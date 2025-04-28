@@ -1,0 +1,51 @@
+﻿.post-classic h4{font-size:1em}
+#TagView2 h2 {
+    font-size: 19px;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 2px 2px #edeef0;
+    border-radius: 4px;
+    margin-bottom: 21px;
+    background-color: #fff;
+    padding: 20px 20px;
+    overflow: hidden;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 2px 2px #edeef0;
+    border-radius: 4px;
+    margin-bottom: 21px;
+    background-color: #fff;
+    padding: 20px 20px;
+    overflow: hidden;
+}
+.CategoryContent {
+    border-bottom: 1px dashed #fff;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    background-color: #fff;
+    border: 1px solid #f0f1f2;
+    box-shadow: 0 2px 2px #edeef0;
+    border-radius: 4px;
+}
+.CategoryContent h3 {
+    margin: 0;
+    font-size: 18px;
+    padding: 0 20px;
+    border-bottom: 1px solid #eaeaea;
+    background-color: #f8f8f8;
+}
+
+.CategoryContent h3 a {
+    font-size: 18px;
+    display: inline-block;
+    height: 44px;
+    line-height: 44px;
+    margin: 0;
+    padding-left: 11px;
+    border-bottom: 2px solid #11afcb;
+}
+
+.CategoryContent .ContentTypeContentDate {
+    font-size: 12px;
+}
+.CategoryContent p {
+    margin: 4px 17px;
+}

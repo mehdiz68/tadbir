@@ -1,0 +1,109 @@
+﻿@model IEnumerable<Domain.ProductRankGroup>
+@using ahmadi.Infrastructure.Helper
+@using Domain;
+
+<title>مدیریت آیتم های امتیازدهی</title>
+
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <h1 style="display:inline-block;font-size: 2em;">
+
+                <a href="@Url.Action("Index","ProductRankGroups")"> مدیریت گروههای آیتم امتیازدهی </a>
+
+            </h1>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-left">
+            <a class="btn btn-success"  href="@Url.Action("SortGroup", "ProductRankGroups")"><span class="glyphicon glyphicon-list-alt"></span> مرتب سازی  </a>
+
+        </div>
+        <div class="clearfix"></div>
+
+        <br /><br />
+        @if (ViewBag.AddPermission)
+            {
+            <p><a class="btn btn-success" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد گروه جدید</a></p>
+        }
+
+
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+                            <span>عنوان</span>
+
+                        </th>
+                        <th class="text-center column-title">
+                            <span>زبان</span>
+
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+
+                        <tr class="rowItem" id="@item.Id">
+                            <td class="text-center">
+                                @item.Title
+                            </td>
+                            <td>
+                                @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId)
+                            </td>
+
+                            <td class="text-center">
+                                @if (ViewBag.EditPermission)
+                                {
+                                    <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                }
+                                @if (ViewBag.DeletePermission)
+                                {
+                                    <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                                }
+                                @if (ViewBag.AddPermission)
+                                {
+                                    <a class="btn btn-success" href="@Url.Action("Ranks", new { id = item.Id })">مدیریت آیتم های امتیاز دهی  --- (@(item.ProductRankGroupSelects.Count.ToString())) آیتم</a>
+                                        <span>
+
+                                        </span>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-success"><span style="text-decoration:line-through"> مدیریت آیتم های امتیاز دهی   --- (@(item.ProductRankGroupSelects.Count.ToString())) آیتم</span>  </span>
+
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+
+        @section Scripts{
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+
+
+        }
+
+
+    </div>
+</div>

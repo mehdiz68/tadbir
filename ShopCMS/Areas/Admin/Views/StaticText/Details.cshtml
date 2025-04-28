@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Domain.StaticTextContent>
+@using PagedList.Mvc;
+@using CoreLib;
+@using ahmadi.Infrastructure.Helper;
+@{
+    var cat = ViewBag.cat as Domain.StaticTextCategory;
+}
+
+<title>محتواهای ثابت @cat.staticTextType.EnumDisplayNameFor() </title>
+
+@section Header{
+
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    @*Pagging*@
+    <link href="~/Content/Base/Css/PagedList.css" rel="stylesheet" type="text/css" />
+
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-md-6">
+            <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+                محتواهای ثابت @cat.staticTextType.EnumDisplayNameFor()
+            </h1>
+
+        </div>
+        <div class="col-md-6 text-left">
+            <a class="btn btn-success " href="@Url.Action("Index")"><span class="fa fa-chevron-left"></span> بازگشت </a>
+        </div>
+        <div class="clearfix"></div>
+        <a href="@Html.DisplayattachmentUrl(cat.attachment.FileName,"LG")">
+            @Html.Displayattachment(cat.attachment.FileName, cat.staticTextType.EnumDisplayNameFor(), "LG", htmlAttributes: new { @class = "img-responsive" })
+        </a>
+
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+
+                        </th>
+                        <th class="text-center column-title">
+                            عنوان
+                        </th>
+                        <th class="text-center column-title">
+                            تصویر
+                        </th>
+
+                        <th class="text-center column-title" style="width:200px">
+                            محتوا
+                        </th>
+
+                        <th class="text-center column-title"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @item.staticTextContentType.EnumDisplayNameFor()
+                            </td>
+                            <td>
+                                <a href="@Html.DisplayattachmentUrl(item.attachment.FileName,"LG")">
+                                    @Html.Displayattachment(item.attachment.FileName, item.staticTextContentType.EnumDisplayNameFor(), "SM", htmlAttributes: new { @class = "img-responsive" })
+                                </a>
+                            </td>
+                            <td style="width:200px">
+                                @item.Data
+
+                            </td>
+
+                            <td>
+
+                                <a class="btn btn-success" href="@Url.Action("Edit", new { id=item.Id })"><span class="glyphicon glyphicon-list"></span> ویرایش </a>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+
+        </div>
+
+        @section Scripts{
+            <script src="~/Areas/Admin/Content/Scripts/View/IndexContactUs.js"></script>
+            @*Persian Calender*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+        }
+    </div>
+</div>

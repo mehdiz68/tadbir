@@ -1,0 +1,195 @@
+﻿@model IEnumerable<Domain.Social>
+@using ahmadi.Infrastructure.Helper
+@using Domain;
+
+<title>مدیریت شبکه های اجتماعی</title>
+@{
+    var HelpModule = ViewBag.HelpModule as HelpModule;
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <span style="cursor:pointer" class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")" title="راهنمای این صفحه"></span>
+
+        <h1 style="display:inline-block;font-size: 2em;">
+
+            <a href="@Url.Action("Index","Socials")"> مدیریت شبکه های اجتماعی</a>
+
+        </h1>
+
+        <br /><br />
+        @if (ViewBag.AddPermission)
+            {
+            <p><a class="btn btn-success" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد شبکه جدید </a></p>
+        }
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><span class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").First().Abstract:"")"></span> جستجو / فیلتر</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content" style="display:none">
+                <div id="SearchPage">
+                    <div>
+                        <div>
+                            @using (Html.BeginForm("Index", "Socials", FormMethod.Get))
+                            {
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("TitleString", ViewBag.TitleStringFilter as string, htmlAttributes: new { placeholder = "عنوان", style = "display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("LanguagenameString", ViewBag.LanguagenameSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان(وب سایت )", style = "display: inline-block", @class = "form-control" })
+
+                                    <span class="fa fa-language form-control-feedback right" aria-hidden="true"></span>
+                                </div>
+                                <div class="clearfix"></div>
+                                <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                @Html.ActionLink("نمایش همه", "Index", null, htmlAttributes: new { @class = "btn btn-success" })
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>عنوان</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Title", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, PlaceShowFilter = ViewBag.PlaceShowFilter })" title="مرتب سازی بر اساس عنوان صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Title_desc", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, PlaceShowFilter = ViewBag.PlaceShowFilter })" title="مرتب سازی بر اساس عنوان نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>ترتیب نمایش</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "DisplaySort", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, PlaceShowFilter = ViewBag.PlaceShowFilter })" title="مرتب سازی بر اساس ترتیب نمایش صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "DisplaySort_desc", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, PlaceShowFilter = ViewBag.PlaceShowFilter })" title="مرتب سازی بر اساس ترتیب نمایش نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>فعال؟</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "IsActive", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, PlaceShowFilter = ViewBag.PlaceShowFilter })" title="مرتب سازی بر اساس غیرفعال ها"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "IsActive_desc", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, PlaceShowFilter = ViewBag.PlaceShowFilter })" title="مرتب سازی بر اساس فعال ها">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>@Html.DisplayNameFor(model => model.Icon)</span>
+
+                            </p>
+                        </th>
+                        <th class="text-center column-title">
+                            کاور ( تصویر)
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>زبان (وب سایت)</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Languagename", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, PlaceShowFilter = ViewBag.PlaceShowFilter })" title="مرتب سازی بر اساس زبان صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Languagename_desc", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, PlaceShowFilter = ViewBag.PlaceShowFilter })" title="مرتب سازی بر اساس زبان نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+            {
+
+                        <tr class="rowItem" id="@item.Id">
+                            <td class="text-center">
+                                <a href="@item.Link" target="_blank">@item.Title</a>
+                            </td>
+
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.DisplaySort)
+                            </td>
+
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.IsActive)
+                            </td>
+                            <td class="text-center">
+                                <span style="font-size: 2em;" class="@item.Icon"></span>
+                            </td>
+                            <td class="text-center">
+                                @if (item.Cover.HasValue)
+                                {
+                                    @Html.Displayattachment(item.attachment.FileName, "SM", htmlAttributes: new { @class = "img-responsive", width = "55", height = "30", style = "display:inline-block;width:55px;height:30px" })
+                                }
+                                else
+                                {
+                                    <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" width="55" height="30" style="display:inline-block;width:55px;height:30px" />
+
+                                }
+                            </td>
+                            <td class="text-center">
+                                @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId.Value)
+                            </td>
+                            <td class="text-center">
+
+
+
+                                @if (ViewBag.EditPermission)
+                                {
+                                    <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                }
+                                @if (ViewBag.DeletePermission)
+                                {
+                                    <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+
+        @section Scripts{
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/View/Social.js"></script>
+
+        }
+
+
+        </div>
+</div>

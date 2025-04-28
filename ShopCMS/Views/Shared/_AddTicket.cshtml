@@ -1,0 +1,36 @@
+﻿@model Domain.Ticket
+<script src="~/Content/Base/Scripts/View/_AddTicket.js"></script>
+
+@{ var cats = ViewBag.cats as IEnumerable<Domain.TicketCategory>; }
+
+@using (Ajax.BeginForm("Index", "FreeConsultation", null, new AjaxOptions { HttpMethod = "POST", OnBegin = "onBeginSubmitContactUs", OnSuccess = "ShowContactUsSuccess", OnFailure = "ShowContactUsFailure", InsertionMode = InsertionMode.Replace }, new { id = "AddContactUs" }))
+{
+
+
+@Html.AntiForgeryToken();
+
+<div>
+    <p>@Html.ValidationMessageFor(model => model.CatId, "", new { @class = "text-danger" })</p>
+    <div>
+        <select id="CatId" name="CatId" class="form-control">
+            <option>انتخاب دسته بندی</option>
+            @foreach (var item in cats)
+            {
+<option value="@item.Id">@item.Title</option>}
+        </select>
+    </div>
+</div>
+
+
+                <div>
+                    <p>@Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })</p>
+                    <p>@Html.TextAreaFor(model => model.Message, new { @placeholder = "متن پرسش...", @class = "form-control", rows = "5" })</p>
+                </div>
+
+                                @Html.Action("Captcha", "Home")
+                                                <br />
+                                                                <br />
+                                                                                <input type="submit" class="btn btn-info" value="ثبت پرسش" />
+}
+
+

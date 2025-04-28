@@ -1,0 +1,220 @@
+﻿    @model PagedList.IPagedList<Domain.Product>
+    @using PagedList.Mvc;
+    @using ahmadi.Infrastructure.Helper
+@{
+            var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+            var ProductCategory = ViewBag.TreeProductCategories as IEnumerable<Domain.ProductCategory>;
+            var setting = ViewBag.setting as Domain.Setting;
+}
+
+  @*View*@
+<link href="~/Areas/Admin/Content/Stylesheets/View/ProductCategories.css" rel="stylesheet" />
+<link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+@*Bootstrap Select*@
+<link href="~/areas/admin/content/scripts/component/bootstrp-dropdown/bootstrap-select.min.css" rel="stylesheet" />
+    <style>
+        #SearchPage {
+            max-height: 400px;
+            overflow: scroll;
+        }
+    </style>
+
+    <div id="ProductManager" style="margin:0;padding:0">
+        <p class="text-left">
+            <br />
+            <button class="btn btn-danger cancel" type="button" id="Cancel_btn_ProductManager">
+                <i class="glyphicon glyphicon-ban-circle"></i>
+                <span>بستن</span>
+            </button>
+        </p>
+        <div id="SearchPageShow" style="background-color: #000; color: #fff" class="">جستجو / فیلتر</div>
+        <div id="SearchPage">
+            <div style="background: #f7f7f7; border: 1px dashed #CCC;">
+                <div class="text-left">
+                    <button class="btn btn-danger cancel" type="button" id="Cancel_btn_SearchProductManager">
+                        <i class="glyphicon glyphicon-ban-circle"></i>
+                        <span>بستن</span>
+                    </button>
+                </div>
+                    @using (Ajax.BeginForm("OpenProducts", "Products", new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "ProductView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();CreateProducts()", InsertionMode = InsertionMode.Replace }, new { @class = "ajax-form-manager" }))
+                    {
+                        
+                        <div class="col-md-6 form-group has-feedback">
+                            @Html.DropDownList("ProductTypeId2", ViewBag.ProductTypeId as IEnumerable<SelectListItem>, "--نوع محصول انتخاب نمایید--", new { @class = "form-control" })
+                            <span class="fa fa-chain-broken form-control-feedback right" aria-hidden="true"></span>
+                        </div>
+                        <div class="col-md-6 form-group has-feedback">
+
+                            @Html.Action("OpenProductCategories", "Products", new { CurrentCatId = ViewBag.CatFilter, ProductTypeId = ViewBag.ProductTypeFilter == null ? 1 : ViewBag.ProductTypeFilter })
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                            @Html.TextBox("NameString", ViewBag.NameFilter as string, htmlAttributes: new { placeholder = "عنوان", style = "display: inline-block", @class = "form-control" })
+                            <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                        </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                        @Html.TextBox("InsertDateStart", ViewBag.InsertDateStartFilter as string, htmlAttributes: new { placeholder = "تاریخ درج از ", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('InsertDateStart');" })
+                                        <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                    </div>
+
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                            @Html.TextBox("InsertDateEnd", ViewBag.InsertDateEndFilter as string, htmlAttributes: new { placeholder = "تا", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('InsertDateEnd');" })
+                                            <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                            @Html.DropDownList("LanguagenameString", ViewBag.LanguagenameSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان ( وب سایت )", style = "display: inline-block", @class = "form-control" })
+                                            <span class="fa fa-language form-control-feedback right" aria-hidden="true"></span>
+
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                            @Html.DropDownList("IsActive", ViewBag.IsActive as SelectList, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "فعال/غیرفعال", style = "width:99%;display: inline-block", @class = "form-control" })
+                                            <span class="fa fa-lock form-control-feedback right" aria-hidden="true"></span>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                            @Html.DropDownList("BrandId", ViewBag.BrandList as IEnumerable<SelectListItem>, "--برند انتخاب نمایید--", new { @class = "form-control"})
+                                            <span class="fa fa-chain-broken form-control-feedback right" aria-hidden="true"></span>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                      
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                            @Html.DropDownList("ProductStateId", ViewBag.ProductStateId as IEnumerable<SelectListItem>, "--وضعیت محصول انتخاب نمایید--", new { @class = "form-control" })
+                                            <span class="fa fa-chain-broken form-control-feedback right" aria-hidden="true"></span>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                            @Html.DropDownList("ProductInsertStateId", ViewBag.ProductInsertStateId as IEnumerable<SelectListItem>, "--وضعیت درج انتخاب نمایید--", new { @class = "form-control" })
+                                            <span class="fa fa-chain-broken form-control-feedback right" aria-hidden="true"></span>
+                                        </div>
+                                      
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                            @Html.DropDownList("SellerId", ViewBag.SellerId as IEnumerable<SelectListItem>, "--فروشنده انتخاب نمایید--", new { @class = "form-control" })
+                                            <span class="fa fa-chain-broken form-control-feedback right" aria-hidden="true"></span>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                            @Html.TextBox("ProductCodeString", ViewBag.ProductCodeFilter as string, htmlAttributes: new { placeholder = "کد کالا", style = "display: inline-block", @class = "form-control" })
+                                            <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                                        </div>
+                                        if (ViewBag.CatFilter != null)
+                                        {
+                                            @Html.Hidden("CatFilter", ViewBag.CatFilter as string);
+                                        }
+
+                                        <div class="clearfix"></div>
+                        <input type="submit" value="جست و جو" class="btn btn-primary" />
+                        @Ajax.ActionLink("نمایش همه", "OpenProducts","Products", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "ProductView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();CreateProducts()", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary" })
+
+                    }
+
+              
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <hr style="margin:0;border:1px solid #000" />
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+                            ردیف
+                        </th>
+                        <th class="text-center column-title">
+                            تصویر
+                        </th>
+
+                        <th class="text-center column-title">
+                            کد محصول
+                        </th>
+
+                        <th class="text-center column-title">
+                            گروه (ها)
+                        </th>
+                        <th class="text-center column-title">
+                            عنوان محصول
+                        </th>
+
+                        <th class="text-center column-title">
+                            وضعیت
+                        </th>
+                        <th class="text-center column-title">
+                            تعداد تنوع
+                        </th>
+                        <th class="text-center column-title">
+
+                        </th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int i = 1; }
+                    @foreach (var item in Model)
+                    {
+                        <tr class="ContentRow">
+
+                            <td class="text-center">@i</td>
+                            <td>
+                                @if (item.ProductImages.Any())
+                                {
+                                    @Html.Displayattachment(item.ProductImages.First(x => x.IsMain).Image.FileName,item.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", width = "110", height = "60", style = "display:inline-block;width:110px;height:60px" })
+                                }
+                                else
+                                {
+                                    <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:110px;height:60px" />
+                                }
+                            </td>
+                            <td class="text-center"> <a class="ProductCode" href="/Product/olk-@item.Code" target="_blank">@item.Code</a> </td>
+                            <td class="text-center">
+                                <ul class="ProductCategories">
+                                    @foreach (var cat in item.ProductCategories)
+                                    {
+
+                                        <li>@cat.Name - </li>
+
+                                    }
+                                </ul>
+                            </td>
+                            <td class="text-center">@item.Name</td>
+                            <td class="text-center">
+                                @switch (item.state)
+                                {
+                                    case 1:<span>در حال بررسی</span>break;
+                                    case 2:<span>بررسی مجدد</span>break;
+                                    case 3:<span>عدم تایید</span>break;
+                                    case 4:<span>تایید</span>break;
+                                    default: <span>نامشخص</span>break;
+                                }
+                            </td>
+                            <td>
+                                <span>@item.ProductPrices.Count </span><br />
+                                <a href="/admin/ProductPrice/Index/@item.Id" target="_blank" class="btn btn-default">لیست تنوع</a>
+                            </td>
+                            <td>
+                                <a href="/admin/Products/Create/@item.Id" target="_blank" class="btn btn-success ">ویرایش محصول</a>
+                                <span class="btn btn-primary AddForLinkProduct" data-Title="@("محصول با ID : "+item.Id)" data-Id="@item.Id"><span class="glyphicon glyphicon-check"></span> انتخاب </span>
+
+
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div id="ProductManagerPagination">
+            <div class="pagination">
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount محصول
+                </strong>
+
+                @Html.PagedListPager(Model, Page => Url.Action("OpenProducts", new { Page, CatFilter = ViewBag.CatFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, BrandFilter = ViewBag.BrandFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductCodeFilter = ViewBag.ProductCodeFilter, ProductStateFilter = ViewBag.ProductStateFilter, ProductInsertStateFilter = ViewBag.ProductInsertStateFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, SellerFilter = ViewBag.SellerFilter }))
+            </div>
+        </div>
+
+
+    </div>

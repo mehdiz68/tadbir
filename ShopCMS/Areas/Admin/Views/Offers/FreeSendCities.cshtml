@@ -1,0 +1,217 @@
+﻿@model PagedList.IPagedList<Domain.FreeSendOfferState>
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+@{ 
+    var FreeSendOffer = ViewBag.FreeSendOffer as Domain.FreeSendOffer;
+}
+
+<title>مدیریت مناطق ارسال رایگان  </title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+        @section Header{
+            @*Bootstrap Select*@
+            <link href="~/areas/admin/content/scripts/component/bootstrp-dropdown/bootstrap-select.min.css" rel="stylesheet" />
+        }
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+            <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+                <a href="@Url.Action("FreeSendCities", "Offers",new { id=FreeSendOffer.Id})"> مدیریت مناطق ارسال رایگان  </a>
+
+            </h1>
+            <br />
+            @if (ViewBag.AddPermission)
+            {
+                <a class="btn btn-success" href="/admin/Offers/CreateCity/@FreeSendOffer.Id"> تعریف شهر جدید</a>
+            }
+            <br />
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left" style="padding-left: 4px;">
+
+            <a class="btn btn-success" href="@Url.Action("Detail", "Offers",new { id=FreeSendOffer.OfferId})"><span class="glyphicon glyphicon-chevron-left"></span> بازگشت </a>
+
+        </div>
+        <div class="clearfix"></div>
+
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:0">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2> جستجو / فیلتر</h2>
+                    <ul class="nav navbar-left panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                        </li>
+
+                        <li>
+                            <a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="x_content">
+
+                    <div id="SearchPage">
+                        <div>
+                            <div>
+
+                                @using (Html.BeginForm("FreeSendCities", "Offers", FormMethod.Get, new { id = "Search-Form" }))
+                                {
+                                    @Html.Hidden("id", FreeSendOffer.Id)
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                        @Html.DropDownList("proviencId", ViewBag.ProvinceList as IEnumerable<SelectListItem>, "--استان انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان ( وب سایت )", style = "width:100%;display: inline-block", @class = "form-control" })
+                                        <span class="fa fa-language form-control-feedback right" aria-hidden="true"></span>
+
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                        @Html.DropDownList("CityId", ViewBag.CityList as IEnumerable<SelectListItem>, "--شهر انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان ( وب سایت )", style = "width:100%;display: inline-block", @class = "form-control" })
+                                        <span class="fa fa-language form-control-feedback right" aria-hidden="true"></span>
+
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                    @Html.ActionLink("نمایش همه", "Index", new { }, htmlAttributes: new { @class = "btn btn-success" })
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model != null)
+            {
+                if (Model.Any())
+                {
+                    <div class="Pagging-New-Container">
+                        <strong class="Pagging-New-Info">
+                            تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+                        </strong>
+
+                        @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page, sortOrder = ViewBag.CurrentSort, proviencIdFilter = ViewBag.proviencIdFilter, CityIdFilter = ViewBag.CityIdFilter }))
+
+                    </div>
+
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+
+                        <div class="table-responsive">
+                            <table class="table table-striped jambo_table bulk_action">
+                                <thead>
+                                    <tr class="headings">
+                                        <th class="text-center column-title">
+
+                                        </th>
+                                        <th class="text-center column-title">
+                                            <a href="@Url.Action("FreeSendCities","Offers",new {sortOrder=ViewBag.CurrentSort!="ProvinceId_desc"?"ProvinceId_desc":"ProvinceId",proviencIdFilter = ViewBag.proviencIdFilter,CityIdFilter = ViewBag.CityIdFilter})">استان</a>
+                                        </th>
+                                        <th class="text-center column-title">
+                                            <a href="@Url.Action("FreeSendCities","Offers",new {sortOrder=ViewBag.CurrentSort!="CityId_desc"?"CityId_desc":"CityId",proviencIdFilter = ViewBag.proviencIdFilter,CityIdFilter = ViewBag.CityIdFilter})">شهر</a>
+                                        </th>
+                                        <th class="text-center column-title">
+
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{ int i = 1; }
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="ContentRow">
+
+                                            <td class="text-center">@((((Model.PageNumber - 1) * Model.PageSize)) + i)</td>
+
+                                            <td class="text-center">@item.City.Province.Name</td>
+
+                                            <td class="text-center">@item.City.Name</td>
+
+                                            <td>
+                                                <a href="/admin/Offers/DeleteCity/@item.Id" title="حذف"><span class="fa fa-remove"></span></a>
+                                            </td>
+                                        </tr>
+                                        i++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="Pagging-New-Container">
+                            <strong class="Pagging-New-Info">
+                                تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+                            </strong>
+
+                            @Html.PagedListPager(Model, Page => Url.Action("FreeSendCities", new { Page, sortOrder = ViewBag.CurrentSort, proviencIdFilter = ViewBag.proviencIdFilter, CityIdFilter = ViewBag.CityIdFilter }))
+
+                        </div>
+
+
+
+                    </div>
+                }
+            }
+        </div>
+        <div class="clearfix"></div>
+
+        @section Scripts{
+            @*Persian Calender*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/Bootstrp-DropDown/bootstrap-select.min.js"></script>
+
+     
+
+            <script>
+
+                $(document).ready(function () {
+                    if ($("#proviencId").val() != "") {
+                        var CityId = $("#CityId option:selected").val();
+                        $.ajax({
+                            type: "Get",
+                            url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#proviencId").val(),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (response) {
+                                $("#CityId option").remove();
+                                $("#CityId").append("<option value='0'>--همه--</option>");
+                                for (var i = 0; i < response.data.length; i++) {
+
+                                    $("#CityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                                }
+                                $("#CityId option[value='" + CityId + "']").prop("selected", true);
+                                $(".loading").hide();
+                            }
+                        });
+                    }
+
+                    $("#proviencId").change(function () {
+                        if ($("#proviencId").val() == "")
+                            $("#CityId option").remove();
+                        else {
+
+                            $(".loading").show();
+                            $.ajax({
+                                type: "Get",
+                                url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#proviencId").val(),
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function (response) {
+                                    $("#CityId option").remove();
+                                    $("#CityId").append("<option value='0'>--همه--</option>");
+                                    for (var i = 0; i < response.data.length; i++) {
+
+                                        $("#CityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                                    }
+
+                                    $(".loading").hide();
+                                }
+                            });
+                        }
+                    });
+                });
+            </script>
+
+        }
+    </div>
+</div>

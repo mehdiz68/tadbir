@@ -1,0 +1,401 @@
+﻿@model CoreLib.ViewModel.Xml.XContentType
+@using CoreLib.Infrastructure
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure
+@using PagedList.Mvc;
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+
+    var sliders = ViewBag.Sliders as IEnumerable<Domain.Slider>;
+    var MostVisitContent = ViewBag.MostVisitContent as IEnumerable<Domain.Content>;
+    int i = 1;
+    var ads = ViewBag.Ads as IEnumerable<Domain.Adveresting>;
+    var latestContent = ViewBag.LatestContent as PagedList.IPagedList<Domain.Content>;
+    var setting = ViewBag.setting as Domain.Setting;
+    var category = ViewBag.category as Domain.Category;
+    var Categories = ViewBag.Categories as IEnumerable<Domain.Category>;
+    Layout = "~/Views/Shared/_LayoutVideo.cshtml";
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+@section Header{
+    <link href="~/Content/Base/Css/view/All-Video.css" rel="stylesheet" />
+
+}
+
+<!-- prs title wrapper Start -->
+<div class="prs_title_main_sec_wrapper">
+    <div class="prs_title_img_overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_title_heading_wrapper">
+                    <h1>@category.Title</h1>
+                    <div>
+                        <div class="breadcrumb-inner">
+                            <ul class="list-inline list-unstyled">
+                                <li class='breadcrumb-item'><a href="/En">Home</a></li>
+                                @Html.Raw(ViewBag.breadcrumbCat)
+
+
+                            </ul>
+                        </div>
+                        <!-- /.container -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- prs title wrapper End -->
+
+@if (ads.Any(x => x.Position == 1))
+{
+    foreach (var item in ads.Where(x => x.Position == 1))
+    {
+
+        <!-- prs video section Start -->
+        <div class="prs_video_section_main_wrapper" style="background:@("url("+Html.DisplayattachmentUrl(item.attachment.FileName,"LG")+") "))">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="prs_video_sec_icon_wrapper">
+                            <ul>
+                                <li>
+                                    <a class="test-popup-link button" href="@item.Link" title="@item.Title"><i class="flaticon-play-button"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- prs video section End -->
+    }
+}
+
+<!-- prs mc slider wrapper Start -->
+
+@foreach (var item in sliders)
+{
+    <div class="prs_mc_slider_main_wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="prs_heading_section_wrapper">
+                        <h2>Speacials</h2>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="prs_mc_slider_wrapper">
+                        @foreach (var item2 in item.SliderImages)
+                        {
+                            <div class="item">
+                                <div class="prs_vp_center_slider_img_wrapper">
+                                    <a href="@item2.Link">
+                                        @Html.Displayattachment(item2.attachment.FileName, "LG")
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+
+
+<!-- prs mc slider wrapper End -->
+<!-- prs mc category slidebar Start -->
+<div class="prs_mc_category_sidebar_main_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 hidden-sm hidden-xs">
+                @if (Categories.Any())
+                {
+                    <div class="prs_mcc_left_side_wrapper">
+                        @*<div class="prs_mcc_left_searchbar_wrapper">
+                            <input type="text" placeholder="Search Movie">
+                            <button>
+                                <i class="flaticon-tool"></i>
+                            </button>
+                        </div>*@
+                        <div class="prs_mcc_bro_title_wrapper">
+                            <h2>categories</h2>
+                            <ul>
+                                @foreach (var item in Categories)
+                                {
+                                    <li>
+                                        <i class="fa fa-caret-right"></i> &nbsp;&nbsp;&nbsp;<a href="@("/En"+Url.Action("Index","videoCategory",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))">@item.Title </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        @if (ads.Any(x => x.Position == 4))
+                        {
+                            foreach (var item in ads.Where(x => x.Position == 4))
+                            {
+                                <div class="prs_mcc_event_title_wrapper">
+                                    <h2>@item.Title</h2>
+                                    @Html.Displayattachment(item.attachment.FileName, "LG")
+                                </div>
+                            }
+
+                        }
+                    </div>
+                }
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                <br /><br />
+                <div class="prs_mcc_right_side_wrapper">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="prs_mcc_right_side_heading_wrapper">
+                                <h2>New Videos</h2>
+                                @*<ul class="nav nav-pills">
+                                    <li class="active">
+                                        <a data-toggle="pill" href="#grid"><i class="fa fa-th-large"></i></a>
+                                    </li>
+                                    <li>
+                                        <a data-toggle="pill" href="#list"><i class="fa fa-list"></i></a>
+                                    </li>
+                                </ul>*@
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="tab-content">
+                                <div id="grid" class="tab-pane fade in active">
+                                    <div class="row">
+                                        @foreach (var item in latestContent)
+                                        {
+                                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 prs_upcom_slide_first">
+                                                <div class="prs_upcom_movie_box_wrapper prs_mcc_movie_box_wrapper">
+                                                    <div class="prs_upcom_movie_img_box">
+                                                        @if (item.Cover.HasValue)
+                                                        {
+
+                                                            @Html.Displayattachment(item.attachment.FileName, "LG")
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="~/Content/Default/images/default-thumbnail.jpg" />
+                                                        }
+                                                        <div class="prs_upcom_movie_img_overlay"></div>
+                                                        <div class="prs_upcom_movie_img_btn_wrapper">
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))">view</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))">detail</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box">
+                                                        <div class="prs_upcom_movie_content_box_inner">
+                                                            <h2><a href="@("/En"+Url.Action("Index","video",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))">@item.Title</a></h2>
+                                                            <p>@item.User.FirstName @item.User.LastName</p>
+
+                                                        </div>
+                                                        @*<div class="prs_upcom_movie_content_box_inner_icon">
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+
+
+
+                                            <div class="pager_wrapper gc_blog_pagination">
+                                                @Html.PagedListPager(latestContent, page => Url.Action("Index", "videoCategory", new { id = category.Id, title = CommonFunctions.NormalizeAddress(category.PageAddress), page }))
+                                                <p>
+                                                    <strong style="color: #900">
+                                                        page  @(latestContent.PageCount < latestContent.PageNumber ? 0 : latestContent.PageNumber) of @latestContent.PageCount From @latestContent.TotalItemCount
+                                                    </strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="list" class="tab-pane fade">
+                                    <div class="row">
+
+                                        @foreach (var item in latestContent)
+                                        {
+
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="prs_mcc_list_movie_main_wrapper">
+                                                    <div class="prs_mcc_list_movie_img_wrapper">
+                                                        @if (item.Cover.HasValue)
+                                                        {
+
+                                                            @Html.Displayattachment(item.attachment.FileName, "LG")
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="~/Content/Default/images/default-thumbnail.jpg" />
+                                                        }
+                                                    </div>
+                                                    <div class="prs_mcc_list_movie_img_cont_wrapper">
+                                                        <div class="prs_mcc_list_left_cont_wrapper">
+                                                            <h2><a href="@Url.Action("Index","video",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) })">@item.Title</a></h2>
+                                                            <p>
+                                                                @item.User.FirstName @item.User.LastName
+                                                            </p>
+                                                        </div>
+                                                        @*<div class="prs_mcc_list_right_cont_wrapper">
+                                                            <a href="./Movie-Categories_files/movie_category.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                        </div>*@
+                                                        <div class="prs_mcc_list_bottom_cont_wrapper">
+                                                            <p>@item.Abstract</p>
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))">view</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))">detail</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="pager_wrapper gc_blog_pagination">
+                                                @Html.PagedListPager(latestContent, page => Url.Action("Index", "videoCategory", new { id = Model.Id, title = CommonFunctions.NormalizeAddress(category.PageAddress), page }))
+                                                <p>
+                                                    <strong style="color: #900">
+                                                        page  @(latestContent.PageCount < latestContent.PageNumber ? 0 : latestContent.PageNumber) of @latestContent.PageCount From @latestContent.TotalItemCount
+                                                    </strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (ads.Any(x => x.Position == 2))
+                            {
+                                foreach (var item in ads.Where(x => x.Position == 2))
+                                {
+                                    <div class="prs_mcc_event_title_wrapper">
+                                        <h2>@item.Title</h2>
+                                        @Html.Displayattachment(item.attachment.FileName, "LG")
+                                    </div>
+                                }
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        @if (ads.Any(x => x.Position == 3))
+        {
+            foreach (var item in ads.Where(x => x.Position == 3))
+            {
+                <div class="prs_mcc_event_title_wrapper">
+                    <h2>@item.Title</h2>
+                    @Html.Displayattachment(item.attachment.FileName, "LG")
+                </div>
+            }
+
+        }
+    </div>
+</div>
+<!-- prs mc category slidebar End -->
+<!-- prs theater Slider Start -->
+<div class="prs_theater_main_slider_wrapper">
+    <div class="prs_theater_img_overlay"></div>
+    <div class="prs_theater_sec_heading_wrapper">
+        <h2>Most View</h2>
+    </div>
+    <div class="wrap-album-slider">
+        <div class="bx-wrapper" >
+            <div class="bx-viewport" >
+                <ul class="album-slider" >
+                    @foreach (var item in MostVisitContent)
+                    {
+                        <li class="album-slider__item">
+                            <figure class="album">
+                                <div class="prs_upcom_movie_box_wrapper">
+                                    <div class="prs_upcom_movie_img_box">
+                                        @if (item.Cover.HasValue)
+                                        {
+
+                                            @Html.Displayattachment(item.attachment.FileName, "LG")
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Content/Default/images/default-thumbnail.jpg" />
+                                        }
+                                        <div class="prs_upcom_movie_img_overlay"></div>
+                                        <div class="prs_upcom_movie_img_btn_wrapper">
+                                            <ul>
+                                                <li>
+                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))">view</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))">detail</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="prs_upcom_movie_content_box">
+                                        <div class="prs_upcom_movie_content_box_inner">
+                                            <h2><a href="@("/En"+Url.Action("Index","video",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))">@item.Title</a></h2>
+                                            <p>@item.User.FirstName @item.User.LastName</p>
+                                            @*<i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>*@
+                                        </div>
+                                        @*<div class="prs_upcom_movie_content_box_inner_icon">
+                                            <ul>
+                                                <li>
+                                                    <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                </li>
+                                            </ul>
+                                        </div>*@
+                                    </div>
+                                </div>
+                                <!-- End album body -->
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                        <!-- End album slider item -->
+                    }
+                </ul>
+            </div>
+        </div>
+        <!-- End slider -->
+    </div>
+</div>
+<!-- prs theater Slider End -->
+
+
+
+@section Scripts{
+
+    <script src="~/Content/Base/Scripts/view/All-Video.js"></script>
+
+}
+
+

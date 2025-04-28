@@ -1,0 +1,1181 @@
+﻿@model Domain.Offer
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+
+<title>جزئیات تخفیف @Model.Title </title>
+<style>
+    .column-state {
+        width: 150px;
+    }
+
+    .column-name {
+        width: 220px
+    }
+
+    .column-image {
+        width: 100px
+    }
+
+    .form-group.has-feedback span {
+        display: inline-block;
+    }
+
+    .dropdown-menu > li > a {
+        text-align: center;
+    }
+
+    .bootstrap-select.btn-group .dropdown-menu li a span.check-mark {
+        display: none !important;
+    }
+
+    .ProductCategories {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .x_panel .nav.navbar-nav > li > a {
+        color: #fff !important;
+    }
+
+    .navbar-right .btn-success {
+        padding: 2px 8px;
+        border-radius: 3px;
+        margin-bottom: 10px;
+    }
+
+        .navbar-right .btn-success:hover {
+            background-color: #ea7526;
+        }
+</style>
+
+<div class="x_panel">
+    <div class="x_content">
+        @{
+            var StateList = ViewBag.ProductStateList as IEnumerable<Domain.ProductState>;
+            var HelpModuleSection = ViewBag.HelpModule as Domain.HelpModuleSection;
+            var ProductCategories = ViewBag.TreeProductCategories as IEnumerable<Domain.ProductCategory>;
+            var setting = ViewBag.setting as Domain.Setting;
+            int? PageSize = ViewBag.PageSize as int?;
+            int? PageSize2 = ViewBag.PageSize2 as int?;
+            var ProductOffers = ViewBag.ProductOffers as PagedList.IPagedList<Domain.ProductPrice>;
+            var ProductOfferOffs = ViewBag.ProductOfferOffs as PagedList.IPagedList<Domain.ProductPrice>;
+            var FreeSendOffers = ViewBag.FreeSendOffers as PagedList.IPagedList<Domain.FreeSendOffer>;
+            var SearchType = ViewBag.SearchType as int?;
+        }
+
+        @section Header{
+            @*View*@
+            <link href="~/Areas/Admin/Content/Stylesheets/View/ProductCategories.css" rel="stylesheet" />
+            <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+            @*Bootstrap Select*@
+            <link href="~/areas/admin/content/scripts/component/bootstrp-dropdown/bootstrap-select.min.css" rel="stylesheet" />
+        }
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+            @if (ViewBag.AddPermission && Model.CodeTypeValueCode != 1 && Model.CodeTypeValueCode != 2)
+            {
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="javascript:;" class="btn-success user-profile dropdown-toggle" data-toggle="dropdown">
+                            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")"> </span>
+                            <span class="glyphicon glyphicon-plus"></span>
+                            تعریف جزئیات تخفیف جدید
+                        </a>
+                        <ul class="dropdown-menu dropdown-usermenu pull-right">
+                            @if (Model.CodeTypeValueCode == 1 || Model.CodeTypeValueCode == 2)
+                            {
+                                <li>
+                                    <a href="/Admin/Offers/CreateProductOffer/@Model.Id">محصول شگفت انگیز یا تخفیف و حراج</a>
+                                </li>
+                            }
+                            else if (Model.CodeTypeValueCode == 0)
+                            {
+                                <li><a href="/Admin/Offers/CreateFreeSend/@Model.Id"> ارسال رایگان برای همه</a></li>
+                            }
+                            else if (Model.CodeTypeValueCode == 4)
+                            {
+                                <li><a href="/Admin/Offers/CreateFreeSend/@Model.Id"> کد تخفیف </a></li>
+                            }
+
+                        </ul>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+                <br />
+                <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+                    <a href="@Url.Action("Detail", "Offers")"> جزئیات تخفیف @Model.Title</a>
+
+                </h1>
+            }
+
+
+
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left" style="padding-left: 4px;">
+            <a class="btn btn-success" href="/Admin/Offers"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a>
+
+        </div>
+        <div class="clearfix"></div>
+
+        @if (Model.CodeTypeValueCode != 1 && Model.CodeTypeValueCode != 2)
+        {
+            <div class="" role="tabpanel" data-example-id="togglable-tabs">
+
+                <div id="myTabContent2" class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade active in" id="tab_content11" aria-labelledby="home-tab">
+
+                        <div class="table-responsive">
+                            <table class="table table-striped jambo_table bulk_action">
+                                <thead>
+                                    <tr class="headings">
+
+                                        <th class="text-center column-title">
+                                            عنوان
+                                        </th>
+                                        <th class="text-center column-title">
+                                            نوع تخفیف
+                                        </th>
+                                        <th class="text-center column-title">
+                                            تاریخ درج
+                                        </th>
+                                        <th class="text-center column-title">
+                                            تاریخ فروش
+                                        </th>
+                                        <th class="text-center column-title">
+                                            تاریخ پایان
+                                        </th>
+                                        <th class="text-center column-title">
+                                            وضعیت تایید
+                                        </th>
+                                        <th class="text-center column-title">
+                                            فعال/غیرفعال
+                                        </th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr class="ContentRow">
+
+
+                                        <td class="text-center">@Model.Title</td>
+
+
+                                        <td class="text-center">
+                                            @if (Model.CodeTypeValueCode == 1)
+                                            {
+                                                <text>شگفت انگیز</text>
+                                            }
+                                            else if (Model.CodeTypeValueCode == 2)
+                                            {
+                                                <text>تخفیف و حراج</text>
+                                            }
+                                            else if (Model.CodeTypeValueCode == 3)
+                                            {
+                                                <text>ارسال رایگان</text>
+                                            }
+                                            else if (Model.CodeTypeValueCode == 4)
+                                            {
+                                                <text>کد تخفیف</text>
+                                            }
+                                        </td>
+                                        <td class="text-center">@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsi(Model.InsertDate) - @Model.InsertDate.ToString("HH:mm")</td>
+                                        <td class="text-center">
+                                            @if (Model.StartDate.HasValue)
+                                            {
+                                                <span>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsi(Model.StartDate.Value)</span> <span>-</span><span> @Model.StartDate.Value.ToString("HH:mm")</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (Model.ExpireDate.HasValue)
+                                            {
+                                                <span>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsi(Model.ExpireDate.Value)</span> <span>-</span><span> @Model.ExpireDate.Value.ToString("HH:mm")</span>
+                                            }
+                                        </td>
+
+                                        <td class="text-center">
+                                            @if (Model.state == true)
+                                            {
+                                                <text>تایید</text>
+                                            }
+                                            else
+                                            {
+                                                <text>عدم تایید</text>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (Model.IsActive == true)
+                                            {
+                                                <text>فعال</text>
+                                            }
+                                            else
+                                            {
+                                                <text>غیرفعال</text>
+                                            }
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        }
+        <ul id="prtabs" class="nav nav-tabs">
+            @if (Model.CodeTypeValueCode == 1 || Model.CodeTypeValueCode == 2)
+            {
+                <li class="@(SearchType.Value==1?"active":"")"><a data-toggle="tab" href="#ProductOffer2"> انتخاب از محصولات مجاز خارج از کمپین</a></li>
+                <li class="@(SearchType.Value==4?"active":"")"><a data-toggle="tab" href="#ProductOffer">ویرایش محصولات مجاز داخل کمپین</a></li>
+                <li><a data-toggle="tab" href="#CatOffer">انتخاب از گروه کالایی</a></li>
+                <li><a data-toggle="tab" href="#BrandOffer">انتخاب از برندها</a></li>
+            }
+            else if (Model.CodeTypeValueCode == 0)
+            {
+                <li class="@(SearchType.Value==2?"active":"")"><a data-toggle="tab" href="#FreeSend">ارسال رایگان برای همه</a></li>
+            }
+
+        </ul>
+        <div class="tab-content">
+            <div id="ProductOffer2" class="@(SearchType.Value==1?"tab-pane fade in active":"tab-pane fade in") ">
+                @if (Model.CodeTypeValueCode == 1 || Model.CodeTypeValueCode == 2)
+                {
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2> جستجو / فیلتر</h2>
+                            <ul class="nav navbar-left panel_toolbox">
+                                <li>
+                                    <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                                </li>
+
+                                <li>
+                                    <a class="close-link"><i class="fa fa-close"></i></a>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content">
+
+                            <div id="SearchPage">
+                                <div>
+                                    <div>
+
+                                        @using (Html.BeginForm("Detail", "Offers", FormMethod.Get, new { id = "Search-Form" }))
+                                        {
+
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                                @Html.DropDownList("ProductTypeId", ViewBag.ProductTypeId as IEnumerable<SelectListItem>, new { id = "OfferProductTypeId", @class = "form-control selectpicker", data_live_search = "true" })
+                                                @Html.Action("OpenOfferProductCategories", "Products", new { CurrentCatId = (ViewBag.ProductCatIdFilter != null ? Convert.ToInt32(ViewBag.ProductCatIdFilter) : 0), catIds = ProductCategories.Any() ? ProductCategories.Select(x => x.Id).ToList() : null })
+
+                                            </div>
+
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                                @Html.TextBox("NameString", ViewBag.NameFilter as string, htmlAttributes: new { placeholder = "عنوان", style = "display: inline-block", @class = "form-control" })
+                                                <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                                            </div>
+
+
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                                @Html.DropDownList("LanguagenameString", ViewBag.LanguagenameSelectListItem as IEnumerable<SelectListItem>, "--زبان را انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان ( وب سایت )", style = "display: inline-block", @class = "form-control" })
+                                                <span class="fa fa-language form-control-feedback right" aria-hidden="true"></span>
+
+                                            </div>
+
+                                            <div class="clearfix"></div>
+                                            <div class="col-md-3 form-group has-feedback">
+                                                @Html.DropDownList("IsActive", ViewBag.IsActive as SelectList, "--فعال/غیرفعال را انتخاب نمایید--", htmlAttributes: new { placeholder = "فعال/غیرفعال", style = "width:99%;display: inline-block", @class = "form-control" })
+                                                <span class="fa fa-lock form-control-feedback right" aria-hidden="true"></span>
+                                            </div>
+
+
+                                            <div class="col-md-3 form-group has-feedback">
+                                                @Html.DropDownList("ProductStateId", ViewBag.ProductStateId as IEnumerable<SelectListItem>, "--وضعیت محصول را انتخاب نمایید--", new { @class = "form-control selectpicker", data_live_search = "true" })
+                                                <span class="fa fa-chain-broken form-control-feedback right" aria-hidden="true"></span>
+                                            </div>
+                                            <div class="col-md-3 form-group has-feedback">
+                                                @Html.DropDownList("ProductInsertStateId", ViewBag.ProductInsertStateId as IEnumerable<SelectListItem>, "--وضعیت درج را انتخاب نمایید--", new { @class = "form-control selectpicker", data_live_search = "true" })
+                                                <span class="fa fa-chain-broken form-control-feedback right" aria-hidden="true"></span>
+                                            </div>
+                                            <div class="col-md-3 form-group has-feedback">
+                                                @Html.TextBox("Quantity", ViewBag.QuantityFilter as string, htmlAttributes: new { placeholder = "تعداد موجودی", style = "display: inline-block", @class = "form-control" })
+                                                <span class="fa fa-store form-control-feedback right" aria-hidden="true"></span>
+                                            </div>
+
+
+                                            <div class="clearfix"></div>
+
+
+                                            if (ViewBag.ProductCatIdFilter != null)
+                                            {
+                                                @Html.Hidden("ProductCatIdFilter", ViewBag.ProductCatIdFilter as string);
+                                            }
+
+                                            @Html.Hidden("PageSize", PageSize.Value);
+                                            @Html.Hidden("PageSize2", PageSize2.Value);
+                                            @Html.Hidden("SearchType", "1");
+                                            @Html.Hidden("OfferId", Model.Id);
+                                            <div class="clearfix"></div>
+                                            <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                            @Html.ActionLink("نمایش همه", "Detail", new { Model.Id }, htmlAttributes: new { @class = "btn btn-success" })
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (ProductOfferOffs != null)
+                        {
+                            if (ProductOfferOffs.Any())
+                            {
+
+
+                                <div class="Pagging-New-Container">
+                                    <strong class="Pagging-New-Info">
+                                        تعداد نتایج : @ProductOfferOffs.TotalItemCount ، صفحه @(ProductOfferOffs.PageCount < ProductOfferOffs.PageNumber ? 0 : ProductOfferOffs.PageNumber) از @ProductOfferOffs.PageCount
+                                    </strong>
+
+                                    @Html.PagedListPager(ProductOfferOffs, Page => Url.Action("Detail", new { Page, sortOrder = ViewBag.CurrentSort, PageSize = PageSize, ProductCatIdFilter = ViewBag.ProductCatIdFilter, QuantityFilter = ViewBag.QuantityFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductStateFilter = ViewBag.ProductStateFilter, ProductInsertStateFilter = ViewBag.ProductInsertStateFilter }))
+
+                                    <div class="PageSizeSelectorContainer">
+                                        <span>تعداد نمایش</span>
+                                        <select class="PageSizeSelector" name="PageSizeSelector">
+                                            <option value="10" selected="@(PageSize.HasValue && PageSize.Value==10?true:false)">10</option>
+                                            <option value="20" selected="@(PageSize.HasValue && PageSize.Value==20?true:false)">20</option>
+                                            <option value="50" selected="@(PageSize.HasValue && PageSize.Value==50?true:false)">50</option>
+                                            <option value="100" selected="@(PageSize.HasValue && PageSize.Value==100?true:false)">100</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped jambo_table bulk_action">
+                                        <thead>
+                                            <tr class="headings">
+                                                <th class="text-center column-title">
+
+                                                </th>
+                                                <th class="text-center column-title column-image">
+
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="code_desc"?"code_desc":"code",PageSize=PageSize,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuantityFilter= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })">کد فروش</a>
+                                                </th>
+                                                <th class="text-center column-title column-name">
+                                                    عنوان تنوع
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="price_desc"?"price_desc":"price",PageSize=PageSize,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuantityFilter= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })">قیمت</a>
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="MaxBasketCount_desc"?"MaxBasketCount_desc":"MaxBasketCount",PageSize=PageSize,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuanQuantityFiltertity= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })">حداکثر سفارش مشتریان در سبد</a>
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="DeliveryTimeout_desc"?"DeliveryTimeout_desc":"DeliveryTimeout",PageSize=PageSize,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuantityFilter= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })"> بازه زمانی ارسال</a>
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="Quantity_desc"?"Quantity_desc":"Quantity",PageSize=PageSize,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuantityFilter= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })"> موجودی نزد شما</a>
+                                                </th>
+
+
+                                                <th class="text-center column-title">
+                                                    موجودی تخفیف
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    حداکثر سفارش در سبد تخفیف
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    نوع تخفیف
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    میزان تخفیف
+                                                </th>
+
+                                                <th class="text-center column-title">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="IsActive_desc"?"IsActive_desc":"IsActive",PageSize=PageSize,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuantityFilter= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })"> فعال</a>
+                                                </th>
+                                                <th class="text-center column-title column-state">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="ProductState_desc"?"ProductState_desc":"ProductState",PageSize=PageSize,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuantityFilter= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })">وضعیت موجودی</a>
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="IsDefault_desc"?"IsDefault_desc":"IsDefault",PageSize=PageSize,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuantityFilter= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })">تنوع پیش فرض</a>
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    عملیات
+                                                </th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{ int i = 1; }
+                                            @foreach (var item in ProductOfferOffs)
+                                            {
+                                                <tr class="ContentRow">
+
+                                                    <td class="text-center">@((((ProductOfferOffs.PageNumber - 1) * ProductOfferOffs.PageSize)) + i)</td>
+                                                    <td>
+                                                        @if (item.ProductImages.Any())
+                                                        {
+                                                            if (item.ProductImages.Where(x => x.IsMain).Any())
+                                                            {
+
+                                                                @Html.Displayattachment(item.ProductImages.Where(x => x.IsMain).First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.Displayattachment(item.ProductImages.First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if (item.Product.ProductImages.Any())
+                                                            {
+                                                                if (item.Product.ProductImages.Where(x => x.IsMain).Any())
+                                                                {
+                                                                    @Html.Displayattachment(item.Product.ProductImages.First(x => x.IsMain).Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.Displayattachment(item.Product.ProductImages.First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:110px;height:60px" />
+
+
+                                                            }
+                                                        }
+                                                    </td>
+
+                                                    <td class="text-center">@item.code</td>
+                                                    <td>
+                                                        <span> @item.Product.Name | </span>
+                                                        @if (item.ProductAttributeSelectModelId.HasValue)
+                                                        {
+                                                            <span>مدل @item.ProductAttributeSelectModel.Value |</span>
+                                                        }
+                                                        @if (item.ProductAttributeSelectSizeId.HasValue)
+                                                        {
+                                                            <span>سایز @item.ProductAttributeSelectSize.Value |</span>
+                                                        }
+                                                        @if (item.ProductAttributeSelectColorId.HasValue)
+                                                        {
+                                                            <span>@Html.DisplaySelectColorAttribute(int.Parse(item.ProductAttributeSelectColor.Value)) |</span>
+                                                        }
+                                                        @if (item.ProductAttributeSelectGarantyId.HasValue)
+                                                        {
+                                                            <span>@Html.DisplaySelectAttribute(int.Parse(item.ProductAttributeSelectGaranty.Value)) |</span>
+                                                        }
+                                                        @if (item.ProductAttributeSelectWeightId.HasValue)
+                                                        {
+                                                            <span>@item.ProductAttributeSelectweight.Value |</span>
+                                                        }
+                                                        <br />
+                                                        <a target="_blank" href="/TFP/@item.ProductId/@CommonFunctions.NormalizeAddress(item.Product.PageAddress)"><span class="glyphicon glyphicon-link"></span></a>
+                                                    </td>
+
+
+                                                    <td class="text-center PriceContainer" data-version="0"><input class="Price" data-old-value="@string.Format("{0:n0}",item.Price)" value="@string.Format("{0:n0}",item.Price)" style="width:100px" /></td>
+                                                    <td class="text-center MaxBasketCountContainer" data-version="0"> <input type="number" class="MaxBasketCount" data-old-value="@item.MaxBasketCount" value="@item.MaxBasketCount" style="width:50px" /> </td>
+                                                    <td class="text-center DeliveryTimeoutContainer" data-version="0"><input type="number" class="DeliveryTimeout" data-old-value="@item.DeliveryTimeout" value="@item.DeliveryTimeout" style="width:50px" />  </td>
+                                                    <td class="text-center QuantityContainer" data-version="0"> <input type="number" class="Quantity" data-old-value="@item.Quantity" value="@item.Quantity" style="width:50px" />   </td>
+                                                    <td class="text-center QuantityContainerOffer" data-version="0"> <input type="number" class="QuantityOffer" data-old-value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().Quantity:0)" value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().Quantity:0)" style="width:50px" />   </td>
+                                                    <td class="text-center MaxBasketCountContainerOffer" data-version="0">
+                                                        <input type="number" class="MaxBasketCountOffer" data-old-value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().MaxBasketCount:0)" value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().MaxBasketCount:0)" style="width:50px" />
+                                                    </td>
+                                                    <td class="text-center CodeTypeContainer" data-version="0" value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().CodeType:0)" data-old-value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().CodeType:0)">
+                                                        <select class="CodeType" value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().CodeType:0)" data-old-value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().CodeType:0)">
+
+                                                            <option value="0">--انتخاب--</option>
+                                                            @if (item.ProductOffers.Any(x => x.OfferId == Model.Id))
+                                                            {
+                                                                if (item.ProductOffers.Where(x => x.OfferId == Model.Id).First().CodeType == 1)
+                                                                {
+
+                                                                    <option selected value="1">ثابت</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="1">ثابت</option>
+
+                                                                }
+                                                                if (item.ProductOffers.Where(x => x.OfferId == Model.Id).First().CodeType == 2)
+                                                                {
+
+                                                                    <option selected value="2">درصدی</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="2">درصدی</option>
+
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <option value="1">ثابت</option>
+                                                                <option value="2">درصدی</option>
+                                                            }
+                                                        </select>
+                                                    </td>
+                                                    <td class="text-center ValueContainer" data-version="0"> <input type="number" class="Value" data-old-value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().Value:0)" value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().Value:0)" style="width:100px" /> </td>
+
+                                                    <td class="text-center IsActiveContainer" data-version="0">
+                                                        <input type="checkbox" class="IsActive" data-old-value="@(item.IsActive?true:false)" checked="@(item.IsActive?true:false)" />
+
+                                                    </td>
+
+                                                    <td class="text-center ProductStateIdContainer" data-version="0">
+                                                        @{
+                                                            <select id="ProductStateId" name="ProductStateId" class="form-control ProductStateId" data-old-value="@(item.ProductStateId!=null?item.ProductStateId:0)">
+                                                                @foreach (var item2 in StateList)
+                                                                {
+                                                                    if (item.ProductStateId.HasValue)
+                                                                    {
+                                                                        <option value="@item2.Id" selected="@(item2.Id == item.ProductStateId ? true : false)">@item2.Title</option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@item2.Id">@item2.Title</option>
+
+                                                                    }
+                                                                }
+                                                            </select>
+                                                        }
+
+                                                    </td>
+                                                    <td class="text-center IsDefaultContainer" data-version="0">
+                                                        <input type="checkbox" data-old-value="@item.IsDefault" checked="@item.IsDefault" class="IsDefault" />
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" data-offer-id="@Model.Id" data-product-offer-id="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().Id:0)" data-id="@item.Id" class="Edit-Now btn btn-default">تایید</a><br /><br />
+                                                        <a href="/admin/ProductPrice/Edit/@item.Id" title="ویرایش کامل"><span class="fa fa-edit"> </span></a>
+                                                        <a href="/admin/ProductPrice/Delete/@item.Id" title="حذف"><span class="fa fa-remove"></span></a>
+                                                        <a href="/admin/ProductPrice/Images/@item.Id" title="تصاویر"><span class="fa fa-picture-o"></span></a>
+
+                                                    </td>
+                                                </tr>
+                                                i++;
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="Pagging-New-Container">
+                                    <strong class="Pagging-New-Info">
+                                        تعداد نتایج : @ProductOfferOffs.TotalItemCount ، صفحه @(ProductOfferOffs.PageCount < ProductOfferOffs.PageNumber ? 0 : ProductOfferOffs.PageNumber) از @ProductOfferOffs.PageCount
+                                    </strong>
+
+                                    @Html.PagedListPager(ProductOfferOffs, Page => Url.Action("Detail", new { Page, sortOrder = ViewBag.CurrentSort, PageSize = PageSize, ProductCatIdFilter = ViewBag.ProductCatIdFilter, QuantityFilter = ViewBag.QuantityFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductStateFilter = ViewBag.ProductStateFilter, ProductInsertStateFilter = ViewBag.ProductInsertStateFilter }))
+                                    <div class="PageSizeSelectorContainer">
+                                        <span>تعداد نمایش</span>
+                                        <select class="PageSizeSelector" name="PageSizeSelector">
+                                            <option value="10" selected="@(PageSize.HasValue && PageSize.Value==10?true:false)">10</option>
+                                            <option value="20" selected="@(PageSize.HasValue && PageSize.Value==20?true:false)">20</option>
+                                            <option value="50" selected="@(PageSize.HasValue && PageSize.Value==50?true:false)">50</option>
+                                            <option value="100" selected="@(PageSize.HasValue && PageSize.Value==100?true:false)">100</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+
+
+                    </div>
+
+                }
+            </div>
+            <div id="ProductOffer" class="@(SearchType.Value==4?"tab-pane fade in active":"tab-pane fade in") ">
+                @if (Model.CodeTypeValueCode == 1 || Model.CodeTypeValueCode == 2)
+                {
+                    <div class="x_panel">
+
+
+
+                        @if (ProductOffers != null)
+                        {
+                            if (ProductOffers.Any())
+                            {
+
+
+                                <div class="Pagging-New-Container">
+                                    <strong class="Pagging-New-Info">
+                                        تعداد نتایج : @ProductOffers.TotalItemCount ، صفحه @(ProductOffers.PageCount < ProductOffers.PageNumber ? 0 : ProductOffers.PageNumber) از @ProductOffers.PageCount
+                                    </strong>
+
+                                    @Html.PagedListPager(ProductOffers, Page2 => Url.Action("Detail", new { SearchType = 4, Page2, sortOrder = ViewBag.CurrentSort, PageSize2 = PageSize2, ProductCatIdFilter = ViewBag.ProductCatIdFilter, QuantityFilter = ViewBag.QuantityFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductStateFilter = ViewBag.ProductStateFilter, ProductInsertStateFilter = ViewBag.ProductInsertStateFilter }))
+
+                                    <div class="PageSizeSelectorContainer">
+                                        <span>تعداد نمایش</span>
+                                        <select class="PageSizeSelector2" name="PageSizeSelector2">
+                                            <option value="10" selected="@(PageSize2.HasValue && PageSize2.Value==10?true:false)">10</option>
+                                            <option value="20" selected="@(PageSize2.HasValue && PageSize2.Value==20?true:false)">20</option>
+                                            <option value="50" selected="@(PageSize2.HasValue && PageSize2.Value==50?true:false)">50</option>
+                                            <option value="100" selected="@(PageSize2.HasValue && PageSize2.Value==100?true:false)">100</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped jambo_table bulk_action">
+                                        <thead>
+                                            <tr class="headings">
+                                                <th class="text-center column-title">
+
+                                                </th>
+                                                <th class="text-center column-title column-image">
+
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="code_desc"?"code_desc":"code",SearchType=4,PageSize2=PageSize2,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuantityFilter= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })">کد فروش</a>
+                                                </th>
+                                                <th class="text-center column-title column-name">
+                                                    عنوان تنوع
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="price_desc"?"price_desc":"price",SearchType=4,PageSize2=PageSize2,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuantityFilter= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })">قیمت</a>
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="MaxBasketCount_desc"?"MaxBasketCount_desc":"MaxBasketCount",SearchType=4,PageSize2=PageSize2,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuanQuantityFiltertity= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })">حداکثر سفارش مشتریان در سبد</a>
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="DeliveryTimeout_desc"?"DeliveryTimeout_desc":"DeliveryTimeout",SearchType=4,PageSize2=PageSize2,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuantityFilter= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })"> بازه زمانی ارسال</a>
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="Quantity_desc"?"Quantity_desc":"Quantity",SearchType=4,PageSize2=PageSize2,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuantityFilter= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })"> موجودی نزد شما</a>
+                                                </th>
+
+
+                                                <th class="text-center column-title">
+                                                    موجودی تخفیف
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    حداکثر سفارش در سبد تخفیف
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    نوع تخفیف
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    میزان تخفیف
+                                                </th>
+
+                                                <th class="text-center column-title">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="IsActive_desc"?"IsActive_desc":"IsActive",SearchType=4,PageSize2=PageSize2,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuantityFilter= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })"> فعال</a>
+                                                </th>
+                                                <th class="text-center column-title column-state">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="ProductState_desc"?"ProductState_desc":"ProductState",SearchType=4,PageSize2=PageSize2,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuantityFilter= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })">وضعیت موجودی</a>
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    <a href="@Url.Action("Detail","Offers",new {sortOrder=ViewBag.CurrentSort!="IsDefault_desc"?"IsDefault_desc":"IsDefault",SearchType=4,PageSize2=PageSize2,ProductCatIdFilter=ViewBag.ProductCatIdFilter, QuantityFilter= ViewBag.QuantityFilter,LanguagenameFilter=ViewBag.LanguagenameFilter,NameFilter=ViewBag.NameFilter,IsActiveFilter=ViewBag.IsActiveFilter,ProductTypeFilter=ViewBag.ProductTypeFilter,ProductStateFilter=ViewBag.ProductStateFilter,ProductInsertStateFilter=ViewBag.ProductInsertStateFilter })">تنوع پیش فرض</a>
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    عملیات
+                                                </th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{ int i = 1; }
+                                            @foreach (var item in ProductOffers)
+                                            {
+                                                <tr class="ContentRow">
+
+                                                    <td class="text-center">@((((ProductOffers.PageNumber - 1) * ProductOffers.PageSize)) + i)</td>
+                                                    <td>
+                                                        @if (item.ProductImages.Any())
+                                                        {
+                                                            if (item.ProductImages.Where(x => x.IsMain).Any())
+                                                            {
+
+                                                                @Html.Displayattachment(item.ProductImages.Where(x => x.IsMain).First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.Displayattachment(item.ProductImages.First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if (item.Product.ProductImages.Any())
+                                                            {
+                                                                if (item.Product.ProductImages.Where(x => x.IsMain).Any())
+                                                                {
+                                                                    @Html.Displayattachment(item.Product.ProductImages.First(x => x.IsMain).Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.Displayattachment(item.Product.ProductImages.First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:110px;height:60px" />
+
+
+                                                            }
+                                                        }
+                                                    </td>
+
+                                                    <td class="text-center">@item.code</td>
+                                                    <td>
+                                                        <span> @item.Product.Name | </span>
+                                                        @if (item.ProductAttributeSelectModelId.HasValue)
+                                                        {
+                                                            <span>مدل @item.ProductAttributeSelectModel.Value |</span>
+                                                        }
+                                                        @if (item.ProductAttributeSelectSizeId.HasValue)
+                                                        {
+                                                            <span>سایز @item.ProductAttributeSelectSize.Value |</span>
+                                                        }
+                                                        @if (item.ProductAttributeSelectColorId.HasValue)
+                                                        {
+                                                            <span>@Html.DisplaySelectColorAttribute(int.Parse(item.ProductAttributeSelectColor.Value)) |</span>
+                                                        }
+                                                        @if (item.ProductAttributeSelectGarantyId.HasValue)
+                                                        {
+                                                            <span>@Html.DisplaySelectAttribute(int.Parse(item.ProductAttributeSelectGaranty.Value)) |</span>
+                                                        }
+                                                        @if (item.ProductAttributeSelectWeightId.HasValue)
+                                                        {
+                                                            <span>@item.ProductAttributeSelectweight.Value |</span>
+                                                        }
+                                                        <br />
+                                                        <a target="_blank" href="/TFP/@item.ProductId/@CommonFunctions.NormalizeAddress(item.Product.PageAddress)"><span class="glyphicon glyphicon-link"></span></a>
+                                                    </td>
+
+
+                                                    <td class="text-center PriceContainer" data-version="0"><input class="Price" data-old-value="@string.Format("{0:n0}",item.Price)" value="@string.Format("{0:n0}",item.Price)" style="width:100px" /></td>
+                                                    <td class="text-center MaxBasketCountContainer" data-version="0"> <input type="number" class="MaxBasketCount" data-old-value="@item.MaxBasketCount" value="@item.MaxBasketCount" style="width:50px" /> </td>
+                                                    <td class="text-center DeliveryTimeoutContainer" data-version="0"><input type="number" class="DeliveryTimeout" data-old-value="@item.DeliveryTimeout" value="@item.DeliveryTimeout" style="width:50px" />  </td>
+                                                    <td class="text-center QuantityContainer" data-version="0"> <input type="number" class="Quantity" data-old-value="@item.Quantity" value="@item.Quantity" style="width:50px" />   </td>
+                                                    <td class="text-center QuantityContainerOffer" data-version="0"> <input type="number" class="QuantityOffer" data-old-value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().Quantity:0)" value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().Quantity:0)" style="width:50px" />   </td>
+                                                    <td class="text-center MaxBasketCountContainerOffer" data-version="0">
+                                                        <input type="number" class="MaxBasketCountOffer" data-old-value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().MaxBasketCount:0)" value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().MaxBasketCount:0)" style="width:50px" />
+                                                    </td>
+                                                    <td class="text-center CodeTypeContainer" data-version="0" value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().CodeType:0)" data-old-value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().CodeType:0)">
+                                                        <select class="CodeType" value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().CodeType:0)" data-old-value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().CodeType:0)">
+
+                                                            <option value="0">--انتخاب--</option>
+                                                            @if (item.ProductOffers.Any(x => x.OfferId == Model.Id))
+                                                            {
+                                                                if (item.ProductOffers.Where(x => x.OfferId == Model.Id).First().CodeType == 1)
+                                                                {
+
+                                                                    <option selected value="1">ثابت</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="1">ثابت</option>
+
+                                                                }
+                                                                if (item.ProductOffers.Where(x => x.OfferId == Model.Id).First().CodeType == 2)
+                                                                {
+
+                                                                    <option selected value="2">درصدی</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="2">درصدی</option>
+
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <option value="1">ثابت</option>
+                                                                <option value="2">درصدی</option>
+                                                            }
+                                                        </select>
+                                                    </td>
+                                                    <td class="text-center ValueContainer" data-version="0"> <input type="number" class="Value" data-old-value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().Value:0)" value="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().Value:0)" style="width:100px" /> </td>
+
+                                                    <td class="text-center IsActiveContainer" data-version="0">
+                                                        <input type="checkbox" class="IsActive" data-old-value="@(item.IsActive?true:false)" checked="@(item.IsActive?true:false)" />
+
+                                                    </td>
+
+                                                    <td class="text-center ProductStateIdContainer" data-version="0">
+                                                        @{
+                                                            <select id="ProductStateId" name="ProductStateId" class="form-control ProductStateId" data-old-value="@(item.ProductStateId!=null?item.ProductStateId:0)">
+                                                                @foreach (var item2 in StateList)
+                                                                {
+                                                                    if (item.ProductStateId.HasValue)
+                                                                    {
+                                                                        <option value="@item2.Id" selected="@(item2.Id == item.ProductStateId ? true : false)">@item2.Title</option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@item2.Id">@item2.Title</option>
+
+                                                                    }
+                                                                }
+                                                            </select>
+                                                        }
+
+                                                    </td>
+                                                    <td class="text-center IsDefaultContainer" data-version="0">
+                                                        <input type="checkbox" data-old-value="@item.IsDefault" checked="@item.IsDefault" class="IsDefault" />
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" data-offer-id="@Model.Id" data-product-offer-id="@(item.ProductOffers.Any(x=>x.OfferId==Model.Id)?item.ProductOffers.Where(x=>x.OfferId==Model.Id).First().Id:0)" data-id="@item.Id" class="Edit-Now btn btn-default">تایید</a><br /><br />
+                                                        <a href="/admin/ProductPrice/Edit/@item.Id" title="ویرایش کامل"><span class="fa fa-edit"> </span></a>
+                                                        <a href="/admin/ProductPrice/Delete/@item.Id" title="حذف"><span class="fa fa-remove"></span></a>
+                                                        <a href="/admin/ProductPrice/Images/@item.Id" title="تصاویر"><span class="fa fa-picture-o"></span></a>
+
+                                                    </td>
+                                                </tr>
+                                                i++;
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="Pagging-New-Container">
+                                    <strong class="Pagging-New-Info">
+                                        تعداد نتایج : @ProductOffers.TotalItemCount ، صفحه @(ProductOffers.PageCount < ProductOffers.PageNumber ? 0 : ProductOffers.PageNumber) از @ProductOffers.PageCount
+                                    </strong>
+
+                                    @Html.PagedListPager(ProductOffers, Page2 => Url.Action("Detail", new { SearchType = 4, Page2, sortOrder = ViewBag.CurrentSort, PageSize2 = PageSize2, ProductCatIdFilter = ViewBag.ProductCatIdFilter, QuantityFilter = ViewBag.QuantityFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductStateFilter = ViewBag.ProductStateFilter, ProductInsertStateFilter = ViewBag.ProductInsertStateFilter }))
+                                    <div class="PageSizeSelectorContainer">
+                                        <span>تعداد نمایش</span>
+                                        <select class="PageSizeSelector2" name="PageSizeSelector2">
+                                            <option value="10" selected="@(PageSize2.HasValue && PageSize2.Value==10?true:false)">10</option>
+                                            <option value="20" selected="@(PageSize2.HasValue && PageSize2.Value==20?true:false)">20</option>
+                                            <option value="50" selected="@(PageSize2.HasValue && PageSize2.Value==50?true:false)">50</option>
+                                            <option value="100" selected="@(PageSize2.HasValue && PageSize2.Value==100?true:false)">100</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+
+
+                    </div>
+
+                }
+            </div>
+            <div id="CatOffer" class="tab-pane fade in">
+                @if (Model.CodeTypeValueCode == 1 || Model.CodeTypeValueCode == 2)
+                {
+                    <div class="col-md-4">
+                        <br />
+                        @Html.DropDownList("ProductTypeId", ViewBag.ProductTypeId as IEnumerable<SelectListItem>, new { id = "OfferProductTypeId2", @class = "form-control selectpicker", data_live_search = "true" })
+                        @Html.Action("OpenOfferProductCategories", "Products", new { catIds = ProductCategories.Any() ? ProductCategories.Select(x => x.Id).ToList() : null })
+                        <br /><label>نوع تخفیف</label><br />
+                        <select class="CodeTypeCat form-control">
+                            <option value="1">ثابت</option>
+                            <option value="2">درصدی</option>
+                        </select>
+                        <br /><label>میزان تخفیف</label><br />
+                        <input type="number" class="ValueCat form-control" />
+                        <br /><br />
+                        <span class="btn btn-primary" data-Offer-Id="@Model.Id" id="Add-ProductOffer-Group">ثبت</span>
+                    </div>
+                }
+            </div>
+            <div id="BrandOffer" class="tab-pane fade in">
+                @if (Model.CodeTypeValueCode == 1 || Model.CodeTypeValueCode == 2)
+                {
+                    <div class="col-md-4">
+                        <br />
+                        @Html.DropDownList("BrandList", ViewBag.BrandList as IEnumerable<SelectListItem>, new { id = "BrandId", @class = "form-control selectpicker", data_live_search = "true" })
+                        <br /><br /><label>نوع تخفیف</label><br />
+                        <select class="CodeTypeBrand form-control">
+                            <option value="1">ثابت</option>
+                            <option value="2">درصدی</option>
+                        </select>
+                        <br /><label>میزان تخفیف</label><br />
+                        <input type="number" class="ValueBrand form-control" />
+                        <br /><br />
+                        <span class="btn btn-primary" data-Offer-Id="@Model.Id" id="Add-ProductOffer-Brand">ثبت</span>
+                    </div>
+                }
+            </div>
+            <div id="FreeSend" class="@(SearchType.Value==2?"tab-pane fade in active":"tab-pane fade in") ">
+                @if (Model.CodeTypeValueCode == 0)
+                {
+
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2> جستجو / فیلتر</h2>
+                            <ul class="nav navbar-left panel_toolbox">
+                                <li>
+                                    <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                                </li>
+
+                                <li>
+                                    <a class="close-link"><i class="fa fa-close"></i></a>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content">
+
+                            <div id="SearchPage">
+                                <div>
+                                    <div>
+
+                                        @using (Html.BeginForm("Detail", "Offers", FormMethod.Get, new { id = "Search-Form-2" }))
+                                        {
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                                @Html.DropDownList("proviencId", ViewBag.ProvinceList as IEnumerable<SelectListItem>, "--استان انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان ( وب سایت )", style = "width:100%;display: inline-block", @class = "form-control" })
+                                                @Html.DropDownList("CityId", ViewBag.CityList as IEnumerable<SelectListItem>, "--شهر انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان ( وب سایت )", style = "width:100%;display: inline-block", @class = "form-control" })
+
+
+                                                <span class="fa fa-chain-broken form-control-feedback right" aria-hidden="true"></span>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                                @Html.DropDownList("ProductTypeId", ViewBag.ProductTypeId as IEnumerable<SelectListItem>, "--نوع محصول را انتخاب نمایید--", new { @class = "form-control selectpicker", data_live_search = "true" })
+                                                @Html.Action("OpenProductCategories", "Products", new { CurrentCatId = (ViewBag.ProductCatIdFilter != null ? Convert.ToInt32(ViewBag.ProductCatIdFilter) : 0), ProductTypeId = (ViewBag.ProductTypeFilter != null ? Convert.ToInt32(ViewBag.ProductTypeFilter) : 1) })
+
+                                                <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                                            </div>
+
+
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                                @Html.DropDownList("BrandId", ViewBag.BrandId as IEnumerable<SelectListItem>, "--برند را انتخاب نمایید--", new { @class = "form-control selectpicker", data_live_search = "true" })
+                                                <span class="fa fa-chain-broken form-control-feedback right" aria-hidden="true"></span>
+                                            </div>
+
+                                            <div class="clearfix"></div>
+
+
+
+
+                                            @Html.Hidden("PageSize", PageSize.Value);
+                                            @Html.Hidden("SearchType", "2");
+                                            <div class="clearfix"></div>
+                                            <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                            @Html.ActionLink("نمایش همه", "Detail", new { Model.Id }, htmlAttributes: new { @class = "btn btn-success" })
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        @if (FreeSendOffers != null)
+                        {
+                            if (FreeSendOffers.Any())
+                            {
+                                <div class="Pagging-New-Container">
+                                    <strong class="Pagging-New-Info">
+                                        تعداد نتایج : @FreeSendOffers.TotalItemCount ، صفحه @(FreeSendOffers.PageCount < FreeSendOffers.PageNumber ? 0 : FreeSendOffers.PageNumber) از @FreeSendOffers.PageCount
+                                    </strong>
+
+                                    @Html.PagedListPager(FreeSendOffers, Page => Url.Action("Detail", new { Page, sortOrder = ViewBag.CurrentSort, SearchType = 2, PageSize = PageSize, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, ProductCatIdFilter = ViewBag.ProductCatIdFilter, BrandFilter = ViewBag.BrandFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductOfferTypeIdFilter = ViewBag.ProductOfferTypeIdFilter }))
+                                    <div class="PageSizeSelectorContainer">
+                                        <span>تعداد نمایش</span>
+                                        <select class="PageSizeSelector" name="PageSizeSelector">
+                                            <option value="10" selected="@(PageSize.HasValue && PageSize.Value == 10 ? true : false)">10</option>
+                                            <option value="20" selected="@(PageSize.HasValue && PageSize.Value == 20 ? true : false)">20</option>
+                                            <option value="50" selected="@(PageSize.HasValue && PageSize.Value == 50 ? true : false)">50</option>
+                                            <option value="100" selected="@(PageSize.HasValue && PageSize.Value == 100 ? true : false)">100</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="" role="tabpanel" data-example-id="togglable-tabs">
+
+                                    <div id="myTabContent3" class="tab-content">
+                                        <div role="tabpanel" class="tab-pane fade active in" id="tab_content11" aria-labelledby="home-tab">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped jambo_table bulk_action">
+                                                    <thead>
+                                                        <tr class="headings">
+                                                            <th class="text-center column-title">
+
+                                                            </th>
+                                                            <th class="text-center column-title">
+                                                                <a href="@Url.Action("Detail", "Offers", new { sortOrder = ViewBag.CurrentSort != "ProductCat_desc" ? "ProductCat_desc" : "ProductCat", SearchType = 2, PageSize = PageSize, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, ProductCatIdFilter = ViewBag.ProductCatIdFilter, BrandFilter = ViewBag.BrandFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductOfferTypeIdFilter = ViewBag.ProductOfferTypeIdFilter })">گروه(ها)</a>
+                                                            </th>
+                                                            <th class="text-center column-title">
+                                                                <a href="@Url.Action("Detail", "Offers", new { sortOrder = ViewBag.CurrentSort != "Brand_desc" ? "Brand_desc" : "Brand", SearchType = 2, PageSize = PageSize, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, ProductCatIdFilter = ViewBag.ProductCatIdFilter, BrandFilter = ViewBag.BrandFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductOfferTypeIdFilter = ViewBag.ProductOfferTypeIdFilter })">برند</a>
+                                                            </th>
+                                                            <th class="text-center column-title">
+                                                                <a href="@Url.Action("Detail", "Offers", new { sortOrder = ViewBag.CurrentSort != "Product_desc" ? "Product_desc" : "Product", SearchType = 2, PageSize = PageSize, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, ProductCatIdFilter = ViewBag.ProductCatIdFilter, BrandFilter = ViewBag.BrandFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductOfferTypeIdFilter = ViewBag.ProductOfferTypeIdFilter })">محصول</a>
+                                                            </th>
+
+
+
+                                                            <th class="text-center column-title">
+                                                                قیمت سفارش
+                                                            </th>
+
+                                                            <th class="text-center column-title">
+                                                                حداکثر هزینه ارسال
+                                                            </th>
+
+                                                            <th class="text-center column-title">
+
+                                                            </th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @{ int i = 1; }
+                                                        @foreach (var item in FreeSendOffers)
+                                                        {
+                                                            <tr class="ContentRow">
+
+                                                                <td class="text-center">@((((FreeSendOffers.PageNumber - 1) * FreeSendOffers.PageSize)) + i)</td>
+
+                                                                <td class="text-center">
+                                                                    @if (item.CatId.HasValue)
+                                                                    {
+                                                                        <text>@item.ProductCategory.Name</text>
+                                                                    }
+                                                                </td>
+
+                                                                <td class="text-center">
+                                                                    @if (item.BrandId.HasValue)
+                                                                    {
+                                                                        <text>@item.Brand.Name</text>
+                                                                    }
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    @if (item.ProductId.HasValue)
+                                                                    {
+                                                                        <text>@item.Product.Name</text>
+                                                                    }
+                                                                </td>
+
+                                                                <td class="text-center">
+
+                                                                    <text>@item.OrderSum</text>
+
+                                                                </td>
+                                                                 <td class="text-center">
+
+                                                                    <text>@item.MaxCost</text>
+
+                                                                </td>
+
+                                                                <td>
+                                                                    <p>
+                                                                        <a href="/admin/Offers/FreeSendCities/@item.Id" class="btn btn-primary">تنظیم مناطق</a>
+                                                                    </p>
+                                                                    <a href="/admin/Offers/DeleteFreeSend/@item.Id" title="حذف"><span class="fa fa-remove"></span></a>
+                                                                    <a href="/admin/Offers/EditFreeSend/@item.Id" title="ویرایش"><span class="fa fa-edit"></span></a>
+
+                                                                </td>
+                                                            </tr>
+                                                            i++;
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div class="Pagging-New-Container">
+                                                <strong class="Pagging-New-Info">
+                                                    تعداد نتایج : @FreeSendOffers.TotalItemCount ، صفحه @(FreeSendOffers.PageCount < FreeSendOffers.PageNumber ? 0 : FreeSendOffers.PageNumber) از @FreeSendOffers.PageCount
+                                                </strong>
+
+                                                @Html.PagedListPager(FreeSendOffers, Page => Url.Action("Detail", new { Page, sortOrder = ViewBag.CurrentSort, SearchType = 2, PageSize = PageSize, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, ProductCatIdFilter = ViewBag.ProductCatIdFilter, BrandFilter = ViewBag.BrandFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductOfferTypeIdFilter = ViewBag.ProductOfferTypeIdFilter }))
+                                                <div class="PageSizeSelectorContainer">
+                                                    <span>تعداد نمایش</span>
+                                                    <select class="PageSizeSelector" name="PageSizeSelector">
+                                                        <option value="10" selected="@(PageSize.HasValue && PageSize.Value == 10 ? true : false)">10</option>
+                                                        <option value="20" selected="@(PageSize.HasValue && PageSize.Value == 20 ? true : false)">20</option>
+                                                        <option value="50" selected="@(PageSize.HasValue && PageSize.Value == 50 ? true : false)">50</option>
+                                                        <option value="100" selected="@(PageSize.HasValue && PageSize.Value == 100 ? true : false)">100</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    </div>
+                }
+            </div>
+
+        </div>
+        @section Scripts{
+
+            <script src="~/Areas/Admin/Content/Scripts/Component/Bootstrp-DropDown/bootstrap-select.min.js"></script>
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/View/ProductCategories.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/View/ProductPriceListOffer.js?v=1.2.1"></script>
+            <script>
+                $(document).ready(function () {
+                    if ($("#proviencId").val() != "") {
+                        var CityId = $("#CityId option:selected").val();
+                        $.ajax({
+                            type: "Get",
+                            url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#proviencId").val(),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (response) {
+                                $("#CityId option").remove();
+                                $("#CityId").append("<option value='0'>--همه--</option>");
+                                for (var i = 0; i < response.data.length; i++) {
+
+                                    $("#CityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                                }
+                                $("#CityId option[value='" + CityId + "']").prop("selected", true);
+                                $(".loading").hide();
+                            }
+                        });
+                    }
+
+                    $("#proviencId").change(function () {
+                        if ($("#proviencId").val() == "")
+                            $("#CityId option").remove();
+                        else {
+
+                            $(".loading").show();
+                            $.ajax({
+                                type: "Get",
+                                url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#proviencId").val(),
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function (response) {
+                                    $("#CityId option").remove();
+                                    $("#CityId").append("<option value='0'>--همه--</option>");
+                                    for (var i = 0; i < response.data.length; i++) {
+
+                                        $("#CityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                                    }
+
+                                    $(".loading").hide();
+                                }
+                            });
+                        }
+                    });
+
+                    if ($("#SearchType").val() == "1") {
+                        $('.nav-tabs a[href="#ProductOffer2"]').tab('show');
+                    }
+                    else if ($("#SearchType").val() == "2") {
+
+                        $('.nav-tabs a[href="#FreeSend"]').tab('show');
+                    }
+                    else if ($("#SearchType").val() == "3") {
+
+                        $('.nav-tabs a[href="#CodeGift"]').tab('show');
+                    }
+                    else {
+
+                        $('.nav-tabs a[href="#ProductOffer"]').tab('show');
+                    }
+                });
+            </script>
+        }
+    </div>
+</div>

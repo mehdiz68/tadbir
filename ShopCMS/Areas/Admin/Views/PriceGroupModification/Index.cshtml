@@ -1,0 +1,391 @@
+﻿@model PagedList.IPagedList<Domain.ProductPriceGroupModification>
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+
+<title>اصلاح گروهی قیمت ها</title>
+
+@{
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+    var ProductCategory = ViewBag.TreeProductCategories as IEnumerable<Domain.ProductCategory>;
+    var setting = ViewBag.setting as Domain.Setting;
+    int? PageSize = ViewBag.PageSize as int?;
+    CoreLib.ViewModel.Xml.XMLReader xmlread = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+}
+
+@section Header{
+
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+            @if (ViewBag.AddPermission)
+            {
+                <div class="dropdown">
+                    <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                        تعریف اصلاح جدید
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" style="float:right;right:0;left:auto;text-align:right">
+                        <li>
+                            <a data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="تعریف اصلاح گروهی قیمت جدید").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="تعریف اصلاح گروهی قیمت جدید").First().Abstract:"")" href="@Url.Action("Create","PriceGroupModification",new { BrandOrCat=false})"><span class="glyphicon glyphicon-plus"></span> فیلتر با گروه </a>
+                        </li>
+                        <li>
+
+                            <a data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="تعریف اصلاح گروهی قیمت جدید").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="تعریف اصلاح گروهی قیمت جدید").First().Abstract:"")" href="@Url.Action("Create","PriceGroupModification",new { BrandOrCat=true})"><span class="glyphicon glyphicon-plus"></span> فیلتر با برند </a>
+                        </li>
+                    </ul>
+                </div>
+
+            }
+            <br />
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"> </span>
+            <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+                <a href="@Url.Action("Index", "PriceGroupModification")"> مدیریت اصلاح گروهی قیمت ها</a>
+
+            </h1>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left" style="padding-left: 4px;">
+
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:0">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2><span class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").First().Abstract:"")"></span> جستجو / فیلتر</h2>
+                    <ul class="nav navbar-left panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                        </li>
+
+                        <li>
+                            <a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="x_content">
+
+                    <div id="SearchPage">
+                        <div>
+                            <div>
+
+                                @using (Html.BeginForm("Index", "PriceGroupModification", FormMethod.Get, new { id = "Search-Form" }))
+                                {
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                        @Html.DropDownList("ProductTypeId", ViewBag.ProductTypeId as IEnumerable<SelectListItem>, new { @class = "form-control selectpicker", data_live_search = "true" })
+                                        @Html.Action("OpenProductCategories", "Products", new { CurrentCatId = (ViewBag.ProductCatIdFilter != null ? Convert.ToInt32(ViewBag.ProductCatIdFilter) : 0), ProductTypeId = (ViewBag.ProductTypeFilter != null ? Convert.ToInt32(ViewBag.ProductTypeFilter) : 1) })
+
+                                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                        @Html.TextBox("InsertDateStart", ViewBag.InsertDateStartFilter as string, htmlAttributes: new { placeholder = "تاریخ درج از ", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('InsertDateStart');" })
+                                        <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                        @Html.TextBox("InsertDateEnd", ViewBag.InsertDateEndFilter as string, htmlAttributes: new { placeholder = "تا", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('InsertDateEnd');" })
+                                        <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                    </div>
+
+                                    <div class="clearfix"></div>
+
+
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                        @Html.DropDownList("BrandId", ViewBag.BrandId as IEnumerable<SelectListItem>, "--برند را انتخاب نمایید--", new { @class = "form-control selectpicker", data_live_search = "true" })
+                                        <span class="fa fa-chain-broken form-control-feedback right" aria-hidden="true"></span>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+
+                                    if (ViewBag.ProductCatIdFilter != null)
+                                    {
+                                        @Html.Hidden("ProductCatIdFilter", ViewBag.ProductCatIdFilter as string);
+                                    }
+
+                                    @Html.Hidden("PageSize", PageSize.Value);
+                                    <div class="clearfix"></div>
+                                    <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                    @Html.ActionLink("نمایش همه", "Index", new { }, htmlAttributes: new { @class = "btn btn-success" })
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model != null)
+            {
+                if (Model.Any())
+                {
+
+
+
+                    <div class="Pagging-New-Container">
+                        <strong class="Pagging-New-Info">
+                            تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+                        </strong>
+
+                        @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page, sortOrder = ViewBag.CurrentSort, PageSize = PageSize, ProductCatIdFilter = ViewBag.ProductCatIdFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, BrandFilter = ViewBag.BrandFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductCodeFilter = ViewBag.ProductCodeFilter, ProductStateFilter = ViewBag.ProductStateFilter, ProductInsertStateFilter = ViewBag.ProductInsertStateFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, SellerFilter = ViewBag.SellerFilter }))
+                        <div class="PageSizeSelectorContainer">
+                            <span>تعداد نمایش</span>
+                            <select class="PageSizeSelector" name="PageSizeSelector">
+                                <option value="10" selected="@(PageSize.HasValue && PageSize.Value==10?true:false)">10</option>
+                                <option value="20" selected="@(PageSize.HasValue && PageSize.Value==20?true:false)">20</option>
+                                <option value="50" selected="@(PageSize.HasValue && PageSize.Value==50?true:false)">50</option>
+                                <option value="100" selected="@(PageSize.HasValue && PageSize.Value==100?true:false)">100</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+
+                        <div id="myTabContent2" class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade active in" id="tab_content11" aria-labelledby="home-tab">
+
+                                <div class="table-responsive">
+                                    <table class="table  jambo_table bulk_action">
+                                        <thead>
+                                            <tr class="headings">
+                                                <th class="text-center column-title">
+
+                                                </th>
+
+
+                                                <th class="text-center column-title">
+                                                    فیلتر با ؟
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    گروه و زیرگروه
+                                                </th>
+
+                                                <th class="text-center column-title">
+                                                    برند
+                                                </th>
+
+                                                <th class="text-center column-title">
+                                                    نوع تخفیف
+                                                </th>
+
+                                                <th class="text-center column-title">
+                                                    مقدار
+                                                </th>
+
+                                                <th class="text-center column-title">
+                                                    افزایش یا کاهش؟
+                                                </th>
+
+                                                <th class="text-center column-title">
+                                                    تاریخ ثبت
+                                                </th>
+                                                <th class="text-center column-title">
+
+                                                    کاربر ثبت کننده
+                                                </th>
+
+                                                <th class="text-center column-title">
+                                                </th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{ int i = 1; }
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr class="@(item.IncreaseType?"alert alert-success":"alert alert-danger")">
+
+                                                    <td class="text-center">
+                                                        @if (item.IncreaseType)
+                                                        {
+                                                            <span class="glyphicon glyphicon-chevron-up"></span>
+                                                        }
+                                                        else
+                                                        {
+
+                                                            <span class="glyphicon glyphicon-chevron-down"></span>
+                                                        }
+                                                        @((((Model.PageNumber - 1) * Model.PageSize)) + i)
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        @if (item.BrandOrCat)
+                                                        {
+                                                            <span> برند</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span> گروه</span>
+                                                        }
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @{
+                                                            if (item.CatId.HasValue)
+                                                            {
+                                                                <span>@item.ProductCategory.Name</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>-</span>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @{
+                                                            if (item.BrandId.HasValue)
+                                                            {
+                                                                <span>@item.Brand.Name</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>-</span>
+                                                            }
+                                                        }
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        @if (item.ValueType)
+                                                        {
+                                                            <span>ثابت</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>درصد</span>
+                                                        }
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @item.Value
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @if (item.IncreaseType)
+                                                        {
+                                                            <span>افزایش</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>کاهش</span>
+                                                        }
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        @{
+                                                            <span>
+                                                                @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate)
+                                                            </span>
+                                                        }
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        @item.User.FirstName @item.User.LastName
+                                                    </td>
+
+                                                    <td>
+                                                        @if (item.IncreaseType)
+                                                        {
+                                                            <span data-id="@item.Id" class="fa fa-undo" style="cursor:pointer" title="برگشت به حالت قبل"></span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                i++;
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="Pagging-New-Container">
+                                    <strong class="Pagging-New-Info">
+                                        تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+                                    </strong>
+
+                                    @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page, PageSize = PageSize, ProductCatIdFilter = ViewBag.ProductCatIdFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, BrandFilter = ViewBag.BrandFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductCodeFilter = ViewBag.ProductCodeFilter, ProductStateFilter = ViewBag.ProductStateFilter, ProductInsertStateFilter = ViewBag.ProductInsertStateFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, SellerFilter = ViewBag.SellerFilter }))
+                                    <div class="PageSizeSelectorContainer">
+                                        <span>تعداد نمایش</span>
+                                        <select class="PageSizeSelector" name="PageSizeSelector">
+                                            <option value="10" selected="@(PageSize.HasValue && PageSize.Value==10?true:false)">10</option>
+                                            <option value="20" selected="@(PageSize.HasValue && PageSize.Value==20?true:false)">20</option>
+                                            <option value="50" selected="@(PageSize.HasValue && PageSize.Value==50?true:false)">50</option>
+                                            <option value="100" selected="@(PageSize.HasValue && PageSize.Value==100?true:false)">100</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <div class="clearfix"></div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+
+    @*View*@
+    <script src="~/Areas/Admin/Content/Scripts/View/ProductCategories.js"></script>
+    @*Product Category*@
+    <script src="~/Areas/Admin/Content/Scripts/View/_CategoryManager.js"></script>
+    @*ProductList*@
+    <script src="~/Areas/Admin/Content/Scripts/View/ProductList.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".fa-undo").click(function () {
+                var $this = $(this);
+                var catid = $("#ProductCatId").val();
+                swal({
+                    title: "",
+                    text: "آیا مطمئن هستید؟",
+                    type: "success",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "بلی",
+                    cancelButtonText: "خیر",
+                    cancelButtonClass: "btn-danger",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                    function (isConfirm) {
+                        if (isConfirm) {
+
+                            $(".loading").show();
+                            $.ajax({
+                                crossDomain: true,
+                                type: "POST",
+                                url: '/Admin/PriceGroupModification/Undo/',
+                                data: '{id:"' + $this.attr("data-id") + '"}',
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function (response) {
+                                    if (response.statusCode == 200) {
+                                        $this.parent().parent().remove();
+                                        swal({ title: "", text: 'انجام شد', type: "success", showCancelButton: false, confirmButtonClass: 'btn-error', confirmButtonText: 'بستن' });
+
+                                    }
+
+                                    $(".loading").hide();
+                                }
+                            });
+
+                            swal.close();
+                        } else {
+                            swal.close();
+                        }
+                    });
+            });
+
+        });
+    </script>
+
+}
+

@@ -1,0 +1,896 @@
+﻿<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+
+        <!-- Meta, title, CSS, favicons, etc. -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Index</title>
+        <link href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Satisfy" rel="stylesheet">
+        <link href="~/Content/Default/Site.css" rel="stylesheet">
+        <!--[if lt IE 9]><script src="~/Content/Base/Scripts/ie8-responsive-file-warning.js"></script><![endif]-->
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="~/Content/Base/Scripts/ie10-viewport-bug-workaround.js"></script>
+        <script src="~/Content/Base/Scripts/ie-emulation-modes-warning.js"></script>
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script src="~/Content/Base/Scripts/html5shiv.min.js"></script>
+        <script src="~/Content/Base/Scripts/respond.min.js"></script>
+        <![endif]-->
+        <link rel="apple-touch-icon-precomposed icon" sizes="144x144" href="~/Content/Default/images/apple-touch-icon-144-precomposed.png">
+        <link rel="shortcut icon" href="~/Content/Default/images/favicon.png">
+
+
+
+
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+    <body>
+        <div id="mainWrapper">
+            <div id="sidebar-wrapper">
+                <div class="sidebar-logo clearfix">
+                    <div class="logo-sidebar"><a href="#"><img src="~/Content/Default/images/logo.png" alt=""></a></div>
+                    <a id="menu-close" href="#" class="close-menu">Close Menu</a>
+                </div>
+
+                <div class="sidebar-login">
+                    <h4>Sign in to your Account</h4>
+                    <form action="#" method="post">
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" placeholder="Password">
+                        </div>
+                        <div class="clearfix">
+                            <div class="form-group pull-left">
+                                <label><input type="checkbox"> Remember Me</label>
+                            </div>
+                            <a href="#" class="pull-right">Forgot Password?</a>
+                        </div>
+                        <div class="form-group text-center"><button type="submit" class="btn btn-primary btn-signin">SIGNIN</button></div>
+                    </form>
+
+                    <div class="form-group text-center">
+                        <a href="#"><strong>REGISTER NOW</strong></a>
+                    </div>
+
+                    <div class="form-group"><a href="#" class="signin-with-fb">Signin with <strong>Facebook</strong></a></div>
+                    <div class="form-group"><a href="#" class="signin-with-gplus">Signin with <strong>Google+</strong></a></div>
+
+                    <ul>
+                        <li class="call">1800-123-4567<span>Call us 24x7</span></li>
+                        <li class="email">help@uniquel.com<span>Email us for any help</span></li>
+                    </ul>
+
+
+                    <div class="sidebar-product-list">
+                        <h3>Best <span>Seller</span></h3>
+                        <div id="carouselOneSidebar" class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner" role="listbox">
+                                <div class="item">
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-1.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Provouge Woman Top</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-2.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Provouge Men T-Shirt</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-3.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Gucci Red Backpack</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-4.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Killer Jeans for Men</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item active">
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-1.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Provouge Woman Top</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-2.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Provouge Men T-Shirt</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-3.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Gucci Red Backpack</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-4.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Killer Jeans for Men</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carousel-nav">
+                                    <a class="left carousel-control" href="#carouselOneSidebar" role="button" data-slide="prev">Previous</a>
+                                    <a class="right carousel-control" href="#carouselOneSidebar" role="button" data-slide="next">Next</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="sidebar-product-list">
+                        <h3>NEW <span>ARRIVALS</span></h3>
+                        <div id="carouselTwoSidebar" class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner" role="listbox">
+                                <div class="item active left">
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-1.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Provouge Woman Top</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-2.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Provouge Men T-Shirt</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-3.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Gucci Red Backpack</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-4.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Killer Jeans for Men</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item next left">
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-1.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Provouge Woman Top</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-2.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Provouge Men T-Shirt</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-3.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Gucci Red Backpack</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                    <div class="media">
+                                        <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-4.jpg" alt="..."></a></div>
+                                        <div class="media-body">
+                                            <h5><a href="#">Killer Jeans for Men</a></h5>
+                                            <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                            <div class="price">$28.40 <del>$35.50</del></div>
+                                            <button type="button" class="btn btn-primary btn-xs">ADD TO CART</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carousel-nav">
+                                    <a class="left carousel-control" href="#carouselTwoSidebar" role="button" data-slide="prev">Previous</a>
+                                    <a class="right carousel-control" href="#carouselTwoSidebar" role="button" data-slide="next">Next</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+
+            <div class="large-modal modal fade" id="menuModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-content">
+                    <div class="close-modal" data-dismiss="modal"><div class="lr"><div class="rl"></div></div></div>
+                    <div class="container">
+                        <ul id="blue-mobile-menu" class="blueMobileMenu">
+                            <li class="firstLevel">
+                                <a href="#">Home</a>
+                            </li>
+                            <li class="firstLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Shop</a></li>
+                            <li class="firstLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Women</a></li>
+                            <ul>
+                                <li class="firstLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Sarees</a></li>
+                                <li class="firstLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Kurtas &amp; Kurtis</a></li>
+                                <li class="firstLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">&gt;Dress Material</a></li>
+                                <li class="firstLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Lehenga Choli</a></li>
+                                <li class="firstLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Salwar Suits</a></li>
+                                <li class="firstLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Blouse</a></li>
+                                <li class="firstLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Salwars &amp; Churidars</a></li>
+                                <li class="firstLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Lingerie &amp; Sleepwear</a></li>
+                                <li class="firstLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Bras</a></li>
+                                &lt;
+                                <li class="firstLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">&gt;Panties</a></li>
+                                <li class="firstLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Nightsuits &amp; Nightdresses</a></li>
+                                <li class="firstLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">New in Clothing</a></li>
+                            </ul>
+
+                            <li class="firstLevel closed">
+                                <div class="icon_menu"></div><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Men</a>
+                                <ul>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Boys' Clothing</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Polos &amp; T-Shirts</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Ethnic Wear</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Winter Wear</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Girls' Clothing</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Dresses &amp; Skirts</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Winter Wear</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Baby Boy Clothing</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Body Suits</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Polos &amp; T-Shirts</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Baby Girl Clothing</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Body Suits</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Dresses</a></li>
+                                </ul>
+                            </li>
+                            <li class="firstLevel closed">
+                                <div class="icon_menu"></div><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Accessories</a>
+                                <ul>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Backpacks</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Wallets</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Belts</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Sunglasses &amp; Frames</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Luggage &amp; Travel</a></li>
+                                    <li class="secondLevel"><a href="http://teampresta.com/Yoda/yoda1/html/list-page.html">Jewellery</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <header class="site-header">
+
+                <div class="pre-header">
+                    <div class="container">
+                        <div class="pre-header-wrap clearfix">
+                            <div class="pre-header-left">
+                                <ul>
+                                    <li>
+                                        <select class="c-select">
+                                            <option>USD</option>
+                                            <option>INR</option>
+                                            <option>GBP</option>
+                                            <option>EURO</option>
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <select class="c-select">
+                                            <option>ENG</option>
+                                            <option>ESP</option>
+                                            <option>RUS</option>
+                                            <option>FR</option>
+                                        </select>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                            <div class="news-ticker visible-lg visible-md">
+                                <div class="ticker">
+                                    <div class="label-back">LATEST</div>
+                                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                        <!-- Wrapper for slides -->
+                                        <div class="carousel-inner" role="listbox">
+                                            <div class="item active left">Congue admodum dissentiet</div>
+                                            <div class="item next left">Congue admodum dissentiet</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="pre-header-right">
+                                <ul>
+                                    <li><a href="#" class="account-link"><span class="link-text">My Account</span></a></li>
+                                    <li><a href="#" class="wishlist-link"><span class="link-text">Wishlist</span><span class="count-baloon">100</span></a></li>
+                                    <li><a data-toggle="collapse" href="#collapseCart" aria-expanded="false" aria-controls="collapseCart" class="cart-link"><span class="link-text">CART</span><span class="count-baloon">20</span></a></li>
+                                    <li><a data-toggle="collapse" href="#collapseSearch" aria-expanded="false" aria-controls="collapseSearch" class="search-link"><span class="link-text">Search</span></a></li>
+                                </ul>
+
+
+                                <div class="cart-dropdown collapse" id="collapseCart">
+                                    <div class="well">
+                                        <div class="cart-list">
+                                            <div class="media">
+                                                <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-1.jpg" alt="..."></a></div>
+                                                <div class="media-body">
+                                                    <h5>Provouge Woman Top</h5>
+                                                    <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                                    <div class="clearfix">
+                                                        <div class="qty-box"><div class="input-group"><span class="input-group-btn"><button type="button" class="btn btn-default">-</button></span><input class="form-control stepper" type="text" value="1" min="1" max="10"><span class="input-group-btn"><button type="button" class="btn btn-default">+</button></span></div></div>
+                                                        <div class="cart-item-price">$ 61.19</div>
+                                                    </div>
+                                                    <button type="button" class="remove-item"><i class="fa fa-times"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="media">
+                                                <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-2.jpg" alt="..."></a></div>
+                                                <div class="media-body">
+                                                    <h5>Provouge Men T-Shirt</h5>
+                                                    <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i></div>
+                                                    <div class="clearfix">
+                                                        <div class="qty-box"><div class="input-group"><span class="input-group-btn"><button type="button" class="btn btn-default">-</button></span><input class="form-control stepper" type="text" value="1" min="1" max="10"><span class="input-group-btn"><button type="button" class="btn btn-default">+</button></span></div></div>
+                                                        <div class="cart-item-price">$ 61.19</div>
+                                                    </div>
+                                                    <button type="button" class="remove-item"><i class="fa fa-times"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="media">
+                                                <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-3.jpg" alt="..."></a></div>
+                                                <div class="media-body">
+                                                    <h5>Gucci Red Backpack</h5>
+                                                    <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></div>
+                                                    <div class="clearfix">
+                                                        <div class="qty-box"><div class="input-group"><span class="input-group-btn"><button type="button" class="btn btn-default">-</button></span><input class="form-control stepper" type="text" value="1" min="1" max="10"><span class="input-group-btn"><button type="button" class="btn btn-default">+</button></span></div></div>
+                                                        <div class="cart-item-price">$ 61.19</div>
+                                                    </div>
+                                                    <button type="button" class="remove-item"><i class="fa fa-times"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cart-total clearfix">
+                                            Cart Subtotal: <span>$747.00</span>
+                                        </div>
+                                        <div class="row btns">
+                                            <div class="col-xs-10 col-xs-offset-1"><a href="#" class="btn btn-default btn-block">Procced to Checkout</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="search-collapse collapse" id="collapseSearch">
+                        <div class="well">
+                            <div class="container">
+                                <div class="search-wrap">
+                                    <a data-toggle="collapse" href="#collapseSearch" aria-expanded="false" aria-controls="collapseSearch" class="close-btn visible-lg visible-md visible-sm">Search</a>
+                                    <div class="row">
+                                        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                                            <div class="search">
+                                                <form action="#" method="post">
+                                                    <div class="textbox"><input class="form-control" type="text" placeholder="TYPE KEYWORD"></div>
+                                                    <div class="option-box">
+                                                        <select class="c-select">
+                                                            <option>All</option>
+                                                            <option>Women</option>
+                                                            <option>Men</option>
+                                                            <option>Juniors</option>
+                                                            <option>Kids</option>
+                                                            <option>Accessories</option>
+                                                        </select>
+                                                    </div>
+                                                    <button type="submit"><i class="fa fa-search"></i></button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="post-header" id="header">
+                    <div class="container">
+                        <div class="post-header-wrap">
+                            <a href="#" class="sidebar-toogle" id="menu-toggle">Sidebar Toogle</a>
+                            <a role="button" href="#menuModal" data-toggle="modal" class="menu-toggle visible-xs visible-sm">MENU TOGGLE</a>
+                            <div class="row">
+                                <div class="col-md-3"><div class="logo"><a href="#"><img src="~/Content/Default/images/logo.png" alt=""></a></div></div>
+                                <div class="col-md-9 visible-lg visible-md">
+                                    <nav class="navbar navbar-default">
+                                        <div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
+                                            <ul class="nav navbar-nav">
+                                                <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+                                                <li class="dropdown mega-dropdown active">
+                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-shopping-bag"></i>Shop</a>
+                                                    <div class="dropdown-menu mega-dropdown-menu">
+                                                        <div class="menu-block">
+                                                            <div class="row">
+                                                                <div class="col-sm-5">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-6">
+                                                                            <div class="sub-menu">
+                                                                                <h4>Clothing</h4>
+                                                                                <ul>
+                                                                                    <li><a href="#">T-Shirts</a></li>
+                                                                                    <li><a href="#">Shirts</a></li>
+                                                                                    <li><a href="#">Jeans</a></li>
+                                                                                    <li><a href="#">Trousers</a></li>
+                                                                                    <li><a href="#">Winter Wear</a></li>
+                                                                                    <li><a href="#">Sports Wear</a></li>
+                                                                                    <li><a href="#">Suits &amp; Blazers</a></li>
+                                                                                    <li><a href="#">Innerwear &amp; Loungewear</a></li>
+                                                                                    <li><a href="#">Ethnic Wear</a></li>
+                                                                                    <li><a href="#">Accessories</a></li>
+                                                                                    <li><a href="#">Shorts, 3/4ths &amp; Cargos</a></li>
+                                                                                </ul>
+                                                                            </div>
+                                                                            <div class="sub-menu">
+                                                                                <h4>School Supplies</h4>
+                                                                                <ul>
+                                                                                    <li><a href="#">School Bags</a></li>
+                                                                                    <li><a href="#">School Combo Sets</a></li>
+                                                                                    <li><a href="#">Lunch Box</a></li>
+                                                                                    <li><a href="#">Kids' Watches</a></li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-sm-6">
+                                                                            <div class="sub-menu">
+                                                                                <h4>Footware</h4>
+                                                                                <ul>
+                                                                                    <li><a href="#">Sports Shoes</a></li>
+                                                                                    <li><a href="#">Casual Shoes</a></li>
+                                                                                    <li><a href="#">Formal Shoes</a></li>
+                                                                                    <li><a href="#">Sandals &amp; Floaters</a></li>
+                                                                                    <li><a href="#">Flip- Flops</a></li>
+                                                                                    <li><a href="#">Loafers</a></li>
+                                                                                    <li><a href="#">Boots</a></li>
+                                                                                    <li><a href="#">Running Shoes</a></li>
+                                                                                    <li><a href="#">Sneakers</a></li>
+                                                                                </ul>
+                                                                            </div>
+                                                                            <div class="sub-menu">
+                                                                                <h4>Accessories</h4>
+                                                                                <ul>
+                                                                                    <li><a href="#">Backpacks</a></li>
+                                                                                    <li><a href="#">Wallets</a></li>
+                                                                                    <li><a href="#">Belts</a></li>
+                                                                                    <li><a href="#">Sunglasses &amp; Frames</a></li>
+                                                                                    <li><a href="#">Luggage &amp; Travel</a></li>
+                                                                                    <li><a href="#">Jewellery</a></li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-sm-4">
+                                                                    <div class="menu-product-list">
+                                                                        <div class="media">
+                                                                            <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-1.jpg" alt="..."></a></div>
+                                                                            <div class="media-body">
+                                                                                <h5>Provouge T-shirt</h5>
+                                                                                <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                                                                <div class="item-price"><del>$99.95</del> $ 61.19</div>
+                                                                                <a href="#" class="details-btn">DETAILS</a>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="media">
+                                                                            <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-2.jpg" alt="..."></a></div>
+                                                                            <div class="media-body">
+                                                                                <h5>Provouge T-shirt</h5>
+                                                                                <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i></div>
+                                                                                <div class="item-price"><del>$99.95</del> $ 61.19</div>
+                                                                                <a href="#" class="details-btn">DETAILS</a>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="media">
+                                                                            <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-3.jpg" alt="..."></a></div>
+                                                                            <div class="media-body">
+                                                                                <h5>Gucci Bagpack</h5>
+                                                                                <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></div>
+                                                                                <div class="item-price"><del>$99.95</del> $ 61.19</div>
+                                                                                <a href="#" class="details-btn">DETAILS</a>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="media">
+                                                                            <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-4.jpg" alt="..."></a></div>
+                                                                            <div class="media-body">
+                                                                                <h5>LeeCooper Jeans</h5>
+                                                                                <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></div>
+                                                                                <div class="item-price"><del>$99.95</del> $ 61.19</div>
+                                                                                <a href="#" class="details-btn">DETAILS</a>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="media">
+                                                                            <div class="media-left"><a href="#"><img class="media-object" src="~/Content/Default/images/product-1.jpg" alt="..."></a></div>
+                                                                            <div class="media-body">
+                                                                                <h5>Provouge T-shirt</h5>
+                                                                                <div class="star-rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i></div>
+                                                                                <div class="item-price"><del>$99.95</del> $ 61.19</div>
+                                                                                <a href="#" class="details-btn">DETAILS</a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <ul class="menu-banner">
+                                                                        <li><a href="#"><img src="~/Content/Default/images/banner-1.jpg" alt=""></a></li>
+                                                                        <li><a href="#"><img src="~/Content/Default/images/banner-2.jpg" alt=""></a></li>
+                                                                    </ul>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="dropdown">
+                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-female"></i>Women</a>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li><a href="#">Sarees</a></li>
+                                                        <li><a href="#">Kurtas &amp; Kurtis</a></li>
+                                                        <li><a href="#">Dress Material</a></li>
+                                                        <li><a href="#">Lehenga Choli</a></li>
+                                                        <li><a href="#">Salwar Suits</a></li>
+                                                        <li><a href="#">Blouse</a></li>
+                                                        <li><a href="#">Salwars &amp; Churidars</a></li>
+                                                        <li><a href="#">Lingerie &amp; Sleepwear</a></li>
+                                                        <li><a href="#">Bras</a></li>
+                                                        <li><a href="#">Panties</a></li>
+                                                        <li><a href="#">Nightsuits &amp; Nightdresses</a></li>
+                                                        <li><a href="#">New in Clothing</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="dropdown">
+                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-male"></i>Men</a>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li><a href="#">T-Shirts</a></li>
+                                                        <li><a href="#">Shirts</a></li>
+                                                        <li><a href="#">Jeans</a></li>
+                                                        <li><a href="#">Trousers</a></li>
+                                                        <li><a href="#">Winter Wear</a></li>
+                                                        <li><a href="#">Sports Wear</a></li>
+                                                        <li><a href="#">Suits &amp; Blazers</a></li>
+                                                        <li><a href="#">Innerwear &amp; Loungewear</a></li>
+                                                        <li><a href="#">Ethnic Wear</a></li>
+                                                        <li><a href="#">Accessories</a></li>
+                                                        <li><a href="#">Shorts, 3/4ths &amp; Cargos</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li><a href="#"><i class="fa fa-gear"></i>Accessories</a></li>
+                                                <li class="dropdown">
+                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-child"></i>Kids</a>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li><a href="#">Boys' Clothing</a></li>
+                                                        <li><a href="#">Polos &amp; T-Shirts</a></li>
+                                                        <li><a href="#">Ethnic Wear</a></li>
+                                                        <li><a href="#">Winter Wear</a></li>
+                                                        <li><a href="#">Girls' Clothing</a></li>
+                                                        <li><a href="#">Dresses &amp; Skirts</a></li>
+                                                        <li><a href="#">Winter Wear</a></li>
+                                                        <li><a href="#">Baby Boy Clothing</a></li>
+                                                        <li><a href="#">Body Suits</a></li>
+                                                        <li><a href="#">Polos &amp; T-Shirts</a></li>
+                                                        <li><a href="#">Baby Girl Clothing</a></li>
+                                                        <li><a href="#">Body Suits</a></li>
+                                                        <li><a href="#">Dresses</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><div></div>
+            </header>
+
+
+        
+
+
+            @RenderBody()
+
+            <footer class="footer">
+                <div class="footer-top">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-3 footmenu">
+                                <h6>Information</h6>
+                                <ul>
+                                    <li><a href="#">Our Blog</a></li>
+                                    <li><a href="#">About Our Shop</a></li>
+                                    <li><a href="#">Secure Shopping</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="col-sm-3 footmenu">
+                                <h6>Our services</h6>
+                                <ul>
+                                    <li><a href="#">Shipping &amp; Returns</a></li>
+                                    <li><a href="#">Secure Shopping</a></li>
+                                    <li><a href="#">International Shipping</a></li>
+                                    <li><a href="#">Affiliates</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="col-sm-3 footmenu">
+                                <h6>My Account</h6>
+                                <ul>
+                                    <li><a href="#">My Account</a></li>
+                                    <li><a href="#">Wishlist</a></li>
+                                    <li><a href="#">Checkout</a></li>
+                                    <li><a href="#">Cart</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="col-sm-3 footinfo">
+                                <h6>Get in Touch</h6>
+                                <ul>
+                                    <li><i class="fa fa-phone"></i><strong>Phone:</strong>1-000-000-0000</li>
+                                    <li><i class="fa fa-envelope-o"></i><strong>Email:</strong> info@yourdomain.com</li>
+                                    <li><i class="fa fa-map-marker"></i>Street Name, 000000, City Name</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="bottom-buttons">
+                    <div class="container">
+
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="flip-container">
+                                    <div class="flip">
+                                        <div class="front">
+                                            <div class="icon"><div class="icon-img"><img src="~/Content/Default/images/return-icon.png" alt=""></div></div>
+                                            <div class="text-info">
+                                                <h5>RETURN &amp; EXCHANGE</h5>
+                                                <p>Pro putent probatus ad, ea philosophia</p>
+                                            </div>
+                                        </div>
+                                        <div class="back">
+                                            <div class="icon"><div class="icon-img"><img src="~/Content/Default/images/return-icon.png" alt=""></div></div>
+                                            <div class="text-info">
+                                                <h5>RETURN &amp; EXCHANGE</h5>
+                                                <p>Pro putent probatus ad, ea philosophia</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="flip-container">
+                                    <div class="flip">
+                                        <div class="front">
+                                            <div class="icon"><div class="icon-img"><img src="~/Content/Default/images/free-shipping-icon.png" alt=""></div></div>
+                                            <div class="text-info">
+                                                <h5>Free shipping</h5>
+                                                <p>Pro putent probatus ad, ea philosophia</p>
+                                            </div>
+                                        </div>
+                                        <div class="back">
+                                            <div class="icon"><div class="icon-img"><img src="~/Content/Default/images/free-shipping-icon.png" alt=""></div></div>
+                                            <div class="text-info">
+                                                <h5>Free shipping</h5>
+                                                <p>Pro putent probatus ad, ea philosophia</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="flip-container">
+                                    <div class="flip">
+                                        <div class="front">
+                                            <div class="icon"><div class="icon-img"><img src="~/Content/Default/images/tag-icon.png" alt=""></div></div>
+                                            <div class="text-info">
+                                                <h5>member discount</h5>
+                                                <p>Pro putent probatus ad, ea philosophia</p>
+                                            </div>
+                                        </div>
+                                        <div class="back">
+                                            <div class="icon"><div class="icon-img"><img src="~/Content/Default/images/tag-icon.png" alt=""></div></div>
+                                            <div class="text-info">
+                                                <h5>member discount</h5>
+                                                <p>Pro putent probatus ad, ea philosophia</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="shop-info">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="shop-icon"><img src="~/Content/Default/images/shop-icon.png" alt=""></div>
+                                <h6>Store Location</h6>
+                                <p>
+                                    250 Biscayne Blvd. (North) Miami, <br>
+                                    Florida 33148
+                                </p>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="shop-icon"><img src="~/Content/Default/images/shop-icon.png" alt=""></div>
+                                <h6>Store Location</h6>
+                                <p>
+                                    250 Biscayne Blvd. (North) Miami, <br>
+                                    Florida 33148
+                                </p>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="shop-icon"><img src="~/Content/Default/images/shop-icon.png" alt=""></div>
+                                <h6>Store Location</h6>
+                                <p>
+                                    250 Biscayne Blvd. (North) Miami, <br>
+                                    Florida 33148
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="copy">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6"><p> Copyright � 2017 UNIQUEL | All Rights are Reserved </p></div>
+                            <div class="col-md-6 clearfix">
+                                <ul>
+                                    <li><img src="~/Content/Default/images/cards.png" alt=""></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </footer>
+
+        </div>
+
+        <!-- Bootstrap core JavaScript================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="~/Content/Base/Scripts/jquery.min.js"></script>
+        <script src="~/Content/Base/Scripts/bootstrap.js"></script>
+        <script src="~/Content/Base/Scripts/custom.js"></script>
+        <script src="~/Content/Base/Scripts/owl.carousel.js"></script>
+        <script src="~/Content/Base/Scripts/jquery-scrolltofixed-min.js"></script>
+        <script src="~/Content/Base/Scripts/jquery.touchSwipe.min.js"></script>
+        <script src="~/Content/Base/Scripts/jquery.matchHeight-min.js"></script>
+        <script type="text/javascript" src="~/Content/Base/Scripts/jquery.flashblue-plugins.js"></script>
+        <script type="text/javascript" src="~/Content/Base/Scripts/jquery.apex-slider.js"></script>
+        <script src="~/Content/Base/Scripts/bootstrap-number-input.js"></script>
+        <script src="~/Content/Base/Scripts/easyResponsiveTabs.js"></script>
+        <script src="~/Content/Base/Scripts/jquery.bxslider.min.js"></script>
+        <script src="~/Content/Base/Scripts/jquery.mCustomScrollbar.concat.min.js"></script>
+        <script>$('.stepper').bootstrapNumber();</script>
+        <script type="text/javascript">$('#header').scrollToFixed();</script>
+        <script type="text/javascript">$('.coleql_height').matchHeight();</script>
+        <script>$("#blue-mobile-menu").blueMobileMenu();</script>
+        <script src="~/Content/Base/Scripts/wow.js"></script>
+        <script>
+            wow = new WOW(
+            {
+                animateClass: 'animated',
+                offset: 100,
+                callback: function (box) {
+                    console.log("WOW: animating <" + box.tagName.toLowerCase() + ">")
+                }
+            }
+            );
+            wow.init();
+            //document.getElementById('moar').onclick = function () {
+            //    var section = document.createElement('section');
+            //    //section.className = 'section--purple wow fadeInDown';
+            //    this.parentNode.insertBefore(section, this);
+            //};
+        </script>
+        <script>
+            $(".carousel").swipe({
+                swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
+                    if (direction == 'left') $(this).carousel('next');
+                    if (direction == 'right') $(this).carousel('prev');
+                },
+                allowPageScroll: "vertical"
+            });
+        </script>
+        <script src="~/Content/Base/Scripts/jquery-ui.js"></script>
+        <script>
+            $(function () {
+                $("#slider-range").slider({
+                    range: true,
+                    min: 100,
+                    max: 1000,
+                    values: [10, 1000],
+                    slide: function (event, ui) {
+                        $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                    }
+                });
+                $("#amount").val("$" + $("#slider-range").slider("values", 0) +
+                " - $" + $("#slider-range").slider("values", 1));
+            });
+
+
+        </script>
+
+    </body>
+
+
+    @RenderSection("scripts", required: false)
+
+</html>

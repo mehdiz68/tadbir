@@ -1,0 +1,215 @@
+﻿@model ahmadi.ViewModels.Home.Master
+@using ahmadi.Infrastructure.Helper
+@using Microsoft.AspNet.Identity;
+@using CoreLib;
+@{
+
+    var Menu = Model.HeaderMainMenu;
+    bool IsRoot = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home";
+    int i = 0;
+}
+
+
+@if (Model.PopUpActive)
+{
+    <!-- Home Popup Section -->
+    <div class="modal fade subscribe_popup" id="onload-popup" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            @if (Model.PopUpType)
+            {
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span style="opacity:1" class="close red" data-dismiss="modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        @Html.Raw(Model.PopUpMessage)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <!-- Modal content-->
+                <div class="modal-content transparent">
+                    <div class="modal-header">
+                        <span style="opacity:1" class="close red" data-dismiss="modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        @Html.Raw(Model.PopUpMessage)
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <!-- End Screen Load Popup Section -->
+
+}
+<!-- START HEADER -->
+<header class="@(IsRoot?"header_wrap":"header_wrap notroott")">
+
+    <div class="middle-header dark_skin">
+        <div class="row nav_block">
+            <div class="contact_phone ">
+                <ul class="navbar-nav attr-nav align-items-center">
+
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="llooggiinn llooggiinn2">
+                            <label>@Model.User.FirstName @Model.User.LastName</label>
+                        </li>
+
+                    }
+                    else
+                    {
+                        <li class="llooggiinn">
+                            <a href="@Url.Action("Login","Account")">ورود</a>
+                        </li>
+                    }
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole("Admin") || User.IsInRole("SuperUser") || User.IsInRole("Support") || User.IsInRole("Security"))
+                        {
+                            <li>
+                                <a class="headUser_entriesLink headUser_name js-labelUserName" href="/Admin" rel="nofollow"> پنل مدیریت </a>
+                            </li>
+                            <li>
+                                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <a href="javascript:document.getElementById('logoutForm').submit()" class="headUser_entriesLink js-logout" rel="nofollow">خروج</a>
+                                }
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a class="headUser_entriesLink headUser_name js-labelUserName" href="/Profile" rel="nofollow">پروفایل کاربری </a>
+                            </li>
+                            <li>
+                                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <a href="javascript:document.getElementById('logoutForm').submit()" class="headUser_entriesLink js-logout" rel="nofollow">خروج</a>
+                                }
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li>
+                            <a href="@Url.Action("Register","Account")">ثبت نام</a>
+                        </li>
+                    }
+
+                </ul>
+
+            </div>
+            <div class="free-advice">
+                <span class="free-text">
+                    <span class="free-f"> رایگان   <span class="fa fa-chevron-left"></span> </span>
+                </span>
+                <a class="free-link" href="/FreeConsultation">مشاوره و ثبت سوالات</a>
+            </div>
+
+            @*<div class="product_search_form">
+                    <form>
+                        <div class="input-group" id="search_bar">
+
+                            <input class="form-control" placeholder="جستجو..." id="search_input" type="text">
+                            <button type="submit" class="search_btn" id="search_btn"><i class="linearicons-magnifier"></i></button>
+                            <div id="SearchList">
+
+                                <div class="ProductList">
+                                    <div class="content">
+                                    </div>
+                                    <div class="continue"></div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </form>
+                </div>*@
+        </div>
+
+    </div>
+    <div class="bottom_header light_skin main_menu_uppercase  mb-4">
+        <div class="row header-bottom">
+            <div class="col-md-2" id="logo-container">
+                <a href="/">
+                    <img class="logo_light logo-desk  img-responsive" src="~/Content/Default/images/Adljou_Logo-3.png" width="222" height="150" />
+                    <img class="logo_light logo-mob lazy img-responsive" data-original="/tf-Products/@Model.HeaderLogo.GetFileName()/@Model.HeaderLogo.GetFolderName()/61/64/LG" width="60" height="63" />
+
+                </a>
+            </div>
+
+            <div class="@(IsRoot?"col-lg-10 col-md-10 col-sm-10 col-10":"col-lg-10 col-md-10 col-sm-10 col-10 notroot")" id="Menu_container">
+                <nav class="navbar navbar-expand-lg" id="head-nav">
+                    <button class="navbar-toggler side_navbar_toggler" type="button" data-toggle="collapse" data-target="#navbarSidetoggle" aria-expanded="false">
+                        <span class="ion-android-menu"></span>
+                    </button>
+                    <div class="collapse navbar-collapse mobile_side_menu" id="navbarSidetoggle">
+                        <ul class="navbar-nav">
+                            @foreach (var item in Menu.Where(x => x.parentId == 0).OrderBy(x => x.DisplayOrder))
+                            {
+                                if (!Menu.Any(x => x.parentId == item.Id))
+                                {
+
+                                    <li><a class="nav-link nav_item" href="@(item.IsRoot ? "/" : item.Link)">@item.Title</a></li>
+
+                                }
+                                else
+                                {
+                                    <li class="dropdown">
+                                        <a class="dropdown-toggle nav-link" href="@(item.IsRoot ? "/" : item.Link)" data-toggle="dropdown">@item.Title</a>
+                                        <div class="dropdown-menu ">
+                                            <ul>
+                                                <li>
+                                                    @foreach (var item2 in Menu.Where(x => x.parentId == item.Id).OrderBy(x => x.DisplayOrder))
+                                                    {
+
+                                                        <a class="dropdown-item menu-link " href="@(item2.IsRoot ? "/" : item2.Link)">@item2.Title</a>
+                                                        if (Menu.Any(x => x.parentId == item2.Id))
+                                                        {
+
+                                                            <div class="dropdown-menu">
+                                                                <ul>
+                                                                    @foreach (var item3 in Menu.Where(x => x.parentId == item2.Id).OrderBy(x => x.DisplayOrder))
+                                                                    {
+
+                                                                        <li><a class="dropdown-item nav-link nav_item" href="@(item3.IsRoot ? "/" : item3.Link)">@item3.Title</a></li>
+
+                                                                    }
+                                                                </ul>
+                                                            </div>
+
+                                                        }
+                                                    }
+                                                </li>
+
+
+
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+                            }
+
+
+                        </ul>
+                    </div>
+
+                </nav>
+            </div>
+        </div>
+    </div>
+
+
+</header>
+<!-- END HEADER -->

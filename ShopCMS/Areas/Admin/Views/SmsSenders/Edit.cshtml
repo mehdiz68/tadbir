@@ -1,0 +1,123 @@
+﻿@model Domain.SmsSender
+<title>ویرایش سرویس اس ام اس</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            <i class="flaticon-email-outbox"></i> ویرایش سرویس اس ام اس
+        </h1>
+            <br /><br />
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            <div class="control-label col-md-3">
+                <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام کاربری").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام کاربری").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                @Html.LabelFor(model => model.Username)
+            </div>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-3">
+                <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "رمز عبور").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "رمز عبور").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                @Html.LabelFor(model => model.Password)
+            </div>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-3">
+                <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "شماره ارسال").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "شماره ارسال").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                @Html.LabelFor(model => model.SenderNumber)
+            </div>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.SenderNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SenderNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-3">
+                <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "دامنه(اختیاری)").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "دامنه(اختیاری)").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                @Html.LabelFor(model => model.DomainName)
+            </div>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DomainName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DomainName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-3">
+                <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "شرکت سرویس sms").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "شرکت سرویس sms").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                @Html.LabelFor(model => model.CompanyId)
+            </div>
+            <div class="col-md-9">
+                @Html.DropDownList("CompanyId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CompanyId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @Html.HiddenFor(x => x.SettingId)
+
+        <div class="form-group">
+            <div class="control-label col-md-3">
+                <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "فعال").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "فعال").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                @Html.LabelFor(model => model.IsActive)
+            </div>
+            <div class="col-md-9">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-3">
+                @Html.LabelFor(model => model.IsPublic)
+            </div>
+            <div class="col-md-9">
+                <div class="checkbox">
+
+
+                    @Html.EditorFor(model => model.IsPublic)
+                    @Html.ValidationMessageFor(model => model.IsPublic, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+
+        @Html.HiddenFor(x => x.DisplaySort)
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="ذخیره" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+            }
+
+</div>
+</div>

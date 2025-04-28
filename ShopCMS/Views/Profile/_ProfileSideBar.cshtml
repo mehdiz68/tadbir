@@ -1,0 +1,62 @@
+﻿@using ahmadi.Infrastructure.Helper;
+@model ahmadi.ViewModels.ShowSideBarProfileViewModel
+
+<div class="detail-block" id="user-links" style="position: relative">
+
+   
+        <a href="/Profile">
+            <div class="name-photo">
+                @if (Model.Avatar.HasValue)
+                {
+                    @Html.Displayattachment(Model.Avatarattachment.FileName, Model.AppUser.FirstName + " " + Model.AppUser.LastName, "LG", htmlAttributes: new {width="64",height="64", @class = "img-responsive round-img" })
+                }
+                else
+                {
+                    if (Model.AppUser.Gender == true)
+                    {
+                        <img class="round-img" src="~/Content/Default/images/man-avatar.jpg" width="64" height="64" />
+                    }
+                    else
+                    {
+                        <img class="round-img" src="~/Content/Default/images/woman-avatar.gif"  width="64" height="64"/>
+                    }
+                }
+                <h5 class="name-side">@Model.AppUser.FirstName @Model.AppUser.LastName  </h5>
+                <p class="dateAndTime">
+                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(DateTime.Now)
+                </p>
+            </div>
+        </a>
+        <hr>
+        <div class="wallet">
+            <a class="text-right" href="/Profile/Edit"><i class="fa fa-user"></i> ویرایش </a>   |    <a class="text-right" href="/Profile/ChangePassword"><i class="fa fa-keyboard-o"></i> تغییر رمز عبور </a>
+        </div>
+        <hr>
+    
+        <div class="user-links">
+            <ul class="user-link-ul">
+              
+                <li class="@(Request.Url.AbsoluteUri.Contains("/Profile/Tickets")?"Active":"Deactive")">
+                    <i class="fa fa-comment"></i>
+                    <a href="/Profile/Tickets">پرسش های من</a>
+                </li>
+                <li class="@(Request.Url.AbsoluteUri.Contains("/Profile/addresses")?"Active":"Deactive")">
+                    <i class="fa fa-map-pin"></i>
+                    <a href="/Profile/addresses">آدرس ها</a>
+                </li>
+                @if (!Request.Browser.IsMobileDevice)
+                {
+                    <li>
+                        <i class="fa fa-user-lock"></i>
+                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right", style = "display: inline-block;" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <a href="javascript:document.getElementById('logoutForm').submit()">خروج</a>
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+

@@ -1,0 +1,111 @@
+﻿@model CoreLib.ViewModel.Xml.XContentType
+
+@using ahmadi.Infrastructure.Helper;
+@using PagedList.Mvc;
+@using CoreLib.Infrastructure;
+
+<title>ایجاد نوع محتوای جدید</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h3 class="box-title">
+            ایجاد نوع محتوای جدید
+        </h3>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control", placeholder = "Id" } })
+                    @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
+                    <span class="fa fa-key form-control-feedback right" aria-hidden="true"></span>
+
+                </div>
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "نام" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+                </div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.EditorFor(model => model.ShortName, new { htmlAttributes = new { @class = "form-control", placeholder = "نام کوتاه" } })
+                    @Html.ValidationMessageFor(model => model.ShortName, "", new { @class = "text-danger" })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", placeholder = "عنوان" } })
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+                </div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.DropDownList("LanguageId", null, null, new { @class = "form-control" })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+                </div>
+
+
+
+
+                <div class="form-group col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                    @Html.CheckBox("InSearch", true, new { @class = "js-switch" })@Html.LabelFor(m => m.InSearch)
+                    <br />
+                    @Html.CheckBox("IsVideo", true, new { @class = "js-switch" }) @Html.LabelFor(m => m.IsVideo)
+
+                    <div>
+                        <label>انتخاب کاور:</label><br />
+                        @Ajax.ActionLink("انتخاب یا آپلود", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager" })
+                        <span class="btn btn-danger deleteCover hide">عدم انتخاب</span>
+
+                        <div id="createView"></div>
+                        <div id="AttachementContainer">
+                            <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" width="220" height="120" style="display:inline-block;width:220px;height:120px" />
+                            @Html.EditorFor(model => model.Cover, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.Cover, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="form-group has-feedback col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    @Html.TextAreaFor(model => model.Abstract, new { @class = "form-control", placeholder = "چکیده", rows = "4" })
+                    @Html.ValidationMessageFor(model => model.Abstract, "", new { @class = "text-danger" })
+                    <span class="fa fa-text-height form-control-feedback right" aria-hidden="true"></span>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="form-group">
+                    <input type="submit" value="ایجاد" class="btn btn-success" />
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+        }
+
+
+
+        @section Scripts{
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+            <script src="~/Scripts/tinymce/tinymce.min.js"></script><script src="~/Scripts/tinymce/tiny_mce_load.js"></script>
+
+        }
+
+    </div>
+</div>

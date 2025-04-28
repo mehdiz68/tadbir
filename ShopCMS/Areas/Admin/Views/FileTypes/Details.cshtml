@@ -1,0 +1,33 @@
+﻿
+@model Domain.FileType
+
+<title>نمایش جزئیاتِ پسوند</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            نمایش جزئیاتِ پسوند
+            </h1>
+            <br /><br />
+
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.FileTypeName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.FileTypeName)
+                </dd>
+
+            </dl>
+            <p>
+
+                <a class="btn btn-primary" href="@Url.Action("Edit", new { id = Model.Id})"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+
+            </p>
+
+</div>
+</div>

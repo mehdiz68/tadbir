@@ -1,0 +1,262 @@
+﻿@model ahmadi.ViewModels.Home.HomePage
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using CoreLib;
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    CoreLib.ViewModel.Xml.XMLReader readXml = new CoreLib.ViewModel.Xml.XMLReader(Meta.StaticContentUrl);
+    var ContentTypes = readXml.ListOfXContentType();
+    int i = 1;
+}
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+<!-- START SECTION تبلیغات بالا -->
+@if (Model.RightAdveresting != null)
+{
+    if (Model.RightAdveresting.Any())
+    {
+        int SumSize = 0;
+    <div class="ads section pb_20 small_pt" id="RightAds">
+        <div class="container">
+            <div class="row">
+                @foreach (var Adveresting in Model.TopAdveresting)
+                {
+
+                    SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+                    <div class="single_banner Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? "lastbox" : "")">
+                        <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : "/Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+                            @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+
+                        </a>
+
+
+                    </div>
+
+                }
+            </div>
+        </div>
+
+
+    </div>
+    }
+}
+
+<!-- START SECTION اسلایدشو -->
+<!-- Slider-->
+
+<section class="carousel slide cid-s6kyvlrHc9 carousel-fade" data-interval="false" id="slider1-b">
+    <div class="full-screen">
+        <div class="mbr-slider slide carousel carousel-fade" data-keyboard="false" data-ride="carousel" data-interval="8000" data-pause="true">
+            <div class="carousel-inner" role="listbox">
+                @foreach (var ImageItem in Model.SliderImages)
+                {
+                    if (ImageItem.Cover != null)
+                    {
+                        <div class="@(i == 1 ? "carousel-item slider-fullscreen-image active" : "carousel-item slider-fullscreen-image")" data-bg-video-slide="false" style="background-image: url(@Html.DisplayattachmentUrl(ImageItem.attachment.FileName, "LG", true));">
+                            <div class="container container-slide">
+                                <div class="image_wrapper">
+                                    <div class="mbr-overlay" style="opacity: 0.6;"></div>
+                                    <img src="assets/images/slider-1636x800.jpg" alt="" title="">
+                                    <div class="carousel-caption justify-content-center">
+
+                                        <a href="@ImageItem.Link">
+                                            <div class="col-10 align-right">
+                                                <h2 class="mbr-fonts-style display-1">@ImageItem.Title</h2>
+                                                @*<p class="lead mbr-text mbr-fonts-style display-2">
+                                                    @ImageItem.Descr
+                                                    <br>
+                                                </p>*@
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    i++;
+                }
+            </div>
+            <a data-app-prevent-settings="" class="carousel-control carousel-control-prev" role="button" data-slide="prev" href="#slider1-b">
+                <span aria-hidden="true" class="mbri-left mbr-iconfont fa fa-chevron-left"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a data-app-prevent-settings="" class="carousel-control carousel-control-next" role="button" data-slide="next" href="#slider1-b">
+                <span aria-hidden="true" class="mbri-right mbr-iconfont fa fa-chevron-right"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+
+</section>
+
+@*<div class="banner_section slide_medium shop_banner_slider staggered-animation-wrap">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12" id="slider_container">
+                    @Html.Partial("_SlideShowMultiCaption", item, new ViewDataDictionary { { "Index", i.ToString() }, { "staticUrl", Meta.StaticContentUrl } })
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+<!-- END SECTION اسلایدشو -->
+<!-- START SECTION تبلیغات راست -->
+@if (Model.RightAdveresting != null)
+{
+    int SumSize = 0;
+    <div class="ads section pb_20 small_pt" id="RightAds">
+        <div class="container">
+            <div class="row">
+                @foreach (var Adveresting in Model.RightAdveresting)
+                {
+
+                    SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+                    <div class="single_banner Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                        <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : "/Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+                            @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+
+                        </a>
+
+
+                    </div>
+
+                }
+            </div>
+        </div>
+
+
+    </div>
+}
+
+@if (Model.MainContents.Any())
+{
+    <div class="NewPr " data-loop="true" data-dots="false" data-nav="true" data-margin="0" data-responsive='{"0":{"items": "4"}, "481":{"items": "2"}, "768":{"items": "2"}, "1199":{"items": "4"}}'>
+        @foreach (var item in Model.MainContents)
+        {
+
+            <div class="item">
+                <a href="@Url.Action("Index", "content", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) })">
+                    @if (item.Cover.HasValue)
+                    {
+                        <img class="lazy img-responsive" data-original="/tf-Products/@item.Blogattachment.FileName.GetFileName()/@item.Blogattachment.FileName.GetFolderName()/101/101/LG" alt="@item.Title" width="100" height="100" />
+                    }
+                    else
+                    {
+
+                        <img class="img-responsive" src="~/Content/Default/images/default-thumbnail.jpg" />
+                    }
+                </a>
+                <h2><a href="@Url.Action("Index", "content", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) })">@item.Title</a></h2>
+            </div>
+        }
+
+    </div>
+}
+
+@if (Model.Content != null)
+{
+    <div id="About-Us">
+        <div class="container">
+            <div class="item row">
+                <div class="col-md-4">
+                    @if (Model.Content.Cover.HasValue)
+                    {
+                        <img class="lazy img-responsive" data-original="/tf-Products/@Model.Content.attachment.FileName.GetFileName()/@Model.Content.attachment.FileName.GetFolderName()/881/481/LG" alt="@Model.Content.Title" width="880" height="480" />
+                    }
+                    else
+                    {
+
+                        <img class="img-responsive" src="~/Content/Default/images/default-thumbnail.jpg" />
+                    }
+                </div>
+                <div class="col-md-8">
+                    <h1><a href="@Url.Action("Index","Content",new {id=Model.Content.Id,title=CommonFunctions.NormalizeAddress(Model.Content.PageAddress) })">@Model.Content.Title</a></h1>
+                    <p>@Model.Content.Abstract</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<!-- START SECTION تبلیغات چپ -->
+@if (Model.LeftAdveresting != null)
+{
+    int SumSize = 0;
+    <div class="ads section pb_20 small_pt">
+        <div class="container">
+            <div class="row">
+                @foreach (var Adveresting in Model.LeftAdveresting)
+                {
+
+                    SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+                    <div class="single_banner Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                        <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : "/Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+                            @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+                        </a>
+
+
+                    </div>
+
+                }
+            </div>
+        </div>
+
+    </div>
+}
+<!-- END SECTION تبلیغات چپ -->
+
+@if (Model.Contents.Any())
+{
+    <h2 class="NewContentTitle">آخرین اخبار و مقالات</h2>
+    <div class="NewContent " data-loop="true" data-dots="false" data-nav="true" data-margin="0" data-responsive='{"0":{"items": "4"}, "481":{"items": "2"}, "768":{"items": "2"}, "1199":{"items": "4"}}'>
+        @foreach (var item in Model.Contents)
+        {
+
+            <div class="item">
+                <a href="@Url.Action("Index", "Content", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) })">
+                    @if (item.Cover.HasValue)
+                    {
+                        <img class="lazy img-responsive" data-original="/tf-Products/@item.attachment.FileName.GetFileName()/@item.attachment.FileName.GetFolderName()/380/380/LG" alt="@item.Title" width="379" height="379" />
+                    }
+                    else
+                    {
+
+                        <img class="img-responsive" src="~/Content/Default/images/default-thumbnail.jpg" />
+                    }
+                </a>
+                <h2><a href="@Url.Action("Index", "Content", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) })">@item.Title</a></h2>
+                <p>@item.Abstract</p>
+            </div>
+        }
+
+    </div>
+}
+
+<!-- START SECTION تبلیغات پایین -->
+@if (Model.BottomAdveresting != null)
+{
+    int SumSize = 0;
+    <div class="ads  section pb_20 small_pt">
+        @foreach (var Adveresting in Model.BottomAdveresting)
+        {
+
+            SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+            <div class="single_banner Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : "/Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+                    @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+                </a>
+
+
+            </div>
+
+
+        }
+
+
+    </div>
+}
+<!-- END SECTION تبلیغات پایین -->

@@ -1,0 +1,70 @@
+﻿@model Domain.SettingState
+
+@{
+    var ProvinceList = ViewBag.ProvinceList as IEnumerable<Domain.Province>;
+}
+
+<title>تعریف استان جدید</title>
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("InnerStateList",new {id=ViewBag.Id })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            تعریف استان جدید
+
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.Hidden("SettingId", ViewBag.Id as int?)
+        @Html.DropDownList("ProvinceId", ViewBag.ProvinceList as SelectList, htmlAttributes: new { @class = "form-control" })
+
+        <br />
+
+        <input type="submit" value="ثبت" class="btn btn-primary" style="border-radius:0" />
+    </div>
+        }
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <script>
+        $(document).ready(function () {
+            $("#ProvinceId").change(function () {
+                if ($("#ProvinceId").val() == "")
+                    $("#CityId option").remove();
+                else {
+
+                    $(".loading").show();
+                    $.ajax({
+                        type: "Get",
+                        url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#ProvinceId").val(),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            $("#CityId option").remove();
+                            $("#CityId").append("<option value='0'>--همه--</option>");
+                            for (var i = 0; i < response.data.length; i++) {
+
+                                $("#CityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                            }
+
+                            $(".loading").hide();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+}

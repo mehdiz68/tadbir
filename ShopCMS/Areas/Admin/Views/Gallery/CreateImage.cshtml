@@ -1,0 +1,77 @@
+﻿@model Domain.GalleryImage
+
+<title>یجاد تصویر</title>
+
+@{
+    int? CatId = ViewBag.id as int?;
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left">
+            <a class="btn btn-success" href="@Url.Action("ImagesManage", new {id=ViewBag.id })"> بازگشت <span class="glyphicon glyphicon-chevron-left"></span></a>
+
+        </div>
+
+        <br /><br />
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            <i class="flaticon-folder-filled-shape"></i> انتخاب تصویر برای گالری
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <p><span class="ContentTitle"></span> کاراکتر باقی مانده.</p>
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { id = "ContentTitle", @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                @Html.Hidden("CatId", CatId)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Cover, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Ajax.ActionLink("انتخاب یا آپلود", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager" })
+                        <div id="createView"></div>
+
+                        <div id="AttachementContainer">
+                            <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" width="220" height="120" style="display:inline-block;width:220px;height:120px" />
+                            @Html.EditorFor(model => model.Cover, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.Cover, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="ذخیره" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        }
+
+        @section Scripts{
+
+            <script>
+                $('#ContentTitle').simplyCountable({ counter: '.ContentTitle', maxCount: 100, safeClass: 'safe', overClass: 'over' });
+                $('#ContentDescr').simplyCountable({ counter: '.ContentDescr', maxCount: 150, safeClass: 'safe', overClass: 'over' });
+            </script>
+
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+
+        }
+        </div>
+</div>

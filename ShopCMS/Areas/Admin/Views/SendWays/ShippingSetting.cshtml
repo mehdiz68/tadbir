@@ -1,0 +1,457 @@
+﻿@model IEnumerable<Domain.ViewModels.ShippingSetting>
+
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml
+
+<title>تنظیمات حمل و نقل @ViewBag.SendwayName</title>
+
+@{
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+    var Setting = ViewBag.setting as Domain.Setting;
+    int? Id = ViewBag.SendwayId as int?;
+    int i = 0;
+}
+
+@section Header{
+    <style>
+        .Price, .limitation {
+            direction: ltr
+        }
+
+        .table-striped > tbody > tr {
+            border-bottom: 2px solid #000
+        }
+
+        .c-new-ship-by-seller-setting-table__body__row__type > div:last-of-type, .c-new-ship-by-seller-setting-table__body__row__price > div:last-of-type {
+            border: none !important;
+        }
+
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: #fff;
+        }
+
+        .table > tbody > tr > td, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td {
+            padding: 0;
+            vertical-align: middle;
+        }
+
+        .c-new-ship-by-seller-setting-table__body__row__type {
+            margin-left: 0 !important;
+        }
+
+            .c-new-ship-by-seller-setting-table__body__row__type > div {
+                border-bottom: 1px dashed #aaa;
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                height: 55px;
+                margin-top: 2px;
+                padding: 7px 0;
+                justify-content: center;
+            }
+
+                .c-new-ship-by-seller-setting-table__body__row__type > div > span {
+                    width: 43px;
+                    height: 40px;
+                }
+
+        .c-new-ship-by-seller-setting-table__body__row__price {
+            margin-left: 0 !important;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+
+            .c-new-ship-by-seller-setting-table__body__row__price > div {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                padding: 8px 0;
+                border-bottom: 1px dashed #aaa;
+                justify-content: center;
+            }
+
+                .c-new-ship-by-seller-setting-table__body__row__price > div > div {
+                    width: 100px;
+                    height: 38px;
+                }
+
+                    .c-new-ship-by-seller-setting-table__body__row__price > div > div input {
+                        border-radius: 8px;
+                        border: 1px solid #e6e9ed;
+                        background-color: transparent;
+                        outline: none;
+                        width: 100%;
+                        height: 100%;
+                        padding: 0;
+                        font-family: IRANYekan,B Yekan,Yekan,serif;
+                        text-align: center;
+                        color: #777;
+                        line-height: 1.571;
+                    }
+
+                .c-new-ship-by-seller-setting-table__body__row__price > div > span {
+                    width: 50px;
+                    height: 40px;
+                }
+    </style>
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <h2>  <a href="@Url.Action("ShippingSetting", "SendWays",new { id=Id})"> تنظیمات حمل و نقل @ViewBag.SendwayName </a></h2>
+            <input type="hidden" value="@Id" id="HfSendWay" />
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+            <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت  <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+        <div class="alert alert-info">
+            <div class="col-md-4">
+                <label>انتخاب استان:</label>
+                @Html.DropDownList("ProvinceId", ViewBag.ProvinceList as IEnumerable<SelectListItem>, "--انتخاب--", new { @class = "form-control" })
+            </div>
+            <div class="col-md-4">
+                <label>انتخاب شهر:</label>
+                <select id="CityId" name="CityId" class="form-control"></select>
+            </div>
+            <div class="col-md-4">
+                <label>&nbsp;</label>
+                <div>
+                    <span><input id="IsActive" type="checkbox" />فعال؟</span>
+                    <span class="btn btn-success" id="btn-add"><span class="fa fa-plus"></span> افزودن به لیست </span>
+                    <span class="btn btn-danger" id="btn-remove"><span class="fa fa-minus"></span> حذف از لیست </span>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div><br /><br />
+
+        <div>
+            <div>
+                @Html.DropDownList("ProvinceId", ViewBag.ProvinceList as IEnumerable<SelectListItem>, "--فیلتر با استان--", new { @class = "form-control PrvId", style = "display:inline-block;max-width:320px" })
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr>
+                        <th>روش ارسال</th>
+                        <th>استان-شهر</th>
+                        <th>باکس</th>
+                        <th>ظرفیت ارسال(به ازای هر بازه زمانی)</th>
+                        <th>هزینه ارسال(تومان)</th>
+                        <th>فعال/غیرفعال</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cityId in Model.GroupBy(x => x.cityId))
+                    {
+                        i = 0;
+                        var items = Model.Where(x => x.cityId == cityId.Key);
+                        <tr>
+                            <td data-id="@items.First().sendwayId" class="sendwayNameContainer">
+                                @items.First().sendwayName
+                            </td>
+                            <td class="cityContainer" data-cityId="@items.First().cityId" data-provienceId="@items.First().provienceId">
+                                @items.First().provienceName - @items.First().cityName
+                            </td>
+                            <td class="boxContainer">
+                                <div class="c-new-ship-by-seller-setting-table__body__row__type">
+                                    @foreach (var item in items)
+                                    {
+                                        <div>
+                                            <div>
+                                                <span class="box-name" data-selector="@("field"+i)" data-id="@item.SendWayBoxID"> @item.boxName </span>
+                                            </div>
+                                            <span id="margin">
+                                            </span>
+                                        </div>
+                                        i++;
+                                    }
+
+                                </div>
+                            </td>
+                            <td class="limitationContainer" data-version="0">
+                                <div class=" c-new-ship-by-seller-setting-table__body__row__price">
+                                    @{ i = 0;}
+                                    @foreach (var item in items)
+                                    {
+                                        <div>
+                                            <div class="limitationContainerCost">
+                                                <input class="limitation" data-selector="@("field"+i)" data-old-value="@string.Format("{0:n0}",item.limitation)" value="@string.Format("{0:n0}",item.limitation)" style="width:100px" />
+                                            </div>
+                                            <span id="margin">
+                                            </span>
+                                        </div>
+                                        i++;
+                                    }
+
+                                </div>
+                            </td>
+                            <td class="CostContainer" data-version="0">
+                                <div class=" c-new-ship-by-seller-setting-table__body__row__price">
+                                    @{ i = 0;}
+                                    @foreach (var item in items)
+                                    {
+                                        <div>
+                                            <div class="CostContainerCost">
+                                                <input class="Price" data-selector="@("field"+i)" data-old-value="@string.Format("{0:n0}",item.Cost)" value="@string.Format("{0:n0}",item.Cost)" style="width:100px" />
+                                            </div>
+                                            <span id="margin">
+                                            </span>
+                                        </div>
+                                        i++;
+                                    }
+
+                                </div>
+                            </td>
+                            <td class="text-center IsActiveContainer" data-version="0">
+                                <div class="c-new-ship-by-seller-setting-table__body__row__type">
+                                    @{ i = 0;}
+                                    @foreach (var item in items)
+                                    {
+                                        <div>
+                                            <div class="IsActiveContainerCost">
+
+                                                <input class="IsActive" data-selector="@("field"+i)" type="checkbox" data-old-value="@(item.isActive?true:false)" checked="@(item.isActive?true:false)" />
+                                            </div>
+                                            <span id="margin">
+                                            </span>
+                                        </div>
+                                        i++;
+                                    }
+
+                                </div>
+                            </td>
+                            <td>
+                                <a href="#" data-cityId="@cityId.Key" class="Edit-Now btn btn-default">تایید</a><br /><br />
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+
+
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script>
+        $(document).ready(function () {
+
+            $(".Price").keyup(function () {
+                $(this).val(numberWithCommas(parseInt(removeComma($(this).val()))));
+
+            });
+
+            $("#ProvinceId").change(function () {
+                if ($("#ProvinceId").val() == "")
+                    $("#CityId option").remove();
+                else {
+
+                    $(".loading").show();
+                    $.ajax({
+                        type: "Get",
+                        url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#ProvinceId").val(),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            $("#CityId option").remove();
+                            $("#CityId").append("<option value='0'>--همه--</option>");
+                            for (var i = 0; i < response.data.length; i++) {
+
+                                $("#CityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                            }
+
+                            $(".loading").hide();
+                        }
+                    });
+                }
+            });
+
+            $("body").on("click change keyup keydown", ".Price,.limitation,.IsActive", function () {
+
+                if ($(this).hasClass("IsActive")) {
+                    var oldvalue = $(this).attr("data-old-value") == "true" || $(this).attr("data-old-value") == "True" ? true : false;
+
+                    if ($(this).is(":checked") != oldvalue)
+                        $(this).parent().attr("data-version", 1);
+                    else {
+                        $(this).parent().attr("data-version", 0);
+                    }
+                }
+                else {
+                    if ($(this).val() != $(this).attr("data-old-value")) {
+                        if ($(this).val())
+                            $(this).parent().attr("data-version", 1);
+                        else
+                            $(this).parent().attr("data-version", 0);
+                    }
+                    else {
+                        $(this).parent().attr("data-version", 0);
+                    }
+                }
+                var c = 0;
+                $(this).parent().parent().parent().parent().parent().find(".limitationContainerCost").each(function () {
+                    if (parseInt($(this).attr("data-version")) > 0)
+                        c++;
+                });
+                $(this).parent().parent().parent().parent().parent().find(".CostContainerCost").each(function () {
+                    if (parseInt($(this).attr("data-version")) > 0)
+                        c++;
+                });
+                $(this).parent().parent().parent().parent().parent().find(".IsActiveContainerCost").each(function () {
+                    if (parseInt($(this).attr("data-version")) > 0)
+                        c++;
+                });
+                if (c > 0) {
+                    $(this).parent().parent().parent().parent().parent().find(".Edit-Now").removeClass("btn-default");
+                    $(this).parent().parent().parent().parent().parent().find(".Edit-Now").addClass("btn-primary ok");
+                }
+                else {
+                    $(this).parent().parent().parent().parent().parent().find(".Edit-Now").removeClass("btn-primary ok");
+                    $(this).parent().parent().parent().parent().parent().find(".Edit-Now").addClass("btn-default");
+                }
+
+
+                //}
+
+
+            });
+
+            $(".Edit-Now").click(function (e) {
+                var $this = $(this);
+                $(".loading").show();
+                e.preventDefault();
+                var InputValid = true;
+                $(this).parent().parent().find("input").each(function () {
+                    if (!$(this).val())
+                        InputValid = false;
+                });
+                if ($(this).hasClass("ok") && InputValid) {
+
+                    var senwayPrices = [];
+                    $(this).parent().parent().find(".boxContainer").find(".box-name").each(function () {
+                        var obj = {
+                            sendwayId: parseInt($(this).parent().parent().parent().parent().parent().find(".sendwayNameContainer").attr("data-id")),
+                            cityId: parseInt($(this).parent().parent().parent().parent().parent().find(".cityContainer").attr("data-cityid")),
+                            SendWayBoxID: parseInt($(this).attr("data-id")),
+                            limitation: parseInt(removeComma($(this).parent().parent().parent().parent().parent().find(".limitationContainer").find(".limitation[data-selector=" + $(this).attr("data-selector") + "]").val())),
+                            value: parseInt(removeComma($(this).parent().parent().parent().parent().parent().find(".CostContainerCost").find(".Price[data-selector=" + $(this).attr("data-selector") + "]").val())),
+                            isActive: $(this).parent().parent().parent().parent().parent().find(".IsActiveContainerCost").find(".IsActive[data-selector=" + $(this).attr("data-selector") + "]").is(":checked")
+                        };
+                        senwayPrices.push(obj);
+                    });
+
+
+                    $.ajax({
+                        crossDomain: true,
+                        type: "POST",
+                        url: '/Admin/SendWays/UpdatePrice',
+                        data: JSON.stringify({ senwayPrices: senwayPrices }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.statuscode == 200) {
+                                $this.removeClass("btn-primary");
+                                $this.removeClass("ok");
+                                $this.addClass("btn-default");
+                                $this.parent().parent().each(function () {
+                                    $(this).find(".Price").each(function () {
+                                        var $this2 = $(this);
+                                        $(this).attr("data-old-value", $this2.val());
+                                    });
+                                    $(this).find(".limitation").each(function () {
+                                        var $this4 = $(this);
+                                        $(this).attr("data-old-value", $this4.val());
+                                    });
+                                    $(this).find("input[type='checkbox']").each(function () {
+                                        var $this3 = $(this);
+                                        $(this).attr("data-old-value", $this3.is(":checked"));
+                                    });
+                                });
+
+                                swal({ title: "", text: "ثبت شد", type: "success", showCancelButton: false, confirmButtonClass: 'btn-error', confirmButtonText: 'بستن' });
+                            }
+                            else {
+                                swal({ title: "", text: response.Message, type: "error", showCancelButton: false, confirmButtonClass: 'btn-error', confirmButtonText: 'بستن' });
+
+                            }
+                            $(".loading").hide();
+                        }
+                    });
+                }
+                else {
+
+                    swal({ title: "", text: "مقادیر را وارد نمایید", type: "error", showCancelButton: false, confirmButtonClass: 'btn-error', confirmButtonText: 'بستن' });
+                }
+            });
+
+            $("#btn-add").click(function () {
+                $(".loading").show();
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/SendWays/AddPrice/",
+                    data: JSON.stringify({
+                        SendwayId: $("#HfSendWay").val(), ProvinceId: $("#ProvinceId").val(), CityId: $("#CityId").val() != 0 ? $("#CityId").val() : null, IsActive: $("#IsActive").is(":checked")}),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        window.location.href = "/Admin/SendWays/ShippingSetting/" + $("#HfSendWay").val() + "?ProvinceId=" + $("#ProvinceId").val();
+                        $(".loading").hide();
+                    }
+                });
+            });
+            $("#btn-remove").click(function () {
+                $(".loading").show();
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/SendWays/RemovePrice/",
+                    data: JSON.stringify({ SendwayId: $("#HfSendWay").val(), ProvinceId: $("#ProvinceId").val(), CityId: $("#CityId").val() != 0 ? $("#CityId").val() : null }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        window.location.href = "/Admin/SendWays/ShippingSetting/" + $("#HfSendWay").val() + "?ProvinceId=" + $("#ProvinceId").val();
+                        $(".loading").hide();
+                    }
+                });
+            });
+
+            $(".PrvId").change(function () {
+                window.location.href = "/Admin/SendWays/ShippingSetting/" + $("#HfSendWay").val() + "?ProvinceId=" + $(this).val();
+            });
+
+        });
+
+        function removeComma(x) {
+            while (x.indexOf(',') > -1) {
+                x = x.replace(",", "");
+            }
+            return x;
+        }
+
+        function numberWithCommas(x) {
+            return x.toLocaleString();
+        }
+
+    </script>
+
+}

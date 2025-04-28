@@ -1,0 +1,77 @@
+﻿@model Domain.Social
+@using ahmadi.Infrastructure.Helper
+<time>حذف شبکه</time>
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            حذفِ شبکه
+        </h1>
+        <h4 style="color:red"><i class="glyphicon glyphicon-remove"></i> آیا مطمئن به حذف این رکورد هستید؟</h4>
+        <br /><br />
+        <p class="text text-danger"><strong>@ViewBag.Erorr</strong></p>
+
+        <dl class="dl-horizontal">
+            <dt>
+                کاور(تصویر)
+            </dt>
+
+            <dd>
+
+                @if (Model.Cover.HasValue)
+                {
+                    @Html.Displayattachment(Model.attachment.FileName, Model.Title, "SM", htmlAttributes: new { @class = "img-responsive", width = "220", height = "120", style = "display:inline-block;width:220px;height:120px" })
+                }
+            </dd>
+            <dt>آیکن</dt>
+            <dd>
+                <span style="font-size: 2em;" class="@Model.Icon"></span>
+            </dd>
+            <dt>
+                زبان ( وب سایت )
+            </dt>
+
+            <dd>
+                @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(Convert.ToInt16(Model.LanguageId))
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+
+            <dd>
+                <a href="@Model.Link" target="_blank">@Model.Title</a>
+            </dd>
+
+
+            <dt>
+                @Html.DisplayNameFor(model => model.DisplaySort)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DisplaySort)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.IsActive)
+            </dd>
+
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="حذف" class="btn btn-danger" />
+            </div>
+        }
+</div>
+</div>

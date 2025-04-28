@@ -1,0 +1,174 @@
+﻿html {
+    direction: rtl;
+}
+
+body {
+    direction: rtl;
+    text-align: right !important;
+    font-family: IRANSans,Tahoma;
+}
+
+header {
+    text-align: left;
+    padding: 2px 20px;
+}
+
+.main_content {
+    min-height: 550px;
+    background-image: url(images/ss.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#loginForm {
+    width: 60%;
+    padding: 35px 10%;
+}
+.reme {
+    margin: 30px auto;
+    width: 80%;
+}
+.form-group {
+    width: 80%;
+    border-radius: 0;
+    margin: 20px auto;
+}
+
+form {
+    background-color: #fff;
+    padding: 15px 10px;
+}
+.btn {
+    background: #fc5e28;
+    font-weight: 700;
+    width: 100%;
+    border-color: #fc5e28;
+    padding:20px 0;
+}
+.ulLogin {
+    padding-right: 10%;
+    margin-bottom:40px;
+}
+.ulLogin .active {
+    color: #000;
+    cursor: default;
+    position:relative;
+}
+.ulLogin .active:after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    bottom: -6px;
+    content: "";
+    width: 100%;
+    height: 4px;
+    background-color: #fc5e28;
+}
+    .ulLogin a {
+        color: #bababa;
+        font-size: 18px;
+        margin-left: 20px;
+    }
+.forgot a {
+    color: #808080;
+    font-size: 12px;
+    text-decoration: underline;
+}
+.ulLogin a:hover {
+    text-decoration: none
+}
+.Agree{font-size:12px}
+header a {
+    padding: 15px 0 !important;
+}
+
+footer {
+    text-align: center;
+    padding: 15px 0;
+    font-size: 12px;
+    direction: ltr;
+}
+
+@media(max-width:768px) {
+    #loginForm {
+        width: 100% !important;
+        padding: 35px 5% !important;
+    }
+
+        #loginForm .form-group {
+            width: 100% !important;
+            margin: 20px auto !important;
+        }
+}
+
+@font-face {
+    font-family: IRANSans;
+    font-style: normal;
+    font-weight: bold;
+    src: url("/fonts/IranNastaliq/eot/IRANSansWeb_Bold.eot");
+    src: url("/fonts/IranNastaliq/eot/IRANSansWeb_Bold.eot?#iefix") format('embedded-opentype'),url("/fonts/IranNastaliq/woff2/IRANSansWeb_Bold.woff2") format('woff2'),url("/fonts/IranNastaliq/woff/IRANSansWeb_Bold.woff") format('woff'),url("/fonts/IranNastaliq/ttf/IRANSansWeb_Bold.ttf") format('truetype')
+}
+
+@font-face {
+    font-family: IRANSans;
+    font-style: normal;
+    font-weight: 500;
+    src: url("/fonts/IranNastaliq/eot/IRANSansWeb_Medium.eot");
+    src: url("/fonts/IranNastaliq/eot/IRANSansWeb_Medium.eot?#iefix") format('embedded-opentype'),url("/fonts/IranNastaliq/woff2/IRANSansWeb_Medium.woff2") format('woff2'),url("/fonts/IranNastaliq/woff/IRANSansWeb_Medium.woff") format('woff'),url("/fonts/IranNastaliq/ttf/IRANSansWeb_Medium.ttf") format('truetype')
+}
+
+@font-face {
+    font-family: IRANSans;
+    font-style: normal;
+    font-weight: 300;
+    src: url("/fonts/IranNastaliq/eot/IRANSansWeb_Light.eot");
+    src: url("/fonts/IranNastaliq/eot/IRANSansWeb_Light.eot?#iefix") format('embedded-opentype'),url("/fonts/IranNastaliq/woff2/IRANSansWeb_Light.woff2") format('woff2'),url("/fonts/IranNastaliq/woff/IRANSansWeb_Light.woff") format('woff'),url("/fonts/IranNastaliq/ttf/IRANSansWeb_Light.ttf") format('truetype')
+}
+
+@font-face {
+    font-family: IRANSans;
+    font-style: normal;
+    font-weight: 200;
+    src: url("/fonts/IranNastaliq/eot/IRANSansWeb_UltraLight.eot");
+    src: url("/fonts/IranNastaliq/eot/IRANSansWeb_UltraLight.eot?#iefix") format('embedded-opentype'),url("/fonts/IranNastaliq/woff2/IRANSansWeb_UltraLight.woff2") format('woff2'),url("/fonts/IranNastaliq/woff/IRANSansWeb_UltraLight.woff") format('woff'),url("/fonts/IranNastaliq/ttf/IRANSansWeb_UltraLight.ttf") format('truetype')
+}
+
+@font-face {
+    font-family: IRANSans;
+    font-style: normal;
+    font-weight: normal;
+    src: url("/fonts/IranNastaliq/eot/IRANSansWeb.eot");
+    src: url("/fonts/IranNastaliq/eot/IRANSansWeb.eot?#iefix") format('embedded-opentype'),url("/fonts/IranNastaliq/woff2/IRANSansWeb.woff2") format('woff2'),url("/fonts/IranNastaliq/woff/IRANSansWeb.woff") format('woff'),url("/fonts/IranNastaliq/ttf/IRANSansWeb.ttf") format('truetype')
+}
+
+
+.field-validation-error {
+    color: #e80c4d !important;
+    font-weight: bold !important;
+    font-size: 0.8em;
+}
+
+.field-validation-valid {
+    display: none !important;
+}
+
+input.input-validation-error {
+    border: 1px solid #e80c4d !important;
+}
+
+textarea.input-validation-error {
+    border: 1px solid #e80c4d !important;
+}
+
+.validation-summary-errors {
+    color: #e80c4d !important;
+    font-weight: bold !important;
+    font-size: 0.9em !important;
+}
+.info-p {
+    font-size: 0.7em;
+    color: #ccc;
+    margin: 4px 0 0 0;
+}
+.navbar-brand img{max-width:150px}

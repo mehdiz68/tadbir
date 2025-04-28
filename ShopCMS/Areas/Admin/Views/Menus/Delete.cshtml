@@ -1,0 +1,82 @@
+﻿@model Domain.Menu
+@using ahmadi.Infrastructure.Helper
+<title>حذف منو</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            <i class="flaticon-menu"></i> حذفِ منو
+        </h1>
+            <h4 style="color:red"><i class="glyphicon glyphicon-remove"></i> آیا مطمئن به حذف این رکورد هستید؟</h4>
+            <br /><br />
+            <p class="text text-danger"><strong>@ViewBag.Erorr</strong></p>
+            <dl class="dl-horizontal">
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Title)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
+                <dt>
+                    منوی اصلی
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ParrentMenu.Title)
+                </dd>
+
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsActive)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.IsActive)
+
+                </dd>
+                <dt>
+                    زبان ( وب سایت )
+                </dt>
+
+                <dd>
+                    @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(Convert.ToInt16(Model.LanguageId))
+                </dd>
+
+                <dt>@Html.LabelFor(model => model.PlaceShow)</dt>
+                <dd>
+                    @if (Model.PlaceShow == 1)
+            {
+                        <span>هدر سایت</span>
+                    }
+                    else if (Model.PlaceShow == 2)
+                    {
+                        <span>فوتر سایت</span>
+
+                    }
+                    else
+                    {
+                        <span>هدر و فوتر</span>
+                    }
+                </dd>
+
+         
+                <content><br /></content>
+
+
+            </dl>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                    <input type="submit" value="حذف" class="btn btn-danger" />
+                </div>
+            }
+</div>
+</div>

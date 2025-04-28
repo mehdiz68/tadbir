@@ -1,0 +1,92 @@
+﻿@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+
+    Layout = "~/Views/Shared/_RegisterLayout.cshtml";
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+@section Header{
+    <style>
+        .time-container {
+            text-align: center
+        }
+
+        .countdown_time.countdown_style4 {
+            float: none !important;
+            direction: ltr;
+        }
+
+        .countdown_time .countdown_box {
+            float: none !important;
+            text-align: center !important;
+            display: inline-block !important;
+        }
+
+        .countdown_time.countdown_style4 .countdown_box * {
+            color: #000 !important;
+        }
+
+        .countdown_style4 .countdown_box .countdown-wrap {
+            margin: 5px !important;
+        }
+
+        .deal_timer .countdown_time .countdown_box .countdown {
+            border: 2px solid #000 !important;
+            display: block;
+            padding: 5px;
+        }
+
+        .countdown_time .cd_text {
+            display: block;
+            font-family: IRANSans,Tahoma;
+            margin-top: 1px;
+            background-color: transparent;
+            font-size: 10px;
+        }
+    </style>
+}
+
+
+<section id="loginForm">
+
+    @using (Html.BeginForm("VerifyPhone", "Account", FormMethod.Post, new { @class = "form-horizontal", name = "VerifyPhoneForm", role = "form" }))
+    {
+        <p class="text-danger"> @ViewBag.Error </p>
+
+        <p class="alert alert-info Team-Description text-center">کد فعال سازی به شماره موبایل شما ارسال شد.</p>
+        <div class="time-container">
+            <span class="text-deal"> فرصت باقی مانده تا فعال سازی : </span>
+            <div class="deal_timer">
+                <div class="countdown_time countdown_style4" data-time="@ViewBag.ActiveTempCodeExpire"></div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+        @Html.AntiForgeryToken()
+        @Html.Hidden("userName", ViewBag.mobile as string)
+        @Html.TextBox("code", null, new { @type = "number", @class = "form-control", Placeholder = "کد فعال سازی را وارد نمایید" })
+        <br />
+        <input type="button" onclick="document.VerifyPhoneForm.submit();" class="btn btn-primary" value="تایید تلفن همراه" /><br /><br />
+    }
+
+
+</section>
+
+
+@section Scripts{
+    <script>
+        $('.countdown_time').each(function () {
+            var endTime = $(this).data('time');
+            $(this).countdown(endTime, function (tm) {
+                if (parseInt(tm.strftime('%D')) == 0) {
+                    $(this).html(tm.strftime('</div><div class="countdown_box"><div class="countdown-wrap"><span class="countdown minutes">%M</span><span class="cd_text">دقیقه</span></div></div><div class="countdown_box"><div class="countdown-wrap"><span class="countdown seconds">%S</span><span class="cd_text">ثانیه</span></div></div>'));
+                }
+                else {
+                    $(this).html(tm.strftime('<div class="countdown_box"><div class="countdown-wrap"><span class="countdown days">%D </span><span class="cd_text">روز</span></div></div><div class="countdown_box"><div class="countdown-wrap"><span class="countdown minutes">%M</span><span class="cd_text">دقیقه</span></div></div><div class="countdown_box"><div class="countdown-wrap"><span class="countdown seconds">%S</span><span class="cd_text">ثانیه</span></div></div>'));
+                }
+            });
+        });
+    </script>
+}

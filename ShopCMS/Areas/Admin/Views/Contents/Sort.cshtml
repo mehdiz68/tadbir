@@ -1,0 +1,137 @@
+﻿@model PagedList.IPagedList<Domain.Content>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+<title>مرتب سازی نمایش  @ViewBag.ContentTypeName</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+}
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Content.css" rel="stylesheet" />
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <a href="@Url.Action("Sort", "Contents",new { ContentTypeId=Request.QueryString["ContentTypeId"]})">
+                <i class="flaticon-folder-filled-shape"></i> مرتب سازی نمایش @ViewBag.ContentTypeName
+                <span style="cursor:pointer" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+            </a>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+            <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index","Contents",new { ContentTypeId=Request.QueryString["ContentTypeId"]})"> بازگشت به مدیریت @ViewBag.ContentTypeName <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+        <hr style="margin:0;border:1px solid #000" />
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+                            عنوان
+                        </th>
+                        <th class="text-center column-title">
+                            کاور تصویر
+                        </th>
+
+                        <th class="text-center column-title">
+                            بازدید
+                        </th>
+                        <th class="text-center column-title">
+                            تاریخ ثبت
+                        </th>
+                        <th class="text-center column-title">
+                            فعال
+                        </th>
+                        <th class="text-center column-title">
+                            زبان وب سایت
+                        </th>
+
+                        <th class="text-center column-title"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="rowItem" id="@item.Id">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @if (item.Cover.HasValue)
+                                {
+                                    @Html.Displayattachment(item.attachment.FileName,item.Title, "SM", htmlAttributes: new { @class = "img-responsive", width = "110", height = "60", style = "display:inline-block;width:110px;height:60px" })
+                                }
+                                else
+                                {
+                                    <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:110px;height:60px" />
+                                }
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Visits)
+                            </td>
+                            <td>
+                                @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate) <br /> @item.InsertDate.ToShortTimeString()
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsActive)
+                            </td>
+                            <td>
+                                @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId.Value)
+                            </td>
+                            <td>
+                                @if (ViewBag.EditPermission)
+                                {
+                                    <a class="btn btn-info" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                }
+                                @if (ViewBag.DeletePermission)
+                                {
+                                    <a class="DeleteContent btn btn-danger" href="@Url.Action("DeleteConfirmed", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p>
+                <strong>
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount @ViewBag.ContentTypeName
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+
+
+
+
+
+
+        </div>
+
+        @section Scripts{
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/View/SortContents.js"></script>
+
+        }
+</div>
+</div>

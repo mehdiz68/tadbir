@@ -1,0 +1,103 @@
+﻿@model PagedList.IPagedList<Domain.UserMessage>
+
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var UserBonLogs = ViewBag.UserBonLogs as PagedList.IPagedList<Domain.UserBonLog>;
+    int i = 0;
+}
+
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+<div class="container" id="Messages">
+    <h1>
+        <span>  پیام ها </span>
+        <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+    </h1>
+
+
+    <div>
+        <div>
+            <h6>پیام های ارسالی از طرف وب سایت در اینجا قابل مشاهده می باشد.</h6><br />
+            @if (!Model.Any())
+            {
+                <p class="alert alert-danger">شما پیامی ندارید !</p>
+            }
+
+            <div class="">
+                @foreach (var item in Model)
+                {
+                    <div class="Message">
+                        <p>
+                            @if (item.UserIdTo == null)
+                            {
+                                <span class="alert alert-danger">پیام همگانی</span>
+                            }
+                            else
+                            {
+                                <span class="alert alert-info"> پیام اختصاصی </span>
+                            }
+                        </p>
+                        <p><strong>عنوان : </strong> @item.Title</p>
+                        <p><strong>تاریخ : </strong>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate)</p>
+
+                        <!-- Trigger the modal with a button -->
+                        <button type="button" class="btn btn-info openMessage" data-id="@item.Id" data-toggle="modal" data-target="@("#myModal"+i)">مشاهده پیام</button>
+
+                        <!-- Modal -->
+                        <div id="@("myModal"+i)" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title text-right">@item.Title</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            @Html.Raw(item.Text)
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <hr />
+                    </div>
+                    i++;
+                }
+
+            </div>
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+                </strong>
+                <br /> <br />
+
+                @Html.PagedListPager(Model, Page => "/Profile/Messages?page=" + Page)
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+
+</div>
+

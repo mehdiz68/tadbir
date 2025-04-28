@@ -1,0 +1,142 @@
+﻿@model Domain.UserAddress
+
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+}
+
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+
+
+<div class="container" id="addresses">
+    <h1>
+        <span> اضافه کردن آدرس جدید</span>
+        <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+    </h1>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+
+        if (ViewBag.error != null)
+        {
+            <p class="alert alert-danger">@ViewBag.error</p>
+        }
+        <div class="form-horizontal">
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <label>نام و نام خانوادگی</label>
+                    @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+
+                </div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <label>تلفن همراه</label>
+                    @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+
+                </div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <label>تلفن ثابت</label>
+                    @Html.TextBoxFor(m => m.LandlinePhone, new { @class = "form-control" })
+
+                </div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <label>استان</label>
+                    @Html.DropDownList("ProvinceId", ViewBag.ProvinceList as SelectList, "--انتخاب استان--", htmlAttributes: new { @class = "form-control " })
+
+                </div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <label>شهر</label>
+                    <select id="CityId" name="CityId" class="form-control">
+                    </select>
+
+                </div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <label>کد پستی</label>
+                    @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control" })
+
+                </div>
+                <div class="form-group has-feedback col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6">
+                            <label> پلاک </label>
+                            @Html.TextBoxFor(m => m.AddressNumber, new { @class = "form-control" })
+
+                        </div>
+
+                        <div class="col-xs-6 col-sm-6">
+                            <label> واحد </label>
+                            @Html.TextBoxFor(m => m.AddressUnit, new { @class = "form-control" })
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <br />
+                    <label>آدرس</label>
+                    @Html.TextAreaFor(m => m.Address, new { @class = "form-control", rows = "5" })
+                </div>
+
+                <input type="hidden" value="@ViewBag.returnurl" />
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-primary" value="ایجاد" />
+                </div>
+            </div>
+
+
+        </div>
+    }
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $('#PhoneNumber').on('input', function (event) {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+            $('#LandlinePhone').on('input', function (event) {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+            $('#PostalCode').on('input', function (event) {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+            $("#FullName").on('change keyup paste keydown', function (e) {
+
+                if (just_persian(e.key, e.keyCode) === false) {
+                    e.preventDefault();
+                    alert("کیبرد خود را روی فارسی قرار دهید");
+                }
+            });
+
+            $("#ProvinceId").change(function () {
+                $(".loading").show();
+                $.ajax({
+                    type: "Get",
+                    url: "/Profile/GetCities?ProvinceId=" + $("#ProvinceId").val(),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $("#CityId option").remove();
+                        for (var i = 0; i < response.data.length; i++) {
+
+                            $("#CityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                        }
+
+                        $(".loading").hide();
+                    }
+                });
+            });
+        });
+    </script>
+}

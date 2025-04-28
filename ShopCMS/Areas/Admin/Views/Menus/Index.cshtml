@@ -1,0 +1,213 @@
+﻿@model PagedList.IPagedList<Domain.Menu>
+@using ahmadi.Infrastructure.Helper;
+@using PagedList.Mvc;
+<title>مدیریت منو</title>
+@{
+    var menus = ViewBag.RootMenu as IEnumerable<Domain.Menu>;
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+    <style>
+        #tree {
+            padding-right: 110px;
+            padding-bottom: 160px;
+        }
+
+        /*.tree li a:hover, .tree li a:hover + ul li a {
+            color: #000 !important;
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }*/
+
+        .hilight {
+            background: #3c8dbc;
+            color: #ffffff !important;
+            border: 1px solid #3c8dbc;
+        }
+
+        .tree li {
+            border: 0;
+            padding-top: 10px;
+        }
+
+            .tree li a {
+                font-size: 12px;
+                font-weight: normal !important;
+            }
+    </style>
+}
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    @*Pagging*@
+    <link href="~/Content/Base/Css/PagedList.css" rel="stylesheet" type="text/css" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            <a href="@Url.Action("Index","Menus")"> <i class="flaticon-menu"></i> مدیریت منو</a>
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+        </h1>
+
+        <div class="text-left">
+            <a class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="مرتب سازی").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="مرتب سازی").First().Abstract:"")" href="~/Admin/Menus/Sort"> مرتب سازی <span class="glyphicon glyphicon-list"></span></a>
+
+        </div>
+        <br /><br />
+        @if (ViewBag.AddPermission)
+        {
+            <p><a class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد منوی اصلی").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد منوی اصلی").First().Abstract:"")" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد منوی اصلی</a></p>
+        }
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><span class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").First().Abstract:"")"></span> جستجو / فیلتر</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content" style="display:none">
+                <div id="SearchPage">
+                    <div>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+
+                            @using (Html.BeginForm("Index", "Menus", FormMethod.Get))
+                            {
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("PlaceShowString", ViewBag.PlaceShow as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "محل نمایش", style = "width:90%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("LanguagenameString", ViewBag.LanguagenameSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان ( وب سایت )", style = "width:90%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-language form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="clearfix"></div>
+
+                                <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                @Html.ActionLink("نمایش همه", "Index", null, htmlAttributes: new { @class = "btn btn-primary" })
+                            }
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div><span class="glyphicon glyphicon-sort"></span> @Html.ActionLink("مرتب سازی بر اساس محل نمایش صعودی", "Index", new { sortOrder = "PlaceShow", PlaceShowFilter = ViewBag.PlaceShowFilter, LanguagenameFilter = ViewBag.LanguagenameFilter }, htmlAttributes: new { @title = "مرتب سازی بر اساس محل نمایش صعودی" })</div>
+                            <div><span class="glyphicon glyphicon-sort"></span> @Html.ActionLink("مرتب سازی بر اساس محل نمایش نزولی", "Index", new { sortOrder = "PlaceShow_desc", PlaceShowFilter = ViewBag.PlaceShowFilter, LanguagenameFilter = ViewBag.LanguagenameFilter }, htmlAttributes: new { @title = "مرتب سازی بر اساس محل نمایش نزولی" })</div>
+
+                            <div><span class="glyphicon glyphicon-sort"></span> @Html.ActionLink("مرتب سازی بر اساس محل زبان ( الف - ی )", "Index", new { sortOrder = "Language", PlaceShowFilter = ViewBag.PlaceShowFilter, LanguagenameFilter = ViewBag.LanguagenameFilter }, htmlAttributes: new { @title = "مرتب سازی بر اساس محل نمایش صعودی" })</div>
+                            <div><span class="glyphicon glyphicon-sort"></span> @Html.ActionLink("مرتب سازی بر اساس محل نمایش ( ی - الف )", "Index", new { sortOrder = "Language_desc", PlaceShowFilter = ViewBag.PlaceShowFilter, LanguagenameFilter = ViewBag.LanguagenameFilter }, htmlAttributes: new { @title = "مرتب سازی بر اساس محل نمایش نزولی" })</div>
+
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="View2">
+
+            <div class="tree" style="padding:0 15px">
+                <ul id="tree" style="margin: 0;padding: 0 50px 160px 0;">
+                    @foreach (var item in menus.Where(x => x.ParrentMenu == null))
+                    {
+                        <li @(item.TypeId != 8 ? "class=allow" : "") data-type="@item.TypeId">
+                            <a data-id="@item.Id" data-type="@item.TypeId" href="#">@item.Title</a>
+                            @if (item.ChildMenu.Any())
+                            {
+                                <ul class="subItem">
+                                    @foreach (var item2 in item.ChildMenu)
+                                    {
+                                        <li class="allow" data-type="@item2.TypeId">
+                                            <a data-id="@item2.Id" data-type="@item2.TypeId" href="#">@item2.Title</a>
+                                            @if (item2.ChildMenu.Any())
+                                            {
+                                                <ul class="subItem">
+                                                    @foreach (var item3 in item2.ChildMenu)
+                                                    {
+                                                        <li @(item.TypeId != 8 ? "class=allow" : "class=allowProduct") data-type="@item3.TypeId">
+                                                            <a data-id="@item3.Id" data-type="@item3.TypeId" href="#">@item3.Title</a>
+                                                            @if (item3.ChildMenu.Any())
+                                                            {
+                                                                <ul class="subItem">
+                                                                    @foreach (var item4 in item3.ChildMenu)
+                                                                    {
+                                                                        <li @(item.TypeId != 8 ? "class=allow" : "") data-type="@item4.TypeId"><a data-id="@item4.Id" data-type="@item4.TypeId" href="#">@item4.Title</a></li>
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                        </li>
+                                                    }
+                                                </ul>
+
+
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </li>
+                    }
+                </ul>
+
+
+
+
+
+
+            </div>
+            <ul id="ContexMenu" style="width: 150px; text-align: center; display: none">
+                @if (ViewBag.AddPermission)
+                {
+                    <li id="NewSubMenu"><span>زیر منو جدید</span><span class="ui-icon ui-icon-circle-check"></span><span style="right: 1.3em" class="ui-icon ui-icon-circle-check"></span></li>
+                }
+                else
+                {
+                    <li><span style="text-decoration-line:line-through">زیر منو جدید</span><span class="ui-icon ui-icon-circle-check"></span><span style="right: 1.3em" class="ui-icon ui-icon-circle-check"></span></li>
+
+                }
+                @if (ViewBag.EditPermission)
+                {
+                    <li id="EditItem"><span>ویرایش</span><span class="ui-icon ui-icon-pencil"></span></li>
+                }
+                else
+                {
+                    <li><span style="text-decoration-line:line-through">ویرایش</span><span class="ui-icon ui-icon-pencil"></span></li>
+                }
+                @if (ViewBag.DeletePermission)
+                {
+                    <li id="DeleteItem"><span>حذف</span><span class="ui-icon ui-icon-circle-close"></span></li>
+                }
+                else
+                {
+                    <li style="text-decoration-line:line-through"><span>حذف</span><span class="ui-icon ui-icon-circle-close"></span></li>
+
+                }
+            </ul>
+
+        </div>
+
+
+
+
+
+    </div>
+</div>
+@section Scripts{
+    <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/Base/jquery.ui-contextmenu.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/View/Menu.js?v=100.3"></script>
+}

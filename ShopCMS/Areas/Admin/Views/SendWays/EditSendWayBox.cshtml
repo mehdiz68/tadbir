@@ -1,0 +1,112 @@
+﻿@model Domain.SendwayBox
+
+@using CoreLib;
+
+<title>ویرایش باکس ارسال</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("SendWayBoxes")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ویرایش باکس ارسال @Model.Title
+
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.error</p>
+
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(x => x.Id)
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.Title)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.Title, htmlAttributes: new { @class = "form-control", placeholder = Html.DisplayNameFor(x => x.Title) })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.Height)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.Height, htmlAttributes: new { type = "number", @class = "form-control", placeholder = Html.DisplayNameFor(x => x.Height) })
+                        @Html.ValidationMessageFor(model => model.Height, "", new { @class = "text-danger" })
+
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.Width)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.Width, htmlAttributes: new { type = "number", @class = "form-control", placeholder = Html.DisplayNameFor(x => x.Width) })
+                        @Html.ValidationMessageFor(model => model.Width, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.Lenght)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.Lenght, htmlAttributes: new { type = "number", @class = "form-control", placeholder = Html.DisplayNameFor(x => x.Lenght) })
+
+                        @Html.ValidationMessageFor(model => model.Lenght, "", new { @class = "text-danger" })
+
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.ProductWeight)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.ProductWeight, htmlAttributes: new { type = "number", @class = "form-control", placeholder = Html.DisplayNameFor(x => x.ProductWeight) })
+                        @Html.ValidationMessageFor(model => model.ProductWeight, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.ProductPackageType)</span>
+
+                        </p>
+                        <select id="ProductPackageType" name="ProductPackageType" class="form-control">
+                            <option selected="@(Model.ProductPackageType == Domain.ProductPackageType.normal?true:false)" value="@Domain.ProductPackageType.normal">@Domain.ProductPackageType.normal.EnumDisplayNameFor()</option>
+                            <option selected="@(Model.ProductPackageType == Domain.ProductPackageType.medium?true:false)" value="@Domain.ProductPackageType.medium">@Domain.ProductPackageType.medium.EnumDisplayNameFor()</option>
+                            <option selected="@(Model.ProductPackageType == Domain.ProductPackageType.high?true:false)" value="@Domain.ProductPackageType.high">@Domain.ProductPackageType.high.EnumDisplayNameFor()</option>
+                        </select>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.Description)</span>
+
+                        </p>
+                        @Html.TextAreaFor(model => model.Description, htmlAttributes: new { @class = "form-control", rows = "4", placeholder = Html.DisplayNameFor(x => x.Description) })
+                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+
+                <input type="submit" value="ویرایش" class="btn btn-primary" style="border-radius:0" />
+            </div>
+        }
+    </div>
+</div>
+
+

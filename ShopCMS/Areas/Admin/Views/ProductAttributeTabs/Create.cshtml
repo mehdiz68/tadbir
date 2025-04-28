@@ -1,0 +1,87 @@
+﻿@model Domain.ProductAttributeTab
+@{ 
+
+    var setting = ViewBag.setting as Domain.Setting;
+}
+<title>ایجاد تب جدید </title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ایجاد تب جدید
+
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @if (ViewBag.message != null)
+                {
+                    <p class="alert alert-danger">@ViewBag.message</p>
+                }
+
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { placeholder = "عنوان", @class = "form-control" } })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+                @{
+                    CoreLib.ViewModel.Xml.XMLReader readXml = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+                    var languages = readXml.ListOfXLanguage();
+                }
+                @if (languages.Count == 1)
+                {
+                    @Html.Hidden("LanguageId", languages.First().Id)
+                }
+                else
+                {
+                    <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        @Html.LabelFor(model => model.LanguageId, "زبان ( وب سایت )", htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.DropDownList("LanguageId", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.LanguageId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="control-label col-md-1">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-11">
+
+                        @Html.TextBoxFor(m => m.Icon, new { @class = "form-control", placeholder = "آیکن", @readonly = "readonly" })
+                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                        <p>
+                            <label type="button" class="btn btn-primary" data-toggle="modal" data-target="#IconsModalLong">
+                                <label class="fa fa-hand-o-left"></label> لیست آیکن ها
+                            </label>
+
+                            @Html.Action("GetIconList", "Home")
+                        </p>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <input type="submit" value="ایجاد" class="btn btn-success" />
+                </div>
+            </div>
+                    }
+
+        @section Scripts{
+
+            <script src="~/Areas/Admin/Content/Scripts/Component/IconList.js"></script>
+
+        }
+
+    </div>
+</div>

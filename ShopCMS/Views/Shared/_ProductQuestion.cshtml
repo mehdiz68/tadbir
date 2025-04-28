@@ -1,0 +1,52 @@
+﻿@model Domain.ProductQuestion
+
+<script src="~/Content/Base/Scripts/View/_Question.js"></script>
+
+
+<div class="section-sm section-bottom-0">
+    <!-- RD Mailform-->
+    @using (Ajax.BeginForm("AddQuestion", "Product", null, new AjaxOptions { HttpMethod = "POST", OnBegin = "onBeginSubmitAddComment", OnSuccess = "ShowCommentSuccess", OnFailure = "ShowCommentFailure", InsertionMode = InsertionMode.Replace }, new { id = "AddQuestion", @class = "c-form-faq" }))
+    {
+
+
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(model => model.ProductId)
+        <input type="hidden" id="ProductQuestionId" name="ProductQuestionId" />
+
+
+        <div class="c-form-faq__row">
+            <div class="c-form-faq__col">
+                <div class="c-ui-textarea">
+                    @Html.TextAreaFor(model => model.Message, new { @class = "c-ui-textarea__field", rows = "5" })
+                    @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="c-form-faq__row">
+            <div class="c-form-faq__col c-form-faq__col--submit">
+                <button class="btn btn-info" type="submit" data-event="submit_question" data-event-category="product_page" data-event-label="logged_in: False">
+                    ثبت پرسش
+                </button>
+            </div>
+            <div class="c-form-faq__col c-form-faq__col--agreement">
+                <label for="agreement-check">
+                    با انتخاب دکمه “ثبت پرسش”، موافقت خود را با <a href="#">قوانین انتشار محتوا</a>
+                    اعلام می کنم.
+                </label>
+
+            </div>
+        </div>
+
+    }
+
+
+
+
+</div>
+
+
+
+
+

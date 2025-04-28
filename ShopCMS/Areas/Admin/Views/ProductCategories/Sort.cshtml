@@ -1,0 +1,125 @@
+﻿@model PagedList.IPagedList<Domain.ProductCategory>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+<title>مرتب سازی گروه و زیر گروه محصول</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+}
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Category.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <a href="~/Admin/ProductCategories/Sort">  مرتب سازی گروه و زیر گروه محصول </a>
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+            <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index","ProductCategories")"> بازگشت به گروه و زیر گروه محصول <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        </div>
+        <div class="clearfix"></div>
+        <br />
+        @if (ViewBag.ParrentCat != null)
+        {
+            var ParrentCat = ViewBag.ParrentCat as Domain.ProductCategory;
+            <ul class="breadcrumb" style="direction:ltr">
+                <li><a href="@Url.Action("Sort","ProductCategories",new {id= ParrentCat.Id })">@ParrentCat.Title</a></li>
+                @while (ParrentCat.ParrentId.HasValue)
+                {
+
+                    <li><a href="@Url.Action("Sort","ProductCategories",new {id= ParrentCat.ParrentId })">@ParrentCat.ParentCat.Title</a></li>
+                    ParrentCat = ParrentCat.ParentCat;
+                }
+                <li><a href="~/Admin/ProductCategories/Sort">مرتب سازی</a></li>
+            </ul>
+        }
+        <br /><br />
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+
+                    <th>
+                        عنوان
+                    </th>
+                    <th>
+                        گروه و زیر گروه محصول اصلی
+                    </th>
+                    <td>فعال</td>
+                    <th>
+                        زبان وب سایت
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr class="rowItem" id="@item.Id">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @{
+                                if (item.ParentCat != null)
+                                {
+                                    @Html.DisplayFor(modelItem => item.ParentCat.Title);
+                                }
+                                else
+                                {
+                                    <span>----</span>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsActive)
+                        </td>
+                        <td>
+                            @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId.Value)
+                        </td>
+
+                        <td>
+                            @if (ViewBag.EditPermission)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                            }
+                            @if (ViewBag.DeletePermission)
+                            {
+                                <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                            }
+
+                            @if (item.ChildCategory.Any())
+                            {
+                                <a class="btn btn-success" href="@Url.Action("Sort",new { id=item.Id})">مرتب سازی زیرگروهها</a>
+                            }
+
+                        </td>
+                    </tr>
+                                }
+
+            </table>
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount گروه و زیر گروه محصول.
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("SortProductCategories", new { page }))
+
+
+        </div>
+
+        @section Scripts{
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/View/SortProductCategory.js"></script>
+
+        }
+</div>
+</div>

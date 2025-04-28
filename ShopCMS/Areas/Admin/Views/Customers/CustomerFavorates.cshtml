@@ -1,0 +1,61 @@
+﻿@model PagedList.IPagedList<Domain.ProductFavorate>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure
+@{
+    var user = ViewBag.user as Domain.ApplicationUser;
+    var products = ViewBag.Products as IEnumerable<Domain.ViewModels.ProductItem>;
+    var folders = ViewBag.folders;
+    int i = 0;
+}
+<title>محصولات مورد علاقه @user.FirstName @user.LastName</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <h3 class="box-title">
+            <i class="flaticon-tag-filled-tool"></i> محصولات مورد علاقه @user.FirstName @user.LastName
+
+        </h3>
+        <br /><br />
+
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr>
+                        <th>محصول</th>
+                        <th>پوشه</th>
+                        <th>توضیحات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var Product = products.Where(x => x.Id == item.ProductId).FirstOrDefault();
+                        <tr>
+                            <td>
+                                <p><a target="_blank" href="~/Product/@Product.Id/@CommonFunctions.NormalizeAddress(Product.Title) ">@Html.Displayattachment(Product.MainImageFileName,Product.Title, "SM",true, new { style = "max-height:100px", @Class = "img-responsive" })</a></p>
+                                <p><a target="_blank" href="~/Product/@Product.Id/@CommonFunctions.NormalizeAddress(Product.Title)"><span>@Product.Title</span></a></p>
+
+                            </td>
+                            <td><span class="orang">گروه @item.FolderName</span></td>
+                            <td><p>@item.Description</p></td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount مورد علاقه.
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, StartDateFilter = ViewBag.StartDateFilter, EndDateFilter = ViewBag.EndDateFilter }))
+
+
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>

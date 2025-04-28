@@ -1,0 +1,339 @@
+﻿@model PagedList.IPagedList<Domain.Content>
+@using ahmadi.Infrastructure.Helper;
+@using PagedList.Mvc;
+@using CoreLib.Infrastructure;
+<title>مدیریت  @ViewBag.ContentTypeName</title>
+@{
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+}
+
+@section Header{
+
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    @*Pagging*@
+    <link href="~/Content/Base/Css/PagedList.css" rel="stylesheet" type="text/css" />
+    <style>
+        .tree li {
+            padding: 6px 5px 0px 5px;
+        }
+
+            .tree li a {
+                padding: 4px;
+                font-weight: normal;
+                font-size: 12px;
+            }
+    </style>
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <input type='hidden' value='@Request.QueryString["CatId"]' id='HdnCatId' />
+        <input type='hidden' value='@Request.QueryString["ContentTypeId"]' id='HdnContentTypeId' />
+
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+
+            <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+                <a href="@Url.Action("Index","Contents",new { ContentTypeId=ViewBag.contenttypeid})">
+                    مدیریت @ViewBag.ContentTypeName
+
+
+                </a>
+            </h1>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+            <a class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="مرتب سازی").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="مرتب سازی").First().Abstract:"")" href="@Url.Action("Sort", "Contents",new { ContentTypeId=ViewBag.contenttypeid})"><span class="glyphicon glyphicon-list-alt"></span> مرتب سازی  </a>
+
+
+
+        </div>
+        <div class="clearfix"></div>
+
+        <br /><br />
+        <p>
+            @if (ViewBag.AddPermission)
+            {
+                <a class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد").First().Abstract:"")" href="@Url.Action("Create",new { ContentTypeId=ViewBag.contenttypeid})"><span class="glyphicon glyphicon-plus"></span> ایجاد @ViewBag.ContentTypeShortName جدید </a>
+            }
+            <a class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="دسته بندی ها").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="دسته بندی ها").First().Abstract:"")" href="@Url.Action("Index", "Categories",new { ContentTypeId=ViewBag.contenttypeid})"><span class="glyphicon glyphicon-list-alt"></span> دسته بندی های @ViewBag.ContentTypeName</a>
+
+        </p>
+
+
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><span class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").First().Abstract:"")"></span> جستجو / فیلتر</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content" style="display:none">
+
+                <div id="SearchPage">
+                    <div>
+                        <div>
+
+                            @using (Html.BeginForm("Index", "Contents", FormMethod.Get))
+                            {
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("TitleString", ViewBag.TitleFilter as string, htmlAttributes: new { placeholder = "عنوان", style = "width:90%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("InsertDateStart", ViewBag.InsertDateStartFilter as string, htmlAttributes: new { placeholder = "تاریخ درج از ", style = "width:90%;display: inline-block", @class = "form-control", onclick = "displayDatePicker('InsertDateStart');" })
+                                    <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("InsertDateEnd", ViewBag.InsertDateEndFilter as string, htmlAttributes: new { placeholder = "تا", style = "width:90%;display: inline-block", @class = "form-control", onclick = "displayDatePicker('InsertDateEnd');" })
+                                    <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="clearfix"></div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("LanguagenameString", ViewBag.LanguagenameSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان ( وب سایت )", style = "width:90%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-language form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("UpdateDateStart", ViewBag.UpdateDateStartFilter as string, htmlAttributes: new { placeholder = "تاریخ ویرایش از ", style = "width:90%;display: inline-block", @class = "form-control", onclick = "displayDatePicker('UpdateDateStart');" })
+                                    <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("UpdateDateEnd", ViewBag.UpdateDateEndFilter as string, htmlAttributes: new { placeholder = "تا", style = "width:90%;display: inline-block", @class = "form-control", onclick = "displayDatePicker('UpdateDateEnd');" })
+                                    <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("IsActive", ViewBag.IsActiveSelectListItem as SelectList, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "فعال/غیرفعال", style = "width:99%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-lock form-control-feedback right" aria-hidden="true"></span>
+
+
+                                </div>
+                                @Html.Hidden("ContentTypeId", ViewBag.contenttypeid as int?)
+                                <div class="clearfix"></div>
+
+                                <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                @Html.ActionLink("نمایش همه", "Index", new { ContentTypeId = ViewBag.contenttypeid }, htmlAttributes: new { @class = "btn btn-success" })
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <div style="margin:0;padding:0">
+            <div class="tree col-lg-2 col-md-2 col-sm-2 col-xs-12" style="padding:0;border:1px solid #f4f4f4;overflow:hidden">
+                <p class="text-center" style="padding-top:5px">
+                    <span class="glyphicon glyphicon-list-alt"></span> فیلتر با دسته بندی
+
+                    <span style="cursor:pointer" class="js-mytooltip-click glyphicon glyphicon-question-sign js-mytooltip type-inline-block style-block style-block-three system-mytooltip--base" data-mytooltip-custom-class="align-center" data-mytooltip-direction="bottom" data-mytooltip-action="click" data-mytooltip-content="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="فیلتر با دسته بندی").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="فیلتر با دسته بندی").First().Abstract:"")" title="راهنمای این صفحه"></span>
+
+                </p>
+                <hr style="border: 1px dashed rgb(204, 204, 204);margin-top:29px">
+                <ul style="padding:0;">
+                    <li>
+                        <a data-id="0" href="@Url.Action("Index", new { CatId = 0,sortOrder = ViewBag.CurrentSort, TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, IsDeleteFilter = ViewBag.IsDeleteFilter, IsActiveFilter = ViewBag.IsActiveFilter, ContentTypeIdFilter = ViewBag.ContentTypeIdFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, UpdateDateStartFilter = ViewBag.UpdateDateStartFilter, UpdateDateEndFilter = ViewBag.UpdateDateEndFilter, DeleteDateStart = ViewBag.DeleteDateStart, DeleteDateEnd = ViewBag.DeleteDateEnd })">
+                            <span>
+                                بدون دسته بندی ها
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        @{
+                            var categories = ViewBag.Categories as IEnumerable<Domain.Category>;
+                            var ContentTypes = ViewBag.ContentTypes as IEnumerable<CoreLib.ViewModel.Xml.XContentType>;
+                        }
+                        @foreach (var ContentTypeItem in ContentTypes.Where(x => x.Id == Convert.ToInt32(ViewBag.contenttypeid)))
+                        {
+                            <a data-id="@ContentTypeItem.Id" href="@Url.Action("Index","Contents",new { ContentTypeId=ContentTypeItem.Id})">
+                                <span>
+                                    @ContentTypeItem.Name
+                                </span>
+                            </a>
+                            <br />
+                            @(Html.TreeView(categories.Where(x => x.ContentTypeId == ContentTypeItem.Id)).EmptyContent("دسته بندی ای وجود ندارد!").Children(m => m.ChildCategory).HtmlAttributes(new { id = "tree" }).ChildrenHtmlAttributes(new { @class = "subItem" }).ItemText(m => m.Title).ItemTemplate(@<text><a data-id="@item.Id" href="@Url.Action("Index", new { CatId = item.Id,sortOrder = ViewBag.CurrentSort, TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter,  IsDeleteFilter = ViewBag.IsDeleteFilter, IsActiveFilter = ViewBag.IsActiveFilter, ContentTypeIdFilter = ViewBag.ContentTypeIdFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, UpdateDateStartFilter = ViewBag.UpdateDateStartFilter, UpdateDateEndFilter = ViewBag.UpdateDateEndFilter, DeleteDateStart = ViewBag.DeleteDateStart, DeleteDateEnd = ViewBag.DeleteDateEnd })">@item.Title</a></text>))
+
+                            <br />
+                        }
+                    </li>
+                </ul>
+
+            </div>
+
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+
+                <div class="table-responsive">
+                    <table class="table table-striped jambo_table bulk_action">
+                        <thead>
+                            <tr class="headings">
+                                <th class="text-center column-title">
+                                    <p class="text-center">
+                                        <span>عنوان</span>
+                                        <span>
+                                            <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Title", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, CatFilter = ViewBag.CatFilter, IsDeleteFilter = ViewBag.IsDeleteFilter, ContentTypeId = ViewBag.contenttypeid, IsActiveFilter = ViewBag.IsActiveFilter, ContentTypeIdFilter = ViewBag.ContentTypeIdFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, UpdateDateStartFilter = ViewBag.UpdateDateStartFilter, UpdateDateEndFilter = ViewBag.UpdateDateEndFilter, DeleteDateStart = ViewBag.DeleteDateStart, DeleteDateEnd = ViewBag.DeleteDateEnd })" title="مرتب سازی بر اساس عنوان صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                            <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Title_desc", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, CatFilter = ViewBag.CatFilter, IsDeleteFilter = ViewBag.IsDeleteFilter, ContentTypeId = ViewBag.contenttypeid, IsActiveFilter = ViewBag.IsActiveFilter, ContentTypeIdFilter = ViewBag.ContentTypeIdFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, UpdateDateStartFilter = ViewBag.UpdateDateStartFilter, UpdateDateEndFilter = ViewBag.UpdateDateEndFilter, DeleteDateStart = ViewBag.DeleteDateStart, DeleteDateEnd = ViewBag.DeleteDateEnd })" title="مرتب سازی بر اساس عنوان نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                        </span>
+                                    </p>
+                                </th>
+                                <th class="text-center column-title">
+                                    کاور تصویر
+                                </th>
+
+                                <th class="text-center column-title">
+                                    <p class="text-center">
+                                        <span>بازدید</span>
+                                        <span>
+                                            <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Visits", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, CatFilter = ViewBag.CatFilter, IsDeleteFilter = ViewBag.IsDeleteFilter, ContentTypeId = ViewBag.contenttypeid, IsActiveFilter = ViewBag.IsActiveFilter, ContentTypeIdFilter = ViewBag.ContentTypeIdFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, UpdateDateStartFilter = ViewBag.UpdateDateStartFilter, UpdateDateEndFilter = ViewBag.UpdateDateEndFilter, DeleteDateStart = ViewBag.DeleteDateStart, DeleteDateEnd = ViewBag.DeleteDateEnd })" title="مرتب سازی بر اساس بازدید صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                            <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Visits_desc", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, CatFilter = ViewBag.CatFilter, IsDeleteFilter = ViewBag.IsDeleteFilter, ContentTypeId = ViewBag.contenttypeid, IsActiveFilter = ViewBag.IsActiveFilter, ContentTypeIdFilter = ViewBag.ContentTypeIdFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, UpdateDateStartFilter = ViewBag.UpdateDateStartFilter, UpdateDateEndFilter = ViewBag.UpdateDateEndFilter, DeleteDateStart = ViewBag.DeleteDateStart, DeleteDateEnd = ViewBag.DeleteDateEnd })" title="مرتب سازی بر اساس بازدید نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                        </span>
+                                    </p>
+                                </th>
+                                <th class="text-center column-title">
+                                    <p class="text-center">
+                                        <span>تاریخ ثبت</span>
+                                        <span>
+                                            <a style="display:block" href="@Url.Action("Index", new { sortOrder = "InsertDate", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, CatFilter = ViewBag.CatFilter, IsDeleteFilter = ViewBag.IsDeleteFilter, ContentTypeId = ViewBag.contenttypeid, IsActiveFilter = ViewBag.IsActiveFilter, ContentTypeIdFilter = ViewBag.ContentTypeIdFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, UpdateDateStartFilter = ViewBag.UpdateDateStartFilter, UpdateDateEndFilter = ViewBag.UpdateDateEndFilter, DeleteDateStart = ViewBag.DeleteDateStart, DeleteDateEnd = ViewBag.DeleteDateEnd })" title="مرتب سازی بر اساس تاریخ ثبت صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                            <a style="display:block" href="@Url.Action("Index", new { sortOrder = "InsertDate_desc", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, CatFilter = ViewBag.CatFilter, IsDeleteFilter = ViewBag.IsDeleteFilter, ContentTypeId = ViewBag.contenttypeid, IsActiveFilter = ViewBag.IsActiveFilter, ContentTypeIdFilter = ViewBag.ContentTypeIdFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, UpdateDateStartFilter = ViewBag.UpdateDateStartFilter, UpdateDateEndFilter = ViewBag.UpdateDateEndFilter, DeleteDateStart = ViewBag.DeleteDateStart, DeleteDateEnd = ViewBag.DeleteDateEnd })" title="مرتب سازی بر اساس تاریخ ثبت نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                        </span>
+                                    </p>
+                                </th>
+                                <th class="text-center column-title">
+                                    <p class="text-center">
+                                        <span>فعال؟</span>
+                                        <span>
+                                            <a style="display:block" href="@Url.Action("Index", new { sortOrder = "IsActive", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, CatFilter = ViewBag.CatFilter, IsDeleteFilter = ViewBag.IsDeleteFilter, ContentTypeId = ViewBag.contenttypeid, IsActiveFilter = ViewBag.IsActiveFilter, ContentTypeIdFilter = ViewBag.ContentTypeIdFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, UpdateDateStartFilter = ViewBag.UpdateDateStartFilter, UpdateDateEndFilter = ViewBag.UpdateDateEndFilter, DeleteDateStart = ViewBag.DeleteDateStart, DeleteDateEnd = ViewBag.DeleteDateEnd })" title="مرتب سازی بر اساس غیرفعال ها"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                            <a style="display:block" href="@Url.Action("Index", new { sortOrder = "IsActive_desc", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, CatFilter = ViewBag.CatFilter, IsDeleteFilter = ViewBag.IsDeleteFilter, ContentTypeId = ViewBag.contenttypeid, IsActiveFilter = ViewBag.IsActiveFilter, ContentTypeIdFilter = ViewBag.ContentTypeIdFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, UpdateDateStartFilter = ViewBag.UpdateDateStartFilter, UpdateDateEndFilter = ViewBag.UpdateDateEndFilter, DeleteDateStart = ViewBag.DeleteDateStart, DeleteDateEnd = ViewBag.DeleteDateEnd })" title="مرتب سازی بر اساس فعال ها">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                        </span>
+                                    </p>
+                                </th>
+                                <th class="text-center column-title">
+                                    <p class="text-center">
+                                        <span>زبان ( وب سایت)</span>
+                                        <span>
+                                            <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Language", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, CatFilter = ViewBag.CatFilter, IsDeleteFilter = ViewBag.IsDeleteFilter, ContentTypeId = ViewBag.contenttypeid, IsActiveFilter = ViewBag.IsActiveFilter, ContentTypeIdFilter = ViewBag.ContentTypeIdFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, UpdateDateStartFilter = ViewBag.UpdateDateStartFilter, UpdateDateEndFilter = ViewBag.UpdateDateEndFilter, DeleteDateStart = ViewBag.DeleteDateStart, DeleteDateEnd = ViewBag.DeleteDateEnd })" title="مرتب سازی بر اساس زبان ( وب سایت) صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                            <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Language_desc", TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, CatFilter = ViewBag.CatFilter, IsDeleteFilter = ViewBag.IsDeleteFilter, ContentTypeId = ViewBag.contenttypeid, IsActiveFilter = ViewBag.IsActiveFilter, ContentTypeIdFilter = ViewBag.ContentTypeIdFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, UpdateDateStartFilter = ViewBag.UpdateDateStartFilter, UpdateDateEndFilter = ViewBag.UpdateDateEndFilter, DeleteDateStart = ViewBag.DeleteDateStart, DeleteDateEnd = ViewBag.DeleteDateEnd })" title="مرتب سازی بر اساس زبان ( وب سایت) نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                        </span>
+                                    </p>
+                                </th>
+                                <th class="text-center column-title">
+
+                                </th>
+                                @*<th class="text-center">
+                                        <div> عملیات گروهی</div>
+                                        <div>
+                                            <span style="cursor:pointer" title="حذف" class="RemoveContents glyphicon glyphicon-remove"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <span style="cursor:pointer" title="خارج کردن از حذف" class="UnRemoveContents glyphicon glyphicon-ok"></span><br />
+                                            <span style="cursor:pointer" title="فعال" class="ActiveContents glyphicon glyphicon-ok"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <span style="cursor:pointer" title="غیر فعال" class="DeActiveContents glyphicon glyphicon-remove"></span>
+                                        </div>
+                                    </th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr class="ContentRow">
+                                    <td class="text-center">
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                        <div><a target="_blank" href="@Url.Action("Index",new { controller ="content", id =item.Id,title= CommonFunctions.NormalizeAddress(item.PageAddress),area=""})"><span class="glyphicon glyphicon-link"></span></a></div>
+                                    </td>
+                                    <td>
+                                        @if (item.Cover.HasValue)
+                                        {
+                                            @Html.Displayattachment(item.attachment.FileName,item.Title, "SM", htmlAttributes: new { @class = "img-responsive", width = "110", height = "60", style = "display:inline-block;width:110px;height:60px" })
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:110px;height:60px" />
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Visits)
+                                    </td>
+                                    <td>
+                                        @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate) <br /> @item.InsertDate.ToShortTimeString()
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IsActive)
+                                    </td>
+                                    <td>
+
+                                        @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId.Value)
+                                    </td>
+                                    <td>
+                                        @if (ViewBag.EditPermission)
+                                        {
+                                            <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                        }
+                                        @if (ViewBag.DeletePermission)
+                                        {
+
+                                            <a class="DeleteContent btn btn-danger" href="@Url.Action("DeleteConfirmed", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+
+                                        }
+                                        else
+                                        {
+                                            <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                                        }
+                                        <a class="btn btn-success" href="@Url.Action("Create","Comments", new { id = item.Id })"><span class="glyphicon glyphicon-comment"></span> افزودن نظر </a>
+
+                                    </td>
+                                    @*<td class="text-center">
+                                            <input class="SelectAll" type="checkbox" id="@("chkSelectRow"+item.Id)" data-id="@item.Id" />
+                                        </td>*@
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                    <p>
+                        <strong style="color: #900">
+                            صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount @ViewBag.ContentTypeShortName
+                        </strong>
+                    </p>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, CatFilter = ViewBag.CatFilter, IsDeleteFilter = ViewBag.IsDeleteFilter, IsActiveFilter = ViewBag.IsActiveFilter, ContentTypeIdFilter = ViewBag.ContentTypeIdFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, UpdateDateStartFilter = ViewBag.UpdateDateStartFilter, UpdateDateEndFilter = ViewBag.UpdateDateEndFilter, DeleteDateStart = ViewBag.DeleteDateStart, DeleteDateEnd = ViewBag.DeleteDateEnd }))
+
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+        </div>
+
+        @section Scripts{
+            <script src="~/Areas/Admin/Content/Scripts/View/IndexContent.js?v=2.5"></script>
+            @*Persian Calender*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+        }
+</div>
+</div>

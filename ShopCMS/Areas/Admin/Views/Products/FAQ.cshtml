@@ -1,0 +1,171 @@
+﻿@model PagedList.IPagedList<Domain.ProductQuestion>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using CoreLib.Infrastructure.DateTime
+<title>پرسش و پاسخ های محصولات @ViewBag.Name</title>
+
+@{
+
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+}
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Category.css" rel="stylesheet" />
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <h3 class="box-title">
+            پرسش و پاسخ های محصولات @ViewBag.Name
+
+        </h3>
+
+        <div class="col-md-6">
+            <a class="btn btn-success" href="@Url.Action("FAQCreate",new {id=ViewBag.id })">پرسش و پاسخ جدید</a><br /><br />
+
+        </div>
+
+        <div class="col-md-6">
+            <div class="text-left">
+                <a class="btn btn-success" target="_blank" href="/TFP/@ViewBag.Id/@ViewBag.Title"> نمایش صفحه محصول <span class="glyphicon glyphicon-chevron-right"></span></a>
+                <a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به محصولات <span class="glyphicon glyphicon-chevron-left"></span></a>
+            </div>
+
+        </div>
+        <div class="clearfix"></div>
+
+
+
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="header-col">
+                        <th>
+                            <table style="width:100%">
+                                <tr>
+                                    <td>
+                                        <p class="text-center">
+                                            <span>نام و نام خانوادگی</span>
+
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </th>
+                        <th>
+                            <table style="width:100%">
+                                <tr>
+                                    <td>
+                                        <p class="text-center">
+                                            <span>نام محصول</span>
+
+                                        </p>
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </th>
+                        <th>
+                            <table style="width:100%">
+                                <tr>
+                                    <td>
+                                        <p class="text-center">
+                                            <span>وضعیت</span>
+
+                                        </p>
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </th>
+                        <th>
+                            <table style="width:100%">
+                                <tr>
+
+                                    <td>
+                                        <p class="text-center">
+                                            <span>تاریخ ثبت</span>
+
+                                        </p>
+
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </th>
+                        <th>
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+
+                        <tr>
+                            <td>
+                                @if (item.AdminAnswer)
+                                {
+                                    <span>کارشناس فروش</span>
+                                }
+                                else if (!String.IsNullOrEmpty(item.FakeUserFullName))
+                                {
+                                    <span>@item.FakeUserFullName</span>
+                                }
+                                else
+                                {
+                                    @item.User.FirstName @item.User.LastName
+                                }
+                            </td>
+                            <td>
+                                @item.Product.Title
+                                @if (item.ParrentId != null)
+                                {
+                                    <strong> | پاسخ </strong>
+                                }
+                                else
+                                {
+                                    <strong> | پرسش </strong>
+                                }
+                            </td>
+                            <td>
+                                @if (item.IsActive)
+                                {
+                                    <text>تایید</text>
+                                }
+                                else
+                                {
+                                    <text>عدم تایید</text>
+                                }
+                            </td>
+                            <td>
+                                @DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate)
+                            </td>
+                            <td>
+                                <a class="btn btn-success" href="@Url.Action("FAQEdit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                <a class="btn btn-danger" href="@Url.Action("FAQDelete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount پرسش.
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("FAQ", new { page }))
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/Areas/Admin/Content/Scripts/View/Category.js"></script>
+    @*Persian Calender*@
+    <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+}

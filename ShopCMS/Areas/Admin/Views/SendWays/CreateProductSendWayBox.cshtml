@@ -1,0 +1,65 @@
+﻿@model Domain.ProductSendWayBox
+
+@{ 
+    var ProductSendWay = ViewBag.ProductSendWay as Domain.ProductSendWay;
+}
+
+<title>انتخاب باکس برای روش ارسال @ProductSendWay.Title </title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("ProductSendWayBoxes","SendWays",new { ProductSendWay.Id })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            انتخاب باکس برای روش ارسال @ProductSendWay.Title
+
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Erorr</p>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("ProductSendWayId", ProductSendWay.Id)
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.SendWayBoxID)</span>
+
+                        </p>
+                        @Html.DropDownList("SendWayBoxID", ViewBag.SendBoxes as IEnumerable<SelectListItem>,new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SendwayBox, "", new { @class = "text-danger" })
+                    </div>
+                    @*<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.MinValue)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.MinValue, htmlAttributes: new { type = "number", @class = "form-control", placeholder = Html.DisplayNameFor(x => x.MinValue) })
+                        @Html.ValidationMessageFor(model => model.MinValue, "", new { @class = "text-danger" })
+
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.MaxValue)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.MaxValue, htmlAttributes: new { type = "number", @class = "form-control", placeholder = Html.DisplayNameFor(x => x.MaxValue) })
+                        @Html.ValidationMessageFor(model => model.MaxValue, "", new { @class = "text-danger" })
+                    </div>*@
+                    <div class="clearfix"></div>
+                </div>
+
+
+                <input type="submit" value="انتخاب" class="btn btn-primary" style="border-radius:0" />
+            </div>
+        }
+    </div>
+</div>
+
+

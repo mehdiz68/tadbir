@@ -1,0 +1,247 @@
+﻿@model PagedList.IPagedList<Domain.ViewModels.ProductCommentList>
+
+@using ahmadi.Infrastructure.Helper;
+@using PagedList.Mvc;
+@{
+    int productid = ViewBag.productid;
+    int sort = ViewBag.sort;
+}
+
+@if (Model.Any())
+{
+    <div class="c-comments__filter">
+        <span class="c-faq__filter-title h4">نظرات کاربران</span>
+        <ul class="c-faq__filter-items js-filter-items" data-title="مرتب‌سازی بر اساس:">
+            <li><a href=@("/Product/GetComment?productid=" + productid + "&page=1&sort=2") class="@(sort == 2 ? "is-active" : "")" data-sort-mode="buyers">نظر خریداران</a></li>
+            <li><a href=@("/Product/GetComment?productid=" + productid + "&page=1&sort=3") class="@(sort == 3 ? "is-active" : "")" data-sort-mode="most_liked">مفیدترین نظرات</a></li>
+            <li><a href=@("/Product/GetComment?productid=" + productid + "&page=1&sort=1") class="@(sort == 1 ? "is-active" : "")" data-sort-mode="newest_comment">جدیدترین نظرات</a></li>
+        </ul>
+    </div>
+}
+
+<div id="product-comment-list">
+
+    <ul class="c-comments__list">
+
+        @foreach (var item in Model)
+        {
+            <li>
+                <section>
+                    @*<div class="aside">
+                            <ul class="c-comments__user-shopping">
+                                <li>
+                                    <div class="cell cell-name">
+                                        <div>
+                                            @if (item.UserAvatar.HasValue)
+                                            {
+                                                @Html.Displayattachment(item.UserAvatarattachment,item.FullName, "SM", htmlAttributes: new { @class = "img-responsive round-img" })
+                                            }
+                                            else
+                                            {
+                                                if (item.UserGender == true)
+                                                {
+                                                    <img class="round-img" src="~/Content/Default/images/man-avatar.jpg" />
+                                                }
+                                                else
+                                                {
+                                                    <img class="round-img" src="~/Content/Default/images/woman-avatar.gif" />
+                                                }
+                                            }
+                                        </div>
+                                        @item.FullName
+                                    </div>
+                                    @if (item.IsBuy)
+                                    {
+                                        <div class="c-comments__buyer-badge">خریدار</div>
+                                    }
+                                </li>
+                                <li>
+                                    <div class="cell">
+                                        @item.InsertDate
+                                    </div>
+                                </li>
+                            </ul>
+                            @if (item.IsBuy)
+                            {
+                                if (item.ProductCommentSatisfaction != null)
+                                {
+                                    if (item.ProductCommentSatisfaction == Domain.ProductCommentSatisfaction.راضی_و_پیشنهاد_می_کنم || item.ProductCommentSatisfaction == Domain.ProductCommentSatisfaction.کاملا_راضی_و_پیشنهاد_میکنم)
+                                    {
+                                        <div class="c-message-light c-message-light--opinion-positive">
+                                            <span class="fa fa-thumbs-up"></span>
+                                            خرید این محصول را توصیه می‌کنم
+                                        </div>
+                                    }
+                                    else if (item.ProductCommentSatisfaction == Domain.ProductCommentSatisfaction.ناراضی_و_پیشنهاد_نمی_کنم || item.ProductCommentSatisfaction == Domain.ProductCommentSatisfaction.کاملا_ناراضی_و_پیشنهاد_نمی_کنم)
+                                    {
+
+                                        <div class="c-message-light c-message-light--opinion-negative">
+                                            <span class="fa fa-thumbs-down"></span>
+                                            خرید این محصول را توصیه نمی‌کنم
+                                        </div>
+
+                                    }
+                                    else
+                                    {
+                                        <div class="c-message-light c-message-light--opinion-noidea">در مورد خرید این محصول مطمئن نیستم</div>
+                                    }
+                                }
+                            }
+                            <div>
+
+
+                            </div>
+
+                            <ul class="c-comments__user-shopping hide">
+                                <li>
+                                    <div class="cell cell-title">فروشنده:</div>
+                                    <div class="cell seller-cell">
+                                        <a href="#" class="btn-link-spoiler"></a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>*@
+                    <div class="article">
+                        <div class="header">
+                            <div>
+                                @item.Title
+                            </div>
+                        </div>
+                        <ul class="comment-title">
+                            <li class="comment-title-date">
+                                <div class="cell">
+                                    @item.InsertDate
+                                </div>
+                            </li>
+                            <li class="comment-title-FullName"> @item.FullName </li>
+                            @if (item.IsBuy)
+                            {
+                                <li class="comment-title-buyer">خریدار</li>
+                            }
+                        </ul>
+                        <hr />
+
+                        @if (item.IsBuy)
+                        {
+                            if (item.ProductCommentSatisfaction != null)
+                            {
+                                if (item.ProductCommentSatisfaction == Domain.ProductCommentSatisfaction.راضی_و_پیشنهاد_می_کنم || item.ProductCommentSatisfaction == Domain.ProductCommentSatisfaction.کاملا_راضی_و_پیشنهاد_میکنم)
+                                {
+                                    <div class="c-message-light c-message-light--opinion-positive">
+                                        <span class="fa fa-thumbs-up"></span>
+                                        خرید این محصول را توصیه می‌کنم
+                                    </div>
+                                }
+                                else if (item.ProductCommentSatisfaction == Domain.ProductCommentSatisfaction.ناراضی_و_پیشنهاد_نمی_کنم || item.ProductCommentSatisfaction == Domain.ProductCommentSatisfaction.کاملا_ناراضی_و_پیشنهاد_نمی_کنم)
+                                {
+
+                                    <div class="c-message-light c-message-light--opinion-negative">
+                                        <span class="fa fa-thumbs-down"></span>
+                                        خرید این محصول را توصیه نمی‌کنم
+                                    </div>
+
+                                }
+                                else
+                                {
+                                    <div class="c-message-light c-message-light--opinion-noidea">در مورد خرید این محصول مطمئن نیستم</div>
+                                }
+                            }
+                        }
+                        <div>
+                            <p>
+                                @item.Text
+                            </p>
+                            @if (item.attachments.Any())
+                            {
+                                <div class="attachements">
+                                    @foreach (var item2 in item.attachments)
+                                    {
+                                        <div class="attachement">
+                                            <a target="_blank" href="@Html.DisplayattachmentUrl(item2.FileName, "LG")">
+                                                @Html.Displayattachment(item2.FileName, "SM", htmlAttributes: new { @class = "img-responsive" })
+                                            </a>
+                                        </div>
+                                    }
+
+
+                                </div>
+                            }
+                        </div>
+
+                        <div class="c-comments__evaluation">
+                            @if (item.ProductAdvantages != null)
+                            {
+                                <div class="c-comments__evaluation-positive">
+                                    <span>&nbsp;</span>
+                                    @*<span>نقاط قوت</span>*@
+                                    <ul>
+                                        @foreach (var item2 in item.ProductAdvantages)
+                                        {
+                                            <li>@item2</li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            @if (item.ProductCommentDisAdvantages != null)
+                            {
+                                <div class="c-comments__evaluation-negative">
+                                    <span>&nbsp;</span>
+                                    @*<span>نقاط ضعف</span>*@
+                                    <ul>
+                                        @foreach (var item2 in item.ProductCommentDisAdvantages)
+                                        {
+                                            <li>@item2</li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+
+                            <div class="c-comments__item-rating">
+                                @foreach (var item2 in item.ProductRankSelectValues.GroupBy(x => x.ProductRankSelect.ProductRankGroupSelect.ProductRank))
+                                {
+                                    var val = item.ProductRankSelectValues.Where(x => x.ProductRankSelect.ProductRankGroupSelect.RankId == item2.Key.Id).Sum(x => x.Value) / item.ProductRankSelectValues.Where(x => x.ProductRankSelect.ProductRankGroupSelect.RankId == item2.Key.Id).Count();
+                                    <div class="rank-val">
+                                        <div class="cell1">@item2.Key.Name</div>
+                                        <div class="cell2">
+                                            <div class="progress">
+                                                <div class="progress-bar" role="progressbar" aria-valuenow="@(val*20)" aria-valuemin="10" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+
+
+                        <div class="footer">
+                            <div class="c-comments__likes js-comment-like-container">
+                                آیا این نظر برایتان مفید بود؟
+                                <button class="btn-like js-comment-like" data-counter="@item.Useful" data-comment="@item.Id">
+                                    بله
+                                </button>
+                                <button class="btn-like js-comment-dislike" data-counter="@item.UnUseful" data-comment="@item.Id">
+                                    خیر
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </li>
+
+        }
+
+    </ul>
+
+</div>
+
+
+
+
+
+@if (Model.Any())
+{
+    @Html.PagedListPager(Model, Page => "/Product/GetComment?productid=" + productid + "&page=" + Page + "&sort=" + sort)
+
+}

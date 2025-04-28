@@ -1,0 +1,76 @@
+﻿@model PagedList.IPagedList<Domain.Content>
+
+@using ahmadi.Infrastructure.Helper;
+@using PagedList.Mvc;
+@using CoreLib.Infrastructure;
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+
+}
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+
+<div class="container">
+    <div class="row">
+
+        <div class="breadcrumb_section bg_gray page-title-mini">
+            <div class="container">
+                <!-- STRART CONTAINER -->
+                <div class="row align-items-center">
+                    <ol class="breadcrumb justify-content-md-end" itemscope itemtype="http://schema.org/BreadcrumbList">
+                        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" href="/"><span itemprop="name">صفحه اصلی</span></a></li>
+                        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" href="/SearchResult/@ViewBag.ContentTypeId/@ViewBag.keyword"><span itemprop="name">@Meta.WebSiteTitle</span></a></li>
+
+                    </ol>
+                </div>
+            </div><!-- END CONTAINER-->
+        </div>
+
+    </div>
+</div>
+
+<div class="section">
+    <div class="container">
+        <div class="row">
+
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3 product">
+                    <div>
+                        <a href="/TFC/@CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress)">
+                            @if (item.Cover.HasValue)
+                            {
+                                @Html.Displayattachment(item.attachment.FileName,item.Title,"SM",true,new {@class="img-responsive" })
+                            }
+                            else
+                            {
+
+                                <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" />
+                            }
+
+
+
+                        </a>
+                    </div>
+                    <div class="product_info">
+
+                        <h6 class="product_title"><a href="/TFC/@item.Id/@CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress)">@item.Title</a></h6>
+                        <p>
+                            @item.Abstract
+                        </p>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+    </div>
+</div>
+
+
+
+
+

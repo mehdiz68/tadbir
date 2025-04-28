@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Domain.ProductRandomSetting>
+<title>گروههای انتخاب محصول تصادفی</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+}
+
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index","Setting")"> بازگشت به تنظیمات سایت <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            گروههای انتخاب محصول تصادفی
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")" title="راهنمای این صفحه"></span>
+
+        </h1>
+        <br /><br />
+        <p>
+          
+                <a class="btn btn-success" href="@Url.Action("CreateProductRandom",new {settingId=ViewBag.settingId as int? })"><span class="glyphicon glyphicon-plus"></span> ایجاد گروه جدید </a>
+            
+
+        </p>
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ProductCatId)
+                    </th>
+
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr class="rowItem" id="@item.Id">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.productCategory.Name)
+                        </td>
+                        <td>
+
+                          
+                                
+                                <a class="btn btn-danger" href="@Url.Action("DeleteProductRandom", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                           
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts{
+
+    @*View*@
+    <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+
+}

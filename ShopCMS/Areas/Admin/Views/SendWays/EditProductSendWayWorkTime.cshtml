@@ -1,0 +1,171 @@
+﻿@model Domain.ProductSendWayWorkTime
+
+
+
+<title>ویرایش زمان کاری   </title>
+
+@section Header{
+
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/timepicker.min.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("ProductSendWayWorkTimes","SendWays",new {id= Model.ProductSendWayId })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ویرایش زمان کاری 
+
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Erorr</p>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("ProductSendWayId", Model.ProductSendWayId)
+            @Html.Hidden("Id", Model.Id)
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.WeekDay)</span>
+
+                        </p>
+                        <select id="WeekDay" name="WeekDay" class="form-control">
+                            @if (Model.WeekDay == 0)
+                            {
+
+                                <option value="0" selected>@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(0)</option>
+                            }
+                            else
+                            {
+
+                                <option value="0">@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(0)</option>
+                            }
+                            @if (Model.WeekDay == 1)
+                            {
+
+                                <option value="1" selected>@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(1)</option>
+                            }
+                            else
+                            {
+
+                                <option value="1">@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(1)</option>
+                            }
+                            @if (Model.WeekDay == 2)
+                            {
+
+                                <option value="2" selected>@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(2)</option>
+                            }
+                            else
+                            {
+
+                                <option value="2">@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(2)</option>
+                            }
+                            @if (Model.WeekDay == 3)
+                            {
+
+                                <option value="3" selected>@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(3)</option>
+                            }
+                            else
+                            {
+
+                                <option value="3">@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(3)</option>
+                            }
+                            @if (Model.WeekDay == 4)
+                            {
+
+                                <option value="4" selected>@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(4)</option>
+                            }
+                            else
+                            {
+
+                                <option value="4">@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(4)</option>
+                            }
+                            @if (Model.WeekDay == 5)
+                            {
+
+                                <option value="5" selected>@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(5)</option>
+                            }
+                            else
+                            {
+
+                                <option value="5">@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(5)</option>
+                            }
+                            @if (Model.WeekDay == 6)
+                            {
+
+                                <option value="6" selected>@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(6)</option>
+                            }
+                            else
+                            {
+
+                                <option value="6">@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(6)</option>
+                            }
+                         
+                        </select>
+                        @Html.ValidationMessageFor(model => model.WeekDay, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.StartTime)</span>
+
+                        </p>
+                        @Html.TextBox("StartTime",Model.StartTime.ToString(@"hh\:mm"), htmlAttributes: new { @readonly = "readonly", id = "time1", @class = "form-control  without_ampm", placeholder = Html.DisplayNameFor(x => x.StartTime) })
+                        @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
+
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.EndTime)</span>
+
+                        </p>
+                        @Html.TextBox("EndTime",Model.EndTime.ToString(@"hh\:mm"), htmlAttributes: new { @readonly = "readonly", id = "time2", @class = "form-control without_ampm", placeholder = Html.DisplayNameFor(x => x.EndTime) })
+                        @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.IsActive)</span>
+
+                        </p>
+
+                        @Html.CheckBoxFor(model => model.IsActive, new { @class = "js-switch" }) فعال
+                        @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+
+                <input type="submit" value="ویرایش" class="btn btn-primary" style="border-radius:0" />
+            </div>
+        }
+    </div>
+</div>
+
+
+
+
+@section Scripts{
+
+    <script src="~/Areas/Admin/Content/Scripts/Component/timepicker.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            var timepicker = new TimePicker(['time1', 'time2'], {
+                lang: 'en',
+                theme: 'dark'
+            });
+
+            timepicker.on('change', function (evt) {
+             
+                    var value = (evt.hour || '00') + ':' + (evt.minute || '00');
+                    evt.element.value = value;
+            });
+        });
+    </script>
+}

@@ -1,0 +1,17 @@
+﻿@model List<Domain.attachment>
+@using ahmadi.Infrastructure.Helper;
+
+@foreach (var item in Model)
+{
+    <li id="@item.Id" data-id="@item.Id">
+        <span class="fa fa-remove remove-janebi" data-id="@item.Id"></span>
+        <br />
+        
+            <img src="~/Content/UploadFiles/@item.FileName" class="img-responsive img-thumbnail" />
+        <input type="hidden" name="janebi" value="@item.Id">
+    </li>
+
+    
+}
+
+

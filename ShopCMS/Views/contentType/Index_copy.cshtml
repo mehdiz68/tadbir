@@ -1,0 +1,164 @@
+﻿@model ahmadi.ViewModels.Content.ContentType
+@using CoreLib.Infrastructure
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure
+@using PagedList.Mvc;
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var setting = ViewBag.setting as Domain.Setting;
+    int i = 1, k = 0;
+    int SumSize = 0;
+
+
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+@section Header{
+    <link href="~/Content/Base/Css/view/ContentType.css" rel="stylesheet" />
+}
+
+
+
+<section class="categories spad" id="ContentType">
+    <div class="container ads">
+        <div class="row">
+            @{ SumSize = 0;}
+            @foreach (var item in Model.TopAdveresting)
+            {
+                SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(item.AdverestingSizeId);
+                <div class="Adveresting Position-@item.Position Size-@item.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                    <a href="@item.Link" title="@item.Title">
+                        <div class="categories__item set-bg" data-setbg="@Html.DisplayattachmentUrl(item.attachment.FileName)" style="background-image: url(&quot;@Html.DisplayattachmentUrl(item.attachment.FileName)&quot;);">
+                            <div class="categories__hover__text">
+                                <h5>@item.Title</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+
+        </div>
+    </div>
+    <div class="categories__post">
+        <div class="container">
+            <div class="row">
+
+                @if (Model.Sliders != null)
+                {
+                    if (Model.Sliders.Any())
+                    {
+                        i = 0;
+                        <div class="col-lg-12" style="padding:0">
+
+                            @foreach (var slider in Model.Sliders)
+                            {
+                                @Html.Partial("_BootStrapSlideShowCaptionBlog", slider, new ViewDataDictionary { { "Index", i.ToString() }, { "staticUrl", Meta.StaticContentUrl } })
+                                i++;
+                            }
+
+                        </div>
+                    }
+                }
+                <div class="col-md-12" id="h1">
+                    <h1>@Model.contentType.Title</h1>
+                </div>
+                <div class="col-lg-12 col-md-12">
+
+
+                    <div class="container ads">
+                        <div class="row">
+
+                            @{ SumSize = 0;}
+                            @foreach (var item in Model.RightAdveresting)
+                            {
+                                SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(item.AdverestingSizeId);
+                                <div class="Adveresting Position-@item.Position Size-@item.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                                    <a href="@item.Link" title="@item.Title">
+                                        <div class="categories__item set-bg" data-setbg="@Html.DisplayattachmentUrl(item.attachment.FileName)" style="background-image: url(&quot;@Html.DisplayattachmentUrl(item.attachment.FileName)&quot;);">
+                                            <div class="categories__hover__text">
+                                                <h5>@item.Title</h5>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row" id="LatestContents">
+                        @foreach (var item in Model.LatestContents)
+                        {
+                            <div class="categories__post__item col-md-4 ">
+                                <div class="item">
+                                    <img src="@Html.DisplayattachmentUrl(item.BlogCover.HasValue?item.Blogattachment.FileName:item.Cover.HasValue? item.attachment.FileName:"default-thumbnail.jpg","SM",true)" alt="@item.Title" class="img-responsive" />
+                                    @* <div class="categories__post__item__pic set-bg" data-setbg="@Html.DisplayattachmentUrl(item.BlogCover.HasValue?item.Blogattachment.FileName:item.Cover.HasValue? item.attachment.FileName:"default-thumbnail.jpg")" style="background-image: url(&quot;@Html.DisplayattachmentUrl(item.BlogCover.HasValue?item.Blogattachment.FileName:item.Cover.HasValue? item.attachment.FileName:"default-thumbnail.jpg"))&quot;);">
+                                        <div class="post__meta">
+
+                                             <span>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsi(item.InsertDate)</span>
+                                         </div>
+                                                        </div>*@
+                                    <div class="categories__post__item__text">
+                                        <h2>
+
+                                            <a href="@Url.Action("Index","Content",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) })">
+                                                @item.Title
+                                            </a>
+                                        </h2>
+                                        <ul class="post__widget">
+                                            @*<li>نویسنده : <span>@item.User.FirstName @item.User.LastName </span></li>*@
+                                            @*<li> زمان مطالعه : <span> @item.ReadMinuts  دقیقه </span> </li>*@
+                                        </ul>
+                                        <p class="abstract">
+                                            @item.Abstract
+                                        </p>
+                                        <p class="text-center">
+
+                                            <a class="btn btn-info more-post" href="@Url.Action("Index","Content",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) })">
+                                                ادامه مطلب
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                    @Html.PagedListPager(Model.LatestContents, page => Url.Action("Index", new { page }))
+
+                </div>
+
+            </div>
+            <br /><br />
+            <div class="ads">
+                <div class="row">
+
+                    @{ SumSize = 0;}
+                    @foreach (var item in Model.BottomAdveresting)
+                    {
+                        SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(item.AdverestingSizeId);
+                        <div class="Adveresting Position-@item.Position Size-@item.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                            <a href="@item.Link" title="@item.Title">
+                                <div class="categories__item set-bg" data-setbg="@Html.DisplayattachmentUrl(item.attachment.FileName)" style="background-image: url(&quot;@Html.DisplayattachmentUrl(item.attachment.FileName)&quot;);">
+                                    <div class="categories__hover__text">
+                                        <h5>@item.Title</h5>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+@section Scripts{
+
+
+}

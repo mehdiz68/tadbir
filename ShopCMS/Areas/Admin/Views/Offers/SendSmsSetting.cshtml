@@ -1,0 +1,140 @@
+﻿@model IEnumerable<Domain.UserOfferMessage>
+
+@section Header{
+    <style>
+        .percent:after {
+            content: ''
+        }
+    </style>
+
+    <title>تنظیمات ارسال sms </title>
+}
+@{
+    double allpercent = (Model.Sum(x => x.UserOfferMessageMembers.Where(a => a.state == Domain.OfferMessageSendMessageType.Sent).Count()) * 1.0 / Model.Sum(x => x.UserOfferMessageMembers.Count) * 1.0) * 100;
+    bool? state = ViewBag.state as bool?;
+    string stateString = "روشن";
+    string stateStringButton = "خاموش";
+    if (state.Value == false)
+    {
+        stateString = "خاموش";
+        stateStringButton = "روشن";
+    }
+}
+<div class="col-md-6">
+    <div i class="dashboard-pane">
+        <h2>وضعیت کلی ارسال پیام ها</h2>
+        <hr>
+        <ul class="block-item">
+            <li>
+                <p>کل پیام های در صف</p>
+                <p class="percent">@Model.Sum(x => x.UserOfferMessageMembers.Count)</p>
+            </li>
+            <li>
+                <p>پیام های ارسال شده</p>
+                <p class="percent">@Model.Sum(x => x.UserOfferMessageMembers.Where(a => a.state == Domain.OfferMessageSendMessageType.Sent).Count())</p>
+            </li>
+            <li>
+                <p>پیام های باقی مانده</p>
+                <p class="percent">@Model.Sum(x => x.UserOfferMessageMembers.Where(a => a.state == Domain.OfferMessageSendMessageType.Waiting).Count())</p>
+            </li>
+        </ul>
+        <div class="widget_summary">
+            <div class="w_right w_55">
+                <h6>درصد پیشرفت ارسال ها</h6>
+            </div>
+            <div class="w_left w_45">
+                <h6>@allpercent % </h6>
+            </div>
+            <div class="clearfix"></div>
+
+        </div>
+        <div class="col-md-12">
+            <div class="progress">
+                <div class="progress-bar bg-green" role="progressbar" aria-valuenow="@allpercent" aria-valuemin="0" aria-valuemax="100" style="width:@allpercent%;">
+                    <span class="sr-only">@allpercent</span>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="col-md-6">
+    <div i class="dashboard-pane">
+        <h2>وضعیت ربات ارسال پیام ها</h2>
+        <hr>
+        <ul class="block-item">
+            <li>
+                <p>وضعیت ربات</p>
+                <p class="percent">@stateString</p>
+            </li>
+            <li>
+                <p>عملیات</p>
+                <p class="percent">
+                    <span class="btn btn-success"  id="SetState">
+                        @stateStringButton <span> کن </span>
+                    </span>
+                </p>
+            </li>
+
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<div id="Orders" class="dashboard-pane">
+    <h5> <a href="#">وضعیت ارسال پیام ها به تفکیک پیام</a></h5>
+    <hr>
+    @foreach (var item in Model)
+    {
+        double percent = (item.UserOfferMessageMembers.Where(x => x.state == Domain.OfferMessageSendMessageType.Sent).Count() * 1.0 / item.UserOfferMessageMembers.Count() * 1.0) * 100;
+        <div class="widget_summary">
+            <div class="w_right w_25">
+                <span><span>@item.Offer.Title - @item.Text</span></span>
+            </div>
+            <div class="w_center w_55">
+                <div class="progress">
+                    <div class="progress-bar bg-green" role="progressbar" aria-valuenow="@percent" aria-valuemin="0" aria-valuemax="100" style="width: @percent%;">
+                        <span class="sr-only">@percent</span>
+                    </div>
+                </div>
+            </div>
+            <div class="w_left w_20">
+                <span>@item.UserOfferMessageMembers.Where(x => x.state == Domain.OfferMessageSendMessageType.Sent).Count() / @item.UserOfferMessageMembers.Count() </span>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    }
+
+
+
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#SetState").click(function (e) {
+                e.preventDefault();
+                var $this = $(this);
+                $(".loading").show();
+                $.ajax({
+                    crossDomain: true,
+                    type: "Post",
+                    url: "/Admin/Offers/SetStateBot",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.statusCode == 200) {
+                            swal({ title: "", text: "انجام شد", type: "success", showCancelButton: false, confirmButtonClass: 'btn-danger', confirmButtonText: 'بستن' });
+                            window.location.href = "/Admin/Offers/SendSmsSetting";
+                        }
+                        else
+                            swal({ title: "", text: response.Message, type: "error", showCancelButton: false, confirmButtonClass: 'btn-error', confirmButtonText: 'بستن' });
+
+                        $(".loading").hide();
+                    }
+                });
+            });
+        });
+    </script>
+}

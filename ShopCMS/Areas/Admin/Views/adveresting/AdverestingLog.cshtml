@@ -1,0 +1,87 @@
+﻿@model PagedList.IPagedList<Domain.AdverestingLog>
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+@{
+    var ads = ViewBag.ads as Domain.Adveresting;
+}
+<title>آمار تبلیغات  @ads.Title</title>
+
+@section Header{
+
+    @*View*@
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-warning" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h3 class="box-title">
+
+            <i class="flaticon-copy-interface-outlined-sign"></i> آمار تبلیغات  @ads.Title
+        </h3><br /><br />
+        <p>
+            <span><span class="glyphicon glyphicon-signal"></span> @ads.AdverestingLogs.Count کلیک</span> <span>&nbsp;&nbsp;&nbsp;</span>
+            <span><span class="glyphicon glyphicon-user"></span> @ads.AdverestingLogs.GroupBy(x => new { x.ClientIP, x.Browser, x.UserAgent }).Count() کلیک منحصر بفرد </span>
+        </p>
+        <hr style="margin:0;border:1px solid #000" />
+
+
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>
+                        IP بازدیدکننده
+                    </th>
+
+                    <th>
+                        مرورگر
+                    </th>
+                    <th>
+                        سیستم عامل
+                    </th>
+                    <th>
+                        تاریخ و زمان بازدید
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr class="rowItem" id="@item.Id">
+                        <td>
+                            @item.ClientIP
+                        </td>
+
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Browser)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserAgent)
+                        </td>
+                        <td>
+                            @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate) @item.InsertDate.ToShortTimeString()
+
+                        </td>
+
+                    </tr>
+                }
+
+            </table>
+
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount بازدید.
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("AdverestingLog", new { page }))
+
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+
+}

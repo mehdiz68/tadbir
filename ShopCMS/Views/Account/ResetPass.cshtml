@@ -1,0 +1,125 @@
+﻿@model ahmadi.Models.ResetPasswordViewModel
+
+
+@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+
+    Layout = "~/Views/Shared/_RegisterLayout.cshtml";
+}
+@section Header{
+    <style>
+        .time-container {
+            text-align: center
+        }
+
+        .countdown_time.countdown_style4 {
+            float: none !important;
+            direction: ltr;
+        }
+
+        .countdown_time .countdown_box {
+            float: none !important;
+            text-align: center !important;
+            display: inline-block !important;
+        }
+
+        .countdown_time.countdown_style4 .countdown_box * {
+            color: #000 !important;
+        }
+
+        .countdown_style4 .countdown_box .countdown-wrap {
+            margin: 5px !important;
+        }
+
+        .deal_timer .countdown_time .countdown_box .countdown {
+            border: 2px solid #000 !important;
+            display: block;
+            padding: 5px;
+        }
+
+        .countdown_time .cd_text {
+            display: block;
+            font-family: IRANSans,Tahoma;
+            margin-top: 1px;
+            background-color: transparent;
+            font-size: 10px;
+        }
+    </style>
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+<div class="body-content outer-top-xs">
+    <br />
+    <div class="container">
+        <div class="row">
+
+            <div class="Pagecontent" id="loginForm">
+                @using (Html.BeginForm("ResetPass", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.Hidden("old", ViewBag.IsOld as bool?)
+                    @Html.AntiForgeryToken()
+                    if (ViewBag.IsOld!=null)
+                    {
+                        <div style="font-size: 1; color: red; line-height: 40px;"> <p>@ViewBag.name عزیز،</p><p> از آخرین باری که رمز عبور خود را تغییر دادید مدتی گذشته است، لطفا جهت استفاده از خدمات فروشگاه، رمز عبور جدید خود را ثبت نمایید.</p></div>
+                    }
+                    <h4 style="font-size: 1.2em; padding: 0px 20px;"> کد فعال سازی و رمز عبور جدید را وارد نمایید :</h4>
+                    <div class="time-container">
+                        <span class="text-deal"> فرصت باقی مانده تا فعال سازی : </span>
+                        <div class="deal_timer">
+                            <div class="countdown_time countdown_style4" data-time="@ViewBag.ActiveTempCodeExpire"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+                    <p class="text-danger">@ViewBag.Error</p>
+                    @Html.Hidden("Mobile", ViewBag.mobile as string)
+                    <div class="form-group">
+                        <label class="control-label">کد فعال سازی</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Code, new {@type="number", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password, new { @class = " control-label" })
+                        <div class="col-md-10">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "control-label" })
+                        <div class="col-md-10">
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" class="btn btn-default" value="تغییر رمز عبور" />
+                        </div>
+                    </div>
+                    <hr />
+                    <a href="@Url.Action("ForgotPassword","Account")">درخواست دوباره تغییر رمز عبور</a>
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $('.countdown_time').each(function () {
+            var endTime = $(this).data('time');
+            $(this).countdown(endTime, function (tm) {
+                if (parseInt(tm.strftime('%D')) == 0) {
+                    $(this).html(tm.strftime('</div><div class="countdown_box"><div class="countdown-wrap"><span class="countdown minutes">%M</span><span class="cd_text">دقیقه</span></div></div><div class="countdown_box"><div class="countdown-wrap"><span class="countdown seconds">%S</span><span class="cd_text">ثانیه</span></div></div>'));
+                }
+                else {
+                    $(this).html(tm.strftime('<div class="countdown_box"><div class="countdown-wrap"><span class="countdown days">%D </span><span class="cd_text">روز</span></div></div><div class="countdown_box"><div class="countdown-wrap"><span class="countdown minutes">%M</span><span class="cd_text">دقیقه</span></div></div><div class="countdown_box"><div class="countdown-wrap"><span class="countdown seconds">%S</span><span class="cd_text">ثانیه</span></div></div>'));
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,186 @@
+﻿@model IEnumerable<Domain.ProductCategory>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+
+<title>مدیریت گروه و زیرگروه</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+        @{
+            var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+            var Category = ViewBag.Category as Domain.ProductCategory;
+            var ProductCategoryAttributes = ViewBag.ProductCategoryAttributes as ICollection<Domain.ProductAttribute>;
+            var setting = ViewBag.setting as Domain.Setting;
+
+            var AllProductAttributeGroups = ViewBag.AllProductAttributeGroups as IEnumerable<Domain.ProductAttributeGroup>;
+            var AllProductAttributes = ViewBag.AllProductAttributes as IEnumerable<Domain.ProductAttribute>;
+        }
+        @section Header{
+
+            @*View*@
+            <link href="~/Areas/Admin/Content/Stylesheets/View/ProductCategories.css" rel="stylesheet" />
+            <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+            @*Bootstrap Select*@
+            <link href="~/areas/admin/content/scripts/component/bootstrp-dropdown/bootstrap-select.min.css" rel="stylesheet" />
+            <link rel="stylesheet" href="~/Areas/Admin/Content/Scripts/Component/Listbox-Transfer/icon_font/css/icon_font.css">
+            <link rel="stylesheet" href="~/Areas/Admin/Content/Scripts/Component/Listbox-Transfer/css/jquery.transfer.css">
+        }
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule != null ? Html.Raw(HelpModule.Data).ToHtmlString() : "راهنمایی وجود ندارد")"> </span>
+            <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+                <a href="@Url.Action("Index", "ProductCategories")"> مدیریت گروه و زیرگروه</a>
+
+            </h1>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left" style="padding-left: 4px;">
+
+            <a class="btn btn-success " data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule.HelpModuleSections.Where(x => x.Name == "مرتب سازی").Any() ? HelpModule.HelpModuleSections.Where(x => x.Name == "مرتب سازی").First().Abstract : "")" href="@Url.Action("Sort", "ProductCategories")"><span class="glyphicon glyphicon-list-alt"></span> مرتب سازی  </a>
+
+        </div>
+        <div class="clearfix"></div>
+
+
+        <div id="ProductCategories" class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <br />
+            @if (ViewBag.AddPermission)
+            {
+                <p style="margin:0"><a class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x => x.Name == "ایجاد گروه و زیرگروه").Any() ? HelpModule.HelpModuleSections.Where(x => x.Name == "ایجاد گروه و زیرگروه").First().Abstract : "")" href="@Url.Action("Create", "ProductCategories")"><span class="glyphicon glyphicon-plus"></span> ایجاد گروه اصلی</a></p>
+            }
+            <div class="tree">
+                @{
+                    CoreLib.ViewModel.Xml.XMLReader xr = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+                    var Languages = xr.ListOfXLanguage();
+                }
+                @if (Languages.Count > 1)
+                {
+                    <div>
+                        <p>فیلتر با زبان (وب سایت) :</p>
+                        @Html.DropDownList("LanguageId", ViewBag.LanguageId as SelectList, "--انتخاب نمایید--", htmlAttributes: new { id = "LanguageFilter", style = "width:99%;display: inline-block", @class = "form-control" })
+                    </div>
+                }
+                @(Html.TreeView(Model).EmptyContent("گروه و زیر گروه ای وجود ندارد!").Children(m => m.ChildCategory).HtmlAttributes(new { id = "tree" }).ChildrenHtmlAttributes(new { @class = "subItem" }).ItemText(m => m.Name).ItemTemplate(@<text><a data-id="@item.Id" href="@Url.Action("Index", new { CatID = item.Id })">@item.Name</a></text>))
+            </div>
+            <ul id="ContexMenu" style="width: 150px; text-align: center; display: none">
+                @if (ViewBag.AddPermission)
+                {
+                    <li id="NewSubMenu"><span>زیر گروه جدید</span><span class="ui-icon ui-icon-circle-check"></span></li>
+                }
+                @if (ViewBag.EditPermission)
+                {
+                    <li id="EditItem"><span>ویرایش</span><span class="ui-icon ui-icon-pencil"></span></li>
+                }
+                @if (ViewBag.DeletePermission)
+                {
+                    <li id="DeleteItem"><span>حذف</span><span class="ui-icon ui-icon-circle-close"></span></li>
+                }
+            </ul>
+
+        </div>
+
+
+        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" style="padding:0">
+
+            @if (Category != null)
+            {
+
+                <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                    <ul id="myTab1" class="nav nav-tabs bar_tabs right" role="tablist">
+
+                        <li role="presentation" class="active">
+                            <a href="#tab-Commission" role="tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">کمیسیون</a>
+                        </li>
+                        <li role="presentation" class="">
+                            <a href="#tab_Groups" role="tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">گروه خصوصیت ها</a>
+                        </li>
+                        <li role="presentation" class="">
+                            <a href="#tab_atts" role="tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">خصوصیت های قابل جستجو</a>
+                        </li>
+                    </ul>
+                    <div id="myTabContent2" class="tab-content">
+
+                        <div role="tabpanel" class="tab-pane fade active in" id="tab-Commission" aria-labelledby="profile-tab">
+                            <p>
+                                <input type="number" id="txt-Commission" placeholder="مقدار کمیسیون این گروه..." class="form-control" value="@(Category != null ? @Category.Commission : 0)" />
+                                <span class="btn btn-primary" id="Update-Commission" data-id="@(Category != null ? @Category.Id : 0)">بروزرسانی</span>
+                            </p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tab_Groups" aria-labelledby="profile-tab">
+                            <div class="row">
+                                @using (Ajax.BeginForm("AddGroup", "ProductCategories", null, new AjaxOptions { HttpMethod = "POST", OnBegin = "onBeginSubmitAddComment2", OnSuccess = "ShowCommentSuccess2", OnFailure = "ShowCommentFailure2", InsertionMode = InsertionMode.Replace }, new { id = "AddComment2", @class = "rd-form rd-mailform" }))
+                                {
+                                    <input type="hidden" value="@Category.Id" name="CatId" />
+                                    foreach (var item in AllProductAttributeGroups.OrderBy(S => S.Title))
+                                    {
+                                        <div class="col-md-3 grp">
+                                            @if (Category.ProductAttributeGroupProductCategorys.Any(s => s.ProductAttributeGroupId == item.Id))
+                                            {
+                                                <input type="hidden" value="@item.Id" name="grpId" /><input data-id="@item.Id" checked="checked" type="checkbox" name="chkGroupId" /><span>&nbsp;&nbsp; @item.Title</span>
+                                            }
+                                            else
+                                            {
+
+                                                <input data-id="@item.Id" type="checkbox" name="chkGroupId" /><span>&nbsp;&nbsp; @item.Title</span>
+                                            }
+                                        </div>
+
+                                    }
+
+                                    <div class="clearfix"></div>
+                                    <br /><br />
+                                    <button type="submit" class="btn btn-primary">ارسال</button>
+                                }
+                            </div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="tab_atts" aria-labelledby="profile-tab">
+                            <div class="row">
+                                @using (Ajax.BeginForm("AddAttribute", "ProductCategories", null, new AjaxOptions { HttpMethod = "POST", OnBegin = "onBeginSubmitAddComment", OnSuccess = "ShowCommentSuccess", OnFailure = "ShowCommentFailure", InsertionMode = InsertionMode.Replace }, new { id = "AddComment", @class = "rd-form rd-mailform" }))
+                                {
+                                    <input type="hidden" value="@Category.Id" name="CatId" />
+                                    foreach (var item in AllProductAttributes.OrderBy(S => S.Name))
+                                    {
+                                        <div class="col-md-3 att">
+                                            @if (Category.ProductCategoryAttributes.Any(s => s.ProductAttributeId == item.Id))
+                                            {
+                                                <input type="hidden" value="@item.Id" name="Attid" /> <input data-id="@item.Id" checked="checked" type="checkbox" name="chkAttId" /><span>&nbsp;&nbsp; @item.Name</span>
+                                            }
+                                            else
+                                            {
+
+                                                <input data-id="@item.Id" type="checkbox" name="chkAttId" /><span>&nbsp;&nbsp; @item.Name</span>
+                                            }
+                                        </div>
+                                    }
+                                    <div class="clearfix"></div>
+                                    <br /><br />
+                                    <button type="submit" class="btn btn-primary">ارسال</button>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            }
+
+        </div>
+        <div class="clearfix"></div>
+
+        @section Scripts{
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/View/ProductCategories.js?v=1.3.1"></script>
+            @*Bootstrap Select*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/Bootstrp-DropDown/bootstrap-select.min.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Base/jquery.ui-contextmenu.js"></script>
+
+            <script src="~/Areas/Admin/Content/Scripts/Component/Listbox-Transfer/js/jquery.transfer.js"></script>
+            
+
+        }
+    </div>
+</div>

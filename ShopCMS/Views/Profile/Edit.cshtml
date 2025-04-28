@@ -1,0 +1,253 @@
+﻿@model ahmadi.Models.EditProfileViewModel
+@using ahmadi.Infrastructure.Helper;
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var returnurl = ViewBag.returnurl as string;
+    var r = ViewBag.r as string;
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+@section Header{
+
+    <link href="~/Content/Default/user.css" rel="stylesheet" />
+
+
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+
+}
+
+<div class="container" id="Edit-Profile">
+    <h1>
+        <span>  ویرایش(تکمیل) پروفایل کاربری</span>
+        <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+    </h1>
+    <div class="row">
+
+        @using (Html.BeginForm("Edit", "Profile", FormMethod.Post, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @if (ViewBag.Error != null)
+                {
+                    if (ViewBag.Error != "")
+                    {
+
+                        <p class="alert alert-danger">@ViewBag.Error </p>
+                    }
+                }
+                @Html.HiddenFor(model => model.Id)
+
+                @Html.Hidden("returnUrl", returnurl)
+                @Html.Hidden("r", r)
+                @Html.HiddenFor(x => x.PhoneNumber)
+
+                <div class="form-group">
+                    <label class="control-label">شماره موبایل </label>
+                    <div class="col-md-10">
+                        <input autocomplete="off" disabled="disabled" value="@Model.PhoneNumber" class="form-control text-box single-line">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.About, htmlAttributes: new { @class = "control-label" })
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(model => model.About, htmlAttributes: new { @class = "form-control", rows = "3" })
+                        @Html.ValidationMessageFor(model => model.About, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label" })
+                    <div class="col-md-10">
+                        <div class="checkbox">
+                            <select id="Gender" name="Gender" class="form-control">
+                                <option>نامشخص</option>
+                                @if (Model.Gender.HasValue)
+                                {
+                                    if (Model.Gender.Value == true)
+                                    {
+
+                                        <option selected="selected" value="True">مرد</option>
+                                        <option  value="False">زن</option>
+                                    }
+                                    else
+                                    {
+
+                                        <option value="False">مرد</option>
+                                        <option selected="selected" value="True">زن</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option value="True">مرد</option>
+                                    <option value="False">زن</option>
+                                }
+                            </select>
+                            @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Avatar, htmlAttributes: new { @class = "control-label" })
+
+                    <div class="col-md-10">
+                        @if (Model.Avatar.HasValue)
+                        {
+                            @Html.Displayattachment(Model.Avatarattachment.FileName, Model.FirstName + " " + Model.LastName, "LG", htmlAttributes: new { @class = "img-responsive", width = "80", height = "80", style = "display:inline-block;width:80px;height:80px" })
+                        }
+                        else
+                        {
+                            if (Model.Gender == true)
+                            {
+                                <img src="~/Content/Default/images/man-avatar.jpg" />
+                            }
+                            else
+                            {
+                                <img src="~/Content/Default/images/woman-avatar.gif" />
+                            }
+                        }
+                        <input type="file" id="file" name="file" />
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.LandlinePhone, new { @class = " control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.LandlinePhone, new { @class = "form-control" })
+
+                        @Html.ValidationMessageFor(model => model.LandlinePhone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <span class="text-danger">*</span> @Html.LabelFor(m => m.PostalCode, new { @class = " control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-10">
+
+                        <span class="text-danger">*</span> <label>استان/شهر</label>
+                        @Html.DropDownList("ProvinceId", ViewBag.ProvinceList as SelectList, "--انتخاب استان--", htmlAttributes: new { @class = "form-control " })
+
+                        @Html.DropDownList("CityId", ViewBag.cityList as SelectList, null, htmlAttributes: new { @class = "form-control " })
+
+                        @*<select id="CityId" name="CityId" class="form-control">
+                                @if (Model.CityId.HasValue)
+                                {
+                                    <option value="@Model.CityId">@Model.CityEntity.Name</option>
+                                }
+                            </select>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div class="col-sm-6 col-xs-6">
+                                <label> پلاک </label>
+                                @Html.TextBoxFor(m => m.AddressNumber, new { @class = "form-control" })
+
+                            </div>
+
+                            <div class="col-sm-6  col-xs-6">
+                                <label> واحد </label>
+                                @Html.TextBoxFor(m => m.AddressUnit, new { @class = "form-control" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <br />
+                        <span class="text-danger">*</span> @Html.LabelFor(m => m.Address, new { @class = " control-label" })
+                        @Html.TextAreaFor(m => m.Address, new { @class = "form-control", rows = "3" })
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <span class="text-danger">*</span>@Html.LabelFor(m => m.NationalCode, new { @class = " control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.NationalCode, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.NationalCode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.BirthDate, new { @class = " control-label" })
+                    <div class="col-md-10">
+                        @{
+                            string shamsiDate = "";
+                            if (Model.BirthDate.HasValue)
+                            {
+                                shamsiDate = CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsi(Model.BirthDate.Value);
+                            }
+                        }
+                        <img src="~/Areas/Admin/Content/images/calender.gif" onclick="displayDatePicker('ShamsiBirthDate');" alt="" />
+                        <input id="ShamsiBirthDate" value="@shamsiDate" name="ShamsiBirthDate" readonly class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.CardNumber, new { @class = " control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.CardNumber, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.CardNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="ذخیره" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        }
+
+
+
+    </div>
+</div>
+
+
+@section Scripts{
+    @*Persian Calender*@
+    <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+    <script src="~/Content/Base/Scripts/view/Profile-Edit.js?v=1.2.3"></script>
+
+}

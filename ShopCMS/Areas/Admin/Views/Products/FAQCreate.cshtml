@@ -1,0 +1,78 @@
+﻿@model Domain.ProductQuestion
+@using ahmadi.Infrastructure.Helper
+
+
+@{
+    var product = ViewBag.product as Domain.Product;
+}
+<title>افزودن پرسش و پاسخ به @product.Name</title>
+
+@section Header{
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Products.css?v=1.22" rel="stylesheet" />
+    @*Bootstrap Select*@
+    <link href="~/areas/admin/content/scripts/component/bootstrp-dropdown/bootstrap-select.min.css" rel="stylesheet" />
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("FAQ",new {id=product.Id })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        @if (ViewBag.Error != null)
+        {
+            <p class="alert alert-danger">@ViewBag.Error</p>
+        }
+        @using (Html.BeginForm("FAQCreate", "Products", FormMethod.Post, new { id = "AddForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("ProductId", product.Id)
+            @Html.Hidden("InsertDate", DateTime.Now)
+            <div class="form-horizontal">
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+
+                <div class="form-group has-feedback col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <label class="control-label" style="display:block">نام و نام خانوادگی</label>
+                    <input type="text" id="FakeUserFullName" value="@ViewBag.userFake" name="FakeUserFullName" class="form-control" />
+                    @Html.ValidationMessageFor(model => model.FakeUserFullName, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group has-feedback col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <label class="control-label" style="display:block">پرسش</label>
+                    <textarea id="question" name="question" class="form-control" rows="4"></textarea>
+                </div>
+
+                <div class="form-group has-feedback col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <label class="control-label" style="display:block">پاسخ</label>
+                    <textarea id="Answer" name="Answer" class="form-control" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <input type="submit" value="ثبت" class="btn btn-primary" />
+                    </div>
+                </div>
+
+
+
+            </div>
+        }
+
+        @section Scripts{
+
+
+            <script src="~/Areas/Admin/Content/Scripts/Component/Bootstrp-DropDown/bootstrap-select.min.js"></script>
+
+            @*Product Category*@
+            <script src="~/Areas/Admin/Content/Scripts/View/_CategoryManager.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+
+
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+            <script src="~/Scripts/tinymce/tinymce.min.js"></script>
+            <script src="~/Scripts/tinymce/tiny_mce_load.js"></script>
+
+        }
+    </div>
+</div>

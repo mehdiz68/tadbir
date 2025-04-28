@@ -1,0 +1,117 @@
+﻿@model List<CoreLib.ViewModel.Xml.XContentType>
+
+@using ahmadi.Infrastructure.Helper;
+@using PagedList.Mvc;
+@using CoreLib.Infrastructure;
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <title>مدیریت انواع محتوا</title>
+        <h1 style="display:inline-block;font-size: 2em;"><a href="~/Admin/ContentTypes">مدیریت انواع محتوا</a> </h1>
+
+        <br /><br />
+        @if (ViewBag.SuperUserPermission != null)
+        {
+            if (ViewBag.AddPermission)
+            {
+                <a class="btn btn-success" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد نوع محتوای جدید </a>
+            }
+            else
+            {
+                <span class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> <span style="text-decoration:line-through"> ایجاد نوع محتوای جدید </span> </span>
+
+            }
+        }
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">Id</th>
+                        <th class="text-center column-title">
+                            زبان(وب سایت)
+                        </th>
+                        <th class="text-center column-title">
+                            نام
+                        </th>
+                        <th class="text-center column-title">
+                            عنوان
+                        </th>
+                        <th class="text-center column-title">
+                            تصویر
+                        </th>
+                        <th class="text-center column-title">
+                            نمایش در جست و جوی سایت
+                        </th>
+                        <th class="text-center column-title">
+                            ویدئویی؟
+                        </th>
+                        <th class="text-center column-title"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>@item.Id</td>
+
+                            <td>
+                                @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @if (!String.IsNullOrEmpty(item.Cover))
+                                {
+                                    @Html.Displayattachment(item.Cover, "SM", htmlAttributes: new { @class = "img-responsive", width = "110", height = "60", style = "display:inline-block;width:110px;height:60px" })
+                                }
+                                else
+                                {
+                                    <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:110px;height:60px" />
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InSearch)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsVideo)
+                            </td>
+                            <td>
+
+                                @if (ViewBag.EditPermission)
+                                {
+                                    <a class="btn btn-success" href="@Url.Action("Edit", new { id=item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                }
+                                @if (ViewBag.SuperUserPermission != null)
+                                {
+                                    if (ViewBag.DeletePermission)
+                                    {
+                                        <a class="btn btn-danger" href="@Url.Action("Delete", new { id=item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+
+
+    </div>
+</div>

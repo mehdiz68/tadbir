@@ -1,0 +1,65 @@
+﻿@model Domain.Comment
+<title>ایجاد نظر</title>
+@{
+    Domain.Content content = ViewBag.Content as Domain.Content;
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h3 class="box-title">
+            ایجاد کامنت برای محتوای <a style="color:blue;text-decoration:underline" href="/content/@content.Id/@CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(content.Title)" target="_blank">@content.Title</a>
+        </h3>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control  text-left",@style="direction:ltr" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Message, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(model => model.Message, new  { @class = "form-control"  })
+                        @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FullName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                @Html.Hidden("ContentId", content.Id)
+                @Html.Hidden("PositiveRating", 0)
+                @Html.Hidden("NegativeRating", 0)
+                @Html.Hidden("InsertDate", DateTime.Now)
+                @Html.Hidden("Visited", true)
+                @Html.Hidden("IsActive", true)
+
+
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="ایجاد" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

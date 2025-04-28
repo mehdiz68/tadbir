@@ -1,0 +1,192 @@
+﻿@model Domain.ProductPriceGroupModification
+@using ahmadi.Infrastructure.Helper
+<title> تعریف اصلاح جدید</title>
+@{
+    var BrandOrCat = ViewBag.BrandOrCat as bool?;
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+    var setting = ViewBag.setting as Domain.Setting;
+    <style>
+        .tree li {
+            padding: 6px 5px 0px 5px;
+        }
+
+            .tree li a {
+                padding: 4px;
+                font-weight: normal;
+                font-size: 12px;
+            }
+
+        .bootstrap-select.btn-group .dropdown-toggle .filter-option {
+            text-align: right !important
+        }
+
+        .bootstrap-select.btn-group .dropdown-menu li {
+            text-align: right
+        }
+    </style>
+}
+@section Header{
+
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        <span style="cursor:pointer" data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            تعریف اصلاح جدید
+
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("BrandOrCat", BrandOrCat.Value)
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @if (BrandOrCat.Value == false)
+                    {
+                        <div>
+                            <label>گروه و زیرگروه</label>
+                            @Html.DropDownList("ProductTypeId", ViewBag.ProductTypeId as IEnumerable<SelectListItem>, new { @class = "form-control selectpicker", data_live_search = "true" })
+                            @Html.Action("OpenProductCategories", "Products", new { CurrentCatId = (ViewBag.ProductCatIdFilter != null ? Convert.ToInt32(ViewBag.ProductCatIdFilter) : 0), ProductTypeId = (ViewBag.ProductTypeFilter != null ? Convert.ToInt32(ViewBag.ProductTypeFilter) : 1) })
+
+                        </div><br /><br />
+
+                        <div>
+                            <label>برند</label>
+                            @Html.DropDownList("BrandId", ViewBag.BrandId as IEnumerable<SelectListItem>, new { @class = "form-control selectpicker", data_live_search = "true" })
+
+                        </div><br /><br />
+                    }
+
+                    else
+                    {
+                        <div>
+                            <label>برند</label>
+                            @Html.DropDownList("BrandId", ViewBag.BrandId as IEnumerable<SelectListItem>, new { @class = "form-control selectpicker", data_live_search = "true" })
+
+                        </div><br /><br />
+
+                                    <div>
+                                        <label>گروه و زیرگروه</label>
+
+                                        @Html.DropDownList("ProductCatId", ViewBag.ProductCategories as IEnumerable<SelectListItem>,  new { @class = "form-control selectpicker", data_live_search = "true" })
+                                    </div><br /><br />
+
+
+                    }
+
+
+
+                </div>
+
+                <div class="form-group">
+                    <select id="IncreaseType" name="IncreaseType" class="form-control">
+                        <option value="false">کاهش قیمت</option>
+                        <option value="true">افزایش قیمت</option>
+                    </select>
+
+                </div>
+                <div class="form-group">
+                    <select id="ValueType" name="ValueType" class="form-control">
+                        <option value="false">قیمت درصدی</option>
+                        <option value="true">قیمت ثابت</option>
+                    </select>
+
+                </div>
+                <div class="form-group">
+
+                    <label>مقدار ( مثلا 1000 برای 1000 تومان یا 10 برای 10 درصد )</label>
+                    @Html.EditorFor(model => model.Value, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
+
+                </div>
+                <input type="submit" value="ثبت" class="btn btn-primary" style="border-radius: 0" />
+
+            </div>
+        }
+
+
+
+        @section Scripts{
+
+            @*Product Category*@
+            <script src="~/Areas/Admin/Content/Scripts/View/_CategoryManager.js"></script>
+            @*ProductList*@
+            <script src="~/Areas/Admin/Content/Scripts/View/ProductList.js"></script>
+
+            <script>
+                $(document).ready(function () {
+                    if ($("#BrandOrCat").val() == "false") {
+                        $("body").on("change", ".CategoryManager select ", function () {
+                            var catid = $("#ProductCatId").val();
+                            $(".loading").show();
+                            $.ajax({
+                                crossDomain: true,
+                                type: "POST",
+                                url: '/Admin/PriceGroupModification/GetBrands/',
+                                data: '{CatId:"' + parseInt(catid) + '"}',
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function (response) {
+                                    if (response.statusCode == 200) {
+                                        $("#BrandId option").hide();
+                                        $("#BrandId option[value='-1']").show();
+                                        $("#BrandId option[value='0']").show();
+                                        for (var i = 0; i < response.data.length; i++) {
+
+                                            $("#BrandId option[value='" + response.data[i] + "']").show();
+                                        }
+
+                                    }
+
+                                    $(".loading").hide();
+                                }
+                            });
+
+                        });
+                    }
+                    else {
+                        $("body").on("change", "#BrandId", function () {
+                            var brandid = $("#BrandId").val();
+                            $(".loading").show();
+                            $.ajax({
+                                crossDomain: true,
+                                type: "POST",
+                                url: '/Admin/PriceGroupModification/GetCats/',
+                                data: '{BrandId:"' + parseInt(brandid) + '"}',
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function (response) {
+                                    if (response.statusCode == 200) {
+                                        $("#ProductCatId option").hide();
+                                        $("#ProductCatId option[value='-1']").show();
+                                        $("#ProductCatId option[value='0']").show();
+                                        for (var i = 0; i < response.data.length; i++) {
+
+                                            $("#ProductCatId option[value='" + response.data[i] + "']").show();
+                                        }
+
+                                    }
+
+                                    $(".loading").hide();
+                                }
+                            });
+
+                        });
+                    }
+                });
+            </script>
+
+        }
+    </div>
+</div>

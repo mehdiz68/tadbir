@@ -1,0 +1,145 @@
+﻿@model Domain.Social
+<title>ایجاد شبکه جدید</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+    var setting = ViewBag.setting as Domain.Setting;
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ایجاد شبکه جدید
+
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @if (ViewBag.message != null)
+                {
+                    <p class="alert alert-danger">@ViewBag.message</p>
+                }
+
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="control-label col-md-1">
+
+                        <span class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                    </div>
+                    <div class="col-md-11">
+                        <div>
+                            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { placeholder = "عنوان", Id = "ContentTitle", @class = "form-control" } })
+                            <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+
+                            <p><label class="ContentTitle"></label> کاراکتر باقی مانده </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="control-label col-md-1">
+                        <span class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "لینک").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "لینک").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                    </div>
+                    <div class="col-md-11">
+                        @Html.EditorFor(model => model.Link, new { htmlAttributes = new { placeholder = "لینک", Id = "ContentLink", @class = "form-control", Style = "text-align:left;direction:ltr" } })
+                        @Html.ValidationMessageFor(model => model.Link, "", new { @class = "text-danger" })
+
+                        <p><label class="ContentLink"></label> کاراکتر باقی مانده</p>
+                    </div>
+                </div>
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="control-label col-md-1">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-11">
+
+                        @Html.TextBoxFor(m => m.Icon, new { @class = "form-control", placeholder = "آیکن", @readonly = "readonly" })
+                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                        <p>
+                            <label type="button" class="btn btn-primary" data-toggle="modal" data-target="#IconsModalLong">
+                                <label class="fa fa-hand-o-left"></label> لیست آیکن ها
+                            </label>
+
+                            @Html.Action("GetIconList", "Home")
+                        </p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+
+                @{
+                    CoreLib.ViewModel.Xml.XMLReader readXml = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+                    var languages = readXml.ListOfXLanguage();
+                }
+                @if (languages.Count == 1)
+                {
+                    @Html.Hidden("LanguageId", languages.First().Id)
+                }
+                else
+                {
+                    <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        @Html.LabelFor(model => model.LanguageId, "زبان ( وب سایت )", htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.DropDownList("LanguageId", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.LanguageId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="control-label col-md-1">
+                        <span class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "آیکن").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "آیکن").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                    </div>
+                    <div class="col-md-11">
+                        @Ajax.ActionLink("انتخاب یا آپلود تصویر", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager" })
+
+                        <div id="createView"></div>
+
+                        <div id="AttachementContainer">
+                            <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" width="220" height="120" style="display:inline-block;width:220px;height:120px" />
+                            @Html.EditorFor(model => model.Cover, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.Cover, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                    @Html.CheckBox("IsActive", true, new { @class = "js-switch" }) @Html.LabelFor(m => m.IsActive)
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <input type="submit" value="ایجاد" class="btn btn-success" />
+                </div>
+            </div>
+                    }
+
+
+        @section Scripts{
+
+            <script>
+
+
+                $('#ContentTitle').simplyCountable({ counter: '.ContentTitle', maxCount: 100, safeClass: 'safe', overClass: 'over' });
+                $('#ContentLink').simplyCountable({ counter: '.ContentLink', maxCount: 255, safeClass: 'safe', overClass: 'over' });
+            </script>
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+            <script src="~/Areas/Admin/Content/Scripts/Component/IconList.js"></script>
+
+        }
+
+        </div>
+</div>

@@ -1,0 +1,37 @@
+﻿@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+
+    Layout = "~/Views/Shared/_RegisterLayout.cshtml";
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+<div class="body-content outer-top-xs">
+    <br />
+    <div class="container">
+        <div class="row">
+
+            <div class="Pagecontent">
+                <div>
+                    <div class="alert alert-danger">
+                        <p>
+                            حساب کاربری شما غیرفعال می باشد. برای فعال سازی آن با ما تماس بگیرید.
+                        </p>
+                        <p>
+                            پس از چند ثانیه به طور خودکار هدایت می شوید.
+                        </p>
+                        <script>
+                            setTimeout(function () {
+                                window.location.href = "/";
+                            }, 6000);
+                        </script>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>

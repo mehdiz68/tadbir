@@ -1,0 +1,101 @@
+﻿@model IEnumerable<Domain.ProductAttributeTab>
+@using ahmadi.Infrastructure.Helper
+@using Domain;
+
+<title>مدیریت تب</title>
+
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <h1 style="display:inline-block;font-size: 2em;">
+
+            <a href="@Url.Action("Index","ProductAttributeTabs")"> مدیریت تب </a>
+
+        </h1>
+
+        <br /><br />
+        @if (ViewBag.AddPermission)
+            {
+            <p><a class="btn btn-success" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد تب جدید </a></p>
+        }
+
+        
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+                                <span>عنوان</span>
+                           
+                        </th>
+
+                        <th class="text-center column-title">
+                            <span>آیکن</span>
+
+                        </th>
+                        <th class="text-center column-title">
+                            <span>زبان</span>
+
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+
+                        <tr class="rowItem" id="@item.Id">
+                            <td class="text-center">
+                                @item.Name
+                            </td>
+                            <td class="text-center">
+
+                                <span style="font-size: 2em;" class="@item.Icon"></span>
+                            </td>
+                            <td>
+                                @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId)
+                            </td>
+
+                            <td class="text-center">
+                                @if (ViewBag.EditPermission)
+                                {
+                                    <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                }
+                                @if (ViewBag.DeletePermission)
+                                {
+                                    <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+
+        @section Scripts{
+
+            @*View*@
+        <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+        <script src="~/Areas/Admin/Content/Scripts/View/SortProductAttributeTabs.js"></script>
+
+
+        }
+
+
+        </div>
+</div>

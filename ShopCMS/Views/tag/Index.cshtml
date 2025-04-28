@@ -1,0 +1,250 @@
+﻿@model Domain.Tag
+@using CoreLib.Infrastructure
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure
+@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var sliders = ViewBag.Sliders as IEnumerable<Domain.Slider>;
+    var setting = ViewBag.setting as Domain.Setting;
+    var MostvisitContents = ViewBag.MostVisitsContent as IEnumerable<Domain.Content>;
+
+    var ads = ViewBag.Ads as IEnumerable<Domain.Adveresting>;
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+@section Header{
+    <link href="~/Content/Base/Css/view/ContentType.css" rel="stylesheet" />
+}
+
+<div class="container ads">
+    <div class="row">
+
+        @if (ads.Where(x => x.Position == 1).Any())
+        {
+            <div class="content">
+                <div class="clearfix filters-container m-t-20">
+                    <div class="row adv-row">
+
+                        @if (ads.Where(x => x.Position == 1).Any())
+                        {
+                            int SumSize = 0;
+                            <div class="adv-box">
+                                @foreach (var Adveresting in ads.Where(x => x.Position == 1).OrderBy(x => x.DisplaySort))
+                                {
+                                    SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+
+                                    <div class="adv-image Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? " lastbox":"" )">
+                                        <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : " Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+                                            @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+                                        </a>
+                                    </div>
+                                    if (SumSize == 12)
+                                    {
+                                        SumSize = 0;
+                                        <div class="clearfix"></div>
+                                    }
+                                }
+                                <div class="clearfix"></div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+            <br /><br />
+        }
+
+    </div>
+</div>
+
+<section class="hero-wrap hero-wrap-2" style="background-image: url('/Content/Base/Theme/images/xbg_2.jpg'); " data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-start">
+            <div class="col-md-9 ftco-animate pb-5 fadeInUp ftco-animated">
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="/"> صفحه اصلی <i class="fa fa-chevron-left"></i></a></span>
+                    <span>برچسب ها <i class="fa fa-chevron-left"></i></span>
+                    <span>@Model.TagName </span>
+                </p>
+                <h1 class="mb-3 bread">@Model.TagName</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+
+        @if (sliders != null)
+        {
+            if (sliders.Any())
+            {
+                int j = 0;
+                foreach (var slider in ViewBag.Sliders as IEnumerable<Domain.Slider>)
+                {
+                    @Html.Partial("_BootStrapSlideShowCaption", slider, new ViewDataDictionary { { "Index", j.ToString() }, { "staticUrl", Meta.StaticContentUrl } })
+                    j++;
+                }
+            }
+        }
+
+
+    </div>
+</div>
+
+<div class="container ads">
+    <div class="row">
+
+        @if (ads.Where(x => x.Position == 2).Any())
+        {
+            <div class="content">
+                <div class="clearfix filters-container m-t-20">
+                    <div class="row adv-row">
+
+                        @if (ads.Where(x => x.Position == 2).Any())
+                        {
+                            int SumSize = 0;
+                            <div class="adv-box">
+                                @foreach (var Adveresting in ads.Where(x => x.Position == 2).OrderBy(x => x.DisplaySort))
+                                {
+                                    SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+
+                                    <div class="adv-image Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? " lastbox":"" )">
+                                        <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : " Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+                                            @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+                                        </a>
+                                    </div>
+                                    if (SumSize == 12)
+                                    {
+                                        SumSize = 0;
+                                        <div class="clearfix"></div>
+                                    }
+                                }
+                                <div class="clearfix"></div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+            <br /><br />
+        }
+
+    </div>
+</div>
+
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        @{
+
+            var TagContent = ViewBag.LatestContent as IEnumerable<Domain.Content>;
+
+            int i = 1;
+
+            foreach (var item in ViewBag.ContentTypes as IEnumerable<CoreLib.ViewModel.Xml.XContentType>)
+            {
+                var latestContent = TagContent.Where(x => x.ContentTypeId == item.Id);
+                if (latestContent.Any())
+                {
+                    <div class="row justify-content-center mb-5 pb-2">
+                        <div class="col-md-8 text-center heading-section ftco-animate fadeInUp ftco-animated">
+                            <h4 class="widget-title">@Model.TagName در @item.Name</h4>
+                        </div>
+                    </div>
+
+                    <div class="row d-flex">
+                        @foreach (var itemContent in latestContent)
+                        {
+                            <div class="col-lg-4 ftco-animate">
+                                <div class="blog-entry">
+                                    <a href="@Url.Action("Index","content",new {id=itemContent.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(itemContent.PageAddress) })" class="block-20" style="background-image:url(@Html.DisplayattachmentUrl(itemContent.attachment.FileName, "LG", true))">
+                                    </a>
+                                    <div class="text d-block">
+                                        <div class="meta">
+                                            <p>
+                                                <a href="#"><span class="fa fa-calendar mr-2"></span>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(itemContent.InsertDate)</a>
+                                                <a href="#" class="meta-chat"><span class="fa fa-comment mr-2"></span> @itemContent.Comments.Count()</a>
+                                            </p>
+                                        </div>
+                                        <h3 class="heading"><a href="@Url.Action("Index","content",new {id=itemContent.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(itemContent.PageAddress) })">@itemContent.Title</a></h3>
+                                        <p><a href="@Url.Action("Index","content",new {id=itemContent.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(itemContent.PageAddress) })" class="btn btn-secondary py-2 px-3">بیشتر</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    if (latestContent.Count() > 0)
+                    {
+
+                        <a href="@Url.Action("Index", "contentTag", new { contentTypeId = item.Id, id = Model.Id, title = CommonFunctions.NormalizeAddress(Model.TagName) })" class="btn btn-primary more-read-btn collapsed m-t-10">
+                            بیشتر
+                        </a>
+                    }
+
+
+                }
+            }
+
+        }
+
+
+    </div>
+</section>
+
+
+
+<div class="container ads">
+    <div class="row">
+
+        @if (ads.Where(x => x.Position == 3).Any())
+        {
+            <div class="content">
+                <div class="clearfix filters-container m-t-20">
+                    <div class="row adv-row">
+
+                        @if (ads.Where(x => x.Position == 3).Any())
+                        {
+                            int SumSize = 0;
+                            <div class="adv-box">
+                                @foreach (var Adveresting in ads.Where(x => x.Position == 3).OrderBy(x => x.DisplaySort))
+                                {
+                                    SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+
+                                    <div class="adv-image Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? " lastbox":"" )">
+                                        <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : " Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+                                            @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+                                        </a>
+                                    </div>
+                                    if (SumSize == 12)
+                                    {
+                                        SumSize = 0;
+                                        <div class="clearfix"></div>
+                                    }
+                                }
+                                <div class="clearfix"></div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+            <br /><br />
+        }
+
+    </div>
+</div>
+
+
+
+
+
+
+
+@section Scripts{
+
+
+}

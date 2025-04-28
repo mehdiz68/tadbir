@@ -1,0 +1,10 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LayoutModal.cshtml";
+
+    ViewBag.ModalTitle = "Login";
+    ViewBag.ModalId = "ModalLogin";
+}
+
+   
+@Html.Partial("_LoginPartialForm",new ahmadi.Models.LoginViewModel())

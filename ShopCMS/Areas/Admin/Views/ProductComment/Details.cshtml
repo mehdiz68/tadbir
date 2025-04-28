@@ -1,0 +1,173 @@
+﻿@model Domain.ProductComment
+@using ahmadi.Infrastructure.Helper
+
+<title>نمایش جزئیات</title>
+
+@{
+    bool Buyer = false;
+    if (ViewBag.Buyer != null)
+    {
+        Buyer = (ViewBag.Buyer as bool?).Value;
+    }
+}
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h3 class="box-title">
+            نمایش جزئیات نظر کاربر
+        </h3>
+        <br /><br />
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(m => m.Id);
+            <dl class="dl-horizontal">
+
+                <dt>
+                    <label>نام کاربر</label>
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.User.FirstName)
+                    @Html.DisplayFor(model => model.User.LastName)
+                </dd>
+                <content><br /></content>
+
+                <dt>
+                    <label>نام محصول</label>
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Product.Title)
+                </dd>
+                <content><br /></content>
+
+                <dt>
+                    @Html.LabelFor(model => model.Title)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
+                <content><br /></content>
+                <dt>
+                    @Html.LabelFor(model => model.InsertDate)
+                </dt>
+
+                <dd>
+                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.InsertDate) <br /> @Model.InsertDate.ToShortTimeString()
+                </dd>
+                <content><br /></content>
+                <dt>
+                    @Html.LabelFor(model => model.Text)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Text)
+                </dd>
+                <content><br /></content>
+
+
+                <dt>
+                    @Html.LabelFor(model => model.IsBuy)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.IsBuy)
+                </dd>
+                <content><br /></content>
+                <dt>
+                    @Html.LabelFor(model => model.Satisfaction)
+                </dt>
+
+                <dd>
+                    @if (Model.Satisfaction.HasValue)
+                    {
+                        <text> @Model.Satisfaction.Value.ToString().Replace("_", " ") </text>
+                    }
+
+                </dd>
+                <content><br /></content>
+
+                @if (Model.ProductCommentAdvantages.Any())
+                {
+                    <dt>
+                        <label>نقاط قوت</label>
+                    </dt>
+
+                    <dd>
+                        <div class="table-responsive">
+                            @{
+                                Int16 id = 1;
+                                foreach (var item in Model.ProductCommentAdvantages)
+                                {
+                                    <div class="form-group advantageData">
+                                        @Html.Hidden("AdvantageId", item.Id, new { id = "AdvantageId" + id })
+                                        @Html.Label("advantageText", item.Title, new { id = "advantageText" + id++, @class = "advantageText" })
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </dd>
+                    <content><br /></content>
+                }
+
+                @if (Model.ProductCommentDisAdvantages.Any())
+                {
+                    <dt>
+                        <label>نقاط ضعف</label>
+                    </dt>
+
+                    <dd>
+                        <div class="table-responsive">
+                            @{
+                                Int16 id = 1;
+                                foreach (var item in Model.ProductCommentDisAdvantages)
+                                {
+                                    <div class="form-group disAdvantageData">
+                                        @Html.Hidden("disAdvantageId", item.Id, new { id = "disAdvantageId" + id })
+                                        @Html.Label("disAdvantageText", item.Title, new { id = "disAdvantageText" + id++, @class = "disAdvantageText" })
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </dd>
+                    <content><br /></content>
+                }
+
+            </dl>
+            <p>
+                @if (ViewBag.EditPermission)
+                {
+                    if (Model.IsActive)
+                    {
+                        <input type="submit" class="btn btn-info" name="Confirm" value="عدم تایید" />
+                    }
+                    else
+                    {
+                        <input type="submit" class="btn btn-info" name="Confirm" value="تایید" />
+                    }
+                    if (Model.SetGiftCode == false && Buyer == false)
+                    {
+                        <input type="submit" class="btn btn-info" name="SetGiftCode" value="تخصیص کد تخفیف" />
+                    }
+                 
+                }
+                else
+                {
+                    <span class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+                }
+                @if (ViewBag.DeletePermission)
+                {
+                    <input type="submit" class="btn btn-danger" name="Delete" value="حذف" onclick="return confirm('آیا شما مطمئن به حذف رکورد مورد نظر هستید؟!')" />
+                }
+
+            </p>
+        }
+    </div>
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/Admin/TinyMCE/Js")
+    <script src="~/Areas/Admin/Content/Scripts/View/ProductComment.js?v=2"></script>
+}

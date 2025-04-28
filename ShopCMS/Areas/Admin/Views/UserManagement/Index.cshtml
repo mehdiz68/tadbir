@@ -1,0 +1,335 @@
+﻿@model PagedList.IPagedList<Domain.ApplicationUser>
+@using PagedList.Mvc;
+@using Domain;
+@using ahmadi.Infrastructure.Helper
+@using ahmadi.Infrastructure.Security;
+<title>مدیریت کاربران</title>
+@{
+    var HelpModule = ViewBag.HelpModule as HelpModule;
+}
+@section Header{
+
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    @*Pagging*@
+    <link href="~/Content/Base/Css/PagedList.css" rel="stylesheet" type="text/css" />
+
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <span style="cursor:pointer" data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span><h1 style="display:inline-block;font-size: 2em;"><a href="~/Admin/UserManagement">مدیریت کاربران</a></h1>
+        <hr />
+        <div class="clearfix"></div>
+        @if (ViewBag.AddPermission)
+            {
+            <a class="btn btn-success" href="@Url.Action("Create")"><span class="fa fa-user-plus"></span> ایجاد کاربر جدید </a>
+        }
+        <p>
+            <ul style="font-size:14px">
+                <li style="line-height:25px">نقش admin: دسترسی پیش فرض به تمامی ماژول های پنل مدیریت</li>
+                <li style="line-height:25px">نقش Support : دسترسی پیش فرض به ماژول های ورود محتوا</li>
+                <li style="line-height:25px">نقش Security : دسترسی پیش فرض به ماژول های تنظیمات و امنیت</li>
+                <li style="line-height:25px">نقش User : کاربر عادی برای استفاده از امکانات سایت</li>
+            </ul>
+        </p>
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><span class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").First().Abstract:"")"></span> جستجو / فیلتر</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+
+            <div class="x_content" style="display:none">
+                <div id="SearchPage">
+                    <div>
+                        <div>
+
+                            @using (Html.BeginForm("Index", "UserManagement", FormMethod.Get))
+                            {
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("UsernameString", ViewBag.UsernameFilter as string, htmlAttributes: new { placeholder = "نام کاربری(ایمیل)", style = "display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("CreationStartDateInput", ViewBag.currentStartDateInputFiltering as string, htmlAttributes: new { placeholder = "تاریخ ایجاد از ", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('CreationStartDateInput')" })
+                                    <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("CreationEndDateInput", ViewBag.currentEndDateInputFiltering as string, htmlAttributes: new { placeholder = "تاریخ ایجاد تا ", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('CreationEndDateInput')" })
+                                    <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("RoleId", ViewBag.RoleName as SelectList, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "نقش", style = "display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-user-secret form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("LastActivityStartDateInput", ViewBag.currentLastActivityStartDateInputFiltering as string, htmlAttributes: new { placeholder = "زمان آخرین ورود از", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('LastActivityStartDateInput');" })
+                                    <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("LastActivityEndDateInput", ViewBag.currentLastActivityEndDateInputFiltering as string, htmlAttributes: new { placeholder = "تا", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('LastActivityEndDateInput');" })
+                                    <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+
+                                </div>
+
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("EmailConfirmId", ViewBag.EmailConfirmSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "وضعیت ایمیل کاربر", style = "display: inline-block", @class = "form-control" })
+
+                                    <span class="fa fa-envelope form-control-feedback right" aria-hidden="true"></span>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("PhoneNumberConfirmId", ViewBag.PhoneNumberSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "وضعیت تلفن همراه کاربر", style = "display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("Disable", ViewBag.DisableSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "کاربران فعال/غیر فعال", style = "display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-user-plus form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("PhoneNumberString", ViewBag.PhoneNumberFilter as string, htmlAttributes: new { placeholder = "تلفن همراه", style = "display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-mobile-phone form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("FullName", ViewBag.FullNameFilter as string, htmlAttributes: new { placeholder = "نام و نام خانوادگی", style = "display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+
+                                    @Html.DropDownList("Gender", ViewBag.GenderSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "جنسیت", style = "display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-genderless form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="clearfix"></div>
+                                <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                @Html.ActionLink("نمایش همه", "Index", null, htmlAttributes: new { @class = "btn btn-success" })
+                            }
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+                            #
+                        </th>
+                        <th>
+                            آواتار
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>نام کاربری ( ایمیل)</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "UserName", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, CurrentRoleIdFiltering = ViewBag.CurrentRoleIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس نام کاربری صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "UserName_desc", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, CurrentRoleIdFiltering = ViewBag.CurrentRoleIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس نام کاربری نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>نام و نام خانوادگی</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "FullName", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, CurrentRoleIdFiltering = ViewBag.CurrentRoleIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس نام و نام خانوادگی صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "FullName_desc", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, CurrentRoleIdFiltering = ViewBag.CurrentRoleIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس نام و نام خانوادگی نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>جنسیت</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Gender", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, CurrentRoleIdFiltering = ViewBag.CurrentRoleIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس زن ها"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Gender", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, CurrentRoleIdFiltering = ViewBag.CurrentRoleIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس مردها">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+
+                        <th class="text-center column-title">
+                            نقش
+                        </th>
+                        <th class="text-center column-title">&nbsp;</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        int i = 0;
+                        foreach (var item in Model)
+                        {
+                            i++;
+                            <tr>
+                                <td>
+                                    @i
+                                </td>
+                                <td>
+                                    @if (item.Avatar.HasValue)
+                                    {
+                                        @Html.Displayattachment(item.Avatarattachment.FileName,item.LastName, "LG", htmlAttributes: new { @class = "img-responsive", width = "80", height = "80", style = "display:inline-block;width:80px;height:80px" })
+                                    }
+                                    else
+                                    {
+                                        if (item.Gender == true)
+                                        {
+                                            <img src="~/Content/Default/images/man-avatar.jpg" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Content/Default/images/woman-avatar.gif" />
+                                        }
+
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.UserName)
+                                </td>
+
+                                <td class="text-center">
+
+                                    @item.FirstName @item.LastName
+                                </td>
+
+                                <td class="text-center">
+                                    @if (item.Gender == true)
+                                    {
+                                        <span>مرد</span>
+                                    }
+                                    else
+                                    {
+                                        <span>زن</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @{
+                                        IdentityManager Oidentitymanager = new IdentityManager();
+                                        bool HasAdminModules = true;
+                                        if (Oidentitymanager.IsInRole(item.Id, "Admin"))
+                                        {
+                                            <span>Admin ( مدیر پنل مدیریت )</span>
+                                        }
+                                        else if (Oidentitymanager.IsInRole(item.Id, "User"))
+                                        {
+                                            HasAdminModules = false;
+                                            <span>User ( کاربرِ سایت )</span>
+                                        }
+
+                                        else if (Oidentitymanager.IsInRole(item.Id, "Security"))
+                                        {
+                                            <span>Security ( مدیر امنیتی )</span>
+                                        }
+
+                                        else if (Oidentitymanager.IsInRole(item.Id, "Support"))
+                                        {
+                                            <span>Support ( مدیر پشتیبانی )</span>
+                                        }
+                                        else
+                                        {
+                                            <span>نقش تعریف نشده است.</span>
+                                        }
+                                    }
+                                </td>
+
+                                <td>
+                                    <div class="form-group has-feedback form-group col-xs-12">
+                                        @if (ViewBag.EditPermission)
+                                        {
+                                            <input class="form-control Password" name="@("Password"+i)" placeholder="رمزعبور جدید حداقل 6 کاراکتر" />
+                                            <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+                                            <p>
+                                                <span class="btn btn-primary ChangePassword" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="تغییر رمز").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="تغییر رمز").First().Abstract:"")" data-url="@Url.Action("ChangePassword", new { UserId = item.Id })"> تغییر رمز </span>
+                                            </p>
+                                        }
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <p>
+                                        @if (ViewBag.EditPermission)
+                                        {
+                                            <a class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="bottom" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="ویرایش").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="ویرایش").First().Abstract:"")" href="@Url.Action("Edit", new { id=item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                        }
+                                        @if (ViewBag.DeletePermission && item.UserName != User.Identity.Name)
+                                        {
+                                            <span class="btn btn-primary Delete" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="حذف").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="حذف").First().Abstract:"")" data-url="@Url.Action("Delete", new { Id = item.Id })"><span class=" glyphicon glyphicon-remove"></span> حذف </span>
+                                        }
+                                    </p>
+                                    <p>
+                                        @if (HasAdminModules && item.UserName != User.Identity.Name)
+                                        {
+                                            if (ViewBag.AddPermission == true)
+                                            {
+                                                <a class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="دسترسی های پنل").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="دسترسی های پنل").First().Abstract:"")" href="@Url.Action("Permission", new { id = item.Id })"><span class="glyphicon glyphicon-user"></span> دسترسی های پنل </a>
+                                            }
+                                        }
+                                        @if (ViewBag.EditPermission && item.UserName != User.Identity.Name)
+                                        {
+                                            <span class="btn btn-primary Disable" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="غیرفعال سازی").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="غیرفعال سازی").First().Abstract:"")" data-url="@Url.Action("Disable", new { id = item.Id })" style="@((item.Disable==false?"display:inline-block":"display:none"))"><span class="glyphicon glyphicon-log-out"></span> غیر فعال سازی </span>
+                                            <span class="btn btn-primary Enable" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="فعال سازی").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="غیرفعال سازی").First().Abstract:"")" data-url="@Url.Action("Enable", new { id = item.Id })" style="@((item.Disable == true ? "display:inline-block" : "display:none"))"><span class="glyphicon glyphicon-log-out"></span> فعال سازی </span>
+                                        }
+
+
+                                    </p>
+                                </td>
+
+                            </tr>
+                                        }
+                    }
+                </tbody>
+
+
+            </table>
+
+            <p>
+                <strong>
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میان @Model.TotalItemCount کاربر
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, CurrentRoleIdFiltering = ViewBag.CurrentRoleIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter }))
+
+        </div>
+
+        @section Scripts{
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/View/Usermanagement.js"></script>
+            @*Persian Calender*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+
+        }
+</div>
+</div>

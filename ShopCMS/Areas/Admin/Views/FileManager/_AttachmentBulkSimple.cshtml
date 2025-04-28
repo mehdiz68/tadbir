@@ -1,0 +1,41 @@
+﻿@model List<Domain.attachment>
+@using ahmadi.Infrastructure.Helper;
+
+@foreach (var item in Model)
+{
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" style="border: 1px dotted #ccc;text-align:center;padding:0" data-id="@item.Id" data-src="@item.FileName">
+        <div style="padding-top:2px">
+            <div>@Html.Displayattachment(item.FileName, item.Title, "SM", true, htmlAttributes: new { @class = "img-responsive", style = "margin:0 auto;display:block;max-height:100px" })</div>
+        </div>
+        <hr style="margin: 4px 0;" />
+        <p style="height:25px;overflow:hidden" title="@item.Title">
+            <a class="title" href="@Url.Action("Details","FileManager",new {id= item.Id })" target="_blank"> <span class="glyphicon glyphicon-link"></span> @Html.DisplayFor(itemItem => item.Title) </a>
+        </p>
+        <div style="font-size:10px;text-align:right">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <label class="HasMultiSize">
+                    @Html.DisplayFor(itemItem => item.HasMultiSize)
+                </label>
+                @Html.Label("تغییر اندازه ")
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="padding:0">
+                @Html.Label("تعداد استفاده : ")
+                <span class="UseCountLabel">@item.UseCount</span>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <label class="HasWatermark">
+                    @Html.DisplayFor(itemItem => item.HasWatermark)
+                </label>
+                @Html.Label("واتر مارک")
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="padding:0">
+                @Html.Label("حجم : ")
+                @Html.DisplayFor(itemItem => item.Capacity) <sup style="color:#169F85;">kb</sup>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+}
+
+

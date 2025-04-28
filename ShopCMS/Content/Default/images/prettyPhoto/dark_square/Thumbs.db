@@ -1,0 +1,38 @@
+[06/17/19 01:15:28]****************** LOG FILE STARTED *******************
+06/17/19 01:15:28	[2672] End of conversation. Removing connection. Session=439398416
+06/17/19 01:15:28	CleanupNotificationThread:: Notification thread terminated.
+06/17/19 01:17:19	ME-IXXXX: [2644] Failed to read data from socket. Error 64. Dropping connection.
+06/17/19 01:17:19	[2644] End of conversation. Removing connection. Session=439398416
+06/17/19 01:17:19	CleanupNotificationThread:: Notification thread terminated.
+06/17/19 01:18:22	ME-IXXXX: [2860] Failed to read data from socket. Error 64. Dropping connection.
+06/17/19 01:18:22	[2860] End of conversation. Removing connection. Session=439398416
+06/17/19 01:18:22	CleanupNotificationThread:: Notification thread terminated.
+06/17/19 01:20:36	Socket (2364) closed by client.
+06/17/19 01:20:36	[2364] End of conversation. Removing connection. Session=439398416
+06/17/19 01:20:36	CleanupNotificationThread:: Notification thread terminated.
+06/17/19 01:23:27	Socket (2112) closed by client.
+06/17/19 01:23:27	[2112] End of conversation. Removing connection. Session=439398416
+06/17/19 01:23:27	CleanupNotificationThread:: Notification thread terminated.
+06/17/19 01:25:06	Socket (2752) closed by client.
+06/17/19 01:25:06	[2752] End of conversation. Removing connection. Session=439398416
+06/17/19 01:25:06	CleanupNotificationThread:: Notification thread terminated.
+06/17/19 04:01:25	ME-IXXXX: [2196] Failed to read data from socket. Error 64. Dropping connection.
+06/17/19 04:01:25	[2196] End of conversation. Removing connection. Session=439398416
+06/17/19 04:01:25	CleanupNotificationThread:: Notification thread terminated.
+06/17/19 04:01:26	Socket (2672) closed by client.
+06/17/19 04:01:26	[2672] End of conversation. Removing connection. Session=613321376
+06/17/19 04:01:26	CleanupNotificationThread:: Notification thread terminated.
+06/17/19 04:02:00	ME-IXXXX: [964] Failed to read data from socket. Error 64. Dropping connection.
+06/17/19 04:02:00	[964] End of conversation. Removing connection. Session=613321376
+06/17/19 04:02:00	CleanupNotificationThread:: Notification thread terminated.
+06/17/19 04:09:25	ME-IXXXX: [2572] Failed to read data from socket. Error 64. Dropping connection.
+06/17/19 04:09:25	[2572] End of conversation. Removing connection. Session=613321376
+06/17/19 04:09:25	CleanupNotificationThread:: Notification thread terminated.
+06/17/19 07:50:47	Socket (2864) closed by client.
+06/17/19 07:50:47	[2864] End of conversation. Removing connection. Session=439398416
+06/17/19 07:50:47	CleanupNotificationThread:: Notification thread terminated.
+06/17/19 10:46:20	ME-IXXXX: [2860] Failed to read data from socket. Error 64. Dropping connection.
+06/17/19 10:46:20	[2860] End of conversation. Removing connection. Session=439959696
+06/17/19 10:46:20	CleanupNotificationThread:: Notification thread terminated.
+06/17/19 10:46:21	[2288] End of conversation. Removing connection. Session=439763040
+06/17/19 10:46:21	CleanupNotificationThread:: Notification thread terminated.

@@ -1,0 +1,54 @@
+﻿@model Domain.Comment
+<script src="~/Content/Base/Scripts/View/_Comment.js"></script>
+
+<div class="section-sm section-bottom-0">
+    <!-- RD Mailform-->
+    @using (Ajax.BeginForm("AddComment", "content", null, new AjaxOptions { HttpMethod = "POST", OnBegin = "onBeginSubmitAddComment", OnSuccess = "ShowCommentSuccess", OnFailure = "ShowCommentFailure", InsertionMode = InsertionMode.Replace }, new { id = "AddComment", @class = "rd-form rd-mailform" }))
+
+    {
+
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(model => model.ContentId)
+        @Html.HiddenFor(model => model.ParrentId, new { id = "CommentParrentId" })
+        <strong>
+            Leave a comment
+        </strong>
+        <p>
+           we keep your email protected.
+        </p>
+          <div class="form-wrap">
+                    <strong class="form-label-outside" for="comment-message">comment</strong>
+                    @Html.TextAreaFor(model => model.Message, new { @class = "form-control", rows = "5" })
+                    @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+
+
+                </div>
+                <br />
+
+          <div class="row">
+              <div class="form-wrap col-md-6">
+                  <strong class="form-label-outside" for="comment-first-name">full name</strong>
+                  @Html.TextBoxFor(model => model.FullName, new { @class = "form-control" })
+                  @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
+              </div>
+
+              <div class="form-wrap  col-md-6">
+                  <strong class="form-label-outside" for="comment-email">email</strong>
+                  @Html.TextBoxFor(model => model.Email, new { @class = "form-control", style = "text-align:left;direction:ltr" })
+                  @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+              </div>
+          </div>
+              
+
+                <br /><br />
+                @Html.Action("Captcha", "Home")
+    <br /><br />
+                <input type="submit" class="btn btn-primary" value="Send" />
+    }
+</div>
+
+
+
+
+

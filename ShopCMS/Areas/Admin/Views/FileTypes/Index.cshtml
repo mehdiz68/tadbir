@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Domain.FileType>
+
+<title>مدیریت پسوند های مجاز</title>
+
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+}
+
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="box-title container" style="padding:0">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                @Html.ActionLink("پسوند های مجاز", "Index")
+                <span  style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")" ></span>
+
+            </div>
+
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+                <a class="btn btn-success" href="@Url.Action("Index","FileManager")">فایل ها </a>
+
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <br /><br />
+        <p>
+            @if (ViewBag.AddPermission)
+            {
+                <a class="btn btn-success" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> تعریف پسوند جدید </a>
+            }
+            else
+            {
+                <span class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> <span style="text-decoration:line-through"> تعریف پسوند جدید </span> </span>
+
+            }
+        </p>
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>
+                        پسوند
+                    </th>
+                    <th>
+                        تعداد فایل
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="text-align:right;direction:ltr">
+                            @Html.DisplayFor(modelItem => item.FileTypeName)
+                        </td>
+                        <td style="text-align:right;direction:ltr">
+                            @item.attachments.Count
+                        </td>
+                        <td>
+
+                            @if (ViewBag.EditPermission)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                            }
+                            else
+                            {
+                                <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                            }
+                            <a class="btn btn-success" href="@Url.Action("Details", new { id = item.Id })"><span class="glyphicon glyphicon-list"></span> نمایش جزئیات </a>
+                            @if (ViewBag.DeletePermission)
+                            {
+                                <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                            }
+                            else
+                            {
+                                <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>

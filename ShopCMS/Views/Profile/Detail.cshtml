@@ -1,0 +1,456 @@
+﻿@model Domain.Order
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml;
+@using ahmadi.Infrastructure.Helper;
+@using Domain;
+
+@{
+    var setting = ViewBag.setting as Domain.Setting;
+    int price = 0;
+    var wallet = Model.OrderWallets.First().Wallet;
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var result = "";
+    Domain.ViewModel.SettingDto settingDto = ViewBag.setting as Domain.ViewModel.SettingDto;
+    int i = 1;
+    @Html.Partial("_Meta", Meta)
+    bool? IsEstelam = ViewBag.IsEstelam as bool?;
+
+
+}
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+@section Header{
+    <style>
+        .deal_timer {
+            position: unset !important
+        }
+
+            .deal_timer .countdown_style4 {
+                float: none;
+                display: inline-block
+            }
+
+        .countdown_box {
+            width: 200px !important;
+            height: 200px !important;
+        }
+
+            .countdown_box .countdown {
+                height: 200px !important;
+            }
+
+        .deal_timer .countdown_time .countdown_box .countdown {
+            font-size: 40px !important;
+            padding-top: 70px !important;
+        }
+
+        .countdown_time .cd_text {
+            font-size: 15px !important
+        }
+
+        .countdown_time.countdown_style4 .countdown_box * {
+            color: #000 !important
+        }
+
+        .countdown_box .countdown {
+            border-color: #000 !important
+        }
+    </style>
+}
+
+
+<div class="o-box container" id="Detail" >
+    <h1>
+        <span>  جزئیات سفارش </span>
+        <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+    </h1>
+    <div class="c-profile-order__details-top-bar">
+        <div class="c-profile-order__details-header">
+            <a href="~/Profile/Orders">
+                <span class="fa fa-chevron-right"></span>
+            </a>
+            <div class="c-profile-order__list-item-detail">@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.InsertDate)</div>
+            <div class="c-profile-order__list-item-detail">@Model.CustomerOrderId</div>
+        </div>
+    </div>
+    @if (IsEstelam.Value == true && Model.OrderStates.OrderByDescending(x => x.Id).Take(1).SingleOrDefault().state == Domain.OrderStatus.در_انتظار_تایید)
+    {
+
+        <p class="alert alert-info">
+            <span> سفارش شما با موفقیت ثبت شد. وضعیت تایید سفارش شما، بر اساس موجود بودن و قیمت محصولات در همین صفحه اطلاع رسانی خواهد شد. لازم بذکر است سفارش شما حداکثر تا    </span>
+            <strong>
+                <u>
+                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.InsertDate.AddMinutes(settingDto.ShoppingEstelamMinutes))
+                    -
+                    ساعت
+                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsiTime(Model.InsertDate.AddMinutes(settingDto.ShoppingEstelamMinutes))
+                </u>
+            </strong>
+            <span> ، </span>
+            <span> تعیین وضعیت خواهد شد. </span>
+            <span>  همینطور از طریق پیامک هم به شما اطلاع رسانی صورت خواهد گرفت. </span>
+            <strong>
+                حداکثر زمان باقی مانده تا اعلام وضعیت سفارش شما :
+            </strong>
+        </p>
+
+        <div class="deal_timer">
+            <div class="countdown_time countdown_style4" data-time="@Model.InsertDate.AddMinutes(settingDto.ShoppingEstelamMinutes)"></div>
+        </div>
+        <div class="clearfix"></div>
+        <br />
+        <br />
+        <br />
+
+        <script>
+            setInterval(function () {
+                window.location.reload();
+            }, 30000);
+        </script>
+    }
+    else if (Model.OrderStates.OrderByDescending(x => x.Id).Take(1).SingleOrDefault().state == Domain.OrderStatus.تایید_سفارش)
+    {
+        <p class="alert alert-info text-left">
+
+
+            <a class="btn btn-info" href="/Cart/OnlinePay/@Model.BankOrderId?bankid=@Model.OrderWallets.First().Wallet.BankAccount.BankId">پرداخت</a>
+
+
+        </p>
+    }
+
+
+    @foreach (var Delivery in Model.OrderDeliveries)
+    {
+
+        <div class="c-profile-order__list-item-details">
+
+
+            <div class="c-profile-order__list-item-details-row">
+                <div class="c-profile-order__list-item-detail">
+                    <div class="clearfix"></div>
+
+                    <span class="c-profile-order__list-item-detail-title">تحویل گیرنده:</span>
+
+                    @{
+                        var CustomerName = "";
+
+                        if (Delivery.UserAddressId.HasValue)
+                        {
+                            CustomerName = Delivery.UserAddress.FullName;
+                        }
+                        else
+                        {
+                            CustomerName = Model.User.FirstName + " " + Model.User.LastName;
+                        }
+                    }
+                    @CustomerName
+
+                </div><div class="c-profile-order__list-item-detail">
+                    <span class="c-profile-order__list-item-detail-title">شماره تماس:</span>
+                    @{
+                        var CustomerMobile = "";
+
+                        if (Delivery.UserAddressId.HasValue)
+                        {
+                            CustomerMobile = Delivery.UserAddress.PhoneNumber;
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(Model.User.PhoneNumber))
+                            {
+                                CustomerMobile = Model.User.PhoneNumber;
+                            }
+                            else
+                            {
+                                CustomerMobile = "-";
+                            }
+                        }
+                    }
+                    @CustomerMobile
+                </div>
+            </div>
+            <div class="c-profile-order__list-item-details-row">
+                <div class="c-profile-order__list-item-detail">
+                    <span class="c-profile-order__list-item-detail-title">ارسال به:</span>
+                    @{
+                        var CustomerState = "";
+
+                        if (Delivery.UserAddressId.HasValue)
+                        {
+
+                            CustomerState = Delivery.UserAddress.CityEntity.Province.Name;
+                        }
+                        else
+                        {
+                            if (Model.User.CityId.HasValue)
+                            {
+                                CustomerState = Model.User.CityEntity.Province.Name;
+                            }
+                            else
+                            {
+                                CustomerState = "-";
+                            }
+                        }
+
+                        var CustomerCity = "";
+
+                        if (Delivery.UserAddressId.HasValue)
+                        {
+                            CustomerCity = Delivery.UserAddress.CityEntity.Name;
+                        }
+                        else
+                        {
+                            if (Model.User.CityId.HasValue)
+                            {
+                                CustomerCity = Model.User.CityEntity.Name;
+                            }
+                            else
+                            {
+                                CustomerCity = "-";
+                            }
+                        }
+
+                        var CustomerAddress = "";
+
+                        if (Delivery.UserAddressId.HasValue)
+                        {
+                            CustomerAddress = Delivery.UserAddress.Address;
+                            if (!String.IsNullOrEmpty(Delivery.UserAddress.AddressNumber))
+                            {
+                                CustomerAddress += " ، پلاک  " + Delivery.UserAddress.AddressNumber;
+                            }
+                            if (!String.IsNullOrEmpty(Delivery.UserAddress.AddressUnit))
+                            {
+                                CustomerAddress += " ، واحد  " + Delivery.UserAddress.AddressUnit;
+                            }
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(Model.User.Address))
+                            {
+                                CustomerAddress = Model.User.Address;
+                                if (!String.IsNullOrEmpty(Model.User.AddressNumber))
+                                {
+                                    CustomerAddress += " ، پلاک  " + Model.User.AddressNumber;
+                                }
+                                if (!String.IsNullOrEmpty(Model.User.AddressUnit))
+                                {
+                                    CustomerAddress += " ، واحد  " + Model.User.AddressUnit;
+                                }
+                            }
+                            else
+                            {
+                                CustomerAddress = "";
+                            }
+                        }
+
+
+
+                    }
+                    @CustomerState / @CustomerCity / @CustomerAddress
+                </div>
+            </div>
+        </div>
+    }
+    <div class="c-profile-order__list-item-details c-profile-order__list-item-details--between">
+        <div class="c-profile-order__list-item-details-row">
+            <div class="c-profile-order__list-item-detail c-profile-order__list-item-detail--currency">
+                <span class="c-profile-order__list-item-detail-title">مبلغ کل:</span>
+                @string.Format("{0:n0}", Model.OrderWallets.First().Wallet.Price)
+            </div>
+        </div><div class="o-btn o-btn--link-gray-md o-btn--black o-btn--l-expand-more js-payment-records-btn is-open">
+            تاریخچه تراکنش
+        </div>
+    </div>
+    <div class="c-profile-order__payment-records js-payment-records" style="display: block;">
+        <div class="c-profile-order__payment-records-row">
+            <div class="c-profile-order__payment-record c-profile-order__payment-record--title">تاریخ</div>
+            <div class="c-profile-order__payment-record c-profile-order__payment-record--title">توضیحات</div>
+            <div class="c-profile-order__payment-record c-profile-order__payment-record--title">وضعیت</div>
+            <div class="c-profile-order__payment-record c-profile-order__payment-record--title">مبلغ</div>
+        </div>
+
+        @foreach (var item in Model.OrderWallets)
+        {
+            <div class="c-profile-order__payment-records-row">
+                <div class="c-profile-order__payment-record">@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.Wallet.InsertDate)</div>
+                <div class="c-profile-order__payment-record">
+
+                    <div>  @item.Wallet.ForWhat.Title</div>
+                </div>
+                <div class="c-profile-order__payment-record c-profile-order__payment-record-status c-profile-order__payment-record-status--positive">
+                    @if (item.Wallet.State)
+                    {
+                        <text>تایید</text>
+                    }
+                    else
+                    {
+
+                        <text>عدم تایید</text>
+                    }
+                </div>
+                <div class="c-profile-order__payment-record">@string.Format("{0:n0}", item.Wallet.Price)</div>
+            </div>
+        }
+
+    </div>
+    <div class="o-box__separator"></div>
+    <div class="c-profile-order__list-item-actions c-profile-order__list-item-actions--no-border">
+        @if (Model.OrderStates.Any(x => x.state == OrderStatus.تایید_پرداخت))
+        {
+            <a href="/Profile/invoice/@Model.Id/" target="_blank" class="o-btn btn-info o-btn--link-blue-md">دریافت فاکتور</a>
+        }
+    </div>
+    <div class="o-box__separator"></div>
+    @foreach (var Delivery in Model.OrderDeliveries)
+    {
+        <div class="c-profile-order__list-item">
+            <div class="c-profile-order__list-item-details">
+                <div class="c-profile-order__list-item-details-top">
+                    <div>
+                        <div class="c-profile-order__list-item-details-row">
+                            <div class="c-profile-order__list-item-detail"> <span>مرسوله &nbsp;</span> <span>@i &nbsp;</span> <span> از &nbsp;</span> <span> @Model.OrderDeliveries.Count </span><span> &nbsp; </span> </div>
+                        </div>
+                        <div class="c-profile-order__list-item-details-row">
+                            <div class="c-profile-order__list-item-detail">
+                                <span class="c-profile-order__list-item-detail-title">تحویل:</span>
+                                @if (Delivery.RequestDate.HasValue)
+                                {
+                                    <span> @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Delivery.RequestDate.Value)</span> <span> <span>&nbsp; @Delivery.ProductSendWayWorkTime.StartTime.ToString(@"hh\:mm") &nbsp;</span> <span>&nbsp; تا &nbsp;</span> <span>&nbsp; @Delivery.ProductSendWayWorkTime.EndTime.ToString(@"hh\:mm") &nbsp;</span> </span>
+
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="c-order-status-bar">
+                        <div class="c-order-status-bar__status">
+                            <div class="c-order-status-bar__current-status" style="color: #2e7b32;">
+                                @Model.OrderStates.Last().state.ToString().Replace("_", " ")
+                            </div>
+                        </div>
+                        <div class="c-order-status-bar__progress">
+                            @{
+                                double st = 0;
+                                if (Convert.ToDouble(Model.OrderStates.Last().state) < 7)
+                                {
+                                    st = Convert.ToDouble(Convert.ToInt32(Model.OrderStates.Last().state) / 6.0) * 100;
+                                }
+                            }
+                            <div class="c-order-status-bar__progress-bar" style="@("background-color: #4caf50;width:"+ st.ToString()+"%")"></div>
+                        </div>
+
+                        @if (Delivery.OrderStates.Any(x => x.state == OrderStatus.ارسال_شده) && !String.IsNullOrEmpty(Delivery.ProductSendWay.TrackingUrl))
+                        {
+                            <div>
+                                <p style=" margin-top: 8px;">
+                                    <span>جهت پیگیری وضعیت مرسوله </span>
+                                    <a style="color:#FF8A00" href="@Delivery.ProductSendWay.TrackingUrl" target="_blank"> اینجا </a> کلیک کنید.
+                                </p>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="c-profile-order__list-item-details-row">
+                    <div class="c-profile-order__list-item-detail c-profile-order__list-item-detail--currency">
+                        <span class="c-profile-order__list-item-detail-title">مبلغ کل این مرسوله:</span>
+                        @string.Format("{0:n0}", Delivery.OrderRows.Sum(x => x.Price * x.Quantity))
+                    </div><div class="c-profile-order__list-item-detail c-profile-order__list-item-detail--currency">
+                        <span class="c-profile-order__list-item-detail-title">هزینه ارسال:</span>
+                        @if (Model.OrderAttributeSelects.Any(x => x.OrderAttribute.DataType == 14))
+                        {
+                            foreach (var item in Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 14))
+                            {
+
+                                price += Convert.ToInt32(item.Value);
+                            }
+
+                        }
+                        @if (price > 0)
+                        {
+                            result = string.Format("{0:n0}", price) + " تومان ";
+                            price = 0;
+                        }
+                        else
+                        {
+                            result = "-";
+                        }
+                        @result
+                    </div>
+                </div>
+            </div>
+            <div class="c-profile-order__list-item-products">
+                @foreach (var item in Delivery.OrderRows)
+                {
+                    <div class="c-profile-order__list-item-product">
+                        <a href="@Url.Action("Index","Product",new {id=item.ProductId,name=CommonFunctions.NormalizeAddress(item.Product.Title) })" class="c-profile-order__list-item-product-img">
+                            @if (item.ProductPrice.ProductImages.Any())
+                            {
+
+                                if (item.ProductPrice.ProductImages.Where(x => x.IsMain).Any())
+                                {
+
+                                    @Html.Displayattachment(item.ProductPrice.ProductImages.Where(x => x.IsMain).First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                }
+                                else
+                                {
+                                    @Html.Displayattachment(item.ProductPrice.ProductImages.First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                }
+                            }
+                            else
+                            {
+                                if (item.ProductPrice.Product.ProductImages.Any())
+                                {
+                                    if (item.ProductPrice.Product.ProductImages.Where(x => x.IsMain).Any())
+                                    {
+                                        @Html.Displayattachment(item.ProductPrice.Product.ProductImages.First(x => x.IsMain).Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                    }
+                                    else
+                                    {
+                                        @Html.Displayattachment(item.ProductPrice.Product.ProductImages.First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                    }
+                                }
+                                else
+                                {
+                                    <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:110px;height:60px" />
+
+
+                                }
+                            }
+                            <span class="c-profile-order__list-item-parcel-product-qty">@item.Quantity</span>
+                        </a>
+                        <div class="c-profile-order__list-item-product-content">
+                            <div class="c-profile-order__list-item-product-top-bar">
+                                <div class="c-profile-order__list-item-product-title">@item.Product.Name</div>
+                            </div>
+                            <div class="c-profile-order__list-item-details-row">
+                                <div class="c-profile-order__list-item-detail c-profile-order__list-item-detail--currency">
+                                    <span class="c-profile-order__list-item-detail-title">قیمت واحد:</span>
+                                    @item.Price
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+            @if (Delivery.OrderStates.Last().state < OrderStatus.پردازش_انبار)
+            {
+                <div class="c-profile-order__list-item-actions c-profile-order__list-item-actions--has-separator">
+                    <a href="/Profile/CancelOrder/@Delivery.Id" class="o-btn o-btn--link-blue-md">لغو مرسوله یا کالا</a>
+                </div>
+            }
+        </div>
+        i++;
+    }
+
+
+</div>
+
+

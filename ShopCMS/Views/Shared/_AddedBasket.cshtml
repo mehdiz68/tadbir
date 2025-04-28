@@ -1,0 +1,167 @@
+﻿@model Domain.ViewModels.BasketShort
+@using ahmadi.Infrastructure.Helper
+
+<!-- The Modal -->
+<div class="modal" id="addedBasketModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                @if (Model.validBuyOneTimePerOffer)
+                {
+                    <h4 class="modal-title">
+                        <i class="fa fa-check"></i><text>این کالا با موفقیت به سبد اضافه شد !</text>
+                    </h4>
+                }
+                else
+                {
+                    <h4 class="modal-title" style=" font-size: 0.6em;color: red;">
+                        <i class="fa fa-remove"></i><text>شما این محصول را در این تخفیف خریداری کرده اید. پس از اتمام تخفیف می توانید اقدام به خرید دوباره نمایید.</text>
+                    </h4>
+                }
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                @if (Model.ProductBasketItems != null)
+                {
+                    <div class="cart_box dropdown-menu dropdown-menu-right cart_box2">
+                        <ul class="cart_list">
+                            @if (Model.ProductBasketItems.Any())
+                            {
+                                foreach (var item in Model.ProductBasketItems.OrderByDescending(x => x.InsertDate))
+                                {
+                                    int ProductPriceQuantity = 0;
+
+                                    if (item.offerMaxQuantity > 0 && item.offerQuantity > 0)
+                                    {
+                                        if (item.offerMaxQuantity < item.offerQuantity)
+                                        {
+                                            ProductPriceQuantity = item.offerMaxQuantity;
+                                        }
+                                        else
+                                        {
+
+                                            ProductPriceQuantity = item.offerQuantity;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ProductPriceQuantity = item.ProductPriceQuantity;
+                                    }
+
+                                    <li class="row">
+                                        <div class="col-sm-9 row">
+                                            <div class="col-xs-2">
+                                                <a href="@Url.Action("Index", "Product", new { id = item.ProductId, name = CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) })">
+                                                    @Html.Displayattachment(item.MainImageFileName, item.Name, "SM", true, new { @class = "img-responsive" })
+                                                </a>
+                                            </div>
+                                            <div class="col-xs-10">
+
+                                                <p>@item.Title</p>
+                                                <p class="cart_quantity">
+                                                    <div class="quantity">
+                                                        <span title="حذف" class="delete-bas"><span class="remove-basket-item2" data-id="@item.Id">حذف کالا</span></span>
+
+                                                        <input type="button" value="-" class="@(item.UserQuantity==1?"minus qchange full":"minus qchange ")">
+                                                        <input name="quantity" value="@item.UserQuantity" max="@ProductPriceQuantity" min="1" data-id="@item.Id" class="qty Basket-quantity">
+                                                        <input type="button" value="+" class="@(ProductPriceQuantity>1 && item.UserQuantity<ProductPriceQuantity?"plus qchange":"plus qchange full")">
+
+                                                    </div>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 li-price">
+                                            <span class="pr-irce"> @string.Format("{0:n0}", item.finalPrice)  تومان </span>
+                                        </div>
+
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                <li>
+                                    <a href="/">
+                                        <span>سبد شما خالی ست</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                        <ul>
+                            <li class="sum-price-cart">
+                                <div class="col-sm-7 descr">
+                                    @if (Model.remainPrice >= 0)
+                                    {
+                                        if (Model.remainPrice == 0)
+                                        {
+                                            <p class="Sendinfo">ارسال سفارش شما رایگان می باشد!</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="Sendinfo">با خرید <span>@string.Format("{0:n0}", Model.remainPrice) تومان </span> دیگر، سفارش خود را رایگان کنید!</p>
+                                        }
+                                    }
+                                    @if (Model.ProductBasketItems.Any())
+                                    {
+                                        <p class="Deliveryinf0 not-res-info">
+                                            <label>زمان ارسال :</label>
+                                            @if (Model.ProductBasketItems.Max(x => x.DeliveryTimeout) == 0)
+                                            {
+                                                <span>محصولات شما هم اکنون آماده ارسال می باشند!</span>
+                                            }
+                                            else
+                                            {
+                                                <span>ارسال کالا از @Model.ProductBasketItems.Max(x => x.DeliveryTimeout) روز کاری آینده</span>
+                                            }
+
+                                        </p>
+                                        
+                                    }
+                                </div>
+                                @*<div class="col-sm-4 count-basket">
+                                    تعداد کالا(ها) : @Model.ProductBasketItems.Sum(x => x.UserQuantity)
+                                </div>*@
+
+                                <div class="col-sm-5 total-cart">
+                                    <p class="cart_total"><span class="cart_price"></span>جمع خرید : @string.Format("{0:n0}", Model.ProductBasketItems.Sum(x => x.finalPrice * x.UserQuantity)) <span> تومان </span></p>
+                                </div>
+                                <div class="col-sm-12 res-info">
+                                    <p class="Deliveryinf0">
+                                        <label>زمان ارسال :</label>
+                                        @if (Model.ProductBasketItems.Max(x => x.DeliveryTimeout) == 0)
+                                        {
+                                            <span>محصولات شما هم اکنون آماده ارسال می باشند!</span>
+                                        }
+                                        else
+                                        {
+                                            <span>ارسال کالا از @Model.ProductBasketItems.Max(x => x.DeliveryTimeout) روز کاری آینده</span>
+                                        }
+
+                                    </p>
+                                </div>
+                                <div class="clearfix"></div>
+
+                            </li>
+                        </ul>
+                        @if (Model.ProductBasketItems.Any())
+                        {
+                            <div class="cart_footer">
+                                <p class="cart_buttons row">
+                                    <a href="/Cart"  class="btn btn-info view-cart"><i class="fas fa-check"></i> تکمیل سفارش </a>
+                                    <a href="javascript:" data-dismiss="modal" id="show-cart-2" class="btn btn-info view-cart"><i class="fas fa-plus"></i> افزودن کالا </a>
+                                </p>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+

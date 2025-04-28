@@ -1,0 +1,7 @@
+.mejs-skip-back-button > button, .mejs__skip-back-button > button {
+    background: url(/Content/Base/Scripts/VideoPlayer/dist/skip-back/skipback.svg) no-repeat 0 -1px;
+    color: #fff;
+    font-size: 8px;
+    line-height: normal;
+    position: relative
+}

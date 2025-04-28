@@ -1,0 +1,391 @@
+﻿@model ahmadi.ViewModels.Home.HomePage
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using CoreLib;
+@{ var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    int i = 1; }
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+
+<!-- START SECTION تبلیغات بالا -->
+@if (Model.TopAdveresting != null)
+{
+    if (Model.TopAdveresting.Any())
+    {
+        int SumSize = 0;
+<div class="ads section pb_20 small_pt" id="TopAds">
+    <div class="container">
+        <div class="row">
+            @foreach (var Adveresting in Model.TopAdveresting)
+            {
+
+                SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+<div class="single_banner Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? "lastbox" : "")">
+    <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : "/Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+        @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+
+    </a>
+
+
+</div>              }
+        </div>
+    </div>
+
+
+</div>}
+}
+
+
+<div id="slideshow">
+    @foreach (var ImageItem in Model.SliderImages)
+    {
+        if (ImageItem.Cover != null)
+        {@*@Html.Partial("_BootStrapSlideShowCaption", ImageItem, new ViewDataDictionary { { "Index", i.ToString() }, { "staticUrl", Meta.StaticContentUrl } })*@
+                            <section class="hero-wrap js-fullheight" style="background-image: url(@Html.DisplayattachmentUrl(ImageItem.attachment.FileName, "LG", true)); height: 610px;" data-stellar-background-ratio="0.5">
+                                <div class="overlay"></div>
+                                <div class="container">
+                                    <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true" style="height: 610px;">
+                                        <div class="col-lg-6 ftco-animate fadeInUp ftco-animated">
+                                            <div class="mt-5">
+                                                <h1 class="mb-4">@ImageItem.Title</h1>
+                                                <p class="mb-4">@ImageItem.Title2</p>
+                                                <p><a href="@ImageItem.Link" class="btn btn-primary">More...</a> <a href="#" class="btn btn-white" data-toggle="modal" data-target="#exampleModalCenter">Inquire Now</a></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>i++;
+                        }
+                    }
+    @{ i = 1;}
+</div>
+<section class="ftco-section ftco-no-pt ftco-no-pb ftco-services-2">
+    <div class="container">
+        <div class="row no-gutters d-flex">
+            @foreach (var item in Model.MainServices.OrderBy(x => x.DisplaySort))
+            {
+<div class="col-lg-4 d-flex align-self-stretch ftco-animate fadeInUp">
+    <div class="@("media block-6 services services-"+i+" d-flex")">
+        <div class="icon justify-content-center align-items-center d-flex"><span class="@item.Icon"></span></div>
+        <div class="media-body pl-4">
+            <h3 class="heading mb-3"><a href="@("En"+Url.Action("Index","Content",new {id=item.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.Title) }))"> @item.Title</a></h3>
+            <p>@item.Abstract</p>
+        </div>
+    </div>
+</div>          i++;
+
+}
+
+        </div>
+    </div>
+</section>
+@if (Model.Video != null)
+{
+<section class="ftco-section" id="about-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 d-flex align-items-stretch">
+                <div class="about-wrap img w-100" style="background-image:url(@Html.DisplayattachmentUrl(Model.Video.attachment.FileName,"LG")">
+                    <div class="icon d-flex align-items-center justify-content-center"><span class="@Model.Video.Icon"></span></div>
+                </div>
+            </div>
+            <div class="col-md-6 py-5 pl-md-5">
+                <div class="row justify-content-center mb-4 pt-md-4">
+                    <div class="col-md-12 heading-section ftco-animate">
+                        <span class="subheading">Welcome to @Meta.WebSiteTitle</span>
+                        <h2 class="mb-4">@Model.Video.Title</h2>
+                        <div class="d-flex about">
+                            <div class="icon"><span class="@Model.Video.Icon"></span></div>
+                            <h3>@Model.Video.Descr</h3>
+                        </div>
+
+                        <p>@Model.Video.Abstract</p>
+                        <div class="d-flex video-image align-items-center mt-md-4">
+                            <a href="@("En"+Url.Action("Index","Video",new {id=Model.Video.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(Model.Video.PageAddress) }))" class="video img d-flex align-items-center justify-content-center" style="background-image:url(@Html.DisplayattachmentUrl(Model.Video.VideoAttachment.FileName,"LG"))">
+                                <span class="fa fa-play-circle"></span>
+                            </a>
+                            <h4 class="ml-4">
+                                <a href="@("En"+Url.Action("Index","Video",new {id=Model.Video.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(Model.Video.PageAddress) }))">
+                                    This is how we work on our clients, Watch video
+                                </a>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>}
+
+<!-- START SECTION تبلیغات راست -->
+@if (Model.RightAdveresting != null)
+{
+    if (Model.RightAdveresting.Any())
+    {
+        int SumSize = 0;
+<div class="ads section pb_20 small_pt" id="RightAds">
+    <div class="container">
+        <div class="row">
+            @foreach (var Adveresting in Model.RightAdveresting)
+            {
+
+                SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+<div class="single_banner Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? "lastbox" : "")">
+    <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : "/Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+        @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+
+    </a>
+
+
+</div>              }
+        </div>
+    </div>
+
+
+</div>}
+}
+
+@if (Model.StaticTextCategories.Any(x => x.staticTextType == StaticTextType.قسمت_اول_درخواست_مشاوره))
+{
+
+    var stCat = Model.StaticTextCategories.Where(x => x.staticTextType == StaticTextType.قسمت_اول_درخواست_مشاوره).First();
+<section class="ftco-intro">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 text-center">
+                <div class="img" style="background-image:url(/Content/Base/Theme/images/xbg_2.jpg)">
+                    <div class="overlay"></div>
+                    <h2>@stCat.StaticTextContents.Where(x => x.staticTextContentType == StaticTextContentType.متن_اول_درخواست_مشاوره).First().Data</h2>
+                    <p>@stCat.StaticTextContents.Where(x => x.staticTextContentType == StaticTextContentType.متن_دوم_درخواست_مشاوره).First().Data</p>
+                    <p class="mb-0"><a href="#" class="btn btn-primary px-4 py-3">Request A Quote</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>}
+@if (Model.Services.Any())
+{
+<section class="ftco-section bg-half-light">
+    <div class="container">
+        <div class="row justify-content-center mb-5 pb-2">
+            <div class="col-md-8 text-center heading-section ftco-animate">
+                <span class="subheading">Our Services</span>
+                <h2 class="mb-4">We Offer Services</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="carousel-services owl-carousel ftco-owl  owl-drag">
+                @foreach (var item in Model.Services)
+                {
+<div class="item">
+    <div class="services-wrap">
+        <div class="img" style="background-image:url(@Html.DisplayattachmentUrl(item.attachment.FileName,"LG"))"></div>
+        <div class="text">
+            <div class="icon"><span class="flaticon-architect"></span></div>
+            <h2>@item.Title</h2>
+            <p>@item.Abstract</p>
+            <a href="@("En"+Url.Action("Index","content",new {id=item.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) }))" class="btn-custom">Read More...</a>
+        </div>
+    </div>
+</div>}
+            </div>
+        </div>
+    </div>
+</section>}
+@if (Model.StaticTextCategories.Any(x => x.staticTextType == StaticTextType.قسمت_دوم_آمار))
+{
+
+    var stCat = Model.StaticTextCategories.Where(x => x.staticTextType == StaticTextType.قسمت_دوم_آمار).First();
+<section class="ftco-section ftco-no-pt ftco-no-pb ftco-counter">
+    <div class="img image-overlay" style="background-image:url(/Content/Base/Theme/images/xabout-3.jpg)"></div>
+    <div class="container">
+        <div class="row no-gutters">
+            <div class="col-md-6 py-5 bg-secondary aside-stretch">
+                <div class="heading-section heading-section-white p-4 pl-md-0 py-md-5 pr-md-5">
+                    <span class="subheading">@stCat.StaticTextContents.Where(x => x.staticTextContentType == StaticTextContentType.متن_اول_سمت_چپ_قسمت_آمار).First().Data</span>
+                    <h2 class="mb-4">@stCat.StaticTextContents.Where(x => x.staticTextContentType == StaticTextContentType.متن_دوم_سمت_چپ_قسمت_آمار).First().Data</h2>
+                    <h4>@stCat.StaticTextContents.Where(x => x.staticTextContentType == StaticTextContentType.متن_سوم_سمت_چپ_قسمت_آمار).First().Data</h4>
+                    <p>@stCat.StaticTextContents.Where(x => x.staticTextContentType == StaticTextContentType.متن_چهارم_سمت_چپ_قسمت_آمار).First().Data</p>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex align-items-center">
+                <div class="row">
+
+                    <div class="col-md-12 d-flex counter-wrap ftco-animate">
+                        <div class="block-18 bg-primary d-flex align-items-center justify-content-between">
+                            <div class="icon d-flex align-items-center justify-content-center"><span class="@stCat.StaticTextContents.Where(x => x.staticTextContentType == StaticTextContentType.آیکن_اول_سمت_راست_قسمت_آمار).First().Data"></span></div>
+                            <div class="text">
+                                <strong class="number" data-number="@stCat.StaticTextContents.Where(x => x.staticTextContentType == StaticTextContentType.عدد_آیکن_اول_سمت_راست_قسمت_آمار).First().Data">0</strong>
+                                <span>@stCat.StaticTextContents.Where(x => x.staticTextContentType == StaticTextContentType.عدد_آیکن_اول_سمت_راست_قسمت_آمار).First().Data</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 d-flex counter-wrap ftco-animate">
+                        <div class="block-18 d-flex align-items-center justify-content-between">
+                            <div class="icon d-flex align-items-center justify-content-center"><span class="@stCat.StaticTextContents.Where(x => x.staticTextContentType == StaticTextContentType.متن_دوم_سمت_چپ_قسمت_آمار).First().Data"></span></div>
+                            <div class="text">
+                                <strong class="number" data-number="@stCat.StaticTextContents.Where(x => x.staticTextContentType == StaticTextContentType.عدد_آیکن_دوم_سمت_راست_قسمت_آمار).First().Data">0</strong>
+                                <span>@stCat.StaticTextContents.Where(x => x.staticTextContentType == StaticTextContentType.عدد_آیکن_دوم_سمت_راست_قسمت_آمار).First().Data</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center mb-5 pb-3">
+            <div class="col-md-7 text-center heading-section ftco-animate">
+                <span class="subheading">Our Global Work Industries</span>
+                <h2 class="mb-4">Latest Projects</h2>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var item in Model.Projects)
+            {
+<div class="col-md-4">
+    <div class="project">
+        <a href="@Html.DisplayattachmentUrl(item.attachment.FileName,"LG")" class="img image-popup d-flex align-items-center" style="background-image:url(@Html.DisplayattachmentUrl(item.attachment.FileName,"MD"))">
+            <div class="icon d-flex align-items-center justify-content-center mb-5"><span class="fa fa-plus"></span></div>
+        </a>
+        <div class="text">
+            @*<span class="subheading">Building</span>*@
+            <h3><a href="@("En"+Url.Action("Index","content",new {id=item.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) }))">@item.Title</a></h3>
+            <p><span class="fa fa-map-marker mr-1"></span> @item.Abstract</p>
+        </div>
+    </div>
+</div>}
+
+        </div>
+    </div>
+</section>
+
+
+<!-- START SECTION تبلیغات چپ -->
+@if (Model.LeftAdveresting != null)
+{
+    if (Model.LeftAdveresting.Any())
+    {
+        int SumSize = 0;
+<div class="ads section pb_20 small_pt" id="LeftAds">
+    <div class="container">
+        <div class="row">
+            @foreach (var Adveresting in Model.LeftAdveresting)
+            {
+
+                SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+<div class="single_banner Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? "lastbox" : "")">
+    <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : "/Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+        @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+
+    </a>
+
+
+</div>              }
+        </div>
+    </div>
+
+
+</div>}
+}
+
+
+@if (Model.StaticTextCategories.Any(x => x.staticTextType == StaticTextType.قسمت_سوم_نظرات_مشتریان))
+{
+
+    var stCat = Model.StaticTextCategories.Where(x => x.staticTextType == StaticTextType.قسمت_سوم_نظرات_مشتریان).First();
+<section class="ftco-section ftco-no-pt ftco-no-pb testimony-section img">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row ftco-animate justify-content-center">
+            <div class="col-md-6 p-4 pl-md-0 py-md-5 pr-md-5 aside-stretch d-flex align-items-center">
+                <div class="heading-section heading-section-white">
+                    <span class="subheading" style="color:#fff;">@stCat.StaticTextContents.Where(x => x.staticTextContentType == StaticTextContentType.متن_اول_سمت_چپ_قسمت_نظرات_مشتریان).First().Data</span>
+                    <h2 class="mb-4">@stCat.StaticTextContents.Where(x => x.staticTextContentType == StaticTextContentType.متن_دوم_سمت_چپ_قسمت_نظرات_مشتریان).First().Data</h2>
+                </div>
+            </div>
+            <div class="col-md-6 pl-md-5 py-4 py-md-5 aside-stretch-right">
+                <div class="carousel-testimony owl-carousel ftco-owl  owl-drag">
+
+                    @foreach (var item in Model.Comments)
+                    {
+    <div class="item">
+        <div class="testimony-wrap py-4 pb-5 d-flex justify-content-between align-items-end">
+            <div class="user-img" style="background-image:url(/Content/Base/Theme/images/xperson_3.jpg)">
+                <span class="quote d-flex align-items-center justify-content-center">
+                    <i class="fa fa-quote-left"></i>
+                </span>
+            </div>
+            <div class="text">
+                <p class="mb-4">@item.Message</p>
+                <p class="name">@item.FullName</p>
+                <span class="position">customer</span>
+            </div>
+        </div>
+    </div>}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>}
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row justify-content-center mb-5 pb-3">
+            <div class="col-md-10 heading-section text-center ftco-animate">
+                <span class="subheading">Our Blog</span>
+                <h2 class="mb-4">Latest Blog Updates</h2>
+            </div>
+        </div>
+        <div class="row d-flex">
+
+            @foreach (var item in Model.Blogs)
+            {
+<div class="col-lg-4 ftco-animate">
+    <div class="blog-entry">
+        <a href="@("En"+Url.Action("Index","content",new {id=item.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) }))" class="block-20" style="background-image:url(@Html.DisplayattachmentUrl(item.attachment.FileName, "LG", true))">
+        </a>
+        <div class="text d-block">
+            <div class="meta">
+                <p>
+                    <a href="#"><span class="fa fa-calendar mr-2"></span>@item.InsertDate.ToShortDateString()</a>
+                    <a href="#" class="meta-chat"><span class="fa fa-comment mr-2"></span> @item.Comments.Count()</a>
+                </p>
+            </div>
+            <h3 class="heading"><a href="@("En"+Url.Action("Index","content",new {id=item.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) }))">@item.Title</a></h3>
+            <p><a href="@("En"+Url.Action("Index","content",new {id=item.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) }))" class="btn btn-secondary py-2 px-3">Read More...</a></p>
+        </div>
+    </div>
+</div>}
+        </div>
+    </div>
+</section> <!-- START SECTION تبلیغات پایین -->
+@if (Model.BottomAdveresting != null)
+{
+    if (Model.BottomAdveresting.Any())
+    {
+        int SumSize = 0;
+<div class="ads section pb_20 small_pt" id="BottomAds">
+    <div class="container">
+        <div class="row">
+            @foreach (var Adveresting in Model.BottomAdveresting)
+            {
+
+                SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+<div class="single_banner Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? "lastbox" : "")">
+    <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : "/Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+        @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+
+    </a>
+
+
+</div>}
+        </div>
+    </div>
+
+
+</div>}
+}

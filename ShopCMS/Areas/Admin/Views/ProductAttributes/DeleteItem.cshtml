@@ -1,0 +1,45 @@
+﻿@model Domain.ProductAttributeItem
+@{
+    var ProductAttribute = ViewBag.ProductAttribute as Domain.ProductAttribute;
+}
+<title>حذف مقدار خصوصیت</title>
+
+<div class="x_panel">
+    <div class="x_content">
+
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index",new {AttributeId=ProductAttribute.Id })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+
+        <h1 style="display:inline-block;font-size: 2em;">
+            <i class="flaticon-tag-filled-tool"></i> حذفِ مقدار خصوصیت
+        </h1>
+        
+            <h4 style="color:red"><i class="glyphicon glyphicon-remove"></i> آیا مطمئن به حذف این رکورد هستید؟</h4>
+      
+        <br /><br />
+        <p class="text text-danger"><strong>@ViewBag.Erorr</strong></p>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Value)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Value)
+            </dd>
+          
+
+        </dl>
+       
+                @using (Html.BeginForm())
+                {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                    <input type="submit" value="حذف" class="btn btn-primary" />
+                </div>
+            }
+        
+
+</div>
+</div>

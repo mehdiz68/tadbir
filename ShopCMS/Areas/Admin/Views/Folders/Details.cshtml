@@ -1,0 +1,53 @@
+﻿@model Domain.Folder
+<title>نمایش جزئیات</title>
+
+
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            <i class="flaticon-folder-filled-shape"></i> نمایش جزئیات
+        </h1>
+            <br /><br />
+
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.FolderName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.FolderName)
+                </dd>
+
+
+                <dt>
+                    پوشه اصلی
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ParrentFolder.FolderName)
+                </dd>
+
+                <dt>
+                    زبان ( وب سایت )
+                </dt>
+
+                <dd>
+                    @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(Convert.ToInt16(Model.LanguageId))
+                </dd>
+
+
+
+
+            </dl>
+            <p>
+
+                <a class="btn btn-success" href="@Url.Action("Edit", new { id = Model.Id})"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+
+            </p>
+
+</div>
+</div>

@@ -1,0 +1,143 @@
+﻿@model PagedList.IPagedList<Domain.Content>
+@using ahmadi.Infrastructure.Helper;
+@using PagedList.Mvc;
+@using CoreLib.Infrastructure;
+<title>مدیریت صفحات پایه ای سایت</title>
+@{
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+}
+
+@section Header{
+    @*Pagging*@
+    <link href="~/Content/Base/Css/PagedList.css" rel="stylesheet" type="text/css" />
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <h1 style="display:inline-block;font-size: 2em;">
+            <a href="@Url.Action("Index","BaseContents")">
+                مدیریت صفحات پایه ای سایت
+
+            </a>
+        </h1>
+        <span style="cursor:pointer" data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+
+
+        <br /><br />
+
+        @*@if (ViewBag.AddPermission)
+            {
+            <a class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد").First().Abstract:"")" href="@Url.Action("Create","Contents",new { ContentTypeId=0})"><span class="glyphicon glyphicon-plus"></span> ایجاد صفحه جدید </a>
+        }*@
+
+        <div style="margin:0;padding:0">
+
+
+            <div>
+                <div class="table-responsive">
+                    <table class="table table-striped jambo_table bulk_action">
+                        <thead>
+                            <tr class="headings">
+
+                                <th class="text-center column-title">
+                                    عنوان
+                                </th>
+
+                                <th class="text-center column-title">
+                                    کاور تصویر
+                                </th>
+
+
+                                <th class="text-center column-title">
+                                    بازدید
+                                </th>
+
+                                <th class="text-center column-title">
+                                    فعال؟
+                                </th>
+
+                                <th class="text-center column-title">
+                                    زبان (وب سایت)
+                                </th>
+
+                                <th class="text-center column-title">
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr class="ContentRow">
+                                    <td class="text-center">
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                        <div><a target="_blank" href="@Url.Action("Index",new { controller ="content", id =item.Id,title= CommonFunctions.NormalizeAddress(item.Title),area=""})"><span class="glyphicon glyphicon-link"></span></a></div>
+                                    </td>
+                                    <td>
+                                        @if (item.Cover.HasValue)
+                                        {
+                                            @Html.Displayattachment(item.attachment.FileName,item.Title, "SM", htmlAttributes: new { @class = "img-responsive", width = "110", height = "60", style = "display:inline-block;width:110px;height:60px" })
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:110px;height:60px" />
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Visits)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IsActive)
+                                    </td>
+                                    <td>
+
+                                        @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId.Value)
+                                    </td>
+                                    <td>
+                                        @if (ViewBag.EditPermission)
+                                        {
+                                            <a class="btn btn-info" target="_blank" href="@Url.Action("Edit","Contents", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                        }
+                                        @if (ViewBag.DeletePermission && !item.IsAbout && !item.IsContact && !item.IsDefault && !item.IsRegister && !item.IsSuperDeal)
+                                        {
+                                            <a class="DeleteContent btn btn-danger" href="@Url.Action("DeleteConfirmed","Contents", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+
+
+                                        }
+
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <p>
+                        <strong style="color: #900">
+                            صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount @ViewBag.ContentTypeName
+                        </strong>
+                    </p>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, TitleFilter = ViewBag.TitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, CatFilter = ViewBag.CatFilter, IsDeleteFilter = ViewBag.IsDeleteFilter, IsActiveFilter = ViewBag.IsActiveFilter, ContentTypeIdFilter = ViewBag.ContentTypeIdFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, UpdateDateStartFilter = ViewBag.UpdateDateStartFilter, UpdateDateEndFilter = ViewBag.UpdateDateEndFilter, DeleteDateStart = ViewBag.DeleteDateStart, DeleteDateEnd = ViewBag.DeleteDateEnd }))
+
+                </div>
+            </div>
+
+
+        </div>
+
+        @section Scripts{
+            <script src="~/Areas/Admin/Content/Scripts/View/IndexContent.js"></script>
+            @*Persian Calender*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+        }
+</div>
+</div>

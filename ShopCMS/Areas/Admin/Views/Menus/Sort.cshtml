@@ -1,0 +1,124 @@
+﻿@model PagedList.IPagedList<Domain.Menu>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+<title>مرتب سازی منو</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+}
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <a href="~/Admin/Menus/Sort"> <i class="flaticon-folder-filled-shape"></i> مرتب سازی منو </a>
+            <span style="cursor:pointer" class="js-mytooltip-click glyphicon glyphicon-question-sign js-mytooltip type-inline-block style-block style-block-three system-mytooltip--base" data-mytooltip-custom-class="align-center" data-mytooltip-direction="bottom" data-mytooltip-action="click" data-mytooltip-content="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")" title="راهنمای این صفحه"></span>
+
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+            <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index","Menus")"> بازگشت به منو <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        </div>
+        <div class="clearfix"></div>
+        <br />
+        @if (ViewBag.ParrentMenu != null)
+        {
+            var ParrentMenu = ViewBag.ParrentMenu as Domain.Menu;
+            <ul class="breadcrumb" style="direction:ltr">
+                <li><a href="@Url.Action("Sort","Menus",new {id= ParrentMenu.Id })">@ParrentMenu.Title</a></li>
+                @while (ParrentMenu.MenuID.HasValue)
+                {
+
+                    <li><a href="@Url.Action("Sort","Menus",new {id= ParrentMenu.MenuID })">@ParrentMenu.ParrentMenu.Title</a></li>
+                    ParrentMenu = ParrentMenu.ParrentMenu;
+                }
+                <li><a href="~/Admin/Menus/Sort">مرتب سازی</a></li>
+            </ul>
+        }
+        <br /><br />
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <tr>
+
+                    <th>
+                        عنوان
+                    </th>
+                    <th>
+                        منو اصلی
+                    </th>
+                    <td>فعال</td>
+                    <th>
+                        زبان وب سایت
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr class="rowItem" id="@item.Id">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @{
+                                if (item.ParrentMenu != null)
+                                {
+                                    @Html.DisplayFor(modelItem => item.ParrentMenu.Title);
+                                }
+                                else
+                                {
+                                    <span>----</span>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsActive)
+                        </td>
+                        <td>
+                            @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId.Value)
+                        </td>
+
+                        <td>
+                            @if (ViewBag.EditPermission)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                            }
+                            @if (ViewBag.DeletePermission)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                            }
+
+                            @if (item.ChildMenu.Any())
+                            {
+                                <a class="btn btn-success" href="@Url.Action("Sort",new { id=item.Id})">مرتب سازی زیرمنوها</a>
+                            }
+
+                        </td>
+                    </tr>
+                                }
+
+            </table>
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount منو.
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("SortMenus", new { page }))
+
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    @*View*@
+    <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/View/SortMenu.js"></script>
+
+}

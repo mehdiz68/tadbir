@@ -1,0 +1,103 @@
+﻿@model PagedList.IPagedList<Domain.ProductLetmeknow>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure
+
+@{
+    var user = ViewBag.user as Domain.ApplicationUser;
+    var products = ViewBag.Products as IEnumerable<Domain.ViewModels.ProductItem>;
+    var folders = ViewBag.folders;
+    int i = 0;
+}
+<title> اطلاع رسانی های @user.FirstName @user.LastName</title>
+
+
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left">
+            <a class="btn btn-success" href="~/Admin/Customers">بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a>
+
+        </div>
+        <h3 class="box-title">
+            اطلاع رسانی های @user.FirstName @user.LastName
+
+        </h3>
+        <br /><br />
+
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr>
+                        <th>محصول</th>
+                        <th>نوع درخواست</th>
+                        <th>نوع اطلاع رسانی</th>
+                    </tr>
+                    </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var Product = products.Where(x => x.Id == item.ProductId).FirstOrDefault();
+                        <tr>
+                            <td>
+
+                                <p><a target="_blank" href="~/Product/@Product.Id/@CommonFunctions.NormalizeAddress(Product.Name) ">@Html.Displayattachment(Product.MainImageFileName, Product.Title, "SM",true, new { style = "max-height:100px", @Class = "img-responsive" })</a></p>
+                                <p><a target="_blank" href="~/Product/@Product.Id/@CommonFunctions.NormalizeAddress(Product.Name)"><span>@Product.Title</span></a></p>
+
+                            </td>
+
+                            <td>
+                                <span>
+                                    @if (item.Available && item.AmazingOffer)
+                                    {
+                                        <text>موجود شدن</text>
+                                        <text> ، </text>
+                                        <text>پیشنهاد شگفت انگیز</text>
+                                    }
+                                    else if (item.Available)
+                                    {
+                                        <text>موجود شدن</text>
+                                    }
+                                    else if (item.AmazingOffer)
+                                    {
+                                        <text>پیشنهاد شگفت انگیز</text>
+                                    }
+                                    else
+                                    {
+                                        <text>نامشخص</text>
+                                    }
+                                </span>
+                            </td>
+                            <td>
+                                @switch (item.NotificationType)
+                                {
+                                    case 1:<text>ایمیل</text>break;
+                                case 2:<text>اس ام اس</text>break;
+                            case 3:<text>سیستم پیام فروشگاه</text>break;
+                        case 4:<text>ایمیل و اس ام اس</text>break;
+                    case 5:<text>ایمیل و سیستم پیام فروشگاه</text>break;
+                case 6:<text>اس ام اس و سیستم پیام فروشگاه</text>break;
+            case 7:<text>ایمیل ، اس ام اس و سیستم پیام فروشگاه</text>break;
+            default:<text>نامشخص</text>break;
+        }
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount اطلاع رسانی.
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, StartDateFilter = ViewBag.StartDateFilter, EndDateFilter = ViewBag.EndDateFilter }))
+
+
+        </div>
+        <div class="clearfix"></div>
+
+    </div>
+</div>

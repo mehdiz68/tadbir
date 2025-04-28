@@ -1,0 +1,99 @@
+﻿@model IEnumerable<Domain.EmailSender>
+<title>ایمیل های اطلاع رسان</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+}
+
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index","Setting")"> بازگشت به تنظیمات سایت <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ایمیل های اطلاع رسان
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")" title="راهنمای این صفحه"></span>
+
+        </h1>
+            <br /><br />
+            <p>
+                @if (ViewBag.AddPermission )
+            {
+                    <a class="btn btn-success" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد ایمیل جدید </a>
+                }
+
+            </p>
+            <div class="table-responsive">
+                <table class="table table-striped jambo_table bulk_action">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Setting.SettingName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.MailServer)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsActive)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Port)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DisplaySort)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr class="rowItem" id="@item.Id">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Setting.SettingName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MailServer)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsActive)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Port)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DisplaySort)
+                            </td>
+                            <td>
+
+                                @if (ViewBag.EditPermission)
+                                {
+                                    <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                }
+                                @*@if (ViewBag.DeletePermission)
+                                {
+                                    <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                }*@
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
+</div>
+</div>
+@section Scripts{
+
+    @*View*@
+    <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/View/SortEmailSender.js"></script>
+
+}

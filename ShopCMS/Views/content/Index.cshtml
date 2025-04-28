@@ -1,0 +1,411 @@
+﻿@model Domain.Content
+
+@using CoreLib.Infrastructure.DateTime
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure
+@using CoreLib.ViewModel.Xml
+
+@{
+    int SumSize = 0;
+    var nextContent = ViewBag.nextContent as Domain.Content;
+    var prevContent = ViewBag.prevContent as Domain.Content;
+
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var sliders = ViewBag.Sliders as List<Domain.Slider>;
+
+    var ads = ViewBag.Ads as IEnumerable<Domain.Adveresting>;
+    XMLReader readXML = new XMLReader(Meta.StaticContentUrl);
+    var ContentType = readXML.DetailOfXContentType(Model.ContentTypeId);
+    string currentUrl = "https://" + HttpContext.Current.Request.Url.Host + "/content/" + Model.Id + "/" + CommonFunctions.NormalizeAddress(Model.PageAddress);
+    int k = 0;
+    var contenttype = ViewBag.contentType as CoreLib.ViewModel.Xml.XContentType;
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+
+}
+
+
+@section Header{
+    <link href="~/Content/Base/Css/glyphicon.css" rel="stylesheet" />
+    <link href="~/Content/Base/Css/star-rating.min.css" rel="stylesheet" />
+    <link href="~/Content/Base/Css/prettyPhoto.css" rel="stylesheet" />
+    <link href="~/Content/Base/Css/view/Content.css?v=1.2.4" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+}
+
+
+
+
+<section class="hero-wrap hero-wrap-2" style="background-image: url(/Content/Base/Theme/images/xbg_2.jpg);" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-start">
+            <div class="col-md-9 ftco-animate pb-5 fadeInUp ftco-animated">
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="/">صفحه اصلی <i class="fa fa-chevron-left"></i></a></span>
+                    <span class="mr-2"><a href="@Url.Action("Index","ContentType",new {id=Model.ContentTypeId })">@contenttype.Name <i class="fa fa-chevron-left"></i></a></span>
+                    <span>@Model.Title </span>
+                </p>
+                <h1 class="mb-3 bread">@Model.Title</h1>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="container ads">
+    <div class="row">
+        @{ SumSize = 0;}
+        @foreach (var item in ads.Where(x => x.Position == 1))
+        {
+            SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(item.AdverestingSizeId);
+            <div class="Adveresting Position-@item.Position Size-@item.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                <a href="@item.Link" title="@item.Title">
+                    <div class="categories__item set-bg" data-setbg="@Html.DisplayattachmentUrl(item.attachment.FileName)" style="background-image: url(&quot;@Html.DisplayattachmentUrl(item.attachment.FileName)&quot;);">
+                        <div class="categories__hover__text">
+                            <h5>@item.Title</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+
+    </div>
+</div>
+
+<section class="ftco-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 ftco-animate fadeInUp ftco-animated">
+                <div class="single-post__title__text">
+
+                    <ul class="widget">
+                        <li><span class="fa fa-calendar"></span>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.InsertDate)</li>
+                        @if (Model.UpdateDate.HasValue)
+                        {
+                            <li><span class="fa fa-calendar"></span>بروزرسانی: @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.UpdateDate.Value)</li>
+                        }
+                        <li>
+                            <span class="fa fa-comment"></span>
+                            @if (Model.Comments.Count > 0)
+                            {
+                                <span>@Model.Comments.Count</span> <span> نظر </span>
+                            }
+                            else
+                            {
+                                <span> بدون نظر </span>
+                            }
+                        </li>
+                        <li><span class="fa fa-bell"></span> <span> @Model.ReadMinuts  دقیقه </span> </li>
+                        <li><span class="fa fa-user"></span> <span> @Model.Visits </span> </li>
+                        <li>
+                            <div id="Rate" data-ContentId="@Model.Id">
+                                <form>
+                                    <input type="text" id="ContentRate" class="rating-loading" />
+                                </form>
+                                @if (Model.ContentRating != null)
+                                {
+                                    <div id="RateResult" itemscope="" itemtype="http://schema.org/Product">
+                                        <span itemprop="name">@Model.Title</span>
+                                        <div itemprop="aggregateRating" itemscope="" itemtype="http://schema.org/AggregateRating">
+                                            <span itemprop="ratingValue">@Model.ContentRating.AverageRating</span> از 5 بوسیله <span itemprop="reviewCount">@Model.ContentRating.TotalRaters</span> رای
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+                <p id="Abstract">@Model.Abstract</p>
+                <div id="Data">
+                    @Html.Raw(Model.Data)
+                </div>
+                @if (Model.ContentTypeId != 3)
+                {
+                    <div id="image">
+                        @if (Model.Cover.HasValue)
+                        {
+                            <img src="@Html.DisplayattachmentUrl(Model.Cover.HasValue?Model.attachment.FileName:"default-thumbnail.jpg","SM",true)" alt="@Model.Title" class="img-responsive img-thumbnail" />
+
+                        }
+                        else
+                        {
+                            <img src="default-thumbnail.jpg" alt="@Model.Title" class="img-responsive img-thumbnail" />
+                        }
+                    </div>
+                }
+
+                <div class="container ads">
+                    <div class="row">
+                        @{ SumSize = 0;}
+                        @foreach (var item in ads.Where(x => x.Position == 2))
+                        {
+                            SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(item.AdverestingSizeId);
+                            <div class="Adveresting Position-@item.Position Size-@item.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                                <a href="@item.Link" title="@item.Title">
+                                    <div class="categories__item set-bg" data-setbg="@Html.DisplayattachmentUrl(item.attachment.FileName)" style="background-image: url(&quot;@Html.DisplayattachmentUrl(item.attachment.FileName)&quot;);">
+                                        <div class="categories__hover__text">
+                                            <h5>@item.Title</h5>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+                <div class="tag-widget post-tag-container mb-5 mt-5">
+                    <div class="tagcloud">
+                        @foreach (var item in Model.Tags)
+                        {
+
+                            <a class="tag-cloud-link" href="@Url.Action("Index","Tag",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.TagName) })">@item.TagName</a>
+                        }
+                    </div>
+                </div>
+                @if (Model.Sources.Any())
+                {
+                    <div class="tag-widget post-tag-container mb-5 mt-5">
+                        <div class="tagcloud">
+                            <span class="tag-cloud-link">منبع :</span>
+                            @foreach (var item in Model.Sources)
+                            {
+                                <a href="@item.Link" class="tag-cloud-link" target="_blank"><span class="fa fa-link"></span> @item.Title </a>
+                            }
+                        </div>
+                    </div>
+                }
+                <div class="single-post__social__item">
+                    <ul>
+                        <li style="margin:0"><span>به اشتراک گذاری : </span></li>
+                        <li><a href="whatsapp://send?text=@Model.Title @currentUrl"><i class="fa fa-whatsapp"></i></a></li>
+                        <li><a href="tg://msg_url?url=@currentUrl"><i class="fa fa-send"></i></a></li>
+                        <li><a href="https://www.linkedin.com/shareArticle?mini=true&url=@currentUrl"><i class="fa fa-linkedin"></i></a></li>
+                        <li><a href="https://www.facebook.com/sharer/sharer.php?u=@currentUrl"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="http://twitter.com/intent/tweet?text=@Model.Title&url=@currentUrl"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="https://plus.google.com/share?url=@currentUrl"><i class="fa fa-google"></i></a></li>
+                    </ul>
+                </div>
+
+
+                <div class="container ads">
+                    <div class="row">
+                        @{ SumSize = 0;}
+                        @foreach (var item in ads.Where(x => x.Position == 3))
+                        {
+                            SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(item.AdverestingSizeId);
+                            <div class="Adveresting Position-@item.Position Size-@item.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                                <a href="@item.Link" title="@item.Title">
+                                    <div class="categories__item set-bg" data-setbg="@Html.DisplayattachmentUrl(item.attachment.FileName)" style="background-image: url(&quot;@Html.DisplayattachmentUrl(item.attachment.FileName)&quot;);">
+                                        <div class="categories__hover__text">
+                                            <h5>@item.Title</h5>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+                <div class="pt-5 mt-5" id="comments">
+                    @if (Model.HasContact)
+                    {
+
+                    }
+                    else
+                    {
+                        if (Model.Comments.Count > 0)
+                        {
+                            <div class="widget__title">
+                                <h3 class="mb-5 font-weight-bold">@Model.Comments.Count نظر</h3>
+                            </div>
+                        }
+
+                        <ul class="comment-list">
+
+                            @foreach (var item in Model.Comments.Where(x => x.IsActive == true && x.ParrentId == null))
+                            {
+
+                                <li class="comment" id="Comment_@(item.Id)">
+                                    <div class="vcard bio">
+                                        <img class="img-responsive" style="width: 64px; height: 64px;" src="~/Content/Default/images/man-avatar.jpg">
+                                    </div>
+                                    <div class="comment-body">
+                                        <h3 class="comment-classic-name">@item.FullName</h3>
+                                        <div class="meta">@DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate) - @item.InsertDate.ToString("HH:mm")</div>
+                                        <p>@item.Message</p>
+                                        <ul class="rrr">
+                                            <li><span href="#"><span>@item.PositiveRating</span><i data-id="@item.Id" class="fa fa-plus-square"></i></span></li>
+                                            <li><span href="#"><span>@item.NegativeRating</span><i data-id="@item.Id" class="fa fa-minus-square"></i></span></li>
+                                            <li><span onclick="NestedComment(@item.Id)" href="#"><i class="fa fa-share-square-o"></i></span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <ul class="children">
+                                        @foreach (var item2 in item.ChildComment.Where(x => x.IsActive == true))
+                                        {
+                                            <li class="comment" id="Comment_@(item2.Id)">
+                                                <div class="vcard bio">
+                                                    <img class="img-responsive" style="width: 64px; height: 64px;" src="~/Content/Default/images/man-avatar.jpg">
+                                                </div>
+                                                <div class="comment-body">
+                                                    <h3 class="comment-classic-name">@item2.FullName</h3>
+                                                    <div class="meta">@DateTimeConverter.ChangeMiladiToLongShamsi(item2.InsertDate) - @item2.InsertDate.ToString("HH:mm")</div>
+                                                    <p>@item2.Message</p>
+                                                    <ul class="rrr">
+                                                        <li><span href="#"><span>@item2.PositiveRating</span><i data-id="@item2.Id" class="fa fa-plus-square"></i></span></li>
+                                                        <li><span href="#"><span>@item2.NegativeRating</span><i data-id="@item2.Id" class="fa fa-minus-square"></i></span></li>
+                                                    </ul>
+                                                </div>
+
+                                                <div class="clearfix"></div>
+                                            </li>
+                                        }
+
+                                    </ul>
+
+                                    <div class="clearfix"></div>
+                                </li>
+
+                            }
+                            <li class="clearfix"></li>
+                        </ul>
+
+                        @Html.Partial("_Comment", new Domain.Comment(Model.Id))
+
+                    }
+                </div>
+
+            </div>
+            <div class="col-lg-4 sidebar ftco-animate fadeInUp ftco-animated">
+
+
+                <div class="sidebar-box ftco-animate fadeInUp ftco-animated">
+                    <h3 class="heading-sidebar">مطالب مرتبط</h3>
+                    @foreach (var item in ViewBag.contentTypes as IQueryable<ahmadi.ViewModels.Content.ContentTypeViewModel>
+)
+                    {
+                        if (item.Contents.Any())
+                        {
+
+
+                            <div class="contentLefSide PagecontentRelated">
+                                @foreach (var contentItem in item.Contents)
+                                {
+
+                                    <div class="block-21 mb-4 d-flex">
+                                        @if (contentItem.Cover.HasValue)
+                                        {
+                                        <a class="blog-img mr-4" style="background-image:url(@Html.DisplayattachmentUrl(contentItem.attachment.FileName, "SM", true))"></a>
+                                        }
+                                        <div class="text">
+                                            <h3 class="heading"><a href="@Url.Action("Index", "content", new { id = contentItem.Id, title = CommonFunctions.NormalizeAddress(contentItem.Title) })">@contentItem.Title</a></h3>
+                                            <div class="meta">
+                                                <div>
+                                                    <a href="#"><span class="fa fa-calendar mr-2"></span>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(contentItem.InsertDate)</a>
+
+                                                </div>
+                                                <div> <a href="#" class="meta-chat"><span class="fa fa-comment mr-2"></span> @contentItem.Comments.Count()</a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                }
+                            </div>
+                        }
+                    }
+
+                </div>
+
+
+                @if (Model.OtherImages.Any())
+                {
+                    <div>
+                        <div id="OtherImages">
+                            <h4><span>تصاویر بیشتر</span></h4>
+
+                            <section">
+
+
+                                @foreach (var item in Model.OtherImages.OrderBy(x => x.DisplaySort))
+                                {
+                                    <div class="js-product-box-container swiper-slide">
+                                        <a href="@Html.DisplayattachmentUrl(item.attachment.FileName)">
+                                            @Html.Displayattachment(item.attachment.FileName, item.Title, "MD", true, new { @class = "img-responsive img-thumbnail" })
+                                        </a>
+                                    </div>
+                                    <br />
+                                }
+
+                            </section">
+                        </div>
+                    </div>
+
+                }
+
+                <div class="container ads">
+                    <div class="row">
+                        @{ SumSize = 0;}
+                        @foreach (var item in ads.Where(x => x.Position == 4))
+                        {
+                            SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(item.AdverestingSizeId);
+                            <div class="Adveresting Position-@item.Position Size-@item.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                                <a href="@item.Link" title="@item.Title">
+                                    <div class="categories__item set-bg" data-setbg="@Html.DisplayattachmentUrl(item.attachment.FileName)" style="background-image: url(&quot;@Html.DisplayattachmentUrl(item.attachment.FileName)&quot;);">
+                                        <div class="categories__hover__text">
+                                            <h5>@item.Title</h5>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+@section Scripts{
+    <script src="~/Content/Base/Scripts/Rating/star-rating.min.js"></script>
+    <script src="~/Content/Base/Scripts/PrettyImage/jquery.prettyPhoto.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+
+        var slider2 =
+            new Swiper('.sliderOther', {
+                zoom: true,
+                spaceBetween: 5,
+                slidesPerView: 2,
+
+                // Navigation arrows
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+
+                // And if we need scrollbar
+                scrollbar: {
+                    el: '.swiper-scrollbar',
+                }
+            });
+
+
+
+
+    </script>
+
+    <script src="~/Content/Base/Scripts/View/Content.js"></script>
+
+}

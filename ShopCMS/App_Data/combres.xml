@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  This file contains basic settings needed for most web apps.
+  For full Combres settings (with explanation), refer to the sample definition file: combres_full_with_annotation.xml
+  Also, refer to Combres' documentation: http://combres.codeplex.com/documentation	
+-->
+<combres xmlns='urn:combres'>
+  <filters>
+    <filter type="Combres.Filters.FixUrlsInCssFilter, Combres" />
+  </filters>
+  <resourceSets url="~/combres.axd"
+                defaultDuration="30"
+                defaultVersion="auto"
+                defaultDebugEnabled="false"
+                defaultIgnorePipelineWhenDebug="true"
+                localChangeMonitorInterval="30"
+                remoteChangeMonitorInterval="60"
+                >
+    <resourceSet name="siteCss" type="css">
+      <resource path="~/Content/Base/Scripts/sweetalert/sweetalert.css" />
+      <resource path="~/Content/Base/Css/animate.css" />
+      <resource path="~/Content/Base/Css/bootstrap.min.css" />
+      <resource path="~/Content/Base/Css/all.min.css" />
+      <resource path="~/Content/Base/Css/ionicons.min.css" />
+      <resource path="~/Content/Base/Css/themify-icons.css" />
+      <resource path="~/Content/Base/Css/linearicons.css" />
+      <resource path="~/Content/Base/Css/flaticon.css" />
+      <resource path="~/Content/Base/Css/simple-line-icons.css" />
+      <resource path="~/Content/Base/Css/font-awesome.css" />
+      <resource path="~/Content/Base/Css/owl.carousel.min.css" />
+      <resource path="~/Content/Base/Css/owl.theme.css" />
+      <resource path="~/Content/Base/Css/owl.theme.default.min.css" />
+      <resource path="~/Content/Base/Css/magnific-popup.css" />
+      <resource path="~/Content/Base/Css/slick.css" />
+      <resource path="~/Content/Base/Css/slick-theme.css" />
+      <resource path="~/Content/Base/Css/style.css" />
+      <resource path="~/Content/Base/Css/responsive.css" />
+      <resource path="~/Content/Base/Scripts/VideoPlayer/dist/mediaelementplayer.css" />
+      <resource path="~/Content/Base/Scripts/VideoPlayer/dist/jump-forward/jump-forward.css" />
+      <resource path="~/Content/Base/Scripts/VideoPlayer/dist/skip-back/skip-back.css" />
+      <resource path="~/Content/Base/Scripts/VideoPlayer/dist/speed/speed.css" />
+      <resource path="~/Content/Default/Site.css" />
+    </resourceSet>
+    <resourceSet name="siteJs" type="js">
+      <resource path="~/Content/Base/scripts/jquery-1.12.4.min.js" />
+      <resource path="~/Content/Base/scripts/popper.min.js" />
+      <resource path="~/Content/Base/scripts/bootstrap.min.js" />
+      <resource path="~/Content/Base/scripts/owl.carousel.min.js" />
+      <resource path="~/Content/Base/scripts/magnific-popup.min.js" />
+      <resource path="~/Content/Base/scripts/waypoints.min.js" />
+      <resource path="~/Content/Base/scripts/parallax.js" />
+      <resource path="~/Content/Base/scripts/jquery.countdown.min.js" />
+      <resource path="~/Content/Base/scripts/Hoverparallax.min.js" />
+      <resource path="~/Content/Base/scripts/jquery.countTo.js" />
+      <resource path="~/Content/Base/scripts/imagesloaded.pkgd.min.js" />
+      <resource path="~/Content/Base/scripts/isotope.min.js" />
+      <resource path="~/Content/Base/scripts/jquery.appear.js" />
+      <resource path="~/Content/Base/scripts/jquery.parallax-scroll.js" />
+      <resource path="~/Content/Base/scripts/jquery.dd.min.js" />
+      <resource path="~/Content/Base/scripts/slick.min.js" />
+      <resource path="~/Content/Base/scripts/jquery.elevatezoom.js" />
+      <resource path="~/Content/Base/Scripts/sweetalert/sweetalert.min.js" />
+      <resource path="~/Content/Base/Scripts/VideoPlayer/dist/mediaelement-and-player.min.js" />
+      <resource path="~/Content/Base/Scripts/VideoPlayer/dist/jump-forward/jump-forward.js" />
+      <resource path="~/Content/Base/Scripts/VideoPlayer/dist/skip-back/skip-back.js" />
+      <resource path="~/Content/Base/Scripts/VideoPlayer/dist/speed/speed.min.js" />
+      <resource path="~/Content/Base/scripts/scripts.js" />
+      <resource path="~/Content/Base/Scripts/jquery.unobtrusive-ajax.js" />
+      <resource path="~/Content/Base/Scripts/jquery.validate.js" />
+      <resource path="~/Content/Base/Scripts/jquery.validate.unobtrusive.js" />
+    </resourceSet>
+  </resourceSets>
+</combres>

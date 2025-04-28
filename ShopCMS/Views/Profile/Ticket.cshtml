@@ -1,0 +1,123 @@
+﻿@model Domain.Ticket
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml;
+@using ahmadi.Infrastructure.Helper;
+@using Domain;
+
+@{
+    var setting = ViewBag.setting as Domain.Setting;
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+
+    @Html.Partial("_Meta", Meta)
+
+
+}
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+@section Header{
+    <style>
+        .alert-default {
+            background: #fff;
+            color: #747474;
+            border-radius: 2px;
+            box-shadow: 0 6px 10px 0 #3c3d4233;
+        }
+
+        .adminticket {
+            border: 1px solid #e8e8e8;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            word-break: break-all;
+            box-shadow: 0 4px 12px 0 #34353c30;
+        }
+
+        .adminheader h5 {
+            border-radius: 3px 3px 0 0 !important;
+            padding: 14px 30px !important;
+            background: #3d4bb4 !important;
+            border-bottom: 1px solid #3d4bb4 !important;
+            color: #fff !important;
+        }
+
+        .clientmsg, .ticket-footer, .adminmsg {
+            padding: 14px 30px !important;
+            margin-bottom: 0 !important;
+        }
+
+        .clientticket {
+            border-radius: 3px;
+            margin-bottom: 30px;
+            word-break: break-all;
+            box-shadow: 0 4px 12px 0 #34353c30;
+        }
+
+        .clientheader h5 {
+            border-radius: 3px 3px 0 0 !important;
+            padding: 14px 30px !important;
+            background: #434650 !important;
+            color: #fff;
+            border-bottom: 1px solid #fff !important;
+        }
+    </style>
+}
+<div class="o-box container" id="Detail">
+    <h1>
+        <span>  جزئیات پرسش @Model.Code</span>
+        <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+    </h1>
+
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-12 col-md-12 padding-0 alert alert-default alert-dismissible">
+            <div class="row">
+                <div class="col-sm-3 padding-top-20 padding-bottom-20 grey-800 text-center">زمان ایجاد : @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.InsertDate) ( @Model.InsertDate.ToShortTimeString() )</div>
+                <div class="col-sm-3 padding-top-20 padding-bottom-20 grey-800 text-center">
+                    آخرین بروزرسانی : @if (Model.UpdateDate.HasValue)
+                    {
+                        @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.UpdateDate.Value)
+                        <span>( @Model.UpdateDate.Value.ToShortTimeString() )</span>
+                    }
+                </div>
+                <div class="col-sm-3 padding-top-20 padding-bottom-20 grey-800 text-center">
+                    وضعیت تیکت : <span style="color:#CAF200">
+                        @if (Model.ChildTickets.Any(x => x.Answer == true))
+                        {
+                            if (ahmadi.Infrastructure.DbSql.SqlManager.CheckTicketState(Model.ChildTickets.Where(x => x.Answer == true)))
+                            {
+                                <span class="red">در انتظار پاسخ</span>
+                            }
+                            else
+                            {
+                                <span class="green">پاسخ داده شده</span>
+                            }
+                        }
+
+                        else
+                        {
+                            <span class="red">در انتظار پاسخ</span>
+                        }
+                    </span>
+                </div>
+                <div class="col-sm-3 padding-top-20 padding-bottom-20 grey-800 text-center">دسته بندی : @Model.TicketCategory.Title</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+
+        @Html.Partial("_TicketList", Model, new ViewDataDictionary { { "ReplayAnswer", false }, { "lastId", ViewBag.lastId } })
+    </div>
+
+</div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#Message").val("");
+        });
+    </script>
+    }

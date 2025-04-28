@@ -1,0 +1,29 @@
+﻿@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta; }
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+@section Header{
+
+    <link href="~/Content/Default/user.css" rel="stylesheet" />
+}
+
+    <div class="container">
+        <div class="row">
+
+           
+
+            <section class="Pagecontent">
+                <div>
+                    <p>
+                        با تشکر .ایمیل شما تایید شد.و شما وارد سایت شدید. هم اکنون میتوانید از خدمات سایت استفاده نمایید.
+                    </p>
+                    <p>
+                        برای دریافت اس ام اس و آگاهی از وضعیت سفارشات خود می توانید وارد صفحه <a href="@Url.Action("Index","Profile")">پروفایل کاربری</a> شده و شماره تماس خود را نیز تایید نمایید.
+                    </p>
+                </div>
+
+            </section>
+        </div>
+    </div>
+

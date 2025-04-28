@@ -1,0 +1,173 @@
+﻿@model Domain.UserGroup
+
+@using PagedList;
+@using ahmadi.Infrastructure.Helper;
+@using PagedList.Mvc;
+@using CoreLib.Infrastructure;
+
+<title>اعضای گروه @Model.Name</title>
+
+@{
+    var UserList = ViewBag.UserList as PagedList<Domain.UserGroupSelect>;
+    int? id = ViewBag.Id as int?;
+    int? PageSize = ViewBag.PageSize as int?;
+}
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            <i class="flaticon-folder-filled-shape"></i> اعضای گروه @Model.Name
+        </h1>
+        <br /><br />
+        @if (ViewBag.AddPermission)
+        {
+            <p><a class="btn btn-success" href="@Url.Action("CreateUserList","usergroup",new {id=Model.Id })"> <span class="glyphicon glyphicon-plus"></span> افزودن عضو جدید</a></p>
+        }
+
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:0">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2><span class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left"></span> جستجو / فیلتر</h2>
+                    <ul class="nav navbar-left panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                        </li>
+
+                        <li>
+                            <a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="x_content">
+
+                    <div id="SearchPage">
+                        <div>
+                            <div>
+
+                                @using (Html.BeginForm("addMember", "UserGroup", FormMethod.Get, new { id = "Search-Form" }))
+                                {
+
+
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                        @Html.TextBox("NameString", ViewBag.NameFilter as string, htmlAttributes: new { placeholder = "عنوان", style = "display: inline-block", @class = "form-control" })
+                                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                                    </div>
+
+
+
+
+                                    <div class="clearfix"></div>
+
+                                    @Html.Hidden("PageSize", PageSize.Value);
+
+                                    <div class="clearfix"></div>
+                                    <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                    @Html.ActionLink("نمایش همه", "addMember", new { }, htmlAttributes: new { @class = "btn btn-success" })
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (UserList != null)
+            {
+                if (UserList.Any())
+                {
+
+                    <div class="Pagging-New-Container">
+                        <strong class="Pagging-New-Info">
+                            تعداد نتایج : @UserList.TotalItemCount ، صفحه @(UserList.PageCount < UserList.PageNumber ? 0 : UserList.PageNumber) از @UserList.PageCount
+                        </strong>
+                        @Html.PagedListPager(UserList, Page => Url.Action("addMember", new { Page, sortOrder = ViewBag.CurrentSort, PageSize = PageSize, NameFilter = ViewBag.NameFilter }))
+
+                        <div class="PageSizeSelectorContainer">
+                            <span>تعداد نمایش</span>
+                            <select class="PageSizeSelector" name="PageSizeSelector">
+                                <option value="10" selected="@(PageSize.HasValue && PageSize.Value==10?true:false)">10</option>
+                                <option value="20" selected="@(PageSize.HasValue && PageSize.Value==20?true:false)">20</option>
+                                <option value="50" selected="@(PageSize.HasValue && PageSize.Value==50?true:false)">50</option>
+                                <option value="100" selected="@(PageSize.HasValue && PageSize.Value==100?true:false)">100</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped jambo_table bulk_action">
+                            <thead>
+                                <tr class="headings">
+                                    <th class="text-center column-title">
+
+                                    </th>
+                                    <th class="text-center column-title">
+                                        <a href="@Url.Action("addMember","usergroup",new {sortOrder=ViewBag.CurrentSort!="Fullname_desc"?"Fullname_desc":"Fullname",PageSize=PageSize,NameFilter=ViewBag.NameFilter })">نام و نام خانوادگی</a>
+                                    </th>
+                                    <th class="text-center column-title">
+                                        <a href="@Url.Action("addMember","usergroup",new {sortOrder=ViewBag.CurrentSort!="Username_desc"?"Username_desc":"Username",PageSize=PageSize,NameFilter=ViewBag.NameFilter })">نام کاربری</a>
+                                    </th>
+                                    <th class="text-center column-title">
+                                        <a href="@Url.Action("addMember","usergroup",new {sortOrder=ViewBag.CurrentSort!="Province_desc"?"Province_desc":"Province",PageSize=PageSize,NameFilter=ViewBag.NameFilter })">استان</a>
+                                    </th>
+                                    <th class="text-center column-title">
+                                        <a href="@Url.Action("addMember","usergroup",new {sortOrder=ViewBag.CurrentSort!="Gender_desc"?"Gender_desc":"Gender",PageSize=PageSize,NameFilter=ViewBag.NameFilter })"> جنسیت</a>
+                                    </th>
+
+                                    <th class="text-center column-title">
+                                        عملیات
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int i = 1; }
+                                @foreach (var item in UserList)
+                                {
+                                    <tr class="ContentRow">
+
+                                        <td class="text-center">@((((UserList.PageNumber - 1) * UserList.PageSize)) + i)</td>
+                                        <td class="text-center ">
+                                            <a href="@("/Admin/UserManagement/Edit/"+item.UserId)" >
+                                                @item.User.FirstName @item.User.LastName
+                                            </a>
+                                        </td>
+                                        <td class="text-center">@item.User.UserName</td>
+                                        <td class="text-center">@item.User.CityEntity.Province.Name</td>
+                                        <td class="text-center">@(item.User.Gender?"مرد":"زن")</td>
+                                        <td>
+                                            <a href="/admin/UserGroup/DeleteMember/@item.Id" title="حذف" class="DeleteContent"><span class="fa fa-remove"></span></a>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="Pagging-New-Container">
+                        <strong class="Pagging-New-Info">
+                            تعداد نتایج : @UserList.TotalItemCount ، صفحه @(UserList.PageCount < UserList.PageNumber ? 0 : UserList.PageNumber) از @UserList.PageCount
+                        </strong>
+
+                        @Html.PagedListPager(UserList, Page => Url.Action("addMember", new { Page, sortOrder = ViewBag.CurrentSort, PageSize = PageSize, NameFilter = ViewBag.NameFilter }))
+                        <div class="PageSizeSelectorContainer">
+                            <span>تعداد نمایش</span>
+                            <select class="PageSizeSelector" name="PageSizeSelector">
+                                <option value="10" selected="@(PageSize.HasValue && PageSize.Value==10?true:false)">10</option>
+                                <option value="20" selected="@(PageSize.HasValue && PageSize.Value==20?true:false)">20</option>
+                                <option value="50" selected="@(PageSize.HasValue && PageSize.Value==50?true:false)">50</option>
+                                <option value="100" selected="@(PageSize.HasValue && PageSize.Value==100?true:false)">100</option>
+                            </select>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/Areas/Admin/Content/Scripts/View/AddMemberUserGroup.js"></script>
+
+}

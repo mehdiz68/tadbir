@@ -1,0 +1,85 @@
+﻿@model Domain.FreeSendOfferState
+
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml
+
+
+@{
+    var FreeSendDetail = ViewBag.FreeSendDetail as Domain.FreeSendOffer;
+}
+
+<title>ایجاد شهر برای @FreeSendDetail.Id </title>
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("FreeSendCities","Offers",new {id=FreeSendDetail.Id})"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        @*<span style="cursor:pointer" data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")" title="راهنمای این صفحه"></span>*@
+
+    <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+        ایجاد شهر برای @FreeSendDetail.Id
+
+    </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                @Html.Hidden("FreeSendOfferId", FreeSendDetail.Id)
+
+                <div class="col-md-3">
+                    <p>
+                        <span>@Html.LabelFor(x => x.CityId)</span>
+
+                    </p>
+                    @Html.DropDownList("ProvinceId", ViewBag.ProvinceList as IEnumerable<SelectListItem>,"--انتخاب--", new { @class = "form-control" })
+                    <select id="CityId" name="CityId" class="form-control"></select>
+                </div><br />
+                <div class="clearfix"></div>
+                <br />
+
+                <input type="submit" value="ثبت" class="btn btn-primary" style="border-radius:0" />
+            </div>
+        }
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <script>
+        $(document).ready(function () {
+            $("#ProvinceId").change(function () {
+                if ($("#ProvinceId").val() == "")
+                    $("#CityId option").remove();
+                else {
+
+                    $(".loading").show();
+                    $.ajax({
+                        type: "Get",
+                        url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#ProvinceId").val(),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            $("#CityId option").remove();
+                            $("#CityId").append("<option value='0'>--همه--</option>");
+                            for (var i = 0; i < response.data.length; i++) {
+
+                                $("#CityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                            }
+
+                            $(".loading").hide();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+}

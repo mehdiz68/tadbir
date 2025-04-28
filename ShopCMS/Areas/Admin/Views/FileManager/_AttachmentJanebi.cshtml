@@ -1,0 +1,20 @@
+﻿@model List<Domain.attachment>
+@using ahmadi.Infrastructure.Helper;
+
+@foreach (var item in Model)
+{
+    <li id="@item.Id" data-id="@item.Id">
+        <span class="glyphicon glyphicon-remove remove-janebi" data-id="@item.Id"></span>
+        <a class="dettail" href="/Admin/FileManager/Edit/@item.Id" target="_blank"><span class="glyphicon glyphicon-list" title="جزئیات"></span></a>
+        <input type="checkbox" title="تصویر پیش فرض" data-id="@item.Id"/>
+        <br>
+        <a href="@item.FileName" target="_blank">
+            <img src="~/Content/UploadFiles/@item.FileName" width="84" height="78">
+        </a>
+        <input type="hidden" name="janebi" value="@item.Id">
+    </li>
+
+    
+}
+
+

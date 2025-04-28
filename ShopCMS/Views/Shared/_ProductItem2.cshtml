@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Domain.ViewModels.ProductItem>
+@using ahmadi.Infrastructure.Helper;
+
+@{
+    int? w = ViewBag.w as int?;
+    w = w.HasValue ? w.Value : 1280;
+    int? h = ViewBag.h as int?;
+    h = h.HasValue ? h.Value : 1280;
+    string size = ViewBag.size as string;
+    size = size != null ? size : "LG";
+}
+
+@foreach (var item in Model)
+{
+
+    <div class="product">
+        @Html.Partial("_PItem", item, new ViewDataDictionary { { "w", w }, { "h", h }, { "size", size } })
+    </div>
+
+}
+
+
+
+
+
+
+
+
+
+

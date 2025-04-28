@@ -1,0 +1,158 @@
+﻿@model Domain.GeneralCodeGift
+@using CoreLib;
+
+<title>ویرایش کد تخفیف عمومی</title>
+
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+    var setting = ViewBag.setting as Domain.Setting;
+}
+@section Header{
+    <link href="~/Content/Base/Scripts/PersianDateJs/persian-datepicker.min.css" rel="stylesheet" />
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    @*Bootstrap Select*@
+    <link href="~/areas/admin/content/scripts/component/bootstrp-dropdown/bootstrap-select.min.css" rel="stylesheet" />
+    <style>
+
+        .timeSelectorPlugin {
+            position: absolute;
+            background-color: #c3c4b0;
+            border: 1px solid #ccc;
+            min-width: 200px;
+            min-height: 50px;
+            z-index: 999999;
+            padding-top: 8px;
+            text-align: center;
+        }
+
+            .timeSelectorPlugin p {
+                cursor: pointer;
+                margin: 5px;
+                padding: 5px;
+                background-color: red;
+                color: #fff;
+                border: 1px solid #fff
+            }
+    </style>
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ویرایش کد تخفیف عمومی
+        </h1>
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(x => Model.OfferId)
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.LabelFor(x => x.CodeType)
+                    <select id="generalCode" name="generalCode" class="form-control">
+                        @if (Model.generalCode == Domain.GeneralCodeType.تخفیف_ارسال_رایگان)
+                        {
+
+                            <option selected="selected" value="@Convert.ToInt16(Domain.GeneralCodeType.تخفیف_ارسال_رایگان)">@Domain.GeneralCodeType.تخفیف_ارسال_رایگان.EnumDisplayNameFor()</option>
+                        }
+                        else
+                        {
+                            <option value="@Convert.ToInt16(Domain.GeneralCodeType.تخفیف_ارسال_رایگان)">@Domain.GeneralCodeType.تخفیف_ارسال_رایگان.EnumDisplayNameFor()</option>
+
+                        }
+                        @if (Model.generalCode == Domain.GeneralCodeType.تخفیف_اولین_سفارش)
+                        {
+
+                            <option selected="selected" value="@Convert.ToInt16(Domain.GeneralCodeType.تخفیف_اولین_سفارش)">@Domain.GeneralCodeType.تخفیف_اولین_سفارش.EnumDisplayNameFor()</option>
+                        }
+                        else
+                        {
+                            <option value="@Convert.ToInt16(Domain.GeneralCodeType.تخفیف_اولین_سفارش)">@Domain.GeneralCodeType.تخفیف_اولین_سفارش.EnumDisplayNameFor()</option>
+
+                        }
+                        @if (Model.generalCode == Domain.GeneralCodeType.تخفیف_سفارش_عمومی)
+                        {
+                            <option selected="selected" value="@Convert.ToInt16(Domain.GeneralCodeType.تخفیف_سفارش_عمومی)">@Domain.GeneralCodeType.تخفیف_سفارش_عمومی.EnumDisplayNameFor()</option>
+                        }
+                        else
+                        {
+                            <option value="@Convert.ToInt16(Domain.GeneralCodeType.تخفیف_سفارش_عمومی)">@Domain.GeneralCodeType.تخفیف_سفارش_عمومی.EnumDisplayNameFor()</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.LabelFor(x => x.Value)
+                    @Html.EditorFor(x => x.Value, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.LabelFor(x => x.CodeType)
+                    <select id="CodeType" name="CodeType" class="form-control">
+                        @if (Model.CodeType == 1)
+                        {
+
+                            <option selected="selected" value="1">ثابت</option>
+                        }
+                        else
+                        {
+
+                            <option value="1">ثابت</option>
+                        }
+                        @if (Model.CodeType == 2)
+                        {
+                            <option selected="selected" value="2">درصدی</option>
+                        }
+                        else
+                        {
+
+                            <option value="2">درصدی</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.LabelFor(x => x.Code)
+                    @Html.EditorFor(x => x.Code, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.LabelFor(x => x.MaxValue)
+                    @Html.EditorFor(x => x.MaxValue, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.MaxValue, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.LabelFor(x => x.CountUse)
+                    @Html.EditorFor(x => x.CountUse, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CountUse, "", new { @class = "text-danger" })
+                    <p>
+                        @Html.CheckBoxFor(x => x.IsActive) فعال؟
+                    </p>
+                </div>
+
+                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <input type="submit" value="ویرایش" class="btn btn-primary" />
+                </div>
+
+            </div>
+        }
+
+        @section Scripts{
+            <script src="~/Content/Base/Scripts/PersianDateJs/persian-date.min.js"></script>
+            <script src="~/Content/Base/Scripts/PersianDateJs/persian-datepicker.min.js"></script>
+            @*Persian Calender*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+
+        }
+    </div>
+</div>

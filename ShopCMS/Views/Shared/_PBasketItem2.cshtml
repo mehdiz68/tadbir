@@ -1,0 +1,62 @@
+﻿@model Domain.ViewModels.ProductBasketItem
+@using ahmadi.Infrastructure.Helper;
+
+@{string url = "/TFP/" + Model.ProductId + "/" + CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(Model.PageAddress);
+    var productSendWay = ViewBag.productSendWay as Domain.ProductSendWay;
+
+}
+
+
+<div class="c-product-box c-product-box--compact js-product-box">
+    <a class="c-product-box__img js-url">
+        @if (Model.MainImageFileName != null)
+        {
+            @Html.Displayattachment(Model.MainImageFileName, Model.Title, "MD", htmlAttributes: new { @class = "img-responsive" })
+        }
+        else
+        {
+            <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" />
+        }
+
+        <div class="c-product-box__quantity">
+          <span class="fa fa-remove"></span>  @Model.UserQuantity
+        </div>
+    </a>
+
+    @if (Model.code != null)
+    {
+        <div class="c-cart-item__product-data c-cart-item__product-data--warranty">
+            <span>کد فروش : @Model.code</span>
+        </div>
+    }
+
+    @*@if (Model.garanty != null)
+        {
+            <div class="c-cart-item__product-data c-cart-item__product-data--warranty">
+                <span>گارانتی : @Model.garanty.Value</span>
+            </div>
+        }
+        @if (!String.IsNullOrEmpty(Model.model))
+        {
+            <div class="c-cart-item__product-data c-cart-item__product-data--warranty">
+                <span>مدل : @Model.model</span>
+            </div>
+        }
+        @if (!String.IsNullOrEmpty(Model.size))
+        {
+            <div class="c-cart-item__product-data c-cart-item__product-data--warranty">
+                <span>سایز : @Model.size</span>
+            </div>
+        }
+        @if (!String.IsNullOrEmpty(Model.weight))
+        {
+            <div class="c-cart-item__product-data c-cart-item__product-data--warranty">
+                <span>وزن : @Model.weight</span>
+            </div>
+        }*@
+
+
+
+</div>
+
+

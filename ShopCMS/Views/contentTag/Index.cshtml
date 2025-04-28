@@ -1,0 +1,126 @@
+﻿@model Domain.Tag
+@using CoreLib.Infrastructure
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure
+@using PagedList.Mvc;
+@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var sliders = ViewBag.Sliders as IEnumerable<Domain.Slider>;
+    var setting = ViewBag.setting as Domain.ViewModel.SettingDto;
+    var ads = ViewBag.Ads as IEnumerable<Domain.Adveresting>;
+    CoreLib.ViewModel.Xml.XMLReader readxml = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+    var ContentType = readxml.DetailOfXContentType(ViewBag.contentTypeId) as CoreLib.ViewModel.Xml.XContentType;
+    int i = 0;
+    int SumSize = 0;
+    bool IsVideo = ContentType.IsVideo;
+    var TagAds = ViewBag.LatestContent as PagedList.IPagedList<Domain.Content>;
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+@section Header{
+    <link href="~/Content/Base/Css/view/tagContent.css" rel="stylesheet" />
+}
+
+
+
+<section class="hero-wrap hero-wrap-2" style="background-image: url('/Content/Base/Theme/images/xbg_2.jpg'); " data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-start">
+            <div class="col-md-9 ftco-animate pb-5 fadeInUp ftco-animated">
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="/"> صفحه اصلی <i class="fa fa-chevron-left"></i></a></span>
+                    <span>برچسب ها <i class="fa fa-chevron-left"></i></span>
+                    <span>
+                        لیست تمام @ContentType.Name مرتبط با @Model.TagName
+                    </span>
+                </p>
+                <h1 class="mb-3 bread">@Model.TagName</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+
+        @if (sliders != null)
+        {
+            if (sliders.Any())
+            {
+                i = 0;
+                <div class="col-lg-12" style="padding:0">
+
+                    @foreach (var slider in sliders)
+                    {
+                        @Html.Partial("_BootStrapSlideShowCaptionBlog", slider, new ViewDataDictionary { { "Index", i.ToString() }, { "staticUrl", Meta.StaticContentUrl } })
+                        i++;
+                    }
+
+                </div>
+            }
+        }
+
+
+    </div>
+</div>
+
+<div class="container ads">
+    <div class="row">
+        @{ SumSize = 0;}
+        @foreach (var item in ads.Where(x => x.Position == 1))
+        {
+            SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(item.AdverestingSizeId);
+            <div class="Adveresting Position-@item.Position Size-@item.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                <a href="@item.Link" title="@item.Title">
+                    <div class="categories__item set-bg" data-setbg="@Html.DisplayattachmentUrl(item.attachment.FileName)" style="background-image: url(&quot;@Html.DisplayattachmentUrl(item.attachment.FileName)&quot;);">
+                        <div class="categories__hover__text">
+                            <h5>@item.Title</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+
+    </div>
+</div>
+
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row d-flex">
+
+            @foreach (var itemContent in TagAds)
+            {
+                <div class="col-lg-4 ftco-animate">
+                    <div class="blog-entry">
+                        <a href="@Url.Action("Index",IsVideo?"Video":"Content", new { id = itemContent.Id, title = CommonFunctions.NormalizeAddress(itemContent.PageAddress) })" class="block-20" style="background-image:url(@Html.DisplayattachmentUrl(itemContent.attachment.FileName, "LG", true))">
+                        </a>
+                        <div class="text d-block">
+                            <div class="meta">
+                                <p>
+                                    <a href="#"><span class="fa fa-calendar mr-2"></span>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(itemContent.InsertDate)</a>
+                                    <a href="#" class="meta-chat"><span class="fa fa-comment mr-2"></span> @itemContent.Comments.Count()</a>
+                                </p>
+                            </div>
+                            <h3 class="heading"><a href="@Url.Action("Index","content",new {id=itemContent.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(itemContent.PageAddress) })">@itemContent.Title</a></h3>
+                            <p><a href="@Url.Action("Index",IsVideo?"Video":"Content", new { id = itemContent.Id, title = CommonFunctions.NormalizeAddress(itemContent.PageAddress) })" class="btn btn-secondary py-2 px-3">بیشتر</a></p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        @if (TagAds.PageCount > 1)
+        {
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(TagAds.PageCount < TagAds.PageNumber ? 0 : TagAds.PageNumber) از @TagAds.PageCount از میانِ @TagAds.TotalItemCount @ContentType.Name .
+                </strong>
+            </p>
+            @Html.PagedListPager(TagAds, page => Url.Action(null, "ContentTag", new { id = Model.Id, title = CommonFunctions.NormalizeAddress(Model.TagName), page, LangId = ContentType.LanguageId }))
+        }
+    </div>
+</section>
+

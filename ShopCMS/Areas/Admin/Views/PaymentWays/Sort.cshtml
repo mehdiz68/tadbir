@@ -1,0 +1,166 @@
+﻿@model PagedList.IPagedList<Domain.BankAccount>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper;
+    @using CoreLib.ViewModel.Xml;
+    <title>مرتب سازی حساب های بانکی</title>
+    @{
+
+        var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+        var Setting = ViewBag.setting as Domain.Setting;
+    }
+    @section Header{
+
+        @*View*@
+        <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+        <link href="~/Areas/Admin/Content/Stylesheets/View/Category.css" rel="stylesheet" />
+    }
+
+
+    <div class="x_panel">
+        <div class="x_content">
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <a href="@Url.Action("Sort", "PaymentWays")">  مرتب سازی حساب های بانکی </a>
+                <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")" title="راهنمای این صفحه"></span>
+
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+                <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index", "PaymentWays")"> بازگشت به حساب های بانکی <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+            </div>
+            <div class="clearfix"></div>
+            <br /><br />
+            <hr style="margin:0;border:1px solid #000" />
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th>
+                            بانک
+                        </th>
+                        <th>
+                            شماره کارت
+                        </th>
+                        <th>
+                            شماره حساب
+                        </th>
+                        <th>
+                            پرداخت با فیش بانکی
+                        </th>
+                        <th>
+                            پرداخت کارت به کارت
+                        </th>
+                        <th>
+                            درگاه پرداخت آنلاین مستقیم
+                        </th>
+                        <th>
+                            درگاه پرداخت آنلاین غیر مستقیم با زرین پال
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @{
+
+                        XMLReader xr = new XMLReader(Setting.StaticContentDomain);
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr class="rowItem" id="@item.Id">
+                            <td>
+                                @xr.DetailOfXBank(item.BankId).Name
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CardNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AccountNumber)
+                            </td>
+                            <td>
+                                @if (item.HasFish)
+                                {
+                                    <span>
+                                        فعال
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        غیر فعال
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.HasCardToCard)
+                                {
+                                    <span>
+                                        فعال
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        غیر فعال
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.BankAccountOnlineInfo != null)
+                                {
+                                    <span>
+                                        فعال
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        غیر فعال
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.MerchantId != null)
+                                {
+                                    <span>
+                                        فعال
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        غیر فعال
+                                    </span>
+                                }
+                            </td>
+                            <td>
+
+                                @if (ViewBag.EditPermission)
+                                {
+                                    <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+                <p>
+                    <strong style="color: #900">
+                        صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount حساب بانکی.
+                    </strong>
+                </p>
+                @Html.PagedListPager(Model, page => Url.Action("SortCategories", new { page }))
+
+            </div>
+        </div>
+    </div>
+
+    @section Scripts{
+
+        @*View*@
+        <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+        <script src="~/Areas/Admin/Content/Scripts/View/SortPaymentWay.js"></script>
+
+    }

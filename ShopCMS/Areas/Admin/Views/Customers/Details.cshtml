@@ -1,0 +1,219 @@
+﻿@model Domain.ApplicationUser
+@using ahmadi.Infrastructure.Helper
+
+<title>جزئیات مشتری @Model.FirstName @Model.LastName </title>
+
+
+
+@{
+    var setting = ViewBag.setting as Domain.Setting;
+    <style>
+        .addresses li {
+            margin-bottom: 50px
+        }
+    </style>
+}
+
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h3 class="box-title">
+            جزئیات مشتری @Model.FirstName @Model.LastName
+        </h3>
+        <br /><br />
+
+        <dl class="dl-horizontal col-lg-4 col-md-4 col-sm-4 col-xs-12" style="border-left:1px solid #ccc">
+
+            <dt>
+                نام کاربری ( ایمیل)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.UserName)
+            </dd>
+            <dt>
+                نام
+            </dt>
+            <dd>
+                @Model.FirstName
+            </dd>
+            <dt>نام خانوادگی</dt>
+            <dd>
+                @Model.LastName
+            </dd>
+            <dt>
+                جنسیت
+            </dt>
+            <dd>
+                @if (Model.Gender == true)
+                {
+                    <span>مرد</span>
+                }
+                else
+                {
+                    <span>زن</span>
+                }
+            </dd>
+          
+            <dt>
+                ایمیل تایید شده است؟
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EmailConfirmed)
+            </dd>
+
+            <dt>
+                تلفن همراه
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </dd>
+
+            <dt>
+                تلفن همراه تایید شده است؟
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PhoneNumberConfirmed)
+            </dd>
+
+
+            <dt>
+                تاریخ ایجاد
+            </dt>
+
+            <dd>
+                <p>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.CreationDate)</p>
+                <p>@Model.CreationDate.ToShortTimeString()</p>
+
+            </dd>
+
+            <dt>
+                زمانِ آخرین ورود
+            </dt>
+
+            <dd>
+                @if (Model.LastActivityDate.HasValue)
+                {
+                    <p>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.LastActivityDate.Value)</p>
+                    <p>@Model.LastActivityDate.Value.ToShortTimeString()</p>
+                }
+            </dd>
+
+
+            <dt>
+                غیرفعال
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Disable)
+            </dd>
+
+            <dt>
+                خروج از قفل
+            </dt>
+
+            <dd>
+                @if (Model.LockoutEndDateUtc.HasValue)
+                {
+
+                    if (DateTime.UtcNow < Model.LockoutEndDateUtc.Value)
+                    {
+                        <p>@((Model.LockoutEndDateUtc.Value - DateTime.UtcNow).TotalMinutes) دقیقه</p>
+                    }
+                    else
+                    {
+
+                        <span>قفل نیست</span>
+                    }
+                }
+                else
+                {
+                    <span>قفل نیست</span>
+                }
+            </dd>
+
+
+            <dt>
+                تعداد تلاش ناموفقِ ورود
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AccessFailedCount)
+            </dd>
+
+           
+
+            <dt>درباره</dt>
+            <dd>@Model.About</dd>
+        </dl>
+        <div class="addresses col-lg-8 col-md-8 col-sm-8 col-xs-12">
+            <h4 style="margin:0">آدرس ها</h4><br />
+            <ol>
+                <li>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        @Model.FirstName @Model.LastName
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <label> استان / شهر: </label> @CoreLib.Infrastructure.CommonFunctions.GetStateName(Model.State, setting.StaticContentDomain)
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <label>   آدرس : </label> @Model.Address
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <label>   کد پستی : </label> @Model.PostalCode
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <label>   شماره تلفن همراه : </label> @Model.PostalCode
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <label>    تلفن ثابت : </label> @Model.PostalCode
+                    </div>
+                    <div class="clearfix"></div>
+                </li>
+                @foreach (var item in Model.UserAddresses)
+                {
+                    <li>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            @item.Address
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label> استان / شهر: </label> @CoreLib.Infrastructure.CommonFunctions.GetStateName(item.State, setting.StaticContentDomain)
+                        </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label>   آدرس : </label> @item.Address
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label>   کد پستی : </label> @item.PostalCode
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label>   شماره تلفن همراه : </label> @item.PostalCode
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label>    تلفن ثابت : </label> @item.PostalCode
+                        </div>
+                        <div class="clearfix"></div>
+
+                    </li>
+                }
+            </ol>
+
+        </div>
+        <div class="clearfix"></div>
+        <p>
+
+            <a class="btn btn-success" target="_blank" href="@Url.Action("Edit","UserManagement", new { id = Model.Id})"><span class="glyphicon glyphicon-edit"></span> ویرایش اطلاعات شخصی </a>
+
+        </p>
+
+    </div>
+</div>

@@ -1,0 +1,180 @@
+﻿@model Domain.Offer
+@using PagedList.Mvc;
+@using Domain;
+@using CoreLib;
+@using ahmadi.Infrastructure.Helper
+@using ahmadi.Infrastructure.Security;
+
+<title>جزئیات تخفیف @Model.Title </title>
+<style>
+    .column-state {
+        width: 150px;
+    }
+
+    .column-name {
+        width: 220px
+    }
+
+    .column-image {
+        width: 100px
+    }
+
+    .form-group.has-feedback span {
+        display: inline-block;
+    }
+
+    .dropdown-menu > li > a {
+        text-align: center;
+    }
+
+    .bootstrap-select.btn-group .dropdown-menu li a span.check-mark {
+        display: none !important;
+    }
+
+    .ProductCategories {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .x_panel .nav.navbar-nav > li > a {
+        color: #fff !important;
+    }
+
+    .navbar-right .btn-success {
+        padding: 2px 8px;
+        border-radius: 3px;
+        margin-bottom: 10px;
+    }
+
+        .navbar-right .btn-success:hover {
+            background-color: #ea7526;
+        }
+</style>
+
+<div class="x_panel">
+    <div class="x_content">
+        @{
+            var HelpModuleSection = ViewBag.HelpModule as Domain.HelpModuleSection;
+            var setting = ViewBag.setting as Domain.Setting;
+            int? PageSize = ViewBag.PageSize as int?;
+        }
+
+        @section Header{
+            @*View*@
+            <link href="~/Areas/Admin/Content/Stylesheets/View/ProductCategories.css" rel="stylesheet" />
+            <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+            @*Bootstrap Select*@
+            <link href="~/areas/admin/content/scripts/component/bootstrp-dropdown/bootstrap-select.min.css" rel="stylesheet" />
+        }
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            @if (ViewBag.AddPermission)
+            {
+                <p style="margin:0"><a class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="left" href="@Url.Action("CreateGeneralCode","Offers",new {id=Model.Id })"><span class="glyphicon glyphicon-plus"></span> ایجاد </a></p>
+            }
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left" style="padding-left: 4px;">
+            <a class="btn btn-success" href="/Admin/Offers"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a>
+
+        </div>
+        <div class="clearfix"></div>
+
+
+        <div class="x_panel">
+            <div class="x_content">
+
+
+                <div class="table-responsive">
+                    <table class="table table-striped jambo_table bulk_action">
+                        <thead>
+                            <tr class="headings">
+                                <th class="text-center column-title">
+                                    #
+                                </th>
+                                <th>
+                                    نوع
+                                </th>
+                                <th class="text-center column-title">
+                                    ارزش
+                                </th>
+                                <th class="text-center column-title">
+                                    نوع ارزش
+                                </th>
+                                <th class="text-center column-title">
+                                    کد تخفیف
+                                </th>
+
+                                <th class="text-center column-title">
+                                    سقف مبلغ استفاده
+                                </th>
+                                <th class="text-center column-title">
+                                    سقف تعداد استفاده
+                                </th>
+                                <th class="text-center column-title">
+                                    فعال
+                                </th>
+
+                                <th class="text-center column-title">
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 1; }
+                            @foreach (var item in Model.generalCodeGifts)
+                            {
+                                <tr>
+                                    <td>
+                                        @i
+                                    </td>
+                                    <td>
+                                        @item.generalCode.EnumDisplayNameFor()
+                                    </td>
+                                    <td>@item.Value</td>
+                                    <td>
+                                        @if (item.CodeType == 1)
+                                        {
+                                        <span>ثابت</span>
+                                        }
+                                        else
+                                        {
+                                            <span>درصدی</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.Code
+                                    </td>
+                                    <td>@item.MaxValue</td>
+                                    <td>@item.CountUse</td>
+                                    <td>
+                                        @Html.DisplayFor(x => item.IsActive)
+                                    </td>
+                                    <td>
+                                        @if (ViewBag.EditPermission)
+                                        {
+                                            <a href="@Url.Action("EditGeneralCode", new { id = item.Id })" class="btn btn-success">ویرایش</a>
+                                        }
+                                        @if (ViewBag.DeletePermission)
+                                        {
+                                            <a href="@Url.Action("DeleteGeneralCode", new { id = item.Id })" class="btn btn-danger">حذف</a>
+                                        }
+                                    </td>
+
+                                </tr>
+                                i++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        @section Scripts{
+
+            <script src="~/Areas/Admin/Content/Scripts/Component/Bootstrp-DropDown/bootstrap-select.min.js"></script>
+
+        }
+    </div>
+</div>

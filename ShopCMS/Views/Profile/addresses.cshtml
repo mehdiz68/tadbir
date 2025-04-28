@@ -1,0 +1,72 @@
+﻿@model PagedList.IPagedList<Domain.UserAddress>
+
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+
+@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;}
+
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+<div class="container" id="addresses">
+    <h1>
+        <span> آدرس ها </span>
+        <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+    </h1>
+    <div class="">
+        @foreach (var item in Model)
+        {
+            <div class="address">
+                <h5>@item.Address</h5>
+                <p>
+                    <span class="fa fa-address-book"></span> @item.CityEntity.Province.Name ، @item.CityEntity.Name ، @item.Address
+
+                    @if (!String.IsNullOrEmpty(item.AddressNumber))
+                    {
+                        <text> ، پلاک </text> @item.AddressNumber
+                    }
+
+                    @if (!String.IsNullOrEmpty(item.AddressUnit))
+                    {
+                        <text> ، واحد </text> @item.AddressUnit
+                    }
+                </p>
+                <p> <span class="fa fa-envelope"></span> @item.PostalCode</p>
+                <p> <span class="fa fa-mobile-phone"></span> @item.PhoneNumber</p>
+                <p> <span class="fa fa-user"></span> @item.FullName</p>
+                <p class="edit-address"><a href="/Profile/EditAddress/@item.Id"><span> ویرایش نشانی  </span><span class="fa fa-chevron-left"></span></a></p>
+                <div class="options">
+                    <span class="fa fa-bars"></span>
+                    <p class="delete" data-id="@item.Id">
+                        حذف از لیست
+                    </p>
+                </div>
+                <hr />
+            </div>
+        }
+
+    </div>
+    <div class="Pagging-New-Container">
+        <strong class="Pagging-New-Info">
+            تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+        </strong>
+        <br /> <br />
+
+        @Html.PagedListPager(Model, Page => "/Profile/addresses?page=" + Page)
+
+    </div>
+    <div id="NewAddress">
+        <hr />
+        <p>
+            <a href="/Profile/AddAddress"> <span class="fa fa-map-marker"></span> اضافه کردن نشانی جدید</a>
+        </p>
+    </div>
+</div>
+

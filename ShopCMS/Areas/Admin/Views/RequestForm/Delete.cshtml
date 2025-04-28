@@ -1,0 +1,83 @@
+﻿
+@model Domain.FormRequest
+
+<title>حذف فرم مشاوره</title>
+
+
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+<h1 style="display:inline-block;font-size: 2em;" class="box-title">
+    <i class="flaticon-message-rectangular-filled-speech-bubble"></i> حذفِ فرم مشاوره
+</h1>
+    <h4 style="color:red"><i class="glyphicon glyphicon-remove"></i> آیا مطمئن به حذف این رکورد هستید؟</h4>
+    <br /><br />
+    <p class="text text-danger"><strong>@ViewBag.Erorr</strong></p>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FormRequestCategory.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FormRequestCategory.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Family)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Family)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tele)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tele)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Message)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Message)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsVisit)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsVisit)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InsertDate)
+        </dt>
+
+        <dd>
+            @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.InsertDate) <br /> @Model.InsertDate.ToShortTimeString()
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="حذف" class="btn btn-danger" />
+        </div>
+    }
+

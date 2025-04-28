@@ -1,0 +1,1951 @@
+﻿@model Domain.Content
+
+
+@using CoreLib.Infrastructure.DateTime
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure
+@using CoreLib.ViewModel.Xml
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var sliders = ViewBag.Sliders as List<Domain.Slider>;
+
+    var ads = ViewBag.Ads as IEnumerable<Domain.Adveresting>;
+    XMLReader readXML = new XMLReader(Meta.StaticContentUrl);
+    var ContentType = readXML.DetailOfXContentType(Model.ContentTypeId);
+    string currentUrl = "http://" + HttpContext.Current.Request.Url.Host + Url.Action("Index", "contents", new { id = Model.Id, title = CommonFunctions.NormalizeAddress(Model.PageAddress) });
+    int k = 0;
+    Layout = "~/Views/Shared/_LayoutVideo.cshtml";
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+
+}
+
+@section Header{
+    <link href="~/Content/Base/Css/star-rating.min.css" rel="stylesheet" />
+    <link href="~/Content/Base/Css/prettyPhoto.css" rel="stylesheet" />
+    <link href="~/Content/Base/Css/view/Content.css" rel="stylesheet" />
+    <link href="~/Content/Base/Css/PlyrVideo.css" rel="stylesheet" />
+}
+
+
+
+
+<!-- prs title wrapper Start -->
+<div class="prs_title_main_sec_wrapper">
+    <div class="prs_title_img_overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_title_heading_wrapper breadcrumb-inner">
+                    <h1>@Model.Title</h1>
+                    <ul>
+
+                        <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+                        @Html.Raw(ViewBag.breadcrumbCat)
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- prs title wrapper End -->
+<!-- prs mc slider wrapper Start -->
+
+@foreach (var item in sliders)
+{
+    <div class="prs_mc_slider_main_wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="prs_heading_section_wrapper">
+                        <h2>ویژه ها</h2>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="prs_mc_slider_wrapper">
+                        @foreach (var item2 in item.SliderImages)
+                        {
+                            <div class="item">
+                                <div class="prs_vp_center_slider_img_wrapper">
+                                    <a href="@item2.Link">
+                                        @Html.Displayattachment(item2.attachment.FileName, "LG")
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!-- prs ms trailer wrapper Start -->
+<div class="prs_ms_trailer_vid_main_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_heading_section_wrapper">
+                    <h2>مشاهده ویدئو</h2>
+                </div>
+            </div>
+            <div class="col-lg-12 col-lg-12 col-lg-12 col-lg-12">
+                <div class="prs_ms_trailer_vid_wrapper" style="background:url('@Html.DisplayattachmentUrl(Model.attachment.FileName)') 50% 0 repeat-y">
+                    <div class="prs_ms_trailer_vid_img_overlay"></div>
+                    <div class="prs_ms_trailer_vid_icon_wrapper">
+                        <ul>
+                            <li>
+                                <a class="test-popup-link button" href="@Html.DisplayattachmentUrl(Model.VideoAttachment.FileName)" title="@Model.Title"><i class="flaticon-play-button"></i></a>
+                            </li>
+                        </ul>
+                        <h2>پخش</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-lg-12 col-lg-12 col-lg-12">
+                <div class="prs_ms_trailer_slider_main_wrapper">
+                    <div class="prs_ms_trailer_slider_left_wrapper">
+                        <div class="owl-carousel owl-theme owl-loaded owl-drag">
+                            <div class="item">
+                                <div class="prs_ms_trailer_slider_left_img_wrapper">
+                                    @Html.Displayattachment(Model.attachment.FileName, "MD")
+                                </div>
+                            </div>
+                            @foreach (var item in Model.OtherImages)
+                            {
+                                <div class="item">
+                                    <div class="prs_ms_trailer_slider_left_img_wrapper">
+                                        @Html.Displayattachment(item.attachment.FileName, "MD")
+                                    </div>
+                                </div>
+                            }
+
+
+                        </div>
+                        <div class="prs_ms_trailer_slider_right_wrapper">
+                            <h2>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.InsertDate)</h2>
+
+                            <p>@Model.Abstract</p>
+                            <ul>
+                                <li>
+                                    بازدید : <span>@Model.Visits</span>
+                                </li>
+                                <li>
+                                    لایک : <span>@Model.Link</span>
+                                </li>
+                                <li>
+                                    دیسلایک : <span>@Model.DisLike</span>
+                                </li>
+                                <li>
+                                    دانلود : <span>@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, Model.VideoAttachment.FileName, "LG", true)</span>
+                                </li>
+
+                                @if (Model.Tags.Any())
+                                {
+                                    <li>
+                                        برچسب ها :
+                                        <span>
+                                            @foreach (var item in Model.Tags)
+                                            {
+                                                <span>
+                                                    <a href="@Url.Action("Index", "Tag", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.TagName) })">@item.TagName</a>
+                                                </span>
+                                            }
+                                        </span>
+
+
+
+
+                                    </li>
+
+
+                                }
+
+
+                                @if (Model.Sources.Any())
+                                {
+                                    <li>
+                                        منبع : 
+                                        <span>
+
+                                            @foreach (var item in Model.Sources)
+                                            {
+                                                <span><a href="@item.Link" target="_blank"><span class="fa fa-link"></span> @item.Title </a></span>
+                                            }
+
+                                        </span>
+                                    </li>
+                                }
+                                    <li>
+                                        <span>
+                                            @{
+                                                currentUrl = "http://" + HttpContext.Current.Request.Url.Host + Url.Action("Index", "Video", new { id = Model.Id, title = CommonFunctions.NormalizeAddress(Model.PageAddress) });
+                                                <span class="share-links">
+                                                    <a class="fa fa-twitter" id="ShareTwitter" href="http://twitter.com/intent/tweet?text=@Model.Title&url=@currentUrl" target="_blank">
+                                                        <span id="ShareTwitterTitle"></span>
+                                                    </a>
+                                                    <a class="fa fa-facebook" id="ShareFacebook" href="https://www.facebook.com/sharer/sharer.php?u=@currentUrl" target="_blank">
+                                                        <span id="ShareFacebookTitle"></span>
+                                                    </a>
+                                                    <a class="fa fa-google-plus" id="ShareGPlus" href="https://plus.google.com/share?url=@currentUrl" target="_blank">
+                                                        <span id="ShareGPlusTitle"></span>
+                                                    </a>
+                                                    <a class="fa fa-pinterest" id="SharePinterest" href="https://pinterest.com/pin/create/button/?url=@currentUrl" target="_blank">
+                                                        <span id="SharePinterestTitle"></span>
+                                                    </a>
+                                                    <a class="fa fa-linkedin" id="ShareLinkedIn" href="https://www.linkedin.com/shareArticle?mini=true&url=@currentUrl" target="_blank">
+                                                        <span id="ShareLinkedInTitle"></span>
+                                                    </a>
+                                                </span>
+                                            }
+                                        </span>
+                                    </li>
+                              
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- prs ms trailer wrapper End -->
+    <!-- prs theater Slider Start -->
+    <div class="prs_movie_cast_main_slider_wrapper">
+        <div class="prs_movie_cast_heading_wrapper">
+            <h2>Movie Cast</h2>
+        </div>
+        <div class="wrap-album-slider">
+            <div class="bx-wrapper" style="max-width: 1901px;">
+                <div class="bx-viewport" style="width: 100%; overflow: hidden; position: relative; height: 383px;">
+                    <ul class="movie-cast-slider" style="width: 915%; position: relative; left: -844.016px;">
+                        <li class="album-slider__item" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_ms_cast_slider_cont_wrapper">
+                                    <div class="prs_ms_cast_img_wrapper">
+                                        <img src="./Movie-Single_files/c1.jpg" alt="cast_img">
+                                    </div>
+                                    <div class="prs_ms_cast_img_cont_wrapper">
+                                        <h4><a href="./Movie-Single_files/movie_single.html">Mariya</a></h4>
+                                        <p>(Miano)</p>
+                                    </div>
+                                </div>
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                        <!-- End album slider item -->
+                        <li class="album-slider__item" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_ms_cast_slider_cont_wrapper">
+                                    <div class="prs_ms_cast_img_wrapper">
+                                        <img src="./Movie-Single_files/c2.jpg" alt="cast_img">
+                                    </div>
+                                    <div class="prs_ms_cast_img_cont_wrapper">
+                                        <h4><a href="./Movie-Single_files/movie_single.html">Kaslera</a></h4>
+                                        <p>(Miano)</p>
+                                    </div>
+                                </div>
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                        <!-- End album slider item -->
+                        <li class="album-slider__item" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_ms_cast_slider_cont_wrapper">
+                                    <div class="prs_ms_cast_img_wrapper">
+                                        <img src="./Movie-Single_files/c3.jpg" alt="cast_img">
+                                    </div>
+                                    <div class="prs_ms_cast_img_cont_wrapper">
+                                        <h4><a href="./Movie-Single_files/movie_single.html">Mariya</a></h4>
+                                        <p>(Miano)</p>
+                                    </div>
+                                </div>
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                        <!-- End album slider item -->
+                        <li class="album-slider__item" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_ms_cast_slider_cont_wrapper">
+                                    <div class="prs_ms_cast_img_wrapper">
+                                        <img src="./Movie-Single_files/c4.jpg" alt="cast_img">
+                                    </div>
+                                    <div class="prs_ms_cast_img_cont_wrapper">
+                                        <h4><a href="./Movie-Single_files/movie_single.html">Vjay</a></h4>
+                                        <p>(Miano)</p>
+                                    </div>
+                                </div>
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                        <!-- End album slider item -->
+                        <li class="album-slider__item" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_ms_cast_slider_cont_wrapper">
+                                    <div class="prs_ms_cast_img_wrapper">
+                                        <img src="./Movie-Single_files/c5.jpg" alt="cast_img">
+                                    </div>
+                                    <div class="prs_ms_cast_img_cont_wrapper">
+                                        <h4><a href="./Movie-Single_files/movie_single.html">Mariya</a></h4>
+                                        <p>(Miano)</p>
+                                    </div>
+                                </div>
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                        <!-- End album slider item -->
+                        <li class="album-slider__item" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_ms_cast_slider_cont_wrapper">
+                                    <div class="prs_ms_cast_img_wrapper">
+                                        <img src="./Movie-Single_files/c6.jpg" alt="cast_img">
+                                    </div>
+                                    <div class="prs_ms_cast_img_cont_wrapper">
+                                        <h4><a href="./Movie-Single_files/movie_single.html">Mariya</a></h4>
+                                        <p>(Miano)</p>
+                                    </div>
+                                </div>
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                        <!-- End album slider item -->
+                        <li class="album-slider__item" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_ms_cast_slider_cont_wrapper">
+                                    <div class="prs_ms_cast_img_wrapper">
+                                        <img src="./Movie-Single_files/c3.jpg" alt="cast_img">
+                                    </div>
+                                    <div class="prs_ms_cast_img_cont_wrapper">
+                                        <h4><a href="./Movie-Single_files/movie_single.html">Mariya</a></h4>
+                                        <p>(Miano)</p>
+                                    </div>
+                                </div>
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                        <!-- End album slider item -->
+                        <li class="album-slider__item bx-clone" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_ms_cast_slider_cont_wrapper">
+                                    <div class="prs_ms_cast_img_wrapper">
+                                        <img src="./Movie-Single_files/c1.jpg" alt="cast_img">
+                                    </div>
+                                    <div class="prs_ms_cast_img_cont_wrapper">
+                                        <h4><a href="./Movie-Single_files/movie_single.html">Mariya</a></h4>
+                                        <p>(Miano)</p>
+                                    </div>
+                                </div>
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                        <li class="album-slider__item bx-clone" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_ms_cast_slider_cont_wrapper">
+                                    <div class="prs_ms_cast_img_wrapper">
+                                        <img src="./Movie-Single_files/c2.jpg" alt="cast_img">
+                                    </div>
+                                    <div class="prs_ms_cast_img_cont_wrapper">
+                                        <h4><a href="./Movie-Single_files/movie_single.html">Kaslera</a></h4>
+                                        <p>(Miano)</p>
+                                    </div>
+                                </div>
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                        <li class="album-slider__item bx-clone" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_ms_cast_slider_cont_wrapper">
+                                    <div class="prs_ms_cast_img_wrapper">
+                                        <img src="./Movie-Single_files/c3.jpg" alt="cast_img">
+                                    </div>
+                                    <div class="prs_ms_cast_img_cont_wrapper">
+                                        <h4><a href="./Movie-Single_files/movie_single.html">Mariya</a></h4>
+                                        <p>(Miano)</p>
+                                    </div>
+                                </div>
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                        <li class="album-slider__item bx-clone" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_ms_cast_slider_cont_wrapper">
+                                    <div class="prs_ms_cast_img_wrapper">
+                                        <img src="./Movie-Single_files/c4.jpg" alt="cast_img">
+                                    </div>
+                                    <div class="prs_ms_cast_img_cont_wrapper">
+                                        <h4><a href="./Movie-Single_files/movie_single.html">Vjay</a></h4>
+                                        <p>(Miano)</p>
+                                    </div>
+                                </div>
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                        <li class="album-slider__item bx-clone" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_ms_cast_slider_cont_wrapper">
+                                    <div class="prs_ms_cast_img_wrapper">
+                                        <img src="./Movie-Single_files/c5.jpg" alt="cast_img">
+                                    </div>
+                                    <div class="prs_ms_cast_img_cont_wrapper">
+                                        <h4><a href="./Movie-Single_files/movie_single.html">Mariya</a></h4>
+                                        <p>(Miano)</p>
+                                    </div>
+                                </div>
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                        <li class="album-slider__item bx-clone" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_ms_cast_slider_cont_wrapper">
+                                    <div class="prs_ms_cast_img_wrapper">
+                                        <img src="./Movie-Single_files/c6.jpg" alt="cast_img">
+                                    </div>
+                                    <div class="prs_ms_cast_img_cont_wrapper">
+                                        <h4><a href="./Movie-Single_files/movie_single.html">Mariya</a></h4>
+                                        <p>(Miano)</p>
+                                    </div>
+                                </div>
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                        <li class="album-slider__item bx-clone" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_ms_cast_slider_cont_wrapper">
+                                    <div class="prs_ms_cast_img_wrapper">
+                                        <img src="./Movie-Single_files/c3.jpg" alt="cast_img">
+                                    </div>
+                                    <div class="prs_ms_cast_img_cont_wrapper">
+                                        <h4><a href="./Movie-Single_files/movie_single.html">Mariya</a></h4>
+                                        <p>(Miano)</p>
+                                    </div>
+                                </div>
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- End slider -->
+        </div>
+    </div>
+    <!-- prs theater Slider End -->
+    <!-- prs syn Slider Start -->
+    <div class="prs_syn_main_section_wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                    <div class="prs_syn_cont_wrapper">
+                        <h3>Synopsis</h3>
+                        <h4><span>Genre -</span> Action , Reality , Drama, Raching</h4>
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore a aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo const. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur at cupidatat non proident, sunt in culpa qui officia deserunt
+                            <br>
+                            <br>error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inveiere veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit ur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
+                            <br>
+                            <br>consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam sam quaerat voluptatem.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut ipii eex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="prs_syn_img_wrapper">
+                        <img src="./Movie-Single_files/v1.jpg" alt="syn_img">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- prs syn Slider End -->
+    <!-- prs videos&photos slider Start -->
+    <div class="prs_vp_main_section_wrapper prs_about_vp_main_section_wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="prs_heading_section_wrapper">
+                        <h2>Video &amp; photos</h2>
+                    </div>
+                </div>
+                <div class="prs_vp_main_slider_wrapper">
+                    <div class="prs_vp_left_slidebar_wrapper">
+                        <div class="wrap-album-slider">
+                            <div class="bx-wrapper" style="max-width: 257px;">
+                                <div class="bx-viewport" style="width: 100%; overflow: hidden; position: relative; height: 176px;">
+                                    <ul class="prs_vp_left_slider" style="width: auto; position: relative; top: -321.77px;">
+                                        <li class="album-slider__item prs_vp_hover_overlay" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp1.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp1.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp2.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp2.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp3.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp3.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp4.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp4.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp5.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp5.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp6.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp6.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay bx-clone" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp1.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp1.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay bx-clone" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp2.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp2.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay bx-clone" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp3.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp3.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay bx-clone" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp4.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp4.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay bx-clone" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp5.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp5.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay bx-clone" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp6.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp6.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="prs_vp_center_slidebar_wrapper">
+                        <div class="prs_vp_center_slider">
+                            <div class="owl-carousel owl-theme owl-loaded owl-drag">
+
+
+
+                                <div class="owl-stage-outer">
+                                    <div class="owl-stage" style="transform: translate3d(-3216px, 0px, 0px); transition: all 1.2s ease 0s; width: 5628px;">
+                                        <div class="owl-item cloned" style="width: 784px; margin-right: 20px;">
+                                            <div class="item">
+                                                <div class="prs_vp_center_slider_img_wrapper">
+                                                    <img src="./Movie-Single_files/vp7.jpg" alt="vp_img">
+                                                </div>
+                                            </div>
+                                        </div><div class="owl-item cloned" style="width: 784px; margin-right: 20px;">
+                                            <div class="item">
+                                                <div class="prs_vp_center_slider_img_wrapper">
+                                                    <img src="./Movie-Single_files/vp7.jpg" alt="vp_img">
+                                                </div>
+                                            </div>
+                                        </div><div class="owl-item" style="width: 784px; margin-right: 20px;">
+                                            <div class="item">
+                                                <div class="prs_vp_center_slider_img_wrapper">
+                                                    <img src="./Movie-Single_files/vp7.jpg" alt="vp_img">
+                                                </div>
+                                            </div>
+                                        </div><div class="owl-item" style="width: 784px; margin-right: 20px;">
+                                            <div class="item">
+                                                <div class="prs_vp_center_slider_img_wrapper">
+                                                    <img src="./Movie-Single_files/vp7.jpg" alt="vp_img">
+                                                </div>
+                                            </div>
+                                        </div><div class="owl-item active" style="width: 784px; margin-right: 20px;">
+                                            <div class="item">
+                                                <div class="prs_vp_center_slider_img_wrapper">
+                                                    <img src="./Movie-Single_files/vp7.jpg" alt="vp_img">
+                                                </div>
+                                            </div>
+                                        </div><div class="owl-item cloned" style="width: 784px; margin-right: 20px;">
+                                            <div class="item">
+                                                <div class="prs_vp_center_slider_img_wrapper">
+                                                    <img src="./Movie-Single_files/vp7.jpg" alt="vp_img">
+                                                </div>
+                                            </div>
+                                        </div><div class="owl-item cloned" style="width: 784px; margin-right: 20px;">
+                                            <div class="item">
+                                                <div class="prs_vp_center_slider_img_wrapper">
+                                                    <img src="./Movie-Single_files/vp7.jpg" alt="vp_img">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><div class="owl-nav"><div class="owl-prev"><i class="flaticon-play-button"></i></div><div class="owl-next"><i class="flaticon-play-button"></i></div></div><div class="owl-dots"><div class="owl-dot"><span></span></div><div class="owl-dot"><span></span></div><div class="owl-dot active"><span></span></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="prs_vp_right_slidebar_wrapper">
+                        <div class="wrap-album-slider">
+                            <div class="bx-wrapper" style="max-width: 257px;">
+                                <div class="bx-viewport" style="width: 100%; overflow: hidden; position: relative; height: 176px;">
+                                    <ul class="prs_vp_right_slider" style="width: auto; position: relative; top: -800.255px;">
+                                        <li class="album-slider__item prs_vp_hover_overlay bx-clone" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp6.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp6.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay bx-clone" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp5.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp5.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay bx-clone" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp4.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp4.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay bx-clone" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp3.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp3.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay bx-clone" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp2.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp2.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay bx-clone" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp1.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp1.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp6.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp6.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp5.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp5.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp4.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp4.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp3.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp3.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp2.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp2.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                        <li class="album-slider__item prs_vp_hover_overlay" style="float: none; list-style: none; position: relative; width: 176px; margin-bottom: 17px;">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    <img src="./Movie-Single_files/vp1.jpg" alt="vp_img">	<a href="./Movie-Single_files/vp1.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="fa fa-search"></i></a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- prs videos&photos slider End -->
+    <!-- prs ms scene slider Start -->
+    <div class="prs_ms_scene_main_wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="prs_heading_section_wrapper">
+                        <h2>behind the scenes</h2>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="prs_ms_scene_slider_wrapper">
+                        <div class="owl-carousel owl-theme owl-loaded owl-drag">
+
+
+
+                            <div class="owl-stage-outer">
+                                <div class="owl-stage" style="transform: translate3d(-1933px, 0px, 0px); transition: all 1.2s ease 0s; width: 3481px;">
+                                    <div class="owl-item cloned" style="width: 366.667px; margin-right: 20px;">
+                                        <div class="item">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img">
+                                                        <img src="./Movie-Single_files/sc1.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc1.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img prs_ms_scene_slider_img2">
+                                                        <img src="./Movie-Single_files/sc4.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc4.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item cloned" style="width: 366.667px; margin-right: 20px;">
+                                        <div class="item">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img">
+                                                        <img src="./Movie-Single_files/sc2.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc2.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img prs_ms_scene_slider_img2">
+                                                        <img src="./Movie-Single_files/sc5.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc5.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item cloned" style="width: 366.667px; margin-right: 20px;">
+                                        <div class="item">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img">
+                                                        <img src="./Movie-Single_files/sc3.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc3.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img prs_ms_scene_slider_img2">
+                                                        <img src="./Movie-Single_files/sc6.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc6.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item" style="width: 366.667px; margin-right: 20px;">
+                                        <div class="item">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img">
+                                                        <img src="./Movie-Single_files/sc1.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc1.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img prs_ms_scene_slider_img2">
+                                                        <img src="./Movie-Single_files/sc4.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc4.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item" style="width: 366.667px; margin-right: 20px;">
+                                        <div class="item">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img">
+                                                        <img src="./Movie-Single_files/sc2.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc2.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img prs_ms_scene_slider_img2">
+                                                        <img src="./Movie-Single_files/sc5.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc5.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item active" style="width: 366.667px; margin-right: 20px;">
+                                        <div class="item">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img">
+                                                        <img src="./Movie-Single_files/sc3.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc3.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img prs_ms_scene_slider_img2">
+                                                        <img src="./Movie-Single_files/sc6.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc6.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item cloned active" style="width: 366.667px; margin-right: 20px;">
+                                        <div class="item">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img">
+                                                        <img src="./Movie-Single_files/sc1.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc1.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img prs_ms_scene_slider_img2">
+                                                        <img src="./Movie-Single_files/sc4.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc4.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item cloned active" style="width: 366.667px; margin-right: 20px;">
+                                        <div class="item">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img">
+                                                        <img src="./Movie-Single_files/sc2.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc2.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img prs_ms_scene_slider_img2">
+                                                        <img src="./Movie-Single_files/sc5.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc5.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item cloned" style="width: 366.667px; margin-right: 20px;">
+                                        <div class="item">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img">
+                                                        <img src="./Movie-Single_files/sc3.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc3.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="prs_ms_scene_slider_img prs_ms_scene_slider_img2">
+                                                        <img src="./Movie-Single_files/sc6.jpg" alt="scene_img">
+                                                        <div class="prs_ms_scene_img_overlay">
+                                                            <a href="./Movie-Single_files/sc6.jpg" class="venobox info vbox-item" data-title="PORTFOLIO TITTLE" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-nav disabled"><div class="owl-prev"><i class="flaticon-play-button"></i></div><div class="owl-next"><i class="flaticon-play-button"></i></div></div><div class="owl-dots disabled"><div class="owl-dot active"><span></span></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- prs ms scene slider End -->
+    <!-- prs ms crew Start -->
+    <div class="prs_ms_crew_main_wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="prs_heading_section_wrapper">
+                        <h2>Our Crew</h2>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="prs_ms_crew_left_cont_wrapper">
+                        <ul>
+                            <li>
+                                Director &amp; Screenplay: <span>Johan Doe</span>
+                            </li>
+                            <li>
+                                Presented by: <span>Sandeep S</span>
+                            </li>
+                            <li>
+                                Producers: <span>Farhan S</span>
+                            </li>
+                            <li>
+                                Story: <span>Ajay S</span>
+                            </li>
+                            <li>
+                                Director of Photography: <span>Akshay H</span>
+                            </li>
+                            <li>
+                                Production Designer: <span>Johan Doe</span>
+                            </li>
+                            <li>
+                                Music Composer: <span>Farhan S</span>
+                            </li>
+                            <li>
+                                VFX Supervisor: <span>Shruti J</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="prs_ms_crew_left_cont_wrapper prs_ms_crew_left_cont_wrapper2">
+                        <ul>
+                            <li>
+                                Sound Design: <span>Johan Doe</span>
+                            </li>
+                            <li>
+                                Stunt Choreography: <span>Sandeep S</span>
+                            </li>
+                            <li>
+                                Additional Stunts: <span>Farhan S</span>
+                            </li>
+                            <li>
+                                Dance Choreographers: <span>Ajay S</span>
+                            </li>
+                            <li>
+                                Editor: <span>Akshay H</span>
+                            </li>
+                            <li>
+                                Costume Designers: <span>Johan Doe</span>
+                            </li>
+                            <li>
+                                Dialogues: <span>Farhan S</span>
+                            </li>
+                            <li>
+                                Music Composer: <span>Shruti J</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- prs ms crew End -->
+    <!-- prs related movie slider Start -->
+    <div class="prs_ms_rm_main_wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="prs_heading_section_wrapper">
+                        <h2>Director Related Movies</h2>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="prs_ms_rm_slider_wrapper">
+                        <div class="owl-carousel owl-theme owl-loaded owl-drag">
+
+
+
+
+                            <div class="owl-stage-outer">
+                                <div class="owl-stage" style="transform: translate3d(-1150px, 0px, 0px); transition: all 1.2s ease 0s; width: 3450px;">
+                                    <div class="owl-item cloned" style="width: 277.5px; margin-right: 10px;">
+                                        <div class="item">
+                                            <div class="prs_upcom_movie_box_wrapper">
+                                                <div class="prs_upcom_movie_img_box">
+                                                    <img src="./Movie-Single_files/up1.jpg" alt="movie_img">
+                                                    <div class="prs_upcom_movie_img_overlay"></div>
+                                                    <div class="prs_upcom_movie_img_btn_wrapper">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Trailer</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Details</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="prs_upcom_movie_content_box">
+                                                    <div class="prs_upcom_movie_content_box_inner">
+                                                        <h2><a href="./Movie-Single_files/movie_single.html">Busting Car</a></h2>
+                                                        <p>Drama , Acation</p>	<i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box_inner_icon">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item cloned" style="width: 277.5px; margin-right: 10px;">
+                                        <div class="item">
+                                            <div class="prs_upcom_movie_box_wrapper">
+                                                <div class="prs_upcom_movie_img_box">
+                                                    <img src="./Movie-Single_files/up2.jpg" alt="movie_img">
+                                                    <div class="prs_upcom_movie_img_overlay"></div>
+                                                    <div class="prs_upcom_movie_img_btn_wrapper">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Trailer</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Details</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="prs_upcom_movie_content_box">
+                                                    <div class="prs_upcom_movie_content_box_inner">
+                                                        <h2><a href="./Movie-Single_files/movie_single.html">Busting Car</a></h2>
+                                                        <p>Drama , Acation</p>	<i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box_inner_icon">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item cloned" style="width: 277.5px; margin-right: 10px;">
+                                        <div class="item">
+                                            <div class="prs_upcom_movie_box_wrapper">
+                                                <div class="prs_upcom_movie_img_box">
+                                                    <img src="./Movie-Single_files/up3.jpg" alt="movie_img">
+                                                    <div class="prs_upcom_movie_img_overlay"></div>
+                                                    <div class="prs_upcom_movie_img_btn_wrapper">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Trailer</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Details</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="prs_upcom_movie_content_box">
+                                                    <div class="prs_upcom_movie_content_box_inner">
+                                                        <h2><a href="./Movie-Single_files/movie_single.html">Busting Car</a></h2>
+                                                        <p>Drama , Acation</p>	<i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box_inner_icon">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item cloned" style="width: 277.5px; margin-right: 10px;">
+                                        <div class="item">
+                                            <div class="prs_upcom_movie_box_wrapper">
+                                                <div class="prs_upcom_movie_img_box">
+                                                    <img src="./Movie-Single_files/up4.jpg" alt="movie_img">
+                                                    <div class="prs_upcom_movie_img_overlay"></div>
+                                                    <div class="prs_upcom_movie_img_btn_wrapper">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Trailer</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Details</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="prs_upcom_movie_content_box">
+                                                    <div class="prs_upcom_movie_content_box_inner">
+                                                        <h2><a href="./Movie-Single_files/movie_single.html">Busting Car</a></h2>
+                                                        <p>Drama , Acation</p>	<i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box_inner_icon">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item active" style="width: 277.5px; margin-right: 10px;">
+                                        <div class="item">
+                                            <div class="prs_upcom_movie_box_wrapper">
+                                                <div class="prs_upcom_movie_img_box">
+                                                    <img src="./Movie-Single_files/up1.jpg" alt="movie_img">
+                                                    <div class="prs_upcom_movie_img_overlay"></div>
+                                                    <div class="prs_upcom_movie_img_btn_wrapper">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Trailer</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Details</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="prs_upcom_movie_content_box">
+                                                    <div class="prs_upcom_movie_content_box_inner">
+                                                        <h2><a href="./Movie-Single_files/movie_single.html">Busting Car</a></h2>
+                                                        <p>Drama , Acation</p>	<i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box_inner_icon">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item active" style="width: 277.5px; margin-right: 10px;">
+                                        <div class="item">
+                                            <div class="prs_upcom_movie_box_wrapper">
+                                                <div class="prs_upcom_movie_img_box">
+                                                    <img src="./Movie-Single_files/up2.jpg" alt="movie_img">
+                                                    <div class="prs_upcom_movie_img_overlay"></div>
+                                                    <div class="prs_upcom_movie_img_btn_wrapper">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Trailer</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Details</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="prs_upcom_movie_content_box">
+                                                    <div class="prs_upcom_movie_content_box_inner">
+                                                        <h2><a href="./Movie-Single_files/movie_single.html">Busting Car</a></h2>
+                                                        <p>Drama , Acation</p>	<i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box_inner_icon">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item active" style="width: 277.5px; margin-right: 10px;">
+                                        <div class="item">
+                                            <div class="prs_upcom_movie_box_wrapper">
+                                                <div class="prs_upcom_movie_img_box">
+                                                    <img src="./Movie-Single_files/up3.jpg" alt="movie_img">
+                                                    <div class="prs_upcom_movie_img_overlay"></div>
+                                                    <div class="prs_upcom_movie_img_btn_wrapper">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Trailer</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Details</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="prs_upcom_movie_content_box">
+                                                    <div class="prs_upcom_movie_content_box_inner">
+                                                        <h2><a href="./Movie-Single_files/movie_single.html">Busting Car</a></h2>
+                                                        <p>Drama , Acation</p>	<i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box_inner_icon">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item active" style="width: 277.5px; margin-right: 10px;">
+                                        <div class="item">
+                                            <div class="prs_upcom_movie_box_wrapper">
+                                                <div class="prs_upcom_movie_img_box">
+                                                    <img src="./Movie-Single_files/up4.jpg" alt="movie_img">
+                                                    <div class="prs_upcom_movie_img_overlay"></div>
+                                                    <div class="prs_upcom_movie_img_btn_wrapper">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Trailer</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Details</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="prs_upcom_movie_content_box">
+                                                    <div class="prs_upcom_movie_content_box_inner">
+                                                        <h2><a href="./Movie-Single_files/movie_single.html">Busting Car</a></h2>
+                                                        <p>Drama , Acation</p>	<i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box_inner_icon">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item cloned" style="width: 277.5px; margin-right: 10px;">
+                                        <div class="item">
+                                            <div class="prs_upcom_movie_box_wrapper">
+                                                <div class="prs_upcom_movie_img_box">
+                                                    <img src="./Movie-Single_files/up1.jpg" alt="movie_img">
+                                                    <div class="prs_upcom_movie_img_overlay"></div>
+                                                    <div class="prs_upcom_movie_img_btn_wrapper">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Trailer</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Details</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="prs_upcom_movie_content_box">
+                                                    <div class="prs_upcom_movie_content_box_inner">
+                                                        <h2><a href="./Movie-Single_files/movie_single.html">Busting Car</a></h2>
+                                                        <p>Drama , Acation</p>	<i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box_inner_icon">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item cloned" style="width: 277.5px; margin-right: 10px;">
+                                        <div class="item">
+                                            <div class="prs_upcom_movie_box_wrapper">
+                                                <div class="prs_upcom_movie_img_box">
+                                                    <img src="./Movie-Single_files/up2.jpg" alt="movie_img">
+                                                    <div class="prs_upcom_movie_img_overlay"></div>
+                                                    <div class="prs_upcom_movie_img_btn_wrapper">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Trailer</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Details</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="prs_upcom_movie_content_box">
+                                                    <div class="prs_upcom_movie_content_box_inner">
+                                                        <h2><a href="./Movie-Single_files/movie_single.html">Busting Car</a></h2>
+                                                        <p>Drama , Acation</p>	<i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box_inner_icon">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item cloned" style="width: 277.5px; margin-right: 10px;">
+                                        <div class="item">
+                                            <div class="prs_upcom_movie_box_wrapper">
+                                                <div class="prs_upcom_movie_img_box">
+                                                    <img src="./Movie-Single_files/up3.jpg" alt="movie_img">
+                                                    <div class="prs_upcom_movie_img_overlay"></div>
+                                                    <div class="prs_upcom_movie_img_btn_wrapper">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Trailer</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Details</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="prs_upcom_movie_content_box">
+                                                    <div class="prs_upcom_movie_content_box_inner">
+                                                        <h2><a href="./Movie-Single_files/movie_single.html">Busting Car</a></h2>
+                                                        <p>Drama , Acation</p>	<i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box_inner_icon">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="owl-item cloned" style="width: 277.5px; margin-right: 10px;">
+                                        <div class="item">
+                                            <div class="prs_upcom_movie_box_wrapper">
+                                                <div class="prs_upcom_movie_img_box">
+                                                    <img src="./Movie-Single_files/up4.jpg" alt="movie_img">
+                                                    <div class="prs_upcom_movie_img_overlay"></div>
+                                                    <div class="prs_upcom_movie_img_btn_wrapper">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Trailer</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="./Movie-Single_files/movie_single.html">View Details</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="prs_upcom_movie_content_box">
+                                                    <div class="prs_upcom_movie_content_box_inner">
+                                                        <h2><a href="./Movie-Single_files/movie_single.html">Busting Car</a></h2>
+                                                        <p>Drama , Acation</p>	<i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                        <i class="fa fa-star-o"></i>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box_inner_icon">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-nav disabled"><div class="owl-prev"><i class="flaticon-play-button"></i></div><div class="owl-next"><i class="flaticon-play-button"></i></div></div><div class="owl-dots disabled"><div class="owl-dot active"><span></span></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- prs related movie slider End -->
+
+    <div class="body-content outer-top-xs details content-detail video-detail">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-sm-12 col-xs-12 sidebar">
+                    <div class="detail-block">
+                        <div class="row wow fadeInUp animated">
+
+                            @if (sliders != null)
+                            {
+                                if (sliders.Any())
+                                {
+                                    int i = 0;
+                                    foreach (var slider in ViewBag.Sliders as List<Domain.Slider>)
+                                    {
+                                        @Html.Partial("_BootStrapSlideShowCaption", slider, new ViewDataDictionary { { "Index", i.ToString() }, { "staticUrl", Meta.StaticContentUrl } })
+                                        i++;
+                                    }
+                                }
+                            }
+
+                            <div class="col-sm-12 col-md-12 product-info-block">
+                                <div class="product-info">
+                                    <h1 class="name">@Model.Title</h1>
+                                    <hr>
+                                    <div class="col-xs-12 col-md-4 col-sm-4 info-content">
+                                        <div class="seen">
+                                            <i class="fa fa-eye"><span>بازدید :</span><span>@Model.Visits</span></i>
+                                        </div>
+                                        <div class="calendar">
+                                            <i class="fa fa-calendar"><span>تاریخ درج :</span><span>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.InsertDate)</span></i>
+                                        </div>
+                                        <div>
+                                            <span title="لایک" class="fa fa-heart" data-id="@Model.Id"></span> <label>@Model.Link</label>
+                                            <span title="دیسلایک" class="fa fa-heartbeat" data-id="@Model.Id"></span> <label>@Model.DisLike</label>
+                                            <a target="_blank" title="دانلود" href="@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, Model.VideoAttachment.FileName,"LG", true)"><span class="fa fa-download"></span></a>
+                                            <span title="به اشتراک گذاری" class="fa fa-share-alt"></span>
+
+
+                                        </div>
+                                        <div class="thumbnail-pics">
+
+                                            <div class="thumbnail-desc">
+                                                <p>
+                                                    @Model.Abstract
+                                                </p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+
+                                    <!-- /.rating-reviews -->
+                                    <div class="col-xs-12 col-sm-8 col-md-8 gallery-holder">
+
+                                        <div>
+                                            <a class="PagecontentCover" href="@Url.Action("Index", "Video", new { id = Model.Id, title = CommonFunctions.NormalizeAddress(Model.PageAddress) })">
+                                                @if (!ContentType.IsVideo)
+                                                {
+                                                    if (Model.Cover.HasValue)
+                                                    {
+                                                        @Html.DisplayattachmentCookieFree(Meta.StaticContentUrl, Model.attachment.FileName, Model.Title, "MD", true, new { @class = "img-responsive mainCover" });
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/Content/images/default-thumbnail.jpg" class="img-responsive mainCover" />
+
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (Model.Cover.HasValue)
+                                                    {
+                                                        <video controls playsinline poster="@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, Model.attachment.FileName,"LG", true)" id="player">
+                                                            <!-- Video files -->
+                                                            <source src="@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, Model.VideoAttachment.FileName,"LG", true)" type="video/mp4" />
+                                                            @*<a href="@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, Model.VideoAttachment.FileName,"LG", true)" download>دانلود</a>*@
+                                                        </video>
+                                                    }
+                                                    else
+                                                    {
+                                                        <video controls playsinline id="player">
+                                                            <!-- Video files -->
+                                                            <source src="@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, Model.VideoAttachment.FileName,"LG", true)" type="video/mp4" />
+                                                            @*<a href="@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, Model.VideoAttachment.FileName,"LG", true)" download>دانلود</a>*@
+                                                        </video>
+                                                    }
+
+                                                }
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                    <!-- /.gallery-holder -->
+
+
+
+                                    <div class="description-container m-t-20">
+                                        @Html.Raw(Model.Data)
+
+                                    </div>
+                                    <!-- /.description-container -->
+
+
+
+                                </div>
+                                <!-- /.product-info -->
+                            </div>
+                            <!-- /.col-sm-7 -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+
+                    @if (ads.Where(x => x.Position == 2).Any())
+                    {
+                        if (ads.Where(x => x.Position == 2).Any())
+                        {
+                            int SumSize = 0;
+
+                            foreach (var Adveresting in ads.Where(x => x.Position == 2).OrderBy(x => x.DisplaySort))
+                            {
+                                SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+
+                                <div class="detail-block wow fadeInUp animated m-t-20 Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? " lastbox":"" )">
+                                    <p>
+                                        <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : " Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+                                            @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+                                        </a>
+                                    </p>
+                                </div>
+                                if (SumSize == 12)
+                                {
+                                    SumSize = 0;
+                                    <div class="clearfix"></div>
+                                }
+                            }
+                            <div class="clearfix"></div>
+                        }
+
+                    }
+
+                    <div class="new-products-carousel detail-block m-t-20">
+                        <h4>مرتبط ها</h4>
+                        <hr>
+                        <div class="owl-carousel-pro owl-carousel owl-theme">
+                            
+                            @foreach (var item in ViewBag.contentTypes as IQueryable<ahmadi.ViewModels.Content.ContentTypeViewModel>)
+                            {
+                                if (item.Contents.Any())
+                                {
+                                    foreach (var contentItem in item.Contents)
+                                    {
+
+                                        <div class="card">
+                                            <a href="@Url.Action("Index",item.IsVideo?"Video":"content", new { id = contentItem.Id, title = CommonFunctions.NormalizeAddress(contentItem.PageAddress) })">
+                                                @if (contentItem.Cover.HasValue)
+                                                {
+                                                    @Html.DisplayattachmentCookieFree(contentItem.Cover.Value, "MD", new { @class = "img-responsive" })
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/Content/images/default-thumbnail.jpg" class="img-responsive" />
+
+                                                }
+                                            </a>
+                                            <h5>
+                                                <a href="@Url.Action("Index",item.IsVideo?"Video":"content", new { id = contentItem.Id, title = CommonFunctions.NormalizeAddress(contentItem.PageAddress) })">
+
+                                                    @contentItem.Title
+                                                </a>
+                                            </h5>
+                                            <p class="description">
+                                                @contentItem.Abstract
+                                            </p>
+                                            <div class="card-footer">
+                                                <p class="favourit-icon text-right">
+                                                    <a href="#">
+                                                        <i class="fa fa-eye"></i><span>@contentItem.Visits</span>
+                                                    </a>
+                                                </p>
+                                                <p class="contact-icon text-left">
+                                                    <a href="#">
+                                                        <i class="fa fa-calendar"></i><span>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsi(contentItem.InsertDate)</span>
+                                                    </a>
+                                                </p>
+
+                                            </div>
+                                            <a href="@Url.Action("Index",item.IsVideo?"Video":"content", new { id = contentItem.Id, title = CommonFunctions.NormalizeAddress(contentItem.PageAddress) })" class="read-more">بیشتر</a>
+                                        </div>
+
+                                    }
+
+                                }
+                            }
+
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="new-products-carousel detail-block m-t-20">
+                        <h4>نظرات</h4>
+
+                        @if (!Model.HasContact)
+                        {
+                            <div id="comments">
+
+                                @foreach (var item in Model.Comments.Where(x => x.IsActive == true && x.ParrentId == null))
+                                {
+                                    <div class="comment-classic-group" id="Comment_@(item.Id)">
+                                        <!-- Comment Classic-->
+                                        <article class="comment-classic">
+                                            <figure class="comment-classic-figure">
+                                                <img class="comment-classic-image img-responsive" style="width: 64px; height: 64px;" src="~/Content/images/man-avatar.jpg">
+
+                                            </figure>
+                                            <div class="comment-classic-main">
+                                                <p class="comment-classic-name">@item.FullName</p>
+                                                <div class="comment-classic-text">
+                                                    <p>@item.Message</p>
+                                                </div>
+                                                <ul class="comment-classic-meta">
+                                                    <li>
+                                                        <time datetime="2018">@DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate) - @item.InsertDate.ToString("HH:mm")</time>
+                                                    </li>
+                                                    <li><span class="comment-classic-reply" onclick="NestedComment(@item.Id)" aria-label="reply"></span></li>
+                                                    <li>
+                                                        <span class="PositiveRating">@item.PositiveRating</span><span data-id="@item.Id" class="fa fa-plus-square"></span> <span data-id="@item.Id" class="fa fa-minus-square"></span><span class="NegativeRating">@item.NegativeRating</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </article>
+
+                                        @foreach (var item2 in item.ChildComment.Where(x => x.IsActive == true))
+                                        {
+                                            <div class="comment-classic-group childComment">
+                                                <!-- Comment Classic-->
+                                                <article class="comment-classic">
+                                                    <figure class="comment-classic-figure">
+                                                        <img class="comment-classic-image img-responsive" style="width: 64px; height: 64px;" src="~/Content/images/man-avatar.jpg">
+                                                    </figure>
+                                                    <div class="comment-classic-main">
+                                                        <p class="comment-classic-name">@item.FullName</p>
+                                                        <div class="comment-classic-text">
+                                                            <p>@item.Message</p>
+                                                        </div>
+                                                        <ul class="comment-classic-meta">
+                                                            <li>
+                                                                <time datetime="2018">@DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate) - @item.InsertDate.ToString("HH:mm")</time>
+                                                            </li>
+                                                            <li>
+                                                                <span class="PositiveRating">@item.PositiveRating</span><span data-id="@item.Id" class="fa fa-plus-square"></span> <span data-id="@item.Id" class="fa fa-minus-square"></span><span class="NegativeRating">@item.NegativeRating</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </article>
+                                            </div>
+
+
+                                        }
+
+
+                                    </div>
+
+
+
+                                }
+
+                                @Html.Partial("_Comment", new Domain.Comment(Model.Id))
+
+                            </div>
+                        }
+                        else
+                        {
+                            @Html.Partial("_ContactUsForm", new Domain.ContactUs(Model.Id))
+                        }
+
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3 col-sm-12 col-xs-12">
+                    <!-- Profile Thin-->
+                    <article class="sidebar-widget wow fadeInUp m-t-10 profile-thin">
+                        <ul class="page-info">
+                            <li>
+                                <div id="Rate" data-ContentId="@Model.Id">
+                                    <form>
+                                        <input type="text" id="ContentRate" class="rating-loading" />
+                                    </form>
+                                    @if (Model.ContentRating != null)
+                                    {
+                                        <div id="RateResult" itemscope="" itemtype="http://schema.org/Product">
+                                            <span itemprop="name">@Model.Title</span>
+                                            <div itemprop="aggregateRating" itemscope="" itemtype="http://schema.org/AggregateRating">
+                                                <span itemprop="ratingValue">@Model.ContentRating.AverageRating</span> از 5 بوسیله <span itemprop="reviewCount">@Model.ContentRating.TotalRaters</span> رای
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="profile-thin-main">
+                            <p class="profile-thin-title">نویسنده : @Model.User.FirstName @Model.User.LastName</p>
+                            <p>@Model.User.About</p>
+                        </div>
+                    </article>
+
+                    <div id="OtherImages" class="sidebar-widget wow fadeInUp m-t-10 profile-thin">
+                        @if (Model.OtherImages.Any())
+                        {
+                            <h4><span>تصاویر بیشتر</span></h4>
+                            <p class="spotlight-group">
+                                @foreach (var item in Model.OtherImages.OrderBy(x => x.DisplaySort))
+                                {
+                                    <a class="spotlight" href="@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, item.attachment.FileName, "LG")" data-description="@item.Title">
+                                        <img src="@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, item.attachment.FileName, "MD")" class="img-responsive" alt="@item.Title">
+                                    </a>
+
+                                    k++;
+                                }
+                            </p>
+                        }
+                    </div>
+
+
+
+                    <!-- ============================================== SIDEBAR CATEGORY ============================================== -->
+                    <div class="sidebar-widget wow fadeInUp m-t-10">
+                        <div class="widget-header">
+                            <h4 class="widget-title">جدیدترین مطالب</h4>
+                            <hr>
+                        </div>
+
+                        <!-- /.sidebar-widget-body -->
+
+                    </div>
+
+                    @if (ads.Where(x => x.Position == 4).Any())
+                    {
+                        int SumSize = 0;
+                        <div class="sidebar-widget wow fadeInUp m-t-10">
+                            @foreach (var Adveresting in ads.Where(x => x.Position == 4))
+                            {
+
+                                SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+
+
+                                <div class="home-banner Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? " lastbox":"" )">
+                                    <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : " Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+                                        @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+                                    </a>
+                                </div>
+                                if (SumSize == 12)
+                                {
+                                    SumSize = 0;
+                                    <div class="clearfix"></div>
+                                }
+                            }
+
+                            <div class="clearfix"></div>
+
+                        </div>
+
+                    }
+
+                    <!-- ============================================== SIDEBAR CATEGORY : END ============================================== -->
+
+
+
+
+
+
+                </div>
+                <!-- /.sidebar -->
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+            @if (ads.Where(x => x.Position == 3).Any())
+            {
+                <div class="content">
+                    <div class="clearfix filters-container m-t-20">
+                        <div class="row adv-row">
+
+                            @if (ads.Where(x => x.Position == 3).Any())
+                            {
+                                int SumSize = 0;
+                                <div class="adv-box">
+                                    @foreach (var Adveresting in ads.Where(x => x.Position == 3).OrderBy(x => x.DisplaySort))
+                                    {
+                                        SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+
+                                        <div class="adv-image Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? " lastbox":"" )">
+                                            <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : " Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+                                                @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+                                            </a>
+                                        </div>
+                                        if (SumSize == 12)
+                                        {
+                                            SumSize = 0;
+                                            <div class="clearfix"></div>
+                                        }
+                                    }
+                                    <div class="clearfix"></div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+
+            }
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+
+
+
+
+
+    @section Scripts{
+        <script src="~/Content/Base/Scripts/Rating/star-rating.min.js"></script>
+        <script src="~/Content/Base/Scripts/PrettyImage/jquery.prettyPhoto.js"></script>
+        <script src="~/Content/Base/Scripts/View/Content.js"></script>
+        <script src="~/Content/Base/Scripts/PlrVideo.js"></script>
+        <script>
+
+            $('.owl-carousel-pro').owlCarousel({
+                rtl: true,
+                loop: true,
+                margin: 10,
+                nav: true,
+                autoplay: true,
+                autoplayTimeout: 2000,
+                responsiveClass: true,
+                responsive: {
+                    0: {
+                        items: 2
+                    },
+                    600: {
+                        items: 3
+                    },
+                    768: {
+                        items: 3
+                    },
+                    1000: {
+                        items: 3
+                    }
+                }
+            });
+        </script>
+    }
+

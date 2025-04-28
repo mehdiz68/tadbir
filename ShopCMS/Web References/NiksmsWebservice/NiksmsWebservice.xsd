@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="GroupSms">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+        <xs:element minOccurs="0" maxOccurs="1" name="model" type="tns:GroupSmsModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="AuthenticationModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Username" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Password" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GroupSmsModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="SenderNumber" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Numbers" type="tns:ArrayOfString" />
+      <xs:element minOccurs="1" maxOccurs="1" name="SendOn" type="xs:dateTime" />
+      <xs:element minOccurs="1" maxOccurs="1" name="SendType" type="tns:OperatorSmsSendType" />
+      <xs:element minOccurs="0" maxOccurs="1" name="YourMessageId" type="tns:ArrayOfLong" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Message" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfString">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="OperatorSmsSendType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Normal" />
+      <xs:enumeration value="AudioMessageMinute" />
+      <xs:enumeration value="AudioMessageSecod" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ArrayOfLong">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="long" type="xs:long" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GroupSmsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="GroupSmsResult" type="tns:ReturnSmsResult" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ReturnSmsResult">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="Status" type="tns:SmsReturn" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Id" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="WarningMessage" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="NikIds" type="tns:ArrayOfLong" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="SmsReturn">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Successful" />
+      <xs:enumeration value="UnknownError" />
+      <xs:enumeration value="InsufficientCredit" />
+      <xs:enumeration value="ForbiddenHours" />
+      <xs:enumeration value="Filtered" />
+      <xs:enumeration value="NoFilters" />
+      <xs:enumeration value="PrivateNumberIsDisable" />
+      <xs:enumeration value="ArgumentIsNullOrIncorrect" />
+      <xs:enumeration value="MessageBodyIsNullOrEmpty" />
+      <xs:enumeration value="PrivateNumberIsIncorrect" />
+      <xs:enumeration value="ReceptionNumberIsIncorrect" />
+      <xs:enumeration value="SentTypeIsIncorrect" />
+      <xs:enumeration value="Warning" />
+      <xs:enumeration value="PanelIsBlocked" />
+      <xs:enumeration value="SiteUpdating" />
+      <xs:enumeration value="AudioMessageNotAllowed" />
+      <xs:enumeration value="AudioMessageFileSizeNotAllowed" />
+      <xs:enumeration value="PanelExpired" />
+      <xs:enumeration value="InvalidUserNameOrPass" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="AsyncGroupSms">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+        <xs:element minOccurs="0" maxOccurs="1" name="model" type="tns:GroupSmsModel" />
+        <xs:element minOccurs="1" maxOccurs="1" name="callBackId" nillable="true" type="xs:long" />
+        <xs:element minOccurs="0" maxOccurs="1" name="callBackUrl" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AsyncGroupSmsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="1" name="AsyncGroupSmsResult" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GroupSmsWithPattern">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+        <xs:element minOccurs="0" maxOccurs="1" name="model" type="tns:GroupSmsWithPatternModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="GroupSmsWithPatternModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="SenderNumber" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Numbers" type="tns:ArrayOfString" />
+      <xs:element minOccurs="1" maxOccurs="1" name="SendOn" type="xs:dateTime" />
+      <xs:element minOccurs="1" maxOccurs="1" name="SendType" type="tns:OperatorSmsSendType" />
+      <xs:element minOccurs="0" maxOccurs="1" name="YourMessageId" type="tns:ArrayOfLong" />
+      <xs:element minOccurs="1" maxOccurs="1" name="MessagePatternId" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GroupSmsWithPatternResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="GroupSmsWithPatternResult" type="tns:ReturnSmsResult" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AsyncGroupSmsWithPattern">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+        <xs:element minOccurs="0" maxOccurs="1" name="model" type="tns:GroupSmsWithPatternModel" />
+        <xs:element minOccurs="1" maxOccurs="1" name="callBackId" nillable="true" type="xs:long" />
+        <xs:element minOccurs="0" maxOccurs="1" name="callBackUrl" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AsyncGroupSmsWithPatternResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="1" name="AsyncGroupSmsWithPatternResult" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PtpSms">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+        <xs:element minOccurs="0" maxOccurs="1" name="model" type="tns:PtpSmsModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="PtpSmsModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="SenderNumber" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Numbers" type="tns:ArrayOfString" />
+      <xs:element minOccurs="1" maxOccurs="1" name="SendOn" type="xs:dateTime" />
+      <xs:element minOccurs="1" maxOccurs="1" name="SendType" type="tns:OperatorSmsSendType" />
+      <xs:element minOccurs="0" maxOccurs="1" name="YourMessageId" type="tns:ArrayOfLong" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Message" type="tns:ArrayOfString" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PtpSmsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="PtpSmsResult" type="tns:ReturnSmsResult" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AsyncPtpSms">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+        <xs:element minOccurs="0" maxOccurs="1" name="model" type="tns:PtpSmsModel" />
+        <xs:element minOccurs="1" maxOccurs="1" name="callBackId" nillable="true" type="xs:long" />
+        <xs:element minOccurs="0" maxOccurs="1" name="callBackUrl" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AsyncPtpSmsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="1" name="AsyncPtpSmsResult" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCredit">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCreditResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="1" name="GetCreditResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetDiscountCredit">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetDiscountCreditResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="1" name="GetDiscountCreditResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPanelExpireDate">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPanelExpireDateResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="1" name="GetPanelExpireDateResult" nillable="true" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetReceiveSms">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+        <xs:element minOccurs="1" maxOccurs="1" name="startDate" nillable="true" type="xs:dateTime" />
+        <xs:element minOccurs="1" maxOccurs="1" name="endDate" nillable="true" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetReceiveSmsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="GetReceiveSmsResult" type="tns:ArrayOfGetReceiveSmsModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ArrayOfGetReceiveSmsModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="GetReceiveSmsModel" nillable="true" type="tns:GetReceiveSmsModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetReceiveSmsModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Message" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="SenderNumber" type="xs:long" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ReceiveNumber" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Id" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="ReceiveDate" type="xs:dateTime" />
+      <xs:element minOccurs="1" maxOccurs="1" name="IsRelayed" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ResetReceiveSmsVisitedStatus">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+        <xs:element minOccurs="1" maxOccurs="1" name="startDate" nillable="true" type="xs:dateTime" />
+        <xs:element minOccurs="1" maxOccurs="1" name="endDate" nillable="true" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ResetReceiveSmsVisitedStatusResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="1" name="ResetReceiveSmsVisitedStatusResult" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSmsDelivery">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+        <xs:element minOccurs="0" maxOccurs="1" name="nikIds" type="tns:ArrayOfLong" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSmsDeliveryResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="GetSmsDeliveryResult" type="tns:ArrayOfSmsStatus" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ArrayOfSmsStatus">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SmsStatus" type="tns:SmsStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="SmsStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NotFound" />
+      <xs:enumeration value="DoNotSend" />
+      <xs:enumeration value="InQueue" />
+      <xs:enumeration value="Sent" />
+      <xs:enumeration value="InsufficientCredit" />
+      <xs:enumeration value="Block" />
+      <xs:enumeration value="NotDeliverdSmsAdvertisingBlock" />
+      <xs:enumeration value="NotDeliverdBlackList" />
+      <xs:enumeration value="NotDeliverdDelay" />
+      <xs:enumeration value="NotDeliverdCanceled" />
+      <xs:enumeration value="NotDeliverdNoViber" />
+      <xs:enumeration value="NotDeliverdFiltering" />
+      <xs:enumeration value="WaitingForRecheckInOprator" />
+      <xs:enumeration value="OpratorFault" />
+      <xs:enumeration value="NotDeliveredBlocked" />
+      <xs:enumeration value="SendedButStatusNotUpdated" />
+      <xs:enumeration value="NotDeliveredDuplicate" />
+      <xs:enumeration value="NotDeliveredBlockPanel" />
+      <xs:enumeration value="NotDeliveredUnknownNumber" />
+      <xs:enumeration value="WaitingForDeliveryBeforeSend" />
+      <xs:enumeration value="NotDeliveredUnAccessible" />
+      <xs:enumeration value="NotDeliveredNotAnswered" />
+      <xs:enumeration value="NotDeliveredLineIsBusy" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="GetSmsDeliveryWithClientId">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+        <xs:element minOccurs="1" maxOccurs="1" name="yourId" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSmsDeliveryWithClientIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="GetSmsDeliveryWithClientIdResult" type="tns:GetSmsDeliveryWithClientIdModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="GetSmsDeliveryWithClientIdModel">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="SmsStatus" type="tns:SmsStatus" />
+      <xs:element minOccurs="1" maxOccurs="1" name="NiksmsId" type="xs:long" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GetServertime">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetServertimeResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="GetServertimeResult" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSenderNumbers">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="security" type="tns:AuthenticationModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSenderNumbersResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="GetSenderNumbersResult" type="tns:ArrayOfString" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

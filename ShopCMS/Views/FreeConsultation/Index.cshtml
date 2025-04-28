@@ -1,0 +1,77 @@
+﻿
+@{
+
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+
+}
+
+
+@section Header{
+ <style>
+     h1{font-size:1.3em;}
+    </style>  
+}
+
+
+<section>
+
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-12" id="Top-content">
+                <ol class="breadcrumb" itemscope="" itemtype="http://schema.org/BreadcrumbList">
+                    <li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem" class="breadcrumb-item"><a itemprop="item" href="/"><span itemprop="name"> صفحه اصلی</span></a><meta itemprop="position" content="0"></li>
+                    <li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem" class="breadcrumb-item"><a itemprop="item" href="/FreeConsultation"><span itemprop="name"> ثبت پرسش جدید </span></a><meta itemprop="position" content="1"></li>
+                </ol>
+
+                <h1>ثبت پرسش جدید</h1>
+
+
+                @Html.Partial("_AddTicket", new Domain.Ticket(),new ViewDataDictionary { {"cats", ViewBag.cats }})
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+@section Scripts{
+    <script src="~/Content/Base/Scripts/Rating/star-rating.min.js"></script>
+    <script src="~/Content/Base/Scripts/PrettyImage/jquery.prettyPhoto.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+
+        var slider2 =
+            new Swiper('.sliderOther', {
+                zoom: true,
+                spaceBetween: 5,
+                slidesPerView: 2,
+
+                // Navigation arrows
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+
+                // And if we need scrollbar
+                scrollbar: {
+                    el: '.swiper-scrollbar',
+                }
+            });
+
+
+
+
+    </script>
+
+    <script src="~/Content/Base/Scripts/View/Content.js"></script>
+
+}

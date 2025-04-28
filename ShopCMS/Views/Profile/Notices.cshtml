@@ -1,0 +1,78 @@
+﻿@model PagedList.IPagedList<Domain.ViewModels.ProductletmeKnowViewModel>
+
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+
+@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;}
+
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+    <div class="container" id="Notices">
+        <h1>
+            <span> اطلاع رسانی ها </span>
+            <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+        </h1>
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="product Notice">
+                    @Html.Partial("_PItem", item.ProductItem)
+
+                    <div>
+
+                        <p class="text-center">
+                            @if (item.Available)
+                            {
+                                <span class="fa fa-check"></span> <span>موجود شدن</span>
+                            }
+                            @if (item.AmazingOffer)
+                            {
+                                <span class="fa fa-bell"></span> <span>  شگفت انگیز شدن</span>
+                            }
+                        </p>
+                        <p class="text-center">
+                            <span>اطلاع رسانی از طریق : </span>
+                            @switch (item.NotificationType)
+                            {
+                                case 1:<span>ایمیل</span>break;
+                                case 2:<span>پیام کوتاه</span>break;
+                                case 3:<span>پیام شخصی</span>break;
+                                case 4:<span>پیام کوتاه و ایمیل</span>break;
+                                case 6:<span>پیام کوتاه و پیام شخصی</span>break;
+                                case 7:<span>پیام کوتاه، ایمیل و پیام شخصی</span>break;
+                                default: break;
+                            }
+                        </p>
+                    </div>
+
+                    <div class="options">
+                        <span class="fa fa-bars"></span>
+                        <p class="delete" data-id="@item.ProductItem.Id">
+                            حذف از لیست
+                        </p>
+                    </div>
+                </div>
+
+            }
+
+        </div>
+        <div class="Pagging-New-Container">
+            <strong class="Pagging-New-Info">
+                تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+            </strong>
+            <br /> <br />
+
+            @Html.PagedListPager(Model, Page => "/Profile/Notices?page=" + Page)
+
+        </div>
+      
+    </div>
+

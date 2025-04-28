@@ -1,0 +1,74 @@
+﻿@model Domain.ProductAttributeItemColor
+    @{ 
+        var ProductAttribute = ViewBag.ProductAttribute as Domain.ProductAttribute;
+    }
+<title>ایجاد مقدار برای @ProductAttribute.Name </title>
+
+
+@section Header{
+    <link href="~/Areas/Admin/Content/Scripts/Component/spectrum/spectrum.css" rel="stylesheet" />
+}
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("ItemsColor",new {AttributeId=ProductAttribute.Id })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ایجاد مقدار برای @ProductAttribute.Name
+
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @if (ViewBag.message != null)
+                {
+                    <p class="alert alert-danger">@ViewBag.message</p>
+                }
+
+                @Html.Hidden("AttributeId", ProductAttribute.Id);
+
+
+                <div class="form-group has-feedback">
+                    @Html.EditorFor(model => model.Color, new { htmlAttributes = new { placeholder = "رنگ", @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Color, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="form-group has-feedback">
+                    @Html.EditorFor(model => model.Value, new { htmlAttributes = new { placeholder = "مقدار", @class = "form-control InputColor" } })
+                    @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <input type="submit" value="ایجاد" class="btn btn-success" />
+                </div>
+            </div>
+        }
+
+
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="~/Areas/Admin/Content/Scripts/Component/spectrum/spectrum.js"></script>
+    @*View*@
+    <script>
+        $(document).ready(function () {
+
+            $(".InputColor").spectrum({
+                preferredFormat: "hex",
+                showInput: true,
+                showPalette: true,
+                allowEmpty: true,
+                palette: [["red", "rgba(0, 255, 0, .5)", "rgb(0, 0, 255)"]]
+            });
+        });
+    </script>
+
+}

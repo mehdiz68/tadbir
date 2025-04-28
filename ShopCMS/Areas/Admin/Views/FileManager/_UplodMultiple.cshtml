@@ -1,0 +1,185 @@
+﻿@model IEnumerable<Domain.Folder>
+@using ahmadi.Infrastructure.Helper;
+
+
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+    var setting = ViewBag.setting as Domain.Setting;
+
+}
+
+<div id="Container">
+    <fieldset>
+        <legend>
+            <span class="glyphicon glyphicon-link"></span> افزودن گروهی فایل
+
+            <span style="cursor:pointer" data-html="true" data-toggle="tooltip" data-placement="right" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+        </legend>
+        <div id="FormContent">
+            <form id="FormMultipleUpload" enctype="multipart/form-data" method="post">
+                <div id="Stage1">
+                    <div style="text-align:left;position:relative">
+                        <button style="position:absolute;z-index:1;left:1%" class="btn btn-danger cancel" type="button" id="Cancel_btn">
+                            <i class="glyphicon glyphicon-ban-circle"></i>
+                            <span>بستن</span>
+                        </button>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <img src="~/Areas/Admin/Content/images/1.png" />
+                        </p>
+                        <p>
+                            <label>
+
+                                <span style="color:red;font-size:18px">**</span> عنوانِ فایل : 
+                                <span data-html="true" data-toggle="tooltip" data-placement="right" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان فایل").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان فایل").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                            </label>
+                            <input class="form-control" type="text" id="Title" name="Title" />
+                        </p>
+                        <p>
+                            <input type="checkbox" id="UseWaterMark" name="UseWaterMark" />&nbsp;<label>
+                                درج واترمارک روی تصویر
+                                <span data-html="true" data-toggle="tooltip" data-placement="right" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "واترمارک").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "واترمارک").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                            </label>
+                            <div id="WaterMarkContainer">
+                                <select class="form-control" id="WaterMarkType" name="WaterMarkType">
+                                    <option value="0" selected="selected">پایین چپ</option>
+                                    <option value="1">پایین مرکز</option>
+                                    <option value="2">پایین راست</option>
+                                    <option value="3">مرکز چپ</option>
+                                    <option value="4">مرکز مرکز</option>
+                                    <option value="5">مرکز راست</option>
+                                    <option value="6">بالا چپ</option>
+                                    <option value="7">بالا مرکز</option>
+                                    <option value="8">بالا راست</option>
+                                </select>
+                            </div>
+                        </p>
+                        <p>
+                            <input type="checkbox" id="HasMultiSize" name="HasMultiSize" />&nbsp;<label>
+                                تغییر اندازه ی تصویر و تولید 3 سایز کوچکتر
+                                <span data-html="true" data-toggle="tooltip" data-placement="right" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تغییر اندازه").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تغییر اندازه").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                            </label>
+                        </p>
+                        <div id="HasMultiSizeContainer">
+
+                            <p> در صورت انتخابِ این گزینه، به جز تصویر اصلی 3 سایز کوچکتر هم ساخته میشود  </p>
+                        </div>
+                        <p>
+                            <input type="checkbox" id="UseCompression" name="UseCompression" />&nbsp;<label>
+                                فشرده سازی تصاویر
+                                <span data-html="true" data-toggle="tooltip" data-placement="right" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "فشرده سازی تصاویر").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "فشرده سازی تصاویر").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                            </label>
+                        </p>
+                        <div id="UseCompressionContainer">
+                            <span>درجه کیفیت</span>
+                            <div class="slidecontainer">
+                                <input type="range" min="1" max="9" value="5" class="slider" id="compressionLevel">
+                            </div>
+                            <div class="col-sm-4 text-right">کمترین (1)</div>
+                            <div class="col-sm-4 text-center" id="compressionLevelCurrent">5</div>
+                            <div class="col-sm-4 text-left">بیشترین (9)</div>
+                            <div class="clearfix"></div>
+                            <br />
+                            <p><span class="glyphicon glyphicon-exclamation-sign"></span> فقط برای تصاویر با پسوند .jpg,.jpeg,.png. در کیفیت تصاویر کمی تاثیر گذار خواهد بود و تصویر به .jpg تبدیل می گردد. </p>
+                        </div>
+                    </div>
+                    <div class="tree col-lg-4 col-md-4 col-sm-12 col-xs-12"  style="height: 500px;overflow: auto !important;">
+                        <p><img src="~/Areas/Admin/Content/images/2.png" /></p>
+
+                        <div>
+                            @{
+                                CoreLib.ViewModel.Xml.XMLReader readXml = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+                                var languages = readXml.ListOfXLanguage();
+                            }
+                            @if (languages.Count == 1)
+                            {
+                                @Html.Hidden("LanguageId", languages.First().Id)
+                            }
+                            else
+                            {
+                                <p><label style="display:block">انتخاب زبان ( وب سایت) :</label></p>
+                                @Html.DropDownList("Languages", null, null, htmlAttributes: new { @ID = "AddAttachementLanguageId", @class = "form-control", @onchange = "ShowAddAttachment('" + Url.Content("/Admin/FileManager/Upload") + "',this)" })
+                            }
+                        </div>
+
+                        <label>
+                            انتخاب پوشه :
+
+                            <span data-html="true" data-toggle="tooltip" data-placement="right" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب پوشه").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب پوشه").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                            <span id="SelectedTreeItem" data-id="0">بدون پوشه</span>
+                        </label>
+                        <ul>
+                            <li>
+                                <span>
+                                    <span class="glyphicon glyphicon-list-alt"></span> پوشه ها
+                                </span>
+                                @(Html.TreeView(Model).EmptyContent("پوشه ای وجود ندارد!").Children(m => m.ChildFolder).HtmlAttributes(new { id = "tree2" }).ChildrenHtmlAttributes(new { @class = "subItem" }).ItemText(m => m.FolderName).ItemTemplate(@<text><a href="#" data-id="@item.Id">@item.FolderName</a></text>))
+                            </li>
+                        </ul>
+
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p><img src="~/Areas/Admin/Content/images/3.png" /></p>
+                        <p><label>انتخاب فایل و ذخیره فایل: </label></p>
+                        <p><span class="glyphicon glyphicon-exclamation-sign"></span> حجم  فایل باید کمتر از 200 مگابایت باشد . </p>
+                        <span class="btn btn-success fileinput-button  fileinput-button js-mytooltip type-inline-block style-block style-block-three system-mytooltip--base" data-mytooltip-custom-class="align-center" data-mytooltip-direction="bottom" data-mytooltip-content="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب فایل").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب فایل").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>انتخاب فایل ها...</span>
+                            <input type="file" name="UploadedFiles" id="UploadedFiles" multiple />
+                        </span>
+                     
+                        <div id="drop_zone" class="drop_zone">می توانید فایل های خود را درگ کرده و به اینجا بیاندازید</div>
+                        <div class="progress CustomProgress">
+                            <div id="FileProgress" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                                <span></span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary start" type="button" id="Submit_btn" data-url="@Url.Content("/Admin/FileManager/UplodMultiple")">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>آپلود و ذخیره فایل</span>
+                        </button>
+                        <div id="Files">
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </fieldset>
+
+
+    <ul id="ContexMenuFolder" style="width: 150px; text-align: center; display: none">
+        <li id="NewSubFolder"><span>افزودن زیر پوشه</span></li>
+    </ul>
+
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div id="Folder-Modal" style="position: fixed;top: 20%;background-color: #fff;border: 1px solid #ccc;z-index: 999999;padding: 21px;display:none">
+            <div class="header">
+                <span class="glyphicon glyphicon-remove" style="color:red;position:absolute"></span>
+                <h4 class="modal-title"></h4>
+                <hr /><br />
+            </div>
+            <div class="body">
+
+                <input type="text" placeholder="نام پوشه..." />
+                <span class="btn btn-primary"> ذخیره </span>
+            </div>
+            <br />
+            <hr /><br />
+            <div class="footer">
+                <button type="button" class="btn btn-primary close-folder">بستن</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+

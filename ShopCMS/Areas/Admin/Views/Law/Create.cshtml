@@ -1,0 +1,121 @@
+﻿@model Domain.Law
+@using ahmadi.Infrastructure.Helper
+<title> ایجاد قانون جدید</title>
+@{
+    var setting = ViewBag.setting as Domain.Setting;
+    int? ParrentId = ViewBag.ParrentId as int?;
+
+}
+@section Header{
+
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left">
+            @if (ParrentId.HasValue)
+            {
+                <a class="btn btn-success" href="@Url.Action("Index",new { id=ParrentId})"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a>
+            }
+            else
+            {
+                <a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a>
+            }
+        </div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            @if (ParrentId.HasValue)
+            {
+                <span>
+                    ایجاد آیتم جدید
+                </span>
+            }
+            else
+            {
+                <span>
+                    ایجاد قانون جدید
+                </span>
+            }
+
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("ParrentId", ParrentId)
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <p>
+                            <span class="ContentTitle"></span> کاراکتر باقی مانده.
+                            <span>عنوان</span>
+                        </p>
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { id = "ContentTitle", @class = "form-control", placeholder = "عنوان" } })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <p>
+                            <span class="ContentPageAddress"></span> کاراکتر باقی مانده.
+                            <span>مصوب</span>
+                        </p>
+                        @Html.EditorFor(model => model.date, new { htmlAttributes = new { id = "ContentPageAddress", @class = "form-control", placeholder = "مصوب"} })
+                        @Html.ValidationMessageFor(model => model.date, "", new { @class = "text-danger" })
+
+                    </div>
+
+
+                    @Html.Hidden("LanguageId", "1")
+
+
+                    <div class="clearfix"></div>
+                </div>
+                
+
+
+                <br /><br />
+                      <div class="form-group col-md-12">
+                          <div>
+
+                              @Ajax.ActionLink("استفاده از فایل ها", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',1)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager", @style = "margin-bottom:0" })
+
+                              @Html.LabelFor(model => model.Data, htmlAttributes: new { @class = "control-label", @style = "display:inline" })
+                          </div>
+                          <div id="createView"></div>
+                          @Html.TextAreaFor(model => model.Data, htmlAttributes: new { Id = "txt_Content", @class = "form-control elm1", rows = "5" })
+                          @Html.ValidationMessageFor(model => model.Data, "", new { @class = "text-danger" })
+
+
+                      </div>
+                <div class="clearfix"></div>
+                
+                                    <input type="submit" value="ثبت" class="btn btn-primary" style="border-radius:0" />
+                
+            </div>
+        }
+
+
+
+        @section Scripts{
+            <script>
+                $('#ContentTitle').simplyCountable({ counter: '.ContentTitle', maxCount: 100, safeClass: 'safe', overClass: 'over' });
+                $('#ContentPageAddress').simplyCountable({ counter: '.ContentPageAddress', maxCount: 80, safeClass: 'safe', overClass: 'over' });
+                $('#ContentDescr').simplyCountable({ counter: '.ContentDescr', maxCount: 150, safeClass: 'safe', overClass: 'over' });
+            </script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+            <script src="~/Scripts/tinymce/tinymce.min.js"></script>
+            <script src="~/Scripts/tinymce/tiny_mce_load.js"></script>
+
+        }
+    </div>
+</div>

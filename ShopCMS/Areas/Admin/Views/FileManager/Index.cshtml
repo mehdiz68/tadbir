@@ -1,0 +1,297 @@
+﻿@model PagedList.IPagedList<Domain.ViewModel.Attachement>
+@using PagedList.Mvc;
+@using Domain;
+@using ahmadi.Infrastructure.Helper;
+@using ahmadi.Infrastructure.Security;
+@using Microsoft.AspNet.Identity;
+<title>فایل ها</title>
+@{
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+
+}
+@section Header{
+    <style>
+        .table>tbody>tr>td{border-top:0!important}
+    </style>
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Attachement.css" rel="stylesheet" />
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    @*Pagging*@
+    <link href="~/Content/Base/Css/PagedList.css" rel="stylesheet" type="text/css" />
+    @*Uploader*@
+    <link href="~/Content/Base/Css/Uploader-style.css" type="text/css" rel="stylesheet" />
+
+
+}
+
+<input type='hidden' value='@Request.QueryString["FolderId"]' id='HdnFolderId' />
+
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <h1 style="font-size: 2em;display:inline-block">@Html.ActionLink("فایل ها", "Index")</h1>
+        <span style="cursor:pointer" data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+    </div>
+    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+        @{
+            IdentityManager im = new IdentityManager();
+            bool HasFolderAccess = false;
+            if (im.IsInRole(User.Identity.GetUserId(), "Admin") || im.IsInRole(User.Identity.GetUserId(), "Security") || im.IsInRole(User.Identity.GetUserId(), "SuperUser"))
+            {
+                HasFolderAccess = true;
+            }
+        }
+        @if (HasFolderAccess)
+        {
+            <a class="btn btn-success" href="@Url.Action("Index", "Folders")"><span class="glyphicon glyphicon-list-alt"></span> مدیریت پوشه ها </a>
+                    <span>&nbsp;</span>
+                    <a class="btn btn-success" href="@Url.Action("Index", "FileTypes")"><span class="glyphicon glyphicon-list-alt"></span> پسوندهای مجاز </a>
+                    <span>&nbsp;</span>
+        }
+        @if (ViewBag.AddPermission)
+        {
+            @Ajax.ActionLink("  افزودن فایل ", "Upload", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode()", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary js-mytooltip type-inline-block style-block style-block-three system-mytooltip--base", data_mytooltip_custom_class = "align-center", data_mytooltip_direction = "bottom", data_mytooltip_content = (HelpModule.HelpModuleSections.Where(x => x.Name == "افزودن فایل").Any() ? HelpModule.HelpModuleSections.Where(x => x.Name == "افزودن فایل").First().Abstract : "") })
+            <span>&nbsp;</span>
+
+                    @Ajax.ActionLink(" افزودن گروهی فایل ", "UplodMultiple", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();multipleFiles_addMode()", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary js-mytooltip type-inline-block style-block style-block-three system-mytooltip--base", data_mytooltip_custom_class = "align-center", data_mytooltip_direction = "bottom", data_mytooltip_content = (HelpModule.HelpModuleSections.Where(x => x.Name == "افزودن گروهی فایل").Any() ? HelpModule.HelpModuleSections.Where(x => x.Name == "افزودن گروهی فایل").First().Abstract : "") })
+        }
+
+        <div id="createView">
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="x_panel">
+        <div class="x_title">
+            <h2><span class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").First().Abstract:"")"></span> جستجو / فیلتر</h2>
+            <ul class="nav navbar-left panel_toolbox">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                </li>
+
+                <li>
+                    <a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="x_content" style="display:none">
+            <div id="SearchPage">
+                <div>
+
+                    @using (Html.BeginForm("Index", "FileManager", FormMethod.Get))
+                    {
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                            @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, htmlAttributes: new { placeholder = "نام فایل", style = "display: inline-block", @class = "form-control" })
+                            <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                            @Html.TextBox("StartDateInput", ViewBag.currentStartDateInputFiltering as string, htmlAttributes: new { placeholder = "تاریخ درج از", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('StartDateInput');" })
+                            <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                            @Html.TextBox("EndDateInput", ViewBag.currentEndDateInputFiltering as string, htmlAttributes: new { placeholder = "تا", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('EndDateInput');" })
+                            <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                        </div>
+                        <div class="clearfix">
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                            @Html.DropDownList("FileTypeId", ViewBag.FileTypeId as SelectList, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "نوع فایل", style = "width:99%;display: inline-block", @class = "form-control" })
+                            <span class="fa fa-file-o form-control-feedback right" aria-hidden="true"></span>
+
+                        </div>
+                        
+
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                            @Html.DropDownList("CapacityList", null, htmlAttributes: new { placeholder = "حجم فایل", style = "width:99%;display: inline-block", @class = "form-control" })
+                            <span class="fa fa-file-o form-control-feedback right" aria-hidden="true"></span>
+
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                            @Html.DropDownList("FolderId", ViewBag.FolderId as SelectList, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "پوشه", style = "width:99%;display: inline-block", @class = "form-control" })
+                            <span class="fa fa-file form-control-feedback right" aria-hidden="true"></span>
+
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                            @Html.DropDownList("LanguageId", ViewBag.LanguageId as SelectList, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان (وب سایت)", style = "width:99%;display: inline-block", @class = "form-control" })
+                            <span class="fa fa-language form-control-feedback right" aria-hidden="true"></span>
+
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                            @Html.DropDownList("IsActive", ViewBag.IsActive as SelectList, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "فعال/غیرفعال", style = "width:99%;display: inline-block", @class = "form-control" })
+                            <span class="fa fa-user-plus form-control-feedback right" aria-hidden="true"></span>
+
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                        <input type="submit" value="جست و جو" class="btn btn-success" />
+                        @Html.ActionLink("نمایش همه", "Index", null, htmlAttributes: new { @class = "btn btn-primary" })
+                        }
+                </div>
+            </div>
+            </div>
+        </div>
+        <br /><br />
+        <div class="container" style="margin:0;padding:0">
+            <div class="x_panel">
+                <div class="x_title" style="border:0">
+
+                </div>
+                <div class="x_content">
+
+
+                    <div class="tree col-lg-3 col-md-3 col-sm-3 col-xs-12" style="padding:0">
+                        <p>
+                            <span class="glyphicon glyphicon-list-alt"></span> پوشه ها
+                            <span data-html="true" data-toggle="tooltip" data-placement="right" style="cursor:pointer" class="glyphicon glyphicon-question-sign" title="@(HelpModule.HelpModuleSections.Any(x=>x.Name=="پوشه ها")?Html.Raw(HelpModule.HelpModuleSections.Where(x=>x.Name=="پوشه ها").First().Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+                        </p>
+                        <ul>
+                            <li>
+                                <a data-id="0" href="@Url.Action("Index", new { FolderId = 0, currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering })">
+                                    <span>
+                                        بدون دسته بندی ها
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index")" class="treeActive">
+                                    <span>
+                                        همه
+                                    </span>
+                                </a>
+                                @(Html.TreeView(ViewBag.Folders as IEnumerable<Folder>).EmptyContent("پوشه ای وجود ندارد!").Children(m => m.ChildFolder).HtmlAttributes(new { id = "tree" }).ChildrenHtmlAttributes(new { @class = "subItem" }).ItemText(m => m.FolderName).ItemTemplate(@<text><a data-id="@item.Id" href="@Url.Action("Index", new { FolderId = item.Id, currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering })">@item.FolderName</a></text>))
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+
+
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr class="header-col">
+                                    <td>
+                                        <strong>
+                                            ترتیب بر اساس :
+                                            <span data-html="true" data-toggle="tooltip" data-placement="right" style="cursor:pointer" class="glyphicon glyphicon-question-sign" title="@(HelpModule.HelpModuleSections.Any(x=>x.Name=="مرتب سازی")?Html.Raw(HelpModule.HelpModuleSections.Where(x=>x.Name=="مرتب سازی").First().Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <p class="text-center">
+                                            <span>عنوان</span>
+                                            <span>
+                                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Title", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering })" title="مرتب سازی بر اساس عنوان صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Title_desc", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering })" title="مرتب سازی بر اساس عنوان نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                            </span>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p class="text-center">
+                                            <span>نوع فایل</span>
+                                            <span>
+                                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "FileTypeName", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering })" title="مرتب سازی بر اساس نوع فایل صعودی"><span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "FileTypeName_desc", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering })" title="مرتب سازی بر اساس نوع فایل نزولی"><span class="glyphicon glyphicon-chevron-down"></span></a>
+                                            </span>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p class="text-center">
+                                            <span>حجم فایل kb</span>
+                                            <span>
+                                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Capacity_desc", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering })" title="مرتب سازی بر اساس حجم فایل نزولی"><span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Capacity", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering })" title="مرتب سازی بر اساس حجم فایل صعودی"><span class="glyphicon glyphicon-chevron-down"></span></a>
+                                            </span>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p class="text-center">
+                                            <span>تعداد استفاده</span>
+                                            <span>
+                                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "UseCount_desc", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering })" title="مرتب سازی بر اساس تعداد استفاده نزولی"><span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "UseCount", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering })" title="مرتب سازی بر اساس تعداد استفاده صعودی"><span class="glyphicon glyphicon-chevron-down"></span></a>
+                                            </span>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p class="text-center">
+                                            <span>تغییر اندازه</span>
+                                            <span>
+                                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "HasMultiSize", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering })" title="مرتب سازی بر اساس تغییر اندازه صعودی"><span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                <a style="display:block" href="@Url.Action( "Index", new { sortOrder = "HasMultiSize_desc", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering })" title="مرتب سازی بر اساس تغییر اندازه نزولی"><span class="glyphicon glyphicon-chevron-down"></span></a>
+                                            </span>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p class="text-center">
+                                            <span>واترمارک</span>
+                                            <span>
+                                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "HasWatermark", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering })" title="مرتب سازی بر اساس واترمارک صعودی"><span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "HasWatermark_desc", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering })" title="مرتب سازی بر اساس واترمارک نزولی"><span class="glyphicon glyphicon-chevron-down"></span></a>
+                                            </span>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p class="text-center">
+                                            <span>تاریخ ایجاد</span>
+                                            <span>
+                                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "InsertDate_desc", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering })" title="مرتب سازی بر اساس تاریخ ایجاد نزولی"><span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "InsertDate", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering })" title="مرتب سازی بر اساس تاریخ ایجاد صعودی"><span class="glyphicon glyphicon-chevron-down"></span></a>
+                                            </span>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="FilesList">
+                            @foreach (var item in Model)
+                            { @Html.Partial("_AttachmentItemIndex", item)   }
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <p>
+                            <strong style="color: #900">
+                                صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount فایل.
+                            </strong>
+                        </p>
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering }))
+
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+            <div class="clearfix"></div>
+        </div>
+
+        @section Scripts{
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/View/Attachement.js?v=1.2"></script>
+            @*Persian Calender*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+            @*Modal Popup*@
+            <script src="~/Content/Base/Scripts/BlockUI/jquery.blockUI.js" type="text/javascript"></script>
+            @*Uploader*@
+            <script src="~/Content/Base/Scripts/FileUpload/Uploader-Common.js" type="text/javascript"></script>
+            <script src="~/Content/Base/Scripts/FileUpload/Uploader-single.core.js" type="text/javascript"></script>
+            <script src="~/Content/Base/Scripts/FileUpload/Uploder-multiple.core.js" type="text/javascript"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+        }

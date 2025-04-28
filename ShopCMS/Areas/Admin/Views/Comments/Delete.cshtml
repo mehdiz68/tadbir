@@ -1,0 +1,138 @@
+﻿@model Domain.Comment
+
+<title>حذف نظر</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            حذفِ نظر
+        </h1>
+        <h4 style="color:red"><i class="glyphicon glyphicon-remove"></i> آیا مطمئن به حذف این رکورد هستید؟</h4>
+        <br /><br />
+        <p class="text text-danger"><strong>@ViewBag.Erorr</strong></p>
+
+
+        <dl class="dl-horizontal col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <dt>
+                @Html.DisplayNameFor(model => model.FullName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FullName)
+            </dd>
+            <dt>
+                نظر مربوط به محتوای
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Content.Title)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Message)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Message)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Visited)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Visited)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.IsActive)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.InsertDate)
+            </dt>
+
+            <dd>
+                @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.InsertDate) <br /> @Model.InsertDate.ToShortTimeString()
+            </dd>
+            <content><br /><br /></content>
+
+            <dt>
+                نظر مربوط به کامنتِ :
+            </dt>
+
+            <dd>
+                @if (Model.ParentComment != null)
+            {
+                    @Html.DisplayFor(model => model.ParentComment.Email)
+                }
+                else
+                {
+                    <span>هیچ کامنتی</span>
+                }
+            </dd>
+
+
+        </dl>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <fieldset class="NewFieldset">
+                <legend class="Newlegend">پاسخها</legend>
+                <div>
+                    <h4>پاسخ های ثبت شده برای این نظر : </h4>
+                    @if (Model.ChildComment.Any())
+                    {
+                        <table class="table">
+                            <tr>
+                                <th>نام و نام خانوادگی</th>
+                                <th>ایمیل</th>
+                                <th>متن نظر</th>
+                                <th>تاریخ ثبت</th>
+                            </tr>
+                            @foreach (var item in Model.ChildComment)
+                            {
+                                <tr>
+                                    <td>@item.FullName</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.Message</td>
+                                    <td>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate) <br /> @item.InsertDate.ToShortTimeString()</td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="alert alert-danger">پاسخی داده نشده است.</p>
+                    }
+
+                </div>
+
+            </fieldset>
+        </div>
+
+        <div class="clearfix"></div>
+        @using (Html.BeginForm())
+            {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="حذف" class="btn btn-danger" />
+            </div>
+        }
+</div>
+</div>

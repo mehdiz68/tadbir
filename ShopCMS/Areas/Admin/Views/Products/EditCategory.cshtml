@@ -1,0 +1,48 @@
+﻿@model Domain.ProductCategory
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+
+<title>ویرایش گروه و زیرگروه</title>
+
+@{
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+    var product = ViewBag.Product as Domain.Product; 
+}
+@section header{
+
+}
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left">
+            <a class="btn btn-success" href="~/Admin/Products">
+                بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span>
+
+            </a>
+        </div>
+        <div class="box-title container" style="padding:0">
+            <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+                @Html.ActionLink("ویرایش گروه و زیرگروه", "EditCategory")
+                </h1>
+                <span class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")" ></span>
+
+</div>
+        <br /><br />
+        <p id="ErrorSummary">
+
+        </p>
+        <span class="hide" id="ProductId">@product.Id</span>
+        @Html.Hidden("ProductTypeId",product.ProductTypeId)
+        @Html.Action("OpenProductCategories", "Products",  new { CurrentCatId = (Model != null ? Convert.ToInt32(Model.Id) : 0), ProductTypeId = product.ProductTypeId  })
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <span class="btn btn-info"> ویرایش </span>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+@section Scripts{
+
+    @*_Category Manager*@
+    <script src="~/Areas/Admin/Content/Scripts/View/_CategoryManager.js?v=1.2"></script>
+    <script src="~/Areas/Admin/Content/Scripts/View/EditProductCategory.js"></script>
+}

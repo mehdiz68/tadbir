@@ -1,0 +1,179 @@
+﻿@model Domain.Category
+@using CoreLib.Infrastructure
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure
+@using PagedList.Mvc;
+
+@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var sliders = ViewBag.Sliders as IEnumerable<Domain.Slider>;
+    var setting = ViewBag.setting as Domain.Setting;
+    int i = 1;
+    var ads = ViewBag.Ads as IEnumerable<Domain.Adveresting>;
+    int SumSize = 0;
+    var latestContent = ViewBag.LatestContent as PagedList.IPagedList<Domain.Content>;
+    var ContentType = ViewBag.ContentType as CoreLib.ViewModel.Xml.XContentType;
+
+}
+
+@section Header{
+    <link href="~/Content/Base/Css/view/Category.css" rel="stylesheet" />
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+
+
+<section class="hero-wrap hero-wrap-2" style="background-image: url('/Content/Base/Theme/images/xbg_2.jpg'); " data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-start">
+            <div class="col-md-9 ftco-animate pb-5 fadeInUp ftco-animated">
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="/"> صفحه اصلی <i class="fa fa-chevron-left"></i></a></span>
+                    <span class="mr-2"><a href="@Url.Action("Index", "ContentType", new { id = ContentType.Id })">@ContentType.Name <i class="fa fa-chevron-left"></i> </a></span>
+
+                    @{
+                        Domain.Category parrentCat = Model.ParentCat;
+                        while (parrentCat != null)
+                        { <span class="mr-2">
+                                <a href="@Url.Action("Index", "category", new { id = parrentCat.Id, title = CommonFunctions.NormalizeAddress(parrentCat.PageAddress) })">@parrentCat.Title <i class="fa fa-chevron-left"></i></a>
+                                @{parrentCat = parrentCat.ParentCat;
+                                }
+                            </span>
+                        }
+                    }
+                    <span class="mr-2">@Model.Title</span>
+                </p>
+                <h1 class="mb-3 bread">@Model.Title</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+
+        @if (sliders != null)
+        {
+            if (sliders.Any())
+            {
+                i = 0;
+                <div class="col-lg-12" style="padding:0">
+
+                    @foreach (var slider in sliders)
+                    {
+                        @Html.Partial("_BootStrapSlideShowCaptionBlog", slider, new ViewDataDictionary { { "Index", i.ToString() }, { "staticUrl", Meta.StaticContentUrl } })
+                        i++;
+                    }
+
+                </div>
+            }
+        }
+
+
+    </div>
+</div>
+
+<div class="container ads">
+    <div class="row">
+        @{ SumSize = 0;}
+        @foreach (var item in ads.Where(x => x.Position == 1))
+        {
+            SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(item.AdverestingSizeId);
+            <div class="Adveresting Position-@item.Position Size-@item.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                <a href="@item.Link" title="@item.Title">
+                    <div class="categories__item set-bg" data-setbg="@Html.DisplayattachmentUrl(item.attachment.FileName)" style="background-image: url(&quot;@Html.DisplayattachmentUrl(item.attachment.FileName)&quot;);">
+                        <div class="categories__hover__text">
+                            <h5>@item.Title</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+
+    </div>
+</div>
+
+<section class="ftco-section bg-half-light">
+    <div class="container">
+        <div class="row justify-content-center mb-5 pb-2">
+            <div class="col-md-8 text-center heading-section ftco-animate fadeInUp ftco-animated">
+                <span class="subheading">خدمات</span>
+                <h2 class="mb-4">خدمات اختصاصی ما</h2>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var item in latestContent)
+            {
+                string classname = "flaticon-architect";
+                if (!String.IsNullOrEmpty(item.Icon))
+                {
+                    classname = item.Icon;
+                }
+                <div class="col-md-4">
+                    <div class="services-wrap ftco-animate fadeInUp ftco-animated">
+                        <div class="img" style="background-image:url(@Html.DisplayattachmentUrl(item.BlogCover.HasValue?item.Blogattachment.FileName:item.Cover.HasValue? item.attachment.FileName:"default-thumbnail.jpg","SM",true))"></div>
+                        <div class="text">
+                            <div class="icon"><span class="@classname"></span></div>
+                            <h2>
+
+                                @item.Title
+                            </h2>
+                            <p>@item.Abstract</p>
+                            <a href="@Url.Action("Index","Content",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) })" class="btn-custom">بیشتر</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @Html.PagedListPager(latestContent, page => Url.Action("Index", new { page }))
+    </div>
+</section>
+
+
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center mb-5 pb-2">
+            <div class="col-md-8 text-center heading-section ftco-animate fadeInUp ftco-animated">
+                <h2 class="mb-4">دسته بندی ها</h2>
+            </div>
+        </div>
+        <div class="row">
+            <ul class="categories" id="ContetTypeCategories">
+                @foreach (var item in Model.ChildCategory)
+                {
+                    <li><a href="@Url.Action("Index","Category",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) })"> @item.Title <span>(@item.Contents.Count)</span></a></li>
+
+                }
+            </ul>
+        </div>
+    </div>
+</section>
+
+<div class="ads">
+    <div class="row">
+
+        @{ SumSize = 0;}
+        @foreach (var item in ads.Where(x => x.Position == 3))
+        {
+            SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(item.AdverestingSizeId);
+            <div class="Adveresting Position-@item.Position Size-@item.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                <a href="@item.Link" title="@item.Title">
+                    <div class="categories__item set-bg" data-setbg="@Html.DisplayattachmentUrl(item.attachment.FileName)" style="background-image: url(&quot;@Html.DisplayattachmentUrl(item.attachment.FileName)&quot;);">
+                        <div class="categories__hover__text">
+                            <h5>@item.Title</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts{
+
+
+}

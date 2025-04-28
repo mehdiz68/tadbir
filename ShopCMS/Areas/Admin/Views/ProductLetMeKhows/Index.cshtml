@@ -1,0 +1,270 @@
+﻿@model PagedList.IPagedList<Domain.ViewModels.ProductItem>
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+
+<title>مدیریت محصولات برای اطلاع رسانی</title>
+<style>
+    .form-group.has-feedback span {
+        display: inline-block;
+    }
+
+    .dropdown-menu > li > a {
+        text-align: center;
+    }
+
+    .bootstrap-select.btn-group .dropdown-menu li a span.check-mark {
+        display: none !important;
+    }
+
+    .ProductCategories {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+</style>
+
+<div class="x_panel">
+    <div class="x_content">
+        @{
+            var ProductCategory = ViewBag.TreeProductCategories as IEnumerable<Domain.ProductCategory>;
+            var setting = ViewBag.setting as Domain.Setting;
+            int? PageSize = ViewBag.PageSize as int?;
+        }
+        @section Header{
+
+            @*View*@
+            <link href="~/Areas/Admin/Content/Stylesheets/View/ProductCategories.css" rel="stylesheet" />
+            <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+            @*Bootstrap Select*@
+            <link href="~/areas/admin/content/scripts/component/bootstrp-dropdown/bootstrap-select.min.css" rel="stylesheet" />
+        }
+
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            <a href="@Url.Action("Index", "ProductLetMeKhows")"> مدیریت محصولات برای اطلاع رسانی</a>
+
+        </h1>
+
+
+
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:0">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2> جستجو / فیلتر</h2>
+                    <ul class="nav navbar-left panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                        </li>
+
+                        <li>
+                            <a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="x_content">
+
+                    <div id="SearchPage">
+                        <div>
+                            <div>
+
+                                @using (Html.BeginForm("Index", "ProductLetMeKhows", FormMethod.Get, new { id = "Search-Form" }))
+                                {
+
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+                                        @Html.DropDownList("ProductTypeId", ViewBag.ProductTypeId as IEnumerable<SelectListItem>, new { @class = "form-control selectpicker", data_live_search = "true" })
+                                        @Html.Action("OpenProductCategories", "Products", new { CurrentCatId = (ViewBag.ProductCatIdFilter != null ? Convert.ToInt32(ViewBag.ProductCatIdFilter) : 0), ProductTypeId = (ViewBag.ProductTypeFilter != null ? Convert.ToInt32(ViewBag.ProductTypeFilter) : 1) })
+
+                                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+
+                                        @Html.DropDownList("notified", ViewBag.VisitedSelectListItem as IEnumerable<SelectListItem>, new { @class = "form-control" })
+                                    </div>
+
+                                    <div class="clearfix"></div>
+
+                                    if (ViewBag.ProductCatIdFilter != null)
+                                    {
+                                        @Html.Hidden("ProductCatIdFilter", ViewBag.ProductCatIdFilter as string);
+                                    }
+
+                                    @Html.Hidden("PageSize", PageSize.Value);
+                                    <div class="clearfix"></div>
+                                    <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                    @Html.ActionLink("نمایش همه", "Index", new { }, htmlAttributes: new { @class = "btn btn-success" })
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model != null)
+            {
+                if (Model.Any())
+                {
+
+
+
+                    <div class="Pagging-New-Container">
+                        <strong class="Pagging-New-Info">
+                            تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+                        </strong>
+
+                        @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page, sortOrder = ViewBag.CurrentSort, PageSize = PageSize, notified=ViewBag.notifiedFilter, ProductCatIdFilter = ViewBag.ProductCatIdFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, BrandFilter = ViewBag.BrandFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductCodeFilter = ViewBag.ProductCodeFilter, ProductStateFilter = ViewBag.ProductStateFilter, ProductInsertStateFilter = ViewBag.ProductInsertStateFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, SellerFilter = ViewBag.SellerFilter }))
+                        <div class="PageSizeSelectorContainer">
+                            <span>تعداد نمایش</span>
+                            <select class="PageSizeSelector" name="PageSizeSelector">
+                                <option value="10" selected="@(PageSize.HasValue && PageSize.Value==10?true:false)">10</option>
+                                <option value="20" selected="@(PageSize.HasValue && PageSize.Value==20?true:false)">20</option>
+                                <option value="50" selected="@(PageSize.HasValue && PageSize.Value==50?true:false)">50</option>
+                                <option value="100" selected="@(PageSize.HasValue && PageSize.Value==100?true:false)">100</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+
+                        <div id="myTabContent2" class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade active in" id="tab_content11" aria-labelledby="home-tab">
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped jambo_table bulk_action">
+                                        <thead>
+                                            <tr class="headings">
+                                                <th class="text-center column-title">
+
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    تصویر
+                                                </th>
+
+                                                <th class="text-center column-title">
+                                                    گروه (ها)
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    عنوان محصول
+                                                </th>
+                                                <th class="text-center column-title">
+
+                                                    برند
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    وضعیت موجودی
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    تعداد درخواست
+                                                </th>
+                                                <th class="text-center column-title">
+
+                                                </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{ int i = 1; }
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr class="ContentRow">
+
+                                                    <td class="text-center">@((((Model.PageNumber - 1) * Model.PageSize)) + i)</td>
+                                                    <td>
+                                                        <a href="/TFP/@item.Id/@CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.Name)">
+                                                            @if (item.MainImageFileName != null)
+                                                            {
+                                                                @Html.Displayattachment(item.MainImageFileName, item.Title, "MD", htmlAttributes: new { style = "display:inline-block;max-height:100px", @class = "img-responsive" })
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" style="display:inline-block;max-height:100px" />
+                                                            }
+                                                        </a>
+                                                    </td>
+                                                    @*<td class="text-center"> <a class="ProductCode" href="/Product/Tf-@item.Code" target="_blank">@item.Code</a> </td>*@
+                                                    <td class="text-center">
+                                                        <ul class="ProductCategories">
+                                                            @foreach (var cat in item.ProductCategories)
+                                                            {
+
+                                                                <li>
+                                                                    @cat.Name --->
+                                                                    @if (cat.ParrentId.HasValue)
+                                                                    {
+                                                                        <text>@cat.ParentCat.Name ---></text>
+                                                                        if (cat.ParentCat.ParrentId.HasValue)
+                                                                        {
+                                                                            <text>@cat.ParentCat.ParentCat.Name</text>
+                                                                        }
+                                                                    }
+
+
+                                                                </li>
+
+                                                            }
+                                                        </ul>
+                                                    </td>
+                                                    <td class="text-center">@item.Name</td>
+                                                    <td class="text-center">@item.Brand.Name</td>
+
+                                                    <td class="text-center">@item.ProductStateTitle</td>
+                                                    <td class="text-center">@item.LetmeKnows</td>
+                                                    <td>
+                                                        <a href="/admin/ProductLetMeKhows/Details/@item.Id" title="اشخاص"><span class="fa fa-user"></span></a>
+                                                        <a href="/admin/Products/Create/@item.Id" title="ویرایش محصول"><span class="fa fa-edit"></span></a>
+                                                        <a href="/admin/ProductPrice/Index/@item.Id" title="تنوع ها"><span class="fa fa-list"></span></a>
+
+                                                    </td>
+                                                </tr>
+                                                i++;
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="Pagging-New-Container">
+                                    <strong class="Pagging-New-Info">
+                                        تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+                                    </strong>
+
+                                    @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page, sortOrder = ViewBag.CurrentSort, PageSize = PageSize, notified = ViewBag.notifiedFilter, ProductCatIdFilter = ViewBag.ProductCatIdFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, BrandFilter = ViewBag.BrandFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductCodeFilter = ViewBag.ProductCodeFilter, ProductStateFilter = ViewBag.ProductStateFilter, ProductInsertStateFilter = ViewBag.ProductInsertStateFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, SellerFilter = ViewBag.SellerFilter }))
+                                    <div class="PageSizeSelectorContainer">
+                                        <span>تعداد نمایش</span>
+                                        <select class="PageSizeSelector" name="PageSizeSelector">
+                                            <option value="10" selected="@(PageSize.HasValue && PageSize.Value==10?true:false)">10</option>
+                                            <option value="20" selected="@(PageSize.HasValue && PageSize.Value==20?true:false)">20</option>
+                                            <option value="50" selected="@(PageSize.HasValue && PageSize.Value==50?true:false)">50</option>
+                                            <option value="100" selected="@(PageSize.HasValue && PageSize.Value==100?true:false)">100</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <div class="clearfix"></div>
+
+        @section Scripts{
+
+            <script src="~/Areas/Admin/Content/Scripts/Component/Bootstrp-DropDown/bootstrap-select.min.js"></script>
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/View/ProductCategories.js"></script>
+            @*Product Category*@
+            <script src="~/Areas/Admin/Content/Scripts/View/_CategoryManager.js"></script>
+            @*ProductList*@
+            <script src="~/Areas/Admin/Content/Scripts/View/ProductList.js"></script>
+
+
+        }
+    </div>
+</div>

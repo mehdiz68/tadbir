@@ -1,0 +1,255 @@
+﻿@model PagedList.IPagedList<Domain.EventLog>
+@using PagedList.Mvc;
+
+<title>رویدادها</title>
+@{
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+}
+
+@section Header{
+
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    @*Pagging*@
+    <link href="~/Content/Base/Css/PagedList.css" rel="stylesheet" type="text/css" />
+
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            <a href="@Url.Action("Index","EventLogs")">  رویدادها</a>
+
+        </h1>
+        <br /><br />
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><span class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").First().Abstract:"")"></span> جستجو / فیلتر</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content" style="display:none">
+                <div id="SearchPage">
+                    <div>
+                        <div>
+
+                            @using (Html.BeginForm("Index", "EventLogs", FormMethod.Get))
+                            {
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("ControllerNameString", ViewBag.ControllerNameFilter as string, htmlAttributes: new { placeholder = "نام ماژول ", style = "display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("LogDateTimeStartString", ViewBag.LogDateTimeStartFilter as string, htmlAttributes: new { placeholder = "تاریخ ثبت از", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('LogDateTimeStartString');" })
+
+                                    <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("LogDateTimeEndString", ViewBag.LogDateTimeEndFilter as string, htmlAttributes: new { placeholder = "تا", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('LogDateTimeEndString');" })
+
+                                    <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+                                </div>
+                                <div class="clearfix"></div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("LogTypeString", ViewBag.LogTypeFilter as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "نوع لاگ", style = "display: inline-block", @class = "form-control" })
+
+                                    <span class="fa fa-tag form-control-feedback right" aria-hidden="true"></span>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("RequestTypeString", ViewBag.RequestTypeFilter as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "نوع درخواست", style = "display: inline-block", @class = "form-control" })
+
+                                    <span class="fa fa-tag form-control-feedback right" aria-hidden="true"></span>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("ActionNameString", ViewBag.ActionNameFilter as string, htmlAttributes: new { placeholder = "نام عمل", style = "display: inline-block", @class = "form-control" })
+
+                                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                                </div>
+
+                                <div class="clearfix"></div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("StatusCodeString", ViewBag.StatusCodeFilter as string, htmlAttributes: new { placeholder = "کد وضعیت http", style = "display: inline-block", @class = "form-control" })
+
+                                    <span class="fa fa-code form-control-feedback right" aria-hidden="true"></span>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("UserIdString", ViewBag.UserIdFilter as string, htmlAttributes: new { placeholder = "نام کاربر", style = "display: inline-block", @class = "form-control" })
+
+                                    <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+                                </div>
+
+                                <div class="clearfix"></div>
+
+                                <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                @Html.ActionLink("نمایش همه", "Index", null, htmlAttributes: new { @class = "btn btn-success" })
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="header-col headings">
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>نوع لاگ</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "LogType", LogTypeFilter = ViewBag.LogTypeFilter, ControllerNameFilter = ViewBag.ControllerNameFilter, ActionNameFilter = ViewBag.ActionNameFilter, RequestTypeFilter = ViewBag.RequestTypeFilter, StatusCodeFilter = ViewBag.StatusCodeFilter, LogDateTimeStartFilter = ViewBag.LogDateTimeStartFilter, LogDateTimeEndFilter = ViewBag.LogDateTimeEndFilter, UserIdFilter = ViewBag.UserIdFilter  })" title="مرتب سازی بر اساس نوع لاگ صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "LogType_desc", LogTypeFilter = ViewBag.LogTypeFilter, ControllerNameFilter = ViewBag.ControllerNameFilter, ActionNameFilter = ViewBag.ActionNameFilter, RequestTypeFilter = ViewBag.RequestTypeFilter, StatusCodeFilter = ViewBag.StatusCodeFilter, LogDateTimeStartFilter = ViewBag.LogDateTimeStartFilter, LogDateTimeEndFilter = ViewBag.LogDateTimeEndFilter, UserIdFilter = ViewBag.UserIdFilter })" title="مرتب سازی بر اساس نوع لاگ نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>نام ماژول</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "ControllerName", LogTypeFilter = ViewBag.LogTypeFilter, ControllerNameFilter = ViewBag.ControllerNameFilter, ActionNameFilter = ViewBag.ActionNameFilter, RequestTypeFilter = ViewBag.RequestTypeFilter, StatusCodeFilter = ViewBag.StatusCodeFilter, LogDateTimeStartFilter = ViewBag.LogDateTimeStartFilter, LogDateTimeEndFilter = ViewBag.LogDateTimeEndFilter, UserIdFilter = ViewBag.UserIdFilter })" title="مرتب سازی بر اساس نام ماژول صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "ControllerName_desc", LogTypeFilter = ViewBag.LogTypeFilter, ControllerNameFilter = ViewBag.ControllerNameFilter, ActionNameFilter = ViewBag.ActionNameFilter, RequestTypeFilter = ViewBag.RequestTypeFilter, StatusCodeFilter = ViewBag.StatusCodeFilter, LogDateTimeStartFilter = ViewBag.LogDateTimeStartFilter, LogDateTimeEndFilter = ViewBag.LogDateTimeEndFilter, UserIdFilter = ViewBag.UserIdFilter })" title="مرتب سازی بر اساس نام ماژول نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>نام عمل</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "ActionName", LogTypeFilter = ViewBag.LogTypeFilter, ControllerNameFilter = ViewBag.ControllerNameFilter, ActionNameFilter = ViewBag.ActionNameFilter, RequestTypeFilter = ViewBag.RequestTypeFilter, StatusCodeFilter = ViewBag.StatusCodeFilter, LogDateTimeStartFilter = ViewBag.LogDateTimeStartFilter, LogDateTimeEndFilter = ViewBag.LogDateTimeEndFilter, UserIdFilter = ViewBag.UserIdFilter })" title="مرتب سازی بر اساس نام عمل صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action( "Index", new { sortOrder = "ActionName_desc", LogTypeFilter = ViewBag.LogTypeFilter, ControllerNameFilter = ViewBag.ControllerNameFilter, ActionNameFilter = ViewBag.ActionNameFilter, RequestTypeFilter = ViewBag.RequestTypeFilter, StatusCodeFilter = ViewBag.StatusCodeFilter, LogDateTimeStartFilter = ViewBag.LogDateTimeStartFilter, LogDateTimeEndFilter = ViewBag.LogDateTimeEndFilter, UserIdFilter = ViewBag.UserIdFilter })" title="مرتب سازی بر اساس نام عمل نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>نوع درخواست</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "RequestType", LogTypeFilter = ViewBag.LogTypeFilter, ControllerNameFilter = ViewBag.ControllerNameFilter, ActionNameFilter = ViewBag.ActionNameFilter, RequestTypeFilter = ViewBag.RequestTypeFilter, StatusCodeFilter = ViewBag.StatusCodeFilter, LogDateTimeStartFilter = ViewBag.LogDateTimeStartFilter, LogDateTimeEndFilter = ViewBag.LogDateTimeEndFilter, UserIdFilter = ViewBag.UserIdFilter })" title="مرتب سازی بر اساس نوع درخواست صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action( "Index", new { sortOrder = "RequestType_desc", LogTypeFilter = ViewBag.LogTypeFilter, ControllerNameFilter = ViewBag.ControllerNameFilter, ActionNameFilter = ViewBag.ActionNameFilter, RequestTypeFilter = ViewBag.RequestTypeFilter, StatusCodeFilter = ViewBag.StatusCodeFilter, LogDateTimeStartFilter = ViewBag.LogDateTimeStartFilter, LogDateTimeEndFilter = ViewBag.LogDateTimeEndFilter, UserIdFilter = ViewBag.UserIdFilter })" title="مرتب سازی بر اساس نوع درخواست نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>کد وضعیت http</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "StatusCode", LogTypeFilter = ViewBag.LogTypeFilter, ControllerNameFilter = ViewBag.ControllerNameFilter, ActionNameFilter = ViewBag.ActionNameFilter, RequestTypeFilter = ViewBag.RequestTypeFilter, StatusCodeFilter = ViewBag.StatusCodeFilter, LogDateTimeStartFilter = ViewBag.LogDateTimeStartFilter, LogDateTimeEndFilter = ViewBag.LogDateTimeEndFilter, UserIdFilter = ViewBag.UserIdFilter })" title="مرتب سازی بر اساس 	کد وضعیت http صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "StatusCode_desc", LogTypeFilter = ViewBag.LogTypeFilter, ControllerNameFilter = ViewBag.ControllerNameFilter, ActionNameFilter = ViewBag.ActionNameFilter, RequestTypeFilter = ViewBag.RequestTypeFilter, StatusCodeFilter = ViewBag.StatusCodeFilter, LogDateTimeStartFilter = ViewBag.LogDateTimeStartFilter, LogDateTimeEndFilter = ViewBag.LogDateTimeEndFilter, UserIdFilter = ViewBag.UserIdFilter })" title="مرتب سازی بر اساس 	کد وضعیت http نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+
+                        </th>
+                        <th class="text-center column-title">
+                            توضیحات
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>زمان ثبت</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "StatusCode", LogTypeFilter = ViewBag.LogTypeFilter, ControllerNameFilter = ViewBag.ControllerNameFilter, ActionNameFilter = ViewBag.ActionNameFilter, RequestTypeFilter = ViewBag.RequestTypeFilter, StatusCodeFilter = ViewBag.StatusCodeFilter, LogDateTimeStartFilter = ViewBag.LogDateTimeStartFilter, LogDateTimeEndFilter = ViewBag.LogDateTimeEndFilter, UserIdFilter = ViewBag.UserIdFilter })" title="مرتب سازی بر اساس زمان ثبت صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "StatusCode_desc", LogTypeFilter = ViewBag.LogTypeFilter, ControllerNameFilter = ViewBag.ControllerNameFilter, ActionNameFilter = ViewBag.ActionNameFilter, RequestTypeFilter = ViewBag.RequestTypeFilter, StatusCodeFilter = ViewBag.StatusCodeFilter, LogDateTimeStartFilter = ViewBag.LogDateTimeStartFilter, LogDateTimeEndFilter = ViewBag.LogDateTimeEndFilter, UserIdFilter = ViewBag.UserIdFilter })" title="مرتب سازی بر اساس زمان ثبت نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+
+                        </th>
+
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>زمان ثبت</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "UserId", LogTypeFilter = ViewBag.LogTypeFilter, ControllerNameFilter = ViewBag.ControllerNameFilter, ActionNameFilter = ViewBag.ActionNameFilter, RequestTypeFilter = ViewBag.RequestTypeFilter, StatusCodeFilter = ViewBag.StatusCodeFilter, LogDateTimeStartFilter = ViewBag.LogDateTimeStartFilter, LogDateTimeEndFilter = ViewBag.LogDateTimeEndFilter, UserIdFilter = ViewBag.UserIdFilter })" title="مرتب سازی بر اساس نام کاربر"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "UserId_desc", LogTypeFilter = ViewBag.LogTypeFilter, ControllerNameFilter = ViewBag.ControllerNameFilter, ActionNameFilter = ViewBag.ActionNameFilter, RequestTypeFilter = ViewBag.RequestTypeFilter, StatusCodeFilter = ViewBag.StatusCodeFilter, LogDateTimeStartFilter = ViewBag.LogDateTimeStartFilter, LogDateTimeEndFilter = ViewBag.LogDateTimeEndFilter, UserIdFilter = ViewBag.UserIdFilter })" title="مرتب سازی بر اساس نام کاربر">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                @switch (item.LogType)
+                                {
+                                    case 1:<span>نمایش اطلاعات</span>; break;
+                                    case 2:<span>درج اطلاعات</span>; break;
+                                    case 3:<span>ویرایش اطلاعات</span>; break;
+                                    case 4:<span>حذف اطلاعات</span>; break;
+                                    case 5:<span style="background-color:red;color:#ffffff;padding:0 10px">خطا</span>; break;
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ControllerName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ActionName)
+                            </td>
+                            <td>
+                                @if (item.RequestType == true)
+                                {
+                                    <span>Get</span>
+                                }
+                                else
+                                {
+                                    <span>Post</span>
+
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StatusCode)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.LogDateTime) <br /> @item.LogDateTime.ToShortTimeString()
+                            </td>
+                            <td>
+                                @item.User.FirstName @item.User.LastName
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount رویداد.
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, FullNameFilter = ViewBag.FullNameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, IsActiveFilter = ViewBag.IsActiveFilter, IsVisitFilter = ViewBag.IsVisitFilter }))
+
+
+        </div>
+
+
+        @section Scripts{
+            @*Persian Calender*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+        }
+</div>
+</div>

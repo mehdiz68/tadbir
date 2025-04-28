@@ -1,0 +1,198 @@
+﻿@model IEnumerable<Domain.Folder>
+@using ahmadi.Infrastructure.Helper
+<title>مدیریت پوشه های فایل ها</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+    var setting = ViewBag.setting as Domain.Setting;
+    <style>
+        #tree {
+            padding-right: 110px;
+            padding-bottom: 160px;
+        }
+
+        .tree li a:hover, .tree li a:hover + ul li a {
+            color: #000 !important;
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+
+        .hilight {
+            background: #3c8dbc;
+            color: #ffffff !important;
+            border: 1px solid #3c8dbc;
+        }
+    </style>
+}
+
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+ 
+}
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+                <a href="@Url.Action("Index","Folders")">  پوشه های فایل ها</a>
+            </h1>
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+            <a class="btn btn-success" href="@Url.Action("Index","FileManager")">فایل ها </a>
+
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+        @{
+            bool IsTreeResponse = true;
+            if (Request.QueryString["Type"] != null)
+            {
+                if (Request.QueryString["Type"] != "Tree")
+                {
+                    IsTreeResponse = false;
+                }
+            }
+        }
+        <ul class="nav nav-tabs">
+            <li class="@((IsTreeResponse?"active":""))"><a data-toggle="tab" href="#View2">نمایش درختی</a></li>
+            <li class="@((IsTreeResponse?"":"active"))"><a data-toggle="tab" href="#View1">نمایش عادی</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="View1" class="@((IsTreeResponse?"tab-pane fade in":"tab-pane fade in "))">
+
+                <br />
+                <p>
+                    @if (ViewBag.AddPermission)
+            {
+                        <a class="btn btn-primary" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد پوشه جدید </a>
+                    }
+                </p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FolderName)
+                            </th>
+                            <th>
+                                @Html.DisplayName("پوشه اصلی")
+                            </th>
+                            <th>
+                                زبان(وب سایت )
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FolderName)
+                                </td>
+                                <td>
+                                    @{
+                                        if (item.ParrentFolder != null)
+                                        {
+                                            @Html.DisplayFor(modelItem => item.ParrentFolder.FolderName);
+                                        }
+                                        else
+                                        {
+                                            <span>----</span>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId.Value)
+                                </td>
+                                <td>
+
+                                    @if (ViewBag.EditPermission)
+                                    {
+                                        <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                    }
+                                    <a class="btn btn-success" href="@Url.Action("Details", new { id = item.Id })"><span class="glyphicon glyphicon-list"></span> نمایش جزئیات </a>
+                                    @if (ViewBag.DeletePermission)
+                                    {
+                                        <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                                    }
+                                </td>
+                            </tr>
+                                        }
+
+                    </table>
+                </div>
+            </div>
+            <div id="View2" class="@((IsTreeResponse?"tab-pane fade in active":"tab-pane fade in active"))">
+
+                <br />
+                <p>
+                    @if (ViewBag.AddPermission)
+            {
+                        <a class="btn btn-primary" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد پوشه جدید </a>
+                    }
+                </p>
+
+
+                <div class="tree">
+                    <br />
+                    @{
+                        CoreLib.ViewModel.Xml.XMLReader xr = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+                        var Languages = xr.ListOfXLanguage();
+                    }
+                    @if (Languages.Count > 1)
+                    {
+                        <div>
+                            <p>فیلتر با زبان (وب سایت) :</p>
+                            @Html.DropDownList("LanguageId", ViewBag.LanguageId as SelectList, "--انتخاب نمایید--", htmlAttributes: new { id = "LanguageFilter", style = "width:99%;display: inline-block", @class = "form-control" })
+                        </div>
+                    }
+                    @(Html.TreeView(ViewBag.Folders as IEnumerable<Domain.Folder>).EmptyContent("پوشه ای وجود ندارد!").Children(m => m.ChildFolder).HtmlAttributes(new { id = "tree" }).ChildrenHtmlAttributes(new { @class = "subItem" }).ItemText(m => m.FolderName).ItemTemplate(@<text><a data-id="@item.Id" href="@Url.Action("SelectTree", new { ID = item.Id})">@item.FolderName</a></text>))
+
+                    <ul id="ContexMenu" style="width: 150px; text-align: center; display: none">
+                        @if (ViewBag.AddPermission)
+                        {
+                            <li id="NewSubMenu"><span>زیر پوشه جدید</span><span class="ui-icon ui-icon-circle-check"></span><span style="right: 1.3em" class="ui-icon ui-icon-circle-check"></span></li>
+                        }
+                        @if (ViewBag.EditPermission)
+                        {
+                            <li id="EditItem"><span>ویرایش</span><span class="ui-icon ui-icon-pencil"></span></li>
+                        }
+                        @if (ViewBag.DeletePermission)
+                        {
+                            <li id="DeleteItem"><span>حذف</span><span class="ui-icon ui-icon-circle-close"></span></li>
+                        }
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts{
+    <script>
+        $('#ContentTitle').simplyCountable({ counter: '.ContentTitle', maxCount: 50, safeClass: 'safe', overClass: 'over' });
+    </script>
+    <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+<script src="~/Areas/Admin/Content/Scripts/Base/jquery.ui-contextmenu.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/View/TreeFolder.js?v=2"></script>
+
+}

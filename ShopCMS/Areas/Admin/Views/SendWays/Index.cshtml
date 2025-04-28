@@ -1,0 +1,269 @@
+﻿@model IEnumerable<Domain.ProductSendWay>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml
+
+<title>مدیریت روش های ارسال</title>
+
+@{
+
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+    var Setting = ViewBag.setting as Domain.Setting;
+}
+@section Header{
+
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <a href="@Url.Action("Index", "SendWays")">  مدیریت روش های ارسال </a>
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+            <a class="btn btn-success" href="@Url.Action("States","SendWays")">
+                <span class="glyphicon glyphicon-list-alt"></span> موقعیت جغرافیایی فروشگاه
+            </a>
+            <a class="btn btn-success" href="@Url.Action("SendWayBoxes","SendWays")">
+                <span class="glyphicon glyphicon-list-alt"></span> باکس های ارسال
+            </a>
+            </a>
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+
+        @if (ViewBag.AddPermission)
+        {
+            <p><a class="btn btn-success" dadata-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد روش ارسال").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد روش ارسال").First().Abstract:"")" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد روش ارسال جدید</a></p>
+        }
+
+        <hr style="margin:0;border:1px solid #c23321" />
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>
+                        عنوان
+                    </th>
+                    <th>
+                        شروع زمان انتظار ( روز )
+                    </th>
+                    <th>
+                        زمان انتظار ( ساعت )
+                    </th>
+                    <th>
+                        پایان زمان انتظار ( روز )
+                    </th>
+                    <th>
+                        آدرس اینترنتی برای پیگیری
+                    </th>
+                    <th>
+                        هزینه جابجایی؟
+                    </th>
+                    <th>
+                        حمل رایگان؟
+                    </th>
+                    <th>
+                        پس کرایه؟
+                    </th>
+                    <th>
+                        صورت حساب بر اساسِ
+                    </th>
+                    <th>
+                        مالیات
+                    </th>
+                    @*<th>
+                            خارج از محدوده؟
+                        </th>*@
+                    <th>
+                        فعال؟
+                    </th>
+                    <th>
+                        پیش فرض؟
+                    </th>
+                    <th></th>
+                </tr>
+
+                @{
+
+                    XMLReader xr = new XMLReader(Setting.StaticContentDomain);
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <p>@item.Title</p>
+                            @if (item.AttachementId.HasValue)
+                            {
+                                <div>
+                                    @Html.Displayattachment(item.Image.FileName, "SM", htmlAttributes: new { @class = "img-responsive", width = "40", height = "40", style = "display:inline-block;width:40px;height:40px" })
+
+
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            @item.DeliveryStartDay روز
+                        </td>
+                        <td>
+                            @item.DeliveryStartDay ساعت
+                        </td>
+                        <td>
+                            @item.DeliveryHourDay روز
+                        </td>
+                        <td>
+                            <a href="@item.TrackingUrl" target="_blank">
+                                لینک
+                            </a>
+                        </td>
+                        <td>
+                            @if (item.HasExtraPrice)
+                            {
+                                <span class="btn btn-success">
+                                    بلی
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="btn btn-danger">
+                                    خیر
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.IsFree)
+                            {
+                                <span class="btn btn-success">
+                                    بلی
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="btn btn-danger">
+                                    خیر
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.PasKeraye)
+                            {
+                                <span class="btn btn-success">
+                                    بلی
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="btn btn-danger">
+                                    خیر
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (item.InvoiceType)
+                            {
+                                <span>گرم</span>
+                            }
+                            else
+                            {
+                                <span>قیمت</span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.TaxId.HasValue)
+                            {
+                                @item.Tax.Title
+                            }
+                            else
+                            {
+                                <span>ندارد</span>
+                            }
+                        </td>
+                        @*<td>
+                                @if (item.OutOfService)
+                                {
+                                    <span class="btn btn-success">
+                                        فعال
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-danger">
+                                        غیر فعال
+                                    </span>
+                                }
+                            </td>*@
+
+                        <td>
+                            @if (item.IsActive)
+                            {
+                                <span class="btn btn-success">
+                                    فعال
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="btn btn-danger">
+                                    غیر فعال
+                                </span>
+                            }
+                        <td>
+                        <td>
+                            @if (item.IsDefault)
+                            {
+                                <span class="btn btn-success">
+                                    بلی
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="btn btn-danger">
+                                    خیر
+                                </span>
+                            }
+                        <td>
+
+                            @if (ViewBag.EditPermission)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit" title="ویرایش"></span> ویرایش  </a>
+                                <p>
+                                    <br />
+                                    <a href="@Url.Action("ProductSendWayBoxes", new { id = item.Id })"><span class="glyphicon glyphicon-random" title=" باکس های ارسالی"></span> </a>
+                                    @if (item.IsIrPost)
+                                    {
+                                        <a href="@Url.Action("IrPostDetail", new { id = item.Id })"><span class="fa fa-money" title="تنظیمات حمل و نقل پست ایران"></span> </a>
+                                    }
+                                    else if (!item.FreeOff)
+                                    {
+
+                                        <a href="@Url.Action("ShippingSetting", new { id = item.Id })"><span class="fa fa-money" title="تنظیمات حمل و نقل"></span> </a>
+                                    }
+
+                                    @if (item.DeliverSelectable)
+                                    {
+                                        <a c href="@Url.Action("ProductSendWayWorkTimes", new { id = item.Id })"><span class="glyphicon glyphicon-time" title="روزها و ساعت های کاری"></span>  </a>
+                                    }
+                                </p>
+                            }
+                            @if (ViewBag.DeletePermission)
+                            {
+                                <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove" title="حذف"></span> حذف  </a>
+
+                            }
+
+
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts{
+
+
+
+}

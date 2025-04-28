@@ -1,0 +1,98 @@
+﻿@model Domain.ProductSendWay
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml
+
+<title>مدیریت زمان های کاری روش ارسال @Model.Title</title>
+
+@{
+
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+    var Setting = ViewBag.setting as Domain.Setting;
+}
+@section Header{
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <a href="@Url.Action("ProductSendWayWorkTimes", "SendWays",new { id=Model.Id})"> مدیریت زمان های کاری روش ارسال @Model.Title</a>
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+            <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت  <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+
+        @if (ViewBag.AddPermission)
+        {
+            <p><a class="btn btn-success" href="/Admin/SendWays/CreateProductSendWayWorkTime/@Model.Id"> درج زمان جدید </a></p>
+        }
+
+        <hr style="margin:0;border:1px solid #c23321" />
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>
+                        روز هفته
+                    </th>
+                    <th>
+                        ساعت شروع
+                    </th>
+                    <th>
+                       ساعت پایان
+                    </th>
+                    <th>
+                        فعال؟
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.ProductSendWayWorkTimes.OrderBy(x=>x.WeekDay).ThenBy(x=>x.StartTime).ThenBy(x=>x.EndTime))
+                {
+                    <tr>
+                        <td>
+                            @CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(item.WeekDay)
+                        </td>
+                        <td>
+                            @item.StartTime.ToString(@"hh\:mm")
+                        </td>
+                        <td>
+                            @item.EndTime.ToString(@"hh\:mm")
+                        </td>
+                        <td>
+                            @if(item.IsActive)
+                            {
+                                <span >فعال</span>
+                            }
+                            else
+                            {
+                                <span>غیرفعال</span>
+                            }
+                        </td>
+                        <td>
+                            @if (ViewBag.EditPermission)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("EditProductSendWayWorkTime", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                            }
+                            @if (ViewBag.DeletePermission)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("DeleteProductSendWayWorkTime", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> حذف </a>
+                            }
+
+
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts{
+
+}

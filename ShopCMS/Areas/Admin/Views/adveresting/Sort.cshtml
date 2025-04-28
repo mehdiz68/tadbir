@@ -1,0 +1,105 @@
+﻿@model IEnumerable<Domain.Adveresting>
+@using ahmadi.Infrastructure.Helper;
+@using PagedList.Mvc;
+@using CoreLib.Infrastructure;
+<title>مرتب سازی تبلیغات</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+}
+
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Slider.css" rel="stylesheet" />
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Category.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left">
+            <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        </div>
+
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            مرتب سازی تبلیغات
+
+        </h1>
+        <p>
+            <br />
+            @Html.DropDownList("TypeId", ViewBag.TypeIdSelectListItem as List<SelectListItem>, null, htmlAttributes: new { style = "width:300px", @class = "form-control" })
+        </p>
+        @if (ViewBag.LinkIdIdSelectListItem != null)
+        {
+            <p>
+                @Html.DropDownList("LinkIdIdSelectListItem", ViewBag.LinkIdIdSelectListItem as List<SelectListItem>, "--همه صفحات--", htmlAttributes: new { style = "width:300px", @class = "form-control" })
+            </p>
+        }
+        @Html.DropDownList("PositionId", ViewBag.PositionIdSelectListItem as List<SelectListItem>, "--همه موقعیت ها--", htmlAttributes: new { style = "width:300px", @class = "form-control" })
+
+
+
+
+
+
+
+
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>
+                        عنوان
+                    </th>
+
+                    <th>
+                        تبلیغ
+                    </th>
+                    <th>موقعیت نمایش</th>
+                    <th>
+                        زبان( وب سایت )
+                    </th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr class="rowItem" id="@item.Id">
+                        <td>
+                            @item.Title
+                        </td>
+
+                        <td>
+                            <a href="@item.Link" target="_blank">@Html.Displayattachment(item.attachment.FileName, item.Title, "LG", true, new { style = "max-width:200px", @class = "img-responsive" })</a>
+                        </td>
+                        <td>
+                            @switch (item.Position)
+                            {
+                                case 1:<span>بالا</span>; break;
+                                case 2:<span>راست</span>; break;
+                                case 3:<span>پایین</span>; break;
+                                case 4:<span>چپ</span>; break;
+                                default:
+                                    break;
+                            }
+                        </td>
+                        <td>
+                            @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId.Value)
+                        </td>
+
+                    </tr>
+                }
+
+            </table>
+
+
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    @*View*@
+    <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/View/AdsSort.js"></script>
+
+}

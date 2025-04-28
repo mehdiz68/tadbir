@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="~/Areas/Admin/Content/AdminPanel/images/favicon.ico" type="image/ico" />
+
+
+    <!-- Bootstrap -->
+    <link href="~/Areas/Admin/Content/AdminPanel/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="~/Areas/Admin/Content/AdminPanel/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="~/Areas/Admin/Content/AdminPanel/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="~/Areas/Admin/Content/AdminPanel/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+
+    <!-- bootstrap-progressbar -->
+    <link href="~/Areas/Admin/Content/AdminPanel/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+    <!-- JQVMap -->
+    <link href="~/Areas/Admin/Content/AdminPanel/vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet" />
+    <!-- bootstrap-daterangepicker -->
+    <link href="~/Areas/Admin/Content/AdminPanel/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <!-- Switchery -->
+    <link href="~/Areas/Admin/Content/AdminPanel/vendors/switchery/dist/switchery.min.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="~/Areas/Admin/Content/AdminPanel/build/css/custom.min.css?v=1.26" rel="stylesheet">
+    <style>
+        .nav-sm ul.nav.child_menu {display:none!important}
+    </style>
+    @RenderSection("Header", required: false)
+
+    @*@Styles.Render("~/Admin/css")
+    @Scripts.Render("~/bundles/modernizr")*@
+
+</head>
+<body class="nav-sm">
+    <div class="container body">
+        <div class="main_container">
+            @Html.Action("GetHeader", "Home", new { whichPlace = false })
+
+            <!-- top navigation -->
+            <div class="top_nav">
+                <div class="nav_menu">
+                    <nav>
+                        @*<div class="nav toggle">
+                            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                        </div>*@
+
+                        <ul class="nav navbar-nav navbar-left">
+                            @Html.Action("GetHeader", "Home", new { whichPlace=true  })
+                        </ul>
+
+                        <ul class="nav navbar-nav navbar-right">
+                            @Html.Action("GetSitebar", "Home")
+                            </ul>
+                        <!-- /sidebar menu -->
+                        <div class="clearfix"></div>
+</nav>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <!-- /top navigation -->
+            <!-- page content -->
+            <div class="right_col" role="main">
+                @RenderBody()
+
+          
+            </div>
+            <!-- /page content -->
+            <!-- footer content -->
+            <footer>
+                <div class="pull-right">
+                    پنل مدیریت فروشگاه  - <a href="https://www.webbold.ir">طراحی سایت توسط وب بولد</a>
+                </div>
+                <div class="clearfix"></div>
+            </footer>
+            <!-- /footer content -->
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.validator.setDefaults({
+                ignore: []
+            });
+        });
+    </script>
+    <!-- Bootstrap -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/nprogress/nprogress.js"></script>
+    <!-- Chart.js -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/Chart.js/dist/Chart.min.js"></script>
+    <!-- gauge.js -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/gauge.js/dist/gauge.min.js"></script>
+    <!-- bootstrap-progressbar -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+    <!-- iCheck -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/iCheck/icheck.min.js"></script>
+    <!-- Skycons -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/skycons/skycons.js"></script>
+    <!-- Flot -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/Flot/jquery.flot.js"></script>
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/Flot/jquery.flot.pie.js"></script>
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/Flot/jquery.flot.time.js"></script>
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/Flot/jquery.flot.stack.js"></script>
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/Flot/jquery.flot.resize.js"></script>
+    <!-- Flot plugins -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/flot.curvedlines/curvedLines.js"></script>
+    <!-- DateJS -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/DateJS/build/date.js"></script>
+    <!-- JQVMap -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/jqvmap/dist/jquery.vmap.js"></script>
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/moment/min/moment.min.js"></script>
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <!-- sweetalert-->
+    <link href="~/Areas/Admin/Content/AdminPanel/vendors/sweetalert/sweetalert.css" rel="stylesheet" />
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/sweetalert/sweetalert.min.js"></script>
+    <!-- Switchery -->
+    <script src="~/Areas/Admin/Content/AdminPanel/vendors/switchery/dist/switchery.min.js"></script>
+    <!-- simplyCountable -->
+    <script src="~/Areas/Admin/Content/Scripts/Component/jquery.simplyCountable.js"></script>
+    <!-- Custom Theme Scripts -->
+    <script src="~/Areas/Admin/Content/AdminPanel/build/js/custom.min.js?v=1.2"></script>
+
+
+    <script src="~/Areas/Admin/Content/Scripts/Master.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/_Header.js?v=1.2"></script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+    
+    @RenderSection("scripts", required: false)
+
+    <div class="loading">
+        <a href="/Admin">
+            <img src="~/Content/Default/images/gif-maker.gif" />
+        </a>
+    </div>
+</body>
+</html>

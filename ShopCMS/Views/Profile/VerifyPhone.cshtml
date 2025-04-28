@@ -1,0 +1,36 @@
+﻿@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta; }
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+
+
+<div class="container">
+    <div class="row">
+
+        <section class="Pagecontent">
+            <p class="alert alert-info">کد فعال سازی به شماره موبایل شما ارسال شد.</p>
+            <h2>تایید شماره تلفن همراه</h2>
+            <div>
+                <p class="text-danger"> @ViewBag.message </p>
+                @using (Html.BeginForm("VerifyPhone", "Profile", FormMethod.Post, new { @style = "display:inline", @class = "form-horizontal", name = "VerifyPhoneForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("userName", User.Identity.Name);
+                    @Html.TextBox("code", null, new { @class = "form-control", Placeholder = "کد فعال سازی را وارد نمایید" })
+                    <br />
+                    <input type="button" onclick="document.VerifyPhoneForm.submit();" class="btn btn-primary" value="تایید تلفن همراه" /><br /><br />
+                }
+            </div>
+
+
+        </section>
+    </div>
+</div>
+

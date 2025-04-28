@@ -1,0 +1,56 @@
+﻿@model Domain.ProductQuestion
+@using ahmadi.Infrastructure.Helper
+
+
+@{
+    var product = ViewBag.product as Domain.Product;
+}
+<title>حذف پرسش یا پاسخ @product.Name</title>
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("FAQ",new {id=product.Id })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h3 class="box-title">
+            <i class="flaticon-file-outlined-blank-paper-sheet"></i> حذف پرسش یا پاسخ @product.Name
+        </h3>
+
+
+
+        <h4 style="color:red"><i class="glyphicon glyphicon-remove"></i>مطمئن به حذف هستید؟</h4>
+
+        <br /><br />
+        <p class="text text-danger"><strong>@ViewBag.Erorr</strong></p>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Id)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Id)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Message)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Message)
+            </dd>
+
+        </dl>
+
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.ProductId)
+            <div class="form-actions no-color">
+                <input type="submit" value="حذف" class="btn btn-danger" />
+            </div>
+        }
+
+    </div>
+</div>

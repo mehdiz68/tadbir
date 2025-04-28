@@ -1,0 +1,553 @@
+﻿@model Domain.Content
+@using ahmadi.Infrastructure.Helper
+<title> ایجاد @ViewBag.ContentTypeName جدید</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+    var setting = ViewBag.setting as Domain.Setting;
+    <style>
+        @@font-face {
+            font-family: "Flaticon";
+            src: url(/Content/Base/Theme/fonts/flaticon/font/Flaticon.eot);
+            src: url(/Content/Base/Theme/fonts/flaticon/font/Flaticon.eot?#iefix) format("embedded-opentype"), url(/Content/Base/Theme/fonts/flaticon/font/Flaticon.woff) format("woff"), url(/Content/Base/Theme/fonts/flaticon/font/Flaticon.ttf) format("truetype"), url(/Content/Base/Theme/fonts/flaticon/font/Flaticon.svg#Flaticon) format("svg");
+            font-weight: normal;
+            font-style: normal
+        }
+
+        @@media screen and (-webkit-min-device-pixel-ratio:0) {
+            @@font-face {
+                font-family: "Flaticon";
+                src: url(/Content/Base/Theme/fonts/flaticon/font/Flaticon.svg#Flaticon) format("svg")
+            }
+        }
+
+        [class^="flaticon-"]:before, [class*=" flaticon-"]:before, [class^="flaticon-"]:after, [class*=" flaticon-"]:after {
+            font-family: Flaticon;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale
+        }
+
+        .flaticon-hammer:before {
+            content: "\f100"
+        }
+
+        .flaticon-worker:before {
+            content: "\f101"
+        }
+
+        .flaticon-engineer-1:before {
+            content: "\f102"
+        }
+
+        .flaticon-engineer:before {
+            content: "\f103"
+        }
+
+        .flaticon-worker-1:before {
+            content: "\f104"
+        }
+
+        .flaticon-architect:before {
+            content: "\f105"
+        }
+
+        .flaticon-crane:before {
+            content: "\f106"
+        }
+
+        .tree li {
+            padding: 6px 5px 0px 5px;
+        }
+
+            .tree li a {
+                padding: 4px;
+                font-weight: normal;
+                font-size: 12px;
+            }
+    </style>
+}
+@section Header{
+
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+    <style>
+        .form-group > .mce-panel {
+            width: 100% !important;
+        }
+
+        .NewFieldset {
+            display: none;
+            border-top: 0;
+        }
+
+        hr {
+            margin: 0;
+            border: 1px solid #ccc;
+        }
+
+        .Newlegend {
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .glyphicon-remove {
+            color: red;
+            cursor: pointer;
+        }
+
+        .fixTopLeft {
+            position: fixed;
+            background-color: #ea7526;
+            top: 0;
+            z-index: 99999;
+            left: 45%;
+            color: #fff;
+            padding: 0px 0 6px 0;
+        }
+
+        #options .form-group {
+            margin: 30px 0;
+        }
+    </style>
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index",new { ContentTypeId=Request.QueryString["ContentTypeId"]})"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        <span style="cursor:pointer" data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")" title="راهنمای این صفحه"></span>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ایجاد @ViewBag.ContentTypeName جدید
+
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("ContentTypeId", Request.QueryString["ContentTypeId"])
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @{
+                        CoreLib.ViewModel.Xml.XMLReader readXml = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+                        var languages = readXml.ListOfXLanguage();
+                    }
+                    @if (languages.Count == 1)
+                    {
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <p>
+                                <span class="ContentTitle"></span> کاراکتر باقی مانده.
+                                <span data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                                <span>عنوان</span>
+                            </p>
+                            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { id = "ContentTitle", @class = "form-control", placeholder = "عنوانِ " + ViewBag.ContentTypeName } })
+                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <p>
+                                <span class="ContentPageAddress"></span> کاراکتر باقی مانده.
+                                <span data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "آدرس صفحه").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "آدرس صفحه").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                                <span>آدرس صفحه</span>
+                            </p>
+                            @Html.EditorFor(model => model.PageAddress, new { htmlAttributes = new { id = "ContentPageAddress", @class = "form-control", placeholder = "آدرس صفحه " + ViewBag.ContentTypeName } })
+                            @Html.ValidationMessageFor(model => model.PageAddress, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+                        @Html.Hidden("LanguageId", languages.First().Id)
+                    }
+                    else
+                    {
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <p>
+                                <span class="ContentTitle"></span> کاراکتر باقی مانده.
+                                <span data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                                <span>عنوان</span>
+
+                            </p>
+                            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { id = "ContentTitle", @class = "form-control", placeholder = "عنوانِ " + ViewBag.ContentTypeName } })
+                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+
+                        </div>
+
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <p>
+                                <span class="ContentPageAddress"></span> کاراکتر باقی مانده.
+                                <span data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "آدرس صفحه").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "آدرس صفحه").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                                <span>آدرس صفحه</span>
+                            </p>
+                            @Html.EditorFor(model => model.PageAddress, new { htmlAttributes = new { id = "ContentPageAddress", @class = "form-control", placeholder = "آدرس صفحه " + ViewBag.ContentTypeName } })
+                            @Html.ValidationMessageFor(model => model.PageAddress, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            @Html.LabelFor(model => model.LanguageId, "زبان ( وب سایت )", htmlAttributes: new { Style = "text-align:right;    padding-right: 0;", @class = "control-label col-md-3" })
+
+                            @Html.DropDownList("LanguageId", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.LanguageId, "", new { @class = "text-danger" })
+
+                        </div>
+                    }
+
+                    <div class="clearfix"></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <p>
+                            <span class="ContentDescr"></span> کاراکتر باقی مانده.
+                            <span data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "توضیحات متای گوگل").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "توضیحات متای گوگل").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                            <span>توضیحات متای گوگل</span>
+
+                        </p>
+                        @Html.TextAreaFor(model => model.Descr, htmlAttributes: new { id = "ContentDescr", @class = "form-control", rows = "4", placeholder = "توضیحات متای گوگل" })
+                        @Html.ValidationMessageFor(model => model.Descr, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <p>
+                            <span data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "چکیده").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "چکیده").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                            <span>چکیده</span>
+
+                        </p>
+                        @Html.TextAreaFor(model => model.Abstract, htmlAttributes: new { @class = "form-control", rows = "4", placeholder = "چکیده" })
+                        @Html.ValidationMessageFor(model => model.Abstract, "", new { @class = "text-danger" })
+
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+
+                <br /><br />
+                <div class="form-group col-md-12">
+                    <div>
+
+                        @Ajax.ActionLink("استفاده از فایل ها", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',1)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager", @style = "margin-bottom:0" })
+                        <span data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "محتوا").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "محتوا").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                        @Html.LabelFor(model => model.Data, htmlAttributes: new { @class = "control-label", @style = "display:inline" })
+                    </div>
+                    <div id="createView"></div>
+                    @Html.TextAreaFor(model => model.Data, htmlAttributes: new { Id = "txt_Content", @class = "form-control elm1", rows = "5" })
+                    @Html.ValidationMessageFor(model => model.Data, "", new { @class = "text-danger" })
+
+
+                </div>
+                <div class="clearfix"></div>
+
+                <div id="options">
+                    @if (ViewBag.ContentTypeId as int? > 0 && ViewBag.ContentTypeId as int? != 9)
+                    {
+                        <div class="form-group">
+                            <fieldset>
+                                <legend class="Newlegend">
+                                    <span data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x => x.Name == "منبع").Any() ? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x => x.Name == "منبع").First().Data).ToHtmlString() : Html.Raw("").ToHtmlString())"></span>
+
+                                    افزودن منبع به @ViewBag.ContentTypeName
+
+                                </legend>
+                                <hr />
+                                <div class="NewFieldset">
+                                    <div class="text-left"><span class="glyphicon glyphicon-remove"></span></div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <p><input type="text" class="form-control" id="SourceName" placeholder="منبع" /></p>
+                                        <p><input type="url" style="text-align:left;direction:ltr" class="form-control" id="SourceLink" placeholder="لینک منبع با    //:http" /></p>
+                                        <p><input type="button" id="AddSource" value="ثبت" class="btn btn-primary" data-Url="@Url.Action("AddSource", "Contents")" /></p>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <div class="table-responsive">
+                                            <h5><span class="glyphicon glyphicon-link"></span> لیست منابع انتخاب شده </h5>
+                                            <table class="table" id="Sources">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>منبع</th>
+                                                    <th>حذف</th>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div>
+                                <fieldset>
+                                    <legend class="Newlegend">
+                                        <span data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x => x.Name == "تصاویر جانبی").Any() ? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x => x.Name == "تصاویر جانبی").First().Data).ToHtmlString() : Html.Raw("").ToHtmlString())"></span>
+
+                                        تصاویر جانبی
+
+                                    </legend>
+
+                                    <hr />
+                                    <div id="OtherImagesContainer" class="NewFieldset" style="height:370px;overflow:auto">
+
+                                        <div class="text-left"><span class="glyphicon glyphicon-remove"></span></div>
+                                        @Ajax.ActionLink("انتخاب یا آپلود", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',3)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager" })
+                                        <hr style="margin:10px 0" />
+                                    </div>
+                                </fieldset>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <fieldset>
+                                    <legend class="Newlegend">
+                                        <span data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x => x.Name == "برچسب ها").Any() ? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x => x.Name == "برچسب ها").First().Data).ToHtmlString() : Html.Raw("").ToHtmlString())"></span>
+
+                                        برچسب ها
+
+                                    </legend>
+                                    <hr />
+                                    <div class="NewFieldset" style="height:370px;overflow:auto;position:relative">
+
+                                        <div class="text-left" style="position:absolute;top:0;left:3px"><span class="glyphicon glyphicon-remove"></span></div>
+                                        <div id="TagContainer">
+                                            <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+
+                                                <div>
+                                                    <br />
+                                                    <input type="text" id="AddTagText" placeholder="نام برچسب..." class="form-control" style="width:50%;display:inline-block" />
+                                                    <input type="button" style="margin-bottom:0" id="AddNewTag" value="افزودن برچسب جدید" class="btn btn-primary" />
+
+                                                </div><br />
+                                                <div class="search">
+                                                    <input type="search" id="SearchTag" placeholder="برای جست و جو تایپ نمایید..." class="form-control" />
+                                                    <hr style="margin:10px 0" />
+                                                </div>
+                                                <div class="Tagcontent" style="height:170px;overflow-y:auto;overflow-x:hidden">
+                                                    @{
+                                                        var tags = ViewBag.TagId as IEnumerable<Domain.Tag>;
+                                                        foreach (var item in tags)
+                                                        {
+                                                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="padding:0">
+                                                                <input type="checkbox" id="@item.TagName" name="@item.TagName" data-id="@item.Id" />
+                                                                <label id="@item.Id" style="font-weight:normal">@item.TagName</label>
+                                                            </div>
+                                                        }
+                                                        <div class="clearfix"></div>
+                                                    }
+
+                                                </div>
+                                                <hr style="margin: 0" />
+                                                <div class="Function" style="padding-top:5px">
+                                                    <p id="tag-Message"></p>
+                                                    <input type="button" id="SelectForContent" value="انتخاب" class="btn btn-primary" />
+                                                    <input type="button" id="EditTag" value="ویرایش" class="btn btn-primary" />
+                                                    <input type="button" id="DeleteTag" value="حذف" class="btn btn-danger" />
+                                                    <input type="button" id="ResetTag" value="نمایش همه" class="btn btn-primary" />
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12" style="padding:1px">
+
+                                                <br /><p> برچسب های انتخابی :  </p><hr />
+                                                <div id="SelectedTags">
+
+                                                </div>
+                                                <div id="SelectedTagsForEdit">
+
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="tree">
+                                <fieldset id="TreeCategoryfieldset">
+                                    <legend class="Newlegend">
+                                        <span data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x => x.Name == "دسته بندی").Any() ? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x => x.Name == "دسته بندی").First().Data).ToHtmlString() : Html.Raw("").ToHtmlString())"></span>
+
+                                        انتخاب دسته بندی
+
+                                    </legend>
+                                    <hr />
+                                    <div class="NewFieldset" style="height:330px;overflow:auto">
+
+                                        <div class="text-left"><span class="glyphicon glyphicon-remove"></span></div>
+                                        <div class="tree col-lg-7 col-md-7 col-sm-6 col-xs-12" style="overflow:hidden">
+                                            <ul>
+                                                <li>
+                                                    <a style="background-color:#3c8dbc;color:#fff;border:1px solid #3c8dbc" data-id="" href="@Url.Action("SelectTree", new { ID = "" })">
+                                                        <span>
+                                                            بدون دسته بندی ها
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li id="TreeCategory">
+                                                    @Html.Partial("_TreeCategory", ViewBag.CatId as IEnumerable<Domain.Category>)
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text-center">
+                                            دسته بندی انتخابی : <br /><span id="SelectedCategory">بدون دسته بندی</span><br />
+                                            @Html.EditorFor(model => model.CatId, new { htmlAttributes = new { id = "SelectedCategoryId", style = "display:none", @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            <div>
+                                <fieldset>
+                                    <legend class="Newlegend">
+                                        <span data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x => x.Name == "کاور").Any() ? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x => x.Name == "کاور").First().Data).ToHtmlString() : Html.Raw("").ToHtmlString())"></span>
+                                        @if (readXml.DetailOfXContentType(Convert.ToInt32(ViewBag.ContentTypeId)).IsVideo)
+                                        {
+                                            <span>کاور(تصویر) و ویدئو</span>
+                                        }
+                                        else
+                                        {
+                                            <span>کاور(تصویر)</span>
+                                        }
+
+
+
+
+                                    </legend>
+                                    <hr />
+                                    <div class="NewFieldset" style="height:330px;overflow:auto">
+                                        <div class="text-left"><span class="glyphicon glyphicon-remove"></span></div>
+                                        <div class="col-md-4">
+                                            <label>انتخاب کاور:</label><br />
+                                            @Ajax.ActionLink("انتخاب یا آپلود", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager" })
+                                            <span class="btn btn-danger deleteCover hide">عدم انتخاب</span>
+
+                                            <div id="AttachementContainer">
+                                                <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" width="220" height="120" style="display:inline-block;width:220px;height:120px" />
+                                                @Html.EditorFor(model => model.Cover, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                                                @Html.ValidationMessageFor(model => model.Cover, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>انتخاب کاور برای صفحه اصلی @ViewBag.ContentTypeName:</label><br />
+                                            @Ajax.ActionLink("انتخاب یا آپلود", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('AttachementContainer4',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager" })
+                                            <span class="btn btn-danger deleteCover hide">عدم انتخاب</span>
+
+                                            <div id="AttachementContainer4" class="AttachementContainer AttachementContainer4">
+                                                <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" width="220" height="120" style="display:inline-block;width:220px;height:120px" />
+                                                @Html.EditorFor(model => model.BlogCover, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                                                @Html.ValidationMessageFor(model => model.BlogCover, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        @if (readXml.DetailOfXContentType(Convert.ToInt32(ViewBag.ContentTypeId)).IsVideo)
+                                        {
+                                            <div class="col-md-4">
+                                                <label>انتخاب ویدئو:</label><br />
+                                                @Ajax.ActionLink("انتخاب یا آپلود", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('AttachementContainer3',4)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager AttachementContainer3" })
+                                                <div id="AttachementContainer3" class="AttachementContainer">
+                                                    <a href="#" target="_blank"></a>
+                                                    <input id="Video" name="Video" type="text" class="form-control text-left Ltr" readonly />
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <div class="clearfix"></div>
+
+                                        <div>
+                                            <br />
+                                            @Html.TextBoxFor(m => m.Icon, new { @class = "form-control", placeholder = "آیکن", @readonly = "readonly" })
+                                            <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                                            <p>
+                                                <label type="button" class="btn btn-primary" data-toggle="modal" data-target="#IconsModalLong">
+                                                    <label class="fa fa-hand-o-left"></label> لیست آیکن ها
+                                                </label>
+
+                                                @Html.Action("GetIconList", "Home")
+                                            </p>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        @Html.Hidden("IsDefault", false)
+                        @Html.Hidden("IsAbout", false)
+                        @Html.Hidden("IsContact", false)
+                        @Html.Hidden("IsRegister", false)
+                        @Html.Hidden("IsSuperDeal", false)
+                    }
+
+
+                    <div class="form-group">
+                        <div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div>
+
+                                        <p>
+                                            <span>زمان مطالعه ( دقیقه )</span>
+                                        </p>
+                                        @Html.TextBoxFor(model => model.ReadMinuts, htmlAttributes: new { type = "number", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.ReadMinuts, "", new { @class = "text-danger" })
+
+                                    </div>
+
+                                    <p>
+                                        @Html.CheckBoxFor(model => model.IsActive, new { @checked = "checked", @class = "js-switch" }) فعال
+                                        @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                                    </p>
+                                    <p>
+                                        @Html.CheckBoxFor(model => model.BlogMain, new { @class = "js-switch" }) نمایش در صفحه اصلی @ViewBag.ContentTypeName
+                                        @Html.ValidationMessageFor(model => model.BlogMain, "", new { @class = "text-danger" })
+                                    </p>
+
+                                    <p>
+                                        @Html.CheckBoxFor(model => model.HasContact, new { @class = "js-switch" }) دارای فرم تماس با ما
+                                        @Html.ValidationMessageFor(model => model.HasContact, "", new { @class = "text-danger" })
+                                    </p>
+                                    <p class="fixTopLeft">
+                                        @Html.CheckBox("AutoSave", true) ذخیره و بازگشت به همین صفحه
+
+                                        <input type="submit" value="ثبت" class="btn btn-primary" style="border-radius:0" />
+                                    </p>
+
+                                    <input type="submit" value="ثبت" class="btn btn-primary" style="border-radius:0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+
+        @section Scripts{
+            <script>
+                $('#ContentTitle').simplyCountable({ counter: '.ContentTitle', maxCount: 100, safeClass: 'safe', overClass: 'over' });
+                $('#ContentPageAddress').simplyCountable({ counter: '.ContentPageAddress', maxCount: 80, safeClass: 'safe', overClass: 'over' });
+                $('#ContentDescr').simplyCountable({ counter: '.ContentDescr', maxCount: 150, safeClass: 'safe', overClass: 'over' });
+            </script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/View/CreateContents.js?v=4.5.1"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/IconList.js"></script>
+
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+            <script src="~/Scripts/tinymce/tinymce.min.js"></script>
+            <script src="~/Scripts/tinymce/tiny_mce_load.js"></script>
+
+        }
+    </div>
+</div>

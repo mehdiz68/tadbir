@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Domain.ProductCategory>
+
+
+<div class="CategoryManager" >
+    <input type="hidden" name="ProductCatId" id="ProductCatId" value="@ViewBag.CurrentCatId" />
+    <select data-level="1" id="Category" name="Category" class="form-control">
+        <option id="0" value="Null">--هیچکدام--</option>
+
+        @foreach (var Cat in Model)
+        {
+            <option id="@("Cat"+Cat.Id)" value="@Cat.Id">@Cat.Title</option>
+
+        }
+    </select>
+
+</div>
+

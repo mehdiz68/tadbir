@@ -1,0 +1,48 @@
+﻿@model Domain.FileType
+
+<title>ویرایش پسوند</title>
+
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+}
+
+
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+             ویرایش پسوند
+            </h1>
+            <br /><br />
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Id)
+
+                    <div class="form-group">
+                        <div class="control-label col-md-3">
+                            <span class="glyphicon glyphicon-question-sign js-mytooltip-click type-inline-block style-block style-block-three system-mytooltip--base" data-mytooltip-action="click" data-mytooltip-custom-class="align-center" data-mytooltip-direction="left" data-mytooltip-content="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پسوند( مثلِ jpg.)").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پسوند( مثلِ jpg.)").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                            @Html.LabelFor(model => model.FileTypeName)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.FileTypeName, new { htmlAttributes = new { @class = "form-control", @style = "text-align:left;direction:ltr" } })
+                            @Html.ValidationMessageFor(model => model.FileTypeName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="ذخیره" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+</div>
+</div>

@@ -1,0 +1,311 @@
+﻿@model Domain.ViewModels.CatAttribute
+@{
+
+    int i = 0;
+}
+<div id="CategoryAttributes" class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding:0">
+    <h4></h4>
+    <fieldset class="SearchAttribute NewFieldset" >
+        <legend class="Newlegend"> <span class="glyphicon glyphicon-chevron-down"></span> جست و جوی خصوصیت </legend>
+        <div class="form-group">
+            <div id="SearchBoxCat">
+                <label class="col-md-12 control-label">
+                    <input type="text" placeholder="نام خصوصیت را وارد نمایید..." class="form-control" />
+                </label>
+                <div class="col-md-12">
+                    <span class="btn btn-info search"> جست و جو </span>
+                    <span class="btn btn-warning showall"> نمایش همه </span>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="SearchGroupAttribute NewFieldset">
+        <legend class="Newlegend"> <span class="glyphicon glyphicon-chevron-down"></span> جست و جوی دسته </legend>
+        <div class="form-group">
+            <div id="SearchGroupBoxCat">
+                <label class="col-md-12 control-label">
+                    <input type="text" placeholder="نام دسته را وارد نمایید..." class="form-control" />
+                </label>
+                <div class="col-md-12">
+                    <span class="btn btn-info search"> جست و جو </span>
+                    <span class="btn btn-warning showall"> نمایش همه </span>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </fieldset>
+
+    <hr />
+    @if (Model.MainCatGroupAttributes.Any())
+    {
+        <p style="padding-right: 25px;"><input type="checkbox" id="checkAll" /> <label> انتخاب همه </label></p>
+    }
+    <div class="List">
+
+
+
+     
+            <div class="NewFieldset GroupAttribute">
+                <div class="Newlegend" style="background-color: brown;">
+                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+                        <input type="checkbox" />
+                        &nbsp;
+                        <span>بدون دسته</span>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 text-left">
+                        <span class="glyphicon glyphicon-plus" title="نمایش خصوصیات"></span>
+                    </div>
+                    <div class="clearfix"></div>
+
+                </div>
+                <div class="Attributes">
+                </div>
+            </div>
+        
+        @foreach (var pags in Model.MainCatGroupAttributes)
+        {
+            if (pags != null)
+            {
+                <div class="NewFieldset GroupAttribute" data-id="@pags.GroupId" >
+                    <div class="Newlegend">
+                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+                            <input type="checkbox" />
+                            &nbsp;
+                            <span>@pags.ProductAttributeGroup.Title</span>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 text-left">
+                            <span class="glyphicon glyphicon-plus" title="نمایش خصوصیات"></span>
+                        </div>
+                        <div class="clearfix"></div>
+
+                    </div>
+
+                    <div class="Attributes">
+                    </div>
+                </div>
+            }
+
+        }
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<div id="MoveCategory" class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+    <ul>
+        <li>
+            <div class="form-group">
+
+                <div>
+                    @Html.DropDownList("GroupId", ViewBag.ProductAttributeGroups as IEnumerable<SelectListItem>, "--گروه خصوصیت انتخاب نمایید--", new { @class = "form-control selectpicker", data_live_search = "true" })
+
+                    <div id="ProductGroups">
+                        @Html.DropDownList("TabId", ViewBag.ProductAttributeTabs as IEnumerable<SelectListItem>, "--تب انتخاب نمایید--", new { @class = "form-control selectpicker", data_live_search = "true" })
+
+
+                    </div>
+                </div>
+
+            </div>
+        </li>
+        <li>
+            <span class="btn btn-primary" id="Add-attribute" style="cursor:pointer">
+                ثبت
+                <span>>></span>
+            </span>
+        </li>
+    </ul>
+</div>
+
+<div id="CurrentCategoryAttributes" class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding:0">
+    <h4></h4>
+
+
+    <fieldset class="SearchAttribute NewFieldset">
+        <legend class="Newlegend"> <span class="glyphicon glyphicon-chevron-down"></span> جست و جوی خصوصیت </legend>
+        <div class="form-group">
+            <div id="SearchBoxSubCat">
+                <label class="col-md-12 control-label">
+                    <input type="text" placeholder="نام خصوصیت را وارد نمایید..." class="form-control" />
+                </label>
+                <div class="col-md-12">
+                    <span class="btn btn-info search"> جست و جو </span>
+                    <span class="btn btn-warning showall"> نمایش همه </span>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="SearchGroupAttribute NewFieldset">
+        <legend class="Newlegend"> <span class="glyphicon glyphicon-chevron-down"></span> جست و جوی دسته </legend>
+        <div class="form-group">
+            <div id="SearchGroupBoxSubCat">
+                <label class="col-md-12 control-label">
+                    <input type="text" placeholder="نام دسته را وارد نمایید..." class="form-control" />
+                </label>
+                <div class="col-md-12">
+                    <span class="btn btn-info search"> جست و جو </span>
+                    <span class="btn btn-warning showall"> نمایش همه </span>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </fieldset>
+
+    <hr />
+    <div class="text-left" style="padding: 3px 5px;">
+        <span type="button" class="btn btn-danger remove-group-multi"> <span class="glyphicon glyphicon-trash"></span> حذف چند تایی</span>
+    </div>
+
+    <div class="List">
+        <div id="Edit-Dialog" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title">ویرایش دسته و تب خصوصیت یا خصوصیات انتخابی</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <div>
+                            <label>دسته</label>
+                            @Html.DropDownList("GroupId2", ViewBag.ProductAttributeGroups as IEnumerable<SelectListItem>, "--انتخاب نمایید--", new { @class = "form-control selectpicker", data_live_search = "true" })
+                            <br />
+                            <label>تب</label>
+                            @Html.DropDownList("TabId2", ViewBag.ProductAttributeTabs as IEnumerable<SelectListItem>, "--انتخاب نمایید--", new { @class = "form-control selectpicker", data_live_search = "true" })
+
+
+
+
+                            <br /><br />
+                        </div>
+                        <p>
+                            <input type="button" class="btn btn-info Edit-Group-btn" value="ویرایش" />
+                        </p><br /><br />
+                        <p><a class="ProductAttributeLink" href="#" target="_blank"> در صورت نیاز به ویرایش اطلاعات پایه ای این خصوصیت ، اینجا کلیک نمایید. </a></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+       
+            <div>
+                <div class="NewFieldset GroupAttribute" >
+                    <div class="Newlegend" style="background-color: brown;">
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                            <input type="checkbox" />
+                            &nbsp;
+                            <span>بدون دسته</span>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 text-left">
+                            <span class="glyphicon glyphicon-trash remove-group" title="حذف این دسته"></span>
+                            <span class="glyphicon glyphicon-plus" title="نمایش خصوصیات"></span>
+                        </div>
+                        <div class="clearfix"></div>
+
+                    </div>
+                    <div class="Attributes">
+                        <div>
+                            <span class='btn btn-default remove-Multi-att' title='حذف چند تایی'><span class="glyphicon glyphicon-trash"></span>  </span>&nbsp;&nbsp;&nbsp;
+                            <span title='تغییر دسته چند تایی' class='btn btn-default Edit-Multi-Group'><span class="glyphicon glyphicon-pencil"></span>  </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+
+
+
+
+        @foreach (var pags in Model.MainCatGroupAttributes)
+        {
+            if (pags != null)
+            {
+                <div class="rowItem" id="@pags.GroupId">
+                    <div class="NewFieldset GroupAttribute" data-id="@pags.GroupId" >
+                        <div class="Newlegend">
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                <input type="checkbox" />
+                                &nbsp;
+                                <span>@pags.ProductAttributeGroup.Title</span>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 text-left">
+                                <span class="glyphicon glyphicon-trash  remove-group" title="حذف این دسته"></span>
+                                <span class="glyphicon glyphicon-plus" title="نمایش خصوصیات"></span>
+                            </div>
+                            <div class="clearfix"></div>
+
+                        </div>
+
+                        <div class="Attributes">
+                            <div>
+                                <span class='btn btn-default remove-Multi-att' title='حذف چند تایی'><span class="glyphicon glyphicon-trash"></span>  </span>&nbsp;&nbsp;&nbsp;
+                                <span title='تغییر دسته چند تایی' class='btn btn-default Edit-Multi-Group'><span class="glyphicon glyphicon-pencil"></span>  </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    @*@foreach (var item in Model.ProductAttributeCategorySelects.Where(x => x.GroupId == Group.Id).OrderBy(x => x.DisplayOrder).Select(s => s.ProductAttribute))
+                            {
+                            <div class="attributeItem" id="@item.Id">
+                                <span data-id="@item.Id" data-group-id="@Group.Id" data-cat-id="@Model.ProductAttributeCategorySelects.First().CatId" style="cursor:pointer" class="glyphicon glyphicon-remove" title="حذف"></span>
+                                <span target="_blank" data-toggle="modal" data-target="@("#attribute"+i)" style="cursor:pointer;color:brown" class="glyphicon glyphicon-edit" title="ویرایش دسته"></span>
+
+
+                                <div id="@("attribute"+i)" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <h5 class="modal-title">ویرایش دسته @item.Name</h5>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <div>
+                                                    <select class="form-control selectpicker GroupId2" data-live-search="true">
+                                                        <option>--بدون دسته--</option>
+                                                        @foreach (var AttributeGroup in ViewBag.ProductAttributeGroups as IEnumerable<SelectListItem>)
+                                                            {
+                                                                if (AttributeGroup.Value == Group.Id.ToString())
+                                                                {
+                                                    <option selected="selected" value="@AttributeGroup.Value">@AttributeGroup.Text</option>
+                                                                }
+                                                                else
+                                                                {
+
+                                                    <option value="@AttributeGroup.Value">@AttributeGroup.Text</option>
+                                                                }
+                                                            }
+                                                    </select>
+                                                    <br /><br />
+                                                </div>
+                                                <p>
+                                                    <input type="button" class="btn btn-info Edit-Group" value="ویرایش" data-Attribute-id="@item.Id" data-group-id="@Group.Id" data-cat-id="@Model.ProductAttributeCategorySelects.First().CatId" />
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <label data-id="@item.Id" class="current-attribute"> @item.Name </label>
+                            </div>
+                            i++;
+                        }*@
+                </div>
+            }
+        }
+    </div>
+
+    <div class="clearfix"></div>
+</div>

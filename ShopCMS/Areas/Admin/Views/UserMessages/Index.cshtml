@@ -1,0 +1,163 @@
+﻿@model PagedList.IPagedList<Domain.UserMessage>
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+
+<title>پیام های ارسالی کاربران</title>
+<style>
+    .form-group.has-feedback span {
+        display: inline-block;
+    }
+
+    .dropdown-menu > li > a {
+        text-align: center;
+    }
+
+    .bootstrap-select.btn-group .dropdown-menu li a span.check-mark {
+        display: none !important;
+    }
+
+    .ProductCategories {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+</style>
+
+<div class="x_panel">
+    <div class="x_content">
+      
+        @section Header{
+
+        }
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            <a href="@Url.Action("Index", "UserMessages")"> پیام های ارسالی کاربران</a>
+
+        </h1>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:0">
+            
+
+            @if (Model != null)
+            {
+                if (Model.Any())
+                {
+                    <div class="Pagging-New-Container">
+                        <strong class="Pagging-New-Info">
+                            تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+                        </strong>
+
+                        @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page, sortOrder = ViewBag.CurrentSort}))
+                      
+                    </div>
+
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+
+                        <div id="myTabContent2" class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade active in" id="tab_content11" aria-labelledby="home-tab">
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped jambo_table bulk_action">
+                                        <thead>
+                                            <tr class="headings">
+                                                <th class="text-center column-title">
+
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    نوع پیام
+                                                </th>
+
+                                                <th class="text-center column-title">
+                                                   عنوان
+                                                </th>
+                                                <th class="text-center column-title">
+                                                   تاریخ
+                                                </th>
+                                             
+                                                <th class="text-center column-title">
+
+                                                </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{ int i = 1; }
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr class="ContentRow">
+
+                                                    <td class="text-center">@((((Model.PageNumber - 1) * Model.PageSize)) + i)</td>
+                                                    <td>
+                                                        @if (item.UserIdTo == null)
+                                                        {
+                                                            <span class="alert alert-danger">پیام همگانی</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="alert alert-info"> پیام اختصاصی </span>
+                                                        }
+                                                    </td>
+                                                <td class="text-center">
+                                                    @item.Title
+                                                </td>
+                                                <td class="text-center">@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate)</td>
+                                                
+                                                <td>
+                                                    <button type="button" class="btn btn-info openMessage" data-id="@item.Id" data-toggle="modal" data-target="@("#myModal"+i)">مشاهده پیام</button>
+
+                                                    <!-- Modal -->
+                                                    <div id="@("myModal"+i)" class="modal fade" role="dialog">
+                                                        <div class="modal-dialog">
+
+                                                            <!-- Modal content-->
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h4 class="modal-title text-right">@item.Title</h4>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div>
+                                                                        @Html.Raw(item.Text)
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </td>
+                                                </tr>
+                                                i++;
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="Pagging-New-Container">
+                                    <strong class="Pagging-New-Info">
+                                        تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+                                    </strong>
+
+                                    @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page, sortOrder = ViewBag.CurrentSort}))
+                                    
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <div class="clearfix"></div>
+
+        @section Scripts{
+
+       
+
+
+        }
+    </div>
+</div>

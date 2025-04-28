@@ -1,0 +1,53 @@
+﻿@model Domain.Slider
+@using ahmadi.Infrastructure.Helper;
+@{
+    int? index = ViewData["Index"] as int?;
+    string staticUrl = ViewData["staticUrl"] as string;
+    int i = 0;
+}
+
+<div id="@("carouselExampleControls"+index)" class="carousel slide light_arrow" data-ride="carousel">
+    <div class="carousel-inner">
+        @foreach (var ImageItem in Model.SliderImages.OrderBy(x => x.DisplaySort))
+        {
+
+            <div class="@(i == 0 ? "carousel-item background_bg active" : "carousel-item background_bg")" data-img-src="@Html.DisplayattachmentCookieFreeUrl(staticUrl,ImageItem.attachment.FileName,"LG",true)" style="background-image: url(&quot;@Html.DisplayattachmentCookieFreeUrl(staticUrl,ImageItem.attachment.FileName,"LG",true)&quot;);">
+                <a href="@ImageItem.Link">
+                    <div class="banner_slide_content banner_content_inner">
+                        <div class="col-lg-8 col-10">
+                            <div class="banner_content overflow-hidden">
+                                @*<h5 class="mb-3 staggered-animation font-weight-light animated slideInLeft" data-animation="slideInLeft" data-animation-delay="0.5s" style="animation-delay: 0.5s; opacity: 1;">
+                                        <a href="@ImageItem.Link">
+                                            @ImageItem.Title
+                                        </a>
+                                    </h5>
+                                    <a class="btn btn-fill-out rounded-0 staggered-animation text-uppercase animated slideInLeft" href="@ImageItem.Link" data-animation="slideInLeft" data-animation-delay="1.5s" style="animation-delay: 1.5s; opacity: 1;">@ImageItem.Title</a>*@
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            i++;
+        }
+    </div>
+    @{
+        i = 0;
+    }
+    <ol class="carousel-indicators indicators_style1">
+        @foreach (var ImageItem in Model.SliderImages.OrderBy(x => x.DisplaySort))
+        {
+
+            <li data-target="@("#carouselExampleControls" + index)" data-slide-to="@i" class="@(i == 0 ? "active" : "")"></li>
+            i++;
+        }
+    </ol>
+</div>
+
+
+
+
+
+
+
+
+

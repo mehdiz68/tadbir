@@ -1,0 +1,93 @@
+﻿@model Domain.SliderImage
+@using ahmadi.Infrastructure.Helper
+
+<title>ویرایش</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index","SliderImages",new {id=Model.SliderId })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+
+        <h1 style="display:inline-block;font-size: 2em;">
+            ویرایش
+        </h1>
+        <br /><br />
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                    <div>
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { placeholder = "عنوان اول", Id = "ContentTitle", @class = "form-control" } })
+                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+
+                        <p><label class="ContentTitle"></label> کاراکتر باقی مانده </p>
+                    </div>
+                    <div>
+                        @Html.EditorFor(model => model.Title2, new { htmlAttributes = new { placeholder = "عنوان دوم", Id = "ContentTitle2", @class = "form-control" } })
+                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                        @Html.ValidationMessageFor(model => model.Title2, "", new { @class = "text-danger" })
+
+                        <p><label class="ContentTitle2"></label> کاراکتر باقی مانده </p>
+                    </div>
+                </div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                    <div>
+                        @Html.EditorFor(model => model.Link, new { htmlAttributes = new { placeholder = "لینک", Id = "ContentLink", @class = "form-control" } })
+                        <span class="fa fa-link form-control-feedback right" aria-hidden="true"></span>
+                        @Html.ValidationMessageFor(model => model.Link, "", new { @class = "text-danger" })
+
+                    </div>
+                </div>
+
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                    @Ajax.ActionLink("انتخاب یا آپلود کاور", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager" })
+                    <div id="createView"></div>
+
+                    <div id="AttachementContainer">
+
+                        @Html.Displayattachment(Model.attachment.FileName, Model.Title, "SM", htmlAttributes: new { @class = "img-responsive", width = "110", height = "60", style = "display:inline-block;width:110px;height:60px" })
+
+
+
+
+                        @Html.EditorFor(model => model.Cover, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.Cover, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+
+
+
+                @Html.HiddenFor(model => model.SliderId)
+
+                <div class="form-group">
+                    <input type="submit" value="ذخیره" class="btn btn-success" />
+                </div>
+            </div>
+        }
+
+
+        @section Scripts{
+            <script>
+                $('#ContentTitle').simplyCountable({ counter: '.ContentTitle', maxCount: 100, safeClass: 'safe', overClass: 'over' });
+                $('#ContentTitle2').simplyCountable({ counter: '.ContentTitle2', maxCount: 100, safeClass: 'safe', overClass: 'over' });
+            </script>
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+
+        }
+
+        </div>
+</div>

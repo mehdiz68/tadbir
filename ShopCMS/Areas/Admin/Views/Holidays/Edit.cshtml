@@ -1,0 +1,63 @@
+﻿@model Domain.Holiday
+
+<title>ویرایش روز تعطیل</title>
+@{
+
+    var setting = ViewBag.setting as Domain.Setting;
+}
+
+@section Header{
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            @Html.ActionLink("ویرایش روز تعطیل", "Edit",new {id=Model.Id })
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(x=>x.Id)
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.InsertDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <img src="~/Areas/Admin/Content/images/calender.gif" style="cursor:pointer" alt="انتخاب تاریخ" title="انتخاب تاریخ" onclick="displayDatePicker('InsertDate');" />
+                        @Html.TextBox("InsertDate", ViewBag.InsertDate as string, htmlAttributes: new { placeholder = "تاریخ تعطیلی", style = "display: inline-block", @class = "form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.InsertDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="ویرایش" class="btn btn-info" />
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+@section Scripts{
+    @*Persian Calender*@
+    <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+}

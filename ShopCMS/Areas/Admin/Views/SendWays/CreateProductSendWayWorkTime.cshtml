@@ -1,0 +1,99 @@
+﻿@model Domain.ProductSendWayWorkTime
+
+@{
+    var ProductSendWay = ViewBag.ProductSendWay as Domain.ProductSendWay;
+}
+
+<title>درج زمان کاری برای روش ارسال @ProductSendWay.Title </title>
+
+@section Header{
+
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/timepicker.min.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("ProductSendWayWorkTimes","SendWays",new {id= ProductSendWay.Id })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            درج زمان کاری برای روش ارسال @ProductSendWay.Title
+
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Erorr</p>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("ProductSendWayId", ProductSendWay.Id)
+            @Html.Hidden("IsActive", "True")
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.WeekDay)</span>
+
+                        </p>
+                        <select id="WeekDay" name="WeekDay" class="form-control">
+                            <option value="0">@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(0)</option>
+                            <option value="1">@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(1)</option>
+                            <option value="2">@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(2)</option>
+                            <option value="3">@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(3)</option>
+                            <option value="4">@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(4)</option>
+                            <option value="5">@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(5)</option>
+                            <option value="6">@CoreLib.Infrastructure.DateTime.DateTimeConverter.GetDayOfWeek(6)</option>
+                        </select>
+                        @Html.ValidationMessageFor(model => model.WeekDay, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.StartTime)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.StartTime, htmlAttributes: new { @readonly = "readonly", id = "time1", @class = "form-control  without_ampm", placeholder = Html.DisplayNameFor(x => x.StartTime) })
+                        @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
+
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.EndTime)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.EndTime, htmlAttributes: new { @readonly = "readonly", id = "time2", @class = "form-control without_ampm", placeholder = Html.DisplayNameFor(x => x.EndTime) })
+                        @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+
+                <input type="submit" value="ثبت" class="btn btn-primary" style="border-radius:0" />
+            </div>
+        }
+    </div>
+</div>
+
+
+
+
+@section Scripts{
+
+    <script src="~/Areas/Admin/Content/Scripts/Component/timepicker.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            var timepicker = new TimePicker(['time1', 'time2'], {
+                lang: 'en',
+                theme: 'dark'
+            });
+
+            timepicker.on('change', function (evt) {
+             
+                    var value = (evt.hour || '00') + ':' + (evt.minute || '00');
+                    evt.element.value = value;
+            });
+        });
+    </script>
+}

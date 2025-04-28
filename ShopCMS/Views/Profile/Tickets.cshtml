@@ -1,0 +1,115 @@
+﻿@model PagedList.IPagedList<Domain.Ticket>
+@using PagedList.Mvc;
+
+<title>پرسش ها</title>
+@{
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule; ;
+}
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+
+@section Header{
+
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    @*Pagging*@
+    <link href="~/Content/Base/Css/PagedList.css" rel="stylesheet" type="text/css" />
+
+}
+
+
+<div class="container" id="orders">
+    <h1>
+        <span>پرسش ها</span>
+        <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+    </h1>
+
+
+    <div class="table-responsive">
+        <table class="table table-striped jambo_table bulk_action">
+            <thead>
+                <tr class="headings">
+                
+                    <th class="text-center column-title">
+                        کد پیگیری
+                    </th>
+                    <th class="text-center column-title">
+                        دسته بندی
+                    </th>
+                    <th class="text-center column-title">
+                        دیده شده؟
+                    </th>
+                    <th class="text-center column-title">
+                        تاریخ ثبت
+                    </th>
+                    <th class="text-center column-title">
+                        وضعیت پاسخ دهی
+                    </th>
+
+                    <th class="text-center column-title"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Code)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TicketCategory.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsVisit)
+                        </td>
+                        <td>
+                            @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate) <br /> @item.InsertDate.ToShortTimeString()
+                        </td>
+                        <td>
+                            @if (item.ChildTickets.Any(x => x.Answer == true))
+                            {
+                                if (ahmadi.Infrastructure.DbSql.SqlManager.CheckTicketState(item.ChildTickets.Where(x => x.Answer == true)))
+                                {
+                                    <span class="red">سوال جدید</span>
+                                }
+                                else
+                                {
+                                    <span class="green">پاسخ داده شده</span>
+                                }
+                            }
+
+                            else
+                            {
+                                <span class="red">پاسخ داده نشده</span>
+                            }
+                        </td>
+                        <td>
+                            <a class="btn btn-success" href="@Url.Action("Ticket", new { id=item.Code })"><span class="glyphicon glyphicon-list"></span> نمایش جزئیات </a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+        <p>
+            <strong style="color: #900">
+                صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount پرسش
+            </strong>
+        </p>
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+
+
+    </div>
+
+</div>
+
+@section Scripts{
+    <script src="~/Areas/Admin/Content/Scripts/View/IndexContactUs.js"></script>
+    @*Persian Calender*@
+    <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+}
+</div>

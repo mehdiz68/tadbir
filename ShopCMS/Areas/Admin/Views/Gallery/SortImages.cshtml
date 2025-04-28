@@ -1,0 +1,102 @@
+﻿@model PagedList.IPagedList<Domain.GalleryImage>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+
+<title>
+    مرتب سازی تصاویر
+</title>
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+}
+
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left">
+            <a class="btn btn-success" href="@Url.Action("ImagesManage", new {id=Model.First().GalleryCategory.Id })"> بازگشت <span class="glyphicon glyphicon-chevron-left"></span></a>
+
+        </div>
+        <br /><br />
+
+        <a href="@Url.Action("Sort", "Gallery")">  مرتب سازی تصاویر </a>
+        <br /><br />
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+
+                        <th class="text-center column-title">
+                            عنوان
+                        </th>
+
+                        <th class="text-center column-title">
+                            کاور
+                        </th>
+
+                        <th class="text-center column-title"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="rowItem" id="@item.Id">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @if (item.attachment != null)
+                                {
+                                    @Html.Displayattachment(item.attachment.FileName, "SM", htmlAttributes: new { @class = "img-responsive", style = "display:inline-block;width:220px;height:120px" })
+
+                                }
+                                else
+                                {
+                                    <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:220px;height:120px" />
+                                }
+                            </td>
+                            <td>
+                                @if (ViewBag.EditPermission)
+                                {
+                                    <a class="btn btn-info" href="@Url.Action("EditImage", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                }
+                                @if (ViewBag.DeletePermission)
+                                {
+                                    <a class="btn btn-danger" onclick="return confirm('آیا شما مطمئن به حذف تصویر مورد نظر هستید؟!')" href="@Url.Action("DeleteImage", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount تصویر
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("SortCategories", new { page }))
+
+
+        </div>
+
+
+        @section Scripts{
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/View/SortImage.js"></script>
+
+        }
+</div>
+</div>

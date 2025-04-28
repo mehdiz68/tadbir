@@ -1,0 +1,69 @@
+﻿<title> دسترسی های پنل برای کاربرِ  @ViewBag.UserName;</title>
+@model IEnumerable<Domain.AdministratorPermission>
+@{
+
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="box-title container" style="padding:0">
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                <i class="flaticon-user-filled-person-shape"></i><a href="@Request.Url.PathAndQuery"> دسترسی های پنل برای کاربرِ <span style="color:red"> @ViewBag.UserName</span></a>
+                <span style="cursor:pointer" data-toggle="tooltip" data-placement="bottom" data-html="true" class="glyphicon glyphicon-question-sign " title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-left">
+                <p><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به مدیریت کاربران  <span class="glyphicon glyphicon-chevron-left"></span></a></p>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <hr>
+
+        @{
+            string UserId = ViewBag.UserId;
+            @Html.Hidden("UserId", UserId);
+        }
+        <div id="Permissions">
+            @foreach (Domain.AdministratorModule item in ViewBag.AdministratorModules as IEnumerable<Domain.AdministratorModule>)
+            {
+                <div class="PermissionsItem col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <fieldset>
+                        <legend>@item.Name</legend>
+                        <div>
+                            @{
+
+                                var userModule = Model.Where(x => x.UserId == ViewBag.UserId && x.ModuleId == item.Id);
+                                bool AllowInsert = userModule.Where(x => x.TypeAccess == 1).Any();
+                                bool AllowUpdate = userModule.Where(x => x.TypeAccess == 2).Any();
+                                bool AllowDelete = userModule.Where(x => x.TypeAccess == 3).Any();
+                                bool NotificationEmail = userModule.Where(x => x.NotificationEmail == true).Any();
+                            }
+
+                            <p><span style="color:forestgreen" class="glyphicon glyphicon-new-window"></span><input type="checkbox" data-id="@item.Id" id="@("AllowInsert"+item.Id)" name="AllowInsert" class="AllowInsert" checked="@AllowInsert"> <span> ایجاد </span></p>
+                            <p><span style="color:orange" class="glyphicon glyphicon-edit"></span><input type="checkbox" data-id="@item.Id" id="@("AllowUpdate" + item.Id)" name=" allowupdate" class="AllowUpdate" checked="@AllowUpdate"> <span> ویرایش </span></p>
+                            <p><span style="color:red" class="glyphicon glyphicon-remove"></span><input type="checkbox" data-id="@item.Id" id="@("AllowDelete" + item.Id)" name=" allowdelete" class="AllowDelete" checked="@AllowDelete"><span> حذف </span></p>
+                            <p><span style="color:blue" class="glyphicon glyphicon-envelope"></span><input type="checkbox" data-id="@item.Id" id="@("NotificationEmail" + item.Id)" name=" NotificationEmail" class="NotificationEmail" checked="@NotificationEmail"><span> دریافت ایمیلِ اطلاع رسانی </span></p>
+                        </div>
+                    </fieldset>
+                </div>
+                                }
+            <div class="clearfix"></div>
+
+
+        </div>
+        <hr style="border: 1px dashed rgb(204, 204, 204);">
+        <div>
+            <span id="AddPermission" data-urlBack="@Url.Action("Index")" data-url="@Url.Action("AddPermission")" class="btn btn-info"> ثبت </span>
+            <a class="btn btn-warning" href="@Url.Action("Index")"><span class="glyphicon glyphicon-list"></span> بازگشت به لیست </a>
+
+        </div>
+
+
+        @section Scripts{
+            <script src="~/Areas/Admin/Content/Scripts/View/Usermanagement-Permission.js?v=3"></script>
+        }
+</div>
+</div>

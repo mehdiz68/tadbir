@@ -1,0 +1,166 @@
+﻿@model Domain.ProductSendWay
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml
+
+<title>ویرایش روش ارسال</title>
+
+@{
+
+    //var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+    var setting = ViewBag.setting as Domain.Setting;
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        @*<span style="cursor:pointer" data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")" title="راهنمای این صفحه"></span>*@
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ویرایش روش ارسال
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+
+        @using (Html.BeginForm())
+        {
+           @Html.HiddenFor(x=>x.Id)
+
+            @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+        <div class="form-group">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <p>
+                    <span>@Html.LabelFor(x => x.Title)</span>
+
+                </p>
+                @Html.TextBoxFor(model => model.Title, htmlAttributes: new { @class = "form-control", placeholder = "عنوان" })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <p>
+                    <span>@Html.LabelFor(x => x.DeliveryStartDay)</span>
+
+                </p>
+                @Html.TextBoxFor(model => model.DeliveryStartDay, htmlAttributes: new { type = "number", @class = "form-control", placeholder = Html.DisplayNameFor(x => x.DeliveryStartDay) })
+                @Html.ValidationMessageFor(model => model.DeliveryStartDay, "", new { @class = "text-danger" })
+
+            </div>
+
+
+            <div class="clearfix"></div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <p>
+                    <span>@Html.LabelFor(x => x.DeliveryStartHour)</span>
+
+                </p>
+                @Html.TextBoxFor(model => model.DeliveryStartHour, htmlAttributes: new { @class = "form-control", placeholder = Html.DisplayNameFor(x => x.DeliveryStartHour) })
+                @Html.ValidationMessageFor(model => model.DeliveryStartHour, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <p>
+                    <span>@Html.LabelFor(x => x.DeliveryHourDay)</span>
+
+                </p>
+                @Html.TextBoxFor(model => model.DeliveryHourDay, htmlAttributes: new { type = "number", @class = "form-control", placeholder = Html.DisplayNameFor(x => x.DeliveryHourDay) })
+                @Html.ValidationMessageFor(model => model.DeliveryHourDay, "", new { @class = "text-danger" })
+
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <p>
+                    <span>@Html.LabelFor(x => x.TrackingUrl)</span>
+
+                </p>
+                @Html.TextBoxFor(model => model.TrackingUrl, htmlAttributes: new { @class = "form-control", placeholder = "آدرس اینترنتی برای پیگیری" })
+                @Html.ValidationMessageFor(model => model.TrackingUrl, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                <div id="createView"></div>
+                <div class="col-md-6">
+                    <label>انتخاب کاور:</label><br />
+                    @Ajax.ActionLink("انتخاب یا آپلود", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager" })
+                    <span class="btn btn-danger deleteCover hide">عدم انتخاب</span>
+
+                    <div id="AttachementContainer">
+                        @if (Model.AttachementId.HasValue)
+                        {
+                            @Html.Displayattachment(Model.Image.FileName, "SM", htmlAttributes: new { @class = "img-responsive", width = "220", height = "120", style = "display:inline-block;width:220px;height:120px" })
+                        }
+                        else
+                        {
+
+                            <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:220px;height:120px" />
+                        }
+
+                        @Html.EditorFor(model => model.AttachementId, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.AttachementId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                @Html.CheckBoxFor(model => model.DeliverSelectable, new { @checked = Model.DeliverSelectable, @class = "js-switch" }) قابلیت انتخاب بازه دریافت؟<br />
+                @Html.CheckBoxFor(model => model.HasExtraPrice, new { @checked = Model.HasExtraPrice, @class = "js-switch" }) دارای هزینه اضافی؟<br />
+                @Html.CheckBoxFor(model => model.IsFree, new { @checked = Model.IsFree, @class = "js-switch" }) حمل رایگان؟<br />
+                @Html.CheckBoxFor(model => model.PasKeraye, new { @checked = Model.PasKeraye, @class = "js-switch" }) پس کرایه؟<br />
+                @Html.CheckBoxFor(model => model.InvoiceType, new { @checked = Model.InvoiceType, @class = "js-switch" }) صورت حساب براساس گرم؟<br />
+                @* @Html.CheckBoxFor(model => model.OutOfService, new { @checked = Model.OutOfService, @class = "js-switch" }) فعال و اعمال بالاترین هزینه برای خارج از محدوده؟<br />*@
+                @Html.CheckBoxFor(model => model.IsActive, new { @checked = Model.IsActive, @class = "js-switch" }) فعال؟<br />
+                @Html.CheckBoxFor(model => model.IsDefault, new { @checked = Model.IsDefault, @class = "js-switch" }) پیش فرض؟<br />
+                @Html.CheckBoxFor(model => model.FreeOff, new { @checked = Model.FreeOff, @class = "js-switch" }) روش ارسال پیش فرض در زمان تخفیف ارسال رایگان؟<br />
+                @Html.CheckBoxFor(model => model.IsIrPost, new { @checked = Model.IsIrPost, @class = "js-switch" }) @Html.DisplayNameFor(x => x.IsIrPost) <br />
+
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <p>
+
+                    @Html.TextAreaFor(model => model.Descr, htmlAttributes: new { @class = "form-control", rows = "4", placeholder = "توضیحات" })
+                    @Html.ValidationMessageFor(model => model.Descr, "", new { @class = "text-danger" })
+                </p>
+                <p>
+
+                    @Html.TextAreaFor(model => model.DeliverSelectDescr, htmlAttributes: new { @class = "form-control", rows = "4", placeholder = "توضیحات زمان تحویل" })
+                    @Html.ValidationMessageFor(model => model.DeliverSelectDescr, "", new { @class = "text-danger" })
+                </p>
+                <p>
+                    @Html.DropDownList("TaxId", ViewBag.TaxList as IEnumerable<SelectListItem>, "--مالیات--", new { @class = "form-control selectpicker", data_live_search = "true" })
+                </p>
+
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+
+        <input type="submit" value="ویرایش" class="btn btn-primary" style="border-radius:0" />
+    </div>
+        }
+        </div>
+    </div>
+
+
+@section Scripts{
+
+    @Scripts.Render("~/bundles/Admin/FileManager/Js")
+
+}

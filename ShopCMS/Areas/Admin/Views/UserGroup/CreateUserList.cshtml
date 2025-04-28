@@ -1,0 +1,223 @@
+﻿@model Domain.UserGroup
+
+<title>افزودن اعضا به گروه @Model.Name</title>
+@{
+
+    var setting = ViewBag.setting as Domain.Setting;
+    var userGroup = ViewBag.userGroup as Domain.UserGroup;
+}
+
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Stylesheets/View/ProductCategories.css" rel="stylesheet" />
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("addMember",new {id=Model.Id })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            افزودن اعضا به گروه @Model.Name
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("GroupId", userGroup.Id)
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group col-md-4">
+                    <label>گروه محصول خریداری شده</label>
+                    <div>
+                        @Html.DropDownList("ProductTypeId", ViewBag.ProductTypeId as IEnumerable<SelectListItem>, new { @class = "form-control selectpicker", data_live_search = "true" })
+                        @Html.Action("OpenProductCategories", "Products", new { CurrentCatId = (ViewBag.ProductCatIdFilter != null ? Convert.ToInt32(ViewBag.ProductCatIdFilter) : 0), ProductTypeId = (ViewBag.ProductTypeFilter != null ? Convert.ToInt32(ViewBag.ProductTypeFilter) : 1) })
+
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>ارزش مالی خرید مشتری ( تومان )</label>
+                    <div>
+                        @Html.TextBox("FromM", null, new { type = "number", placeholder = "از", @class = "form-control" })
+                    </div>
+                    <div>
+                        @Html.TextBox("ToM", null, new { type = "number", placeholder = "تا", @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>حداقل تعداد خرید ( عدد )</label><br />
+                    <div>
+                        @Html.TextBox("OrderCount", null, new { type = "number", placeholder = "تعداد", @class = "form-control" })
+                    </div>
+                    <div>
+                        @Html.TextBox("DateCount", null, new { type = "number", placeholder = "چند روز اخیر؟", @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="clearfix"></div><br />
+                <div class="form-group col-md-4">
+                    <label>استان/شهر</label>
+                    <div>
+
+                        @Html.DropDownList("ProvinceId", ViewBag.ProvinceList as SelectList, "--انتخاب استان--", htmlAttributes: new { @class = "form-control " })
+                        @Html.DropDownList("CityId", ViewBag.cityList as SelectList, null, htmlAttributes: new { @class = "form-control " })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>تعداد استفاده از کد تخفیف</label><br />
+                    <div>
+                        @Html.TextBox("CodeGiftCount", null, new { type = "number", placeholder = "تعداد", @class = "form-control" })
+                    </div>
+                    <div>
+                        <select id="Gender" name="Gender" class="form-control">
+                            <option>--انتخاب جنسیت--</option>
+                            <option value="true">مرد</option>
+                            <option value="false">زن</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>تاریخ آخرین خرید</label>
+                    <div>
+                        <select id="LastDateBuy" name="LastDateBuy" class="form-control">
+                            <option value="">----</option>
+                            <option value="30">1 ماه گذشته</option>
+                            <option value="60">2 ماه گذشته</option>
+                            <option value="90">3 ماه گذشته</option>
+                            <option value="120">4 ماه گذشته</option>
+                            <option value="150">5 ماه گذشته</option>
+                            <option value="180">6 ماه گذشته</option>
+                            <option value="210">7 ماه گذشته</option>
+                            <option value="240">8 ماه گذشته</option>
+                            <option value="270">9 ماه گذشته</option>
+                            <option value="300">10 ماه گذشته</option>
+                            <option value="330">11 ماه گذشته</option>
+                            <option value="360">12 ماه گذشته</option>
+                            <option value="390">13 ماه گذشته</option>
+                            <option value="420">14 ماه گذشته</option>
+                            <option value="450">15 ماه گذشته</option>
+                            <option value="480">16 ماه گذشته</option>
+                            <option value="510">17 ماه گذشته</option>
+                            <option value="540">18 ماه گذشته</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-md-12">
+                    <br />
+                    <div id="CheckList" class="hide">
+                        <span> تعداد کل کاربران : </span> <strong id="All-User"></strong> نفر <br />
+                        <span> تعداد کل کاربران موجود در دیگر گروهها : </span> <strong id="All-User-Duplicate"></strong>  نفر
+                    </div>
+                    <br />
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <span class="btn btn-success" id="CheckCount">بررسی</span>
+                        <input type="submit" value="ثبت" class="btn btn-info hide" id="Reg" />
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+@section Scripts{
+
+    @*View*@
+    <script src="~/Areas/Admin/Content/Scripts/View/ProductCategories.js"></script>
+    @*Product Category*@
+    <script src="~/Areas/Admin/Content/Scripts/View/_CategoryManager.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#CheckCount").click(function () {
+
+                $(".loading").show();
+                var ProductCatId = null;
+                var FromM = null;
+                var ToM = null;
+                var OrderCount = null;
+                var DateCount = null;
+                var ProvinceId = null;
+                var CityId = null;
+                var CodeGiftCount = null;
+                var Gender = null;
+                var LastDateBuy = null;
+
+                if ($("#ProductCatId").val())
+                    ProductCatId = $("#ProductCatId").val();
+
+                if ($("#FromM").val()) {
+                    FromM = $("#FromM").val();
+                }
+                if ($("#ToM").val()) {
+                    ToM = $("#ToM").val();
+                }
+                if ($("#OrderCount").val()) {
+                    OrderCount = $("#OrderCount").val();
+                }
+                if ($("#DateCount").val()) {
+                    DateCount = $("#DateCount").val();
+                }
+                if ($("#ProvinceId").val()) {
+                    ProvinceId = $("#ProvinceId").val();
+                }
+                if ($("#CityId").val()) {
+                    CityId = $("#CityId").val();
+                }
+                if ($("#CodeGiftCount").val()) {
+                    CodeGiftCount = $("#CodeGiftCount").val();
+                }
+                if ($("#Gender").val()) {
+                    Gender = $("#Gender").val();
+                }
+                if ($("#LastDateBuy").val()) {
+                    LastDateBuy = $("#LastDateBuy").val();
+                }
+
+                $.ajax({
+                    type: "Post",
+                    url: "/Admin/usergroup/GetUsers",
+                    data: JSON.stringify({ ProductCatId: ProductCatId, FromM: FromM, ToM: ToM, OrderCount: OrderCount, DateCount: DateCount, ProvinceId: ProvinceId, CityId: CityId, CodeGiftCount: CodeGiftCount, Gender: Gender, LastDateBuy: LastDateBuy }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $("#CheckList").removeClass("hide");
+                        $("#All-User").text(response.AllCount);
+                        $("#All-User-Duplicate").text(response.AllDuplicateCount);
+                        $("#Reg").removeClass("hide");
+                        $(".loading").hide();
+                    }
+                });
+            });
+
+            $("#ProvinceId").change(function () {
+                $(".loading").show();
+                $.ajax({
+                    type: "Get",
+                    url: "/Profile/GetCities?ProvinceId=" + $("#ProvinceId").val(),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $("#CityId option").remove();
+                        $("#CityId").prepend("<option>--همه--</option>");
+                        for (var i = 0; i < response.data.length; i++) {
+
+                            $("#CityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                        }
+
+                        $(".loading").hide();
+                    }
+                });
+            });
+        });
+    </script>
+
+
+}

@@ -1,0 +1,77 @@
+﻿@model Domain.ProductQuestion
+@using ahmadi.Infrastructure.Helper
+
+
+@{
+    var product = ViewBag.product as Domain.Product;
+}
+<title>ویرایش پرسش یا پاسخ  @product.Name</title>
+
+@section Header{
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Products.css?v=1.22" rel="stylesheet" />
+    @*Bootstrap Select*@
+    <link href="~/areas/admin/content/scripts/component/bootstrp-dropdown/bootstrap-select.min.css" rel="stylesheet" />
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("FAQ",new {id=product.Id })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        @if (ViewBag.Error != null)
+        {
+            <p class="alert alert-danger">@ViewBag.Error</p>
+        }
+        @using (Html.BeginForm("FAQEdit", "Products", FormMethod.Post, new { id = "AddForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.InsertDate)
+            @Html.HiddenFor(x => x.ProductId)
+            @Html.HiddenFor(x => x.IsActive)
+            @Html.HiddenFor(x => x.Like)
+            @Html.HiddenFor(x => x.UnLike)
+            @Html.HiddenFor(x => x.UserId)
+            @Html.HiddenFor(x => x.Visited)
+            @Html.HiddenFor(x => x.AdminAnswer)
+            @Html.HiddenFor(x => x.FakeUserFullName)
+            @Html.HiddenFor(x => x.ParrentId)
+            <div class="form-horizontal">
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+
+                <div class="form-group has-feedback col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <textarea id="question" name="question" class="form-control" rows="4">@Model.Message</textarea>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <input type="submit" value="ویرایش" class="btn btn-primary" />
+                    </div>
+                </div>
+
+
+
+            </div>
+        }
+
+        @section Scripts{
+
+
+            <script src="~/Areas/Admin/Content/Scripts/Component/Bootstrp-DropDown/bootstrap-select.min.js"></script>
+
+            @*Product Category*@
+            <script src="~/Areas/Admin/Content/Scripts/View/_CategoryManager.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+
+
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+            <script src="~/Scripts/tinymce/tinymce.min.js"></script>
+            <script src="~/Scripts/tinymce/tiny_mce_load.js"></script>
+
+        }
+    </div>
+</div>

@@ -1,0 +1,84 @@
+﻿@using ahmadi.Models
+@model LoginViewModel
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    Layout = "~/Views/Shared/_RegisterLayout.cshtml";
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+
+
+<section id="loginForm">
+    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        if(ViewBag.UrlReferrer!=null)
+        {
+            <input id="UrlReferrer" name="UrlReferrer" type="hidden" value="@ViewBag.UrlReferrer" />
+        }
+        @Html.AntiForgeryToken()
+        <h4 class="ulLogin">
+            <a href="/account/Login" class="active">ورود به سایت</a>
+            <a href="/account/Register">ثبت نام</a>
+        </h4>
+        @Html.ValidationSummary()
+
+<div class="form-group">
+    @Html.TextBoxFor(m => m.Mobile, new { autocompelete = "off", style = "border-radius: 0",id="Mobile", placeholder = Html.DisplayNameFor(x => x.Mobile), @class = "form-control" })
+    <p class="info-p">کاربر گرامی شماره تلفن همراه با 09 شروع می شود</p>
+    <div>
+        &nbsp;
+        @Html.ValidationMessageFor(m => m.Mobile, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.PasswordFor(m => m.Password, new { autocompelete = "off", style = "border-radius: 0", placeholder = Html.DisplayNameFor(x => x.Password), @class = "form-control" })
+
+    <p class="info-p">رمز عبور باید حداقل 6 کارکتر باشد.</p>
+    <div>
+        &nbsp;
+        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+    </div>
+</div>
+        <div class="container">
+            <div class="form-group row reme">
+                <div class="col-md-6">
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(m => m.RememberMe)
+                        @Html.LabelFor(m => m.RememberMe)
+                    </div>
+                </div>
+                <div class="col-md-6 forgot">
+                    @Html.ActionLink("فراموشی رمز عبور", "ForgotPassword")
+
+                </div>
+            </div>
+        </div>
+        <div class="form-group reme">
+            <div class="col-md-12">
+                <input type="submit" value="ورود" class="btn btn-info" />
+                <input type="hidden" id="Add" name="Add" />
+            </div>
+        </div>
+    }
+</section>
+
+
+@section Scripts{
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfeT2UcAAAAAADjGY2cpdG4iCHKwJ3KZjYu-WYw"></script>
+    <script>
+        $(document).ready(function () {
+            $('#Mobile').on('input', function (event) {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+        });
+        grecaptcha.ready(function () {
+            grecaptcha.execute('6LfeT2UcAAAAAADjGY2cpdG4iCHKwJ3KZjYu-WYw', { action: 'homepage' }).then(function (token) {
+                document.getElementById("Add").value = token;
+            });
+        });
+    </script>
+
+}

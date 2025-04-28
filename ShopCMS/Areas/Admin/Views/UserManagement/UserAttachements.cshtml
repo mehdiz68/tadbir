@@ -1,0 +1,90 @@
+﻿@model PagedList.IPagedList<Domain.attachment>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper;
+<title>فایل های ثبت شده توسطِ @ViewBag.Username</title>
+
+
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Attachement.css" rel="stylesheet" />
+
+    @*Pagging*@
+    <link href="~/Content/Base/Css/PagedList.css" rel="stylesheet" type="text/css" />
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <div class="box-title container" style="padding:0">
+            <i class="fa fa-file"></i><a href="@Url.Action("Index")">فایل های ثبت شده توسطِ  @ViewBag.Username</a>
+            <hr>
+        </div>
+        <br /><br />
+        <div class="container" style="margin:0;padding:0">
+
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                <div id="FilesList">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" style="border: 1px dotted #ccc;text-align:center">
+                            <div>
+                                <div>@Html.Displayattachment(item.FileName, item.Title, "XS", true, htmlAttributes: new { width = "110", height = "55", style = "margin:0 auto;display:block;width:110px;height:55px" })</div>
+                            </div>
+                            <hr />
+                            <p class=" text-bold">
+                                @Html.DisplayFor(modelItem => item.Title)
+
+                            </p>
+                            <div style="font-size:12px">
+                                <p>
+                                    @Html.DisplayFor(modelItem => item.HasMultiSize)
+                                    @Html.Label(" با تغییر اندازه ")
+                                </p>
+                                <p>
+                                    @Html.DisplayFor(modelItem => item.HasWatermark)
+                                    @Html.Label("استفاده از واتر مارک")
+                                </p>
+                                <p>
+                                    @Html.Label("تعداد استفاده : ")
+                                    @Html.DisplayFor(modelItem => item.UseCount)
+                                </p>
+                                <p>
+                                    @Html.Label("حجم : ")
+                                    @Html.DisplayFor(modelItem => item.Capacity) <sup style="color:#169F85;">kb</sup>
+                                </p>
+                            </div>
+                            <div>
+                                <a class="btn btn-success" href="@Url.Action("Edit", "FileManager", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span>ویرایش</a>&nbsp;
+                                <a class="btn btn-success" href="@Url.Action("Details", "FileManager", new { id = item.Id })"><span class="glyphicon glyphicon-list"></span>جزئیات</a><br /><br />
+                            </div>
+                        </div>
+                    }
+                    <div class="clearfix"></div>
+                </div>
+                <hr>
+
+                <p>
+                    <strong>
+                        صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount فایل
+                    </strong>
+                </p>
+                @Html.PagedListPager(Model, page => Url.Action("UserAttachements", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering }))
+            </div>
+
+
+
+            <div class="clearfix"></div>
+        </div>
+
+        @section Scripts{
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/View/Attachement.js"></script>
+        }
+
+        </div>
+</div>

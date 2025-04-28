@@ -1,0 +1,153 @@
+﻿@model Domain.Slider
+<title>ویرایش اسلایدر</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+
+        <h1 style="display:inline-block;font-size: 2em;">
+            ویرایشِ اسلایدر
+        </h1>
+        <br /><br />
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="control-label col-md-1">
+
+                        <span class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                    </div>
+                    <div class="col-md-11">
+                        <div>
+                            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { placeholder = "عنوان", Id = "ContentTitle", @class = "form-control" } })
+                            <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+
+                            <p><label class="ContentTitle"></label> کاراکتر باقی مانده </p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="control-label col-md-1">
+
+                        <span class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                    </div>
+                    <div class="col-md-11">
+                        <div>
+                            @Html.EditorFor(model => model.DisplaySort, new { htmlAttributes = new { placeholder = "ترتیب نمایش", @class = "form-control" } })
+                            <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                            @Html.ValidationMessageFor(model => model.DisplaySort, "", new { @class = "text-danger" })
+                            <p><label class="ContentTitle"></label> ترتیب نمایش</p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                    @Html.CheckBox("IsActive", true, new { @class = "js-switch" }) @Html.LabelFor(m => m.IsActive)
+                </div>
+                <div class="clearfix"></div>
+
+                @Html.HiddenFor(x => x.LanguageId)
+
+
+                <fieldset class="NewFieldset">
+                    <legend class="Newlegend">
+                        محل نمایش اسلایدر
+                        <span class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "محل نمایش").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "محل نمایش").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                    </legend>
+                    <div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TypeId, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.TypeId, ViewBag.TypeIdSelectListItem as List<SelectListItem>, null, htmlAttributes: new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TypeId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group" id="SearchContainer" style="display:none">
+                            <label class="control-label col-md-3">جستجو در محتواها</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" id="SearchContent" placeholder="عنوان را وارد نمایید..." style="display:inline-block;width:40%" />
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LinkId, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+
+
+                                <span id="CurrentLinkId" style="display:none">@Model.LinkId</span>
+
+                                @Html.DropDownListFor(model => model.LinkId, ViewBag.LinkIdSelectListItem as List<SelectListItem>, null, htmlAttributes: new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.LinkId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <br />
+                <fieldset class="NewFieldset">
+                    <legend class="Newlegend">
+                        تصاویر
+                        <span class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تصاویر").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تصاویر").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                    </legend>
+                    <div id="OtherImagesContainer" style="height:370px;overflow:auto">
+                        <div id="createView"></div>
+                        @Ajax.ActionLink("انتخاب یا آپلود تصویر", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',3,1);changeTitle();", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-instagram OpenFileManager" })
+                        <hr style="margin:10px 0" />
+                        @{
+                            if (Session["JanebiList"] != null)
+                            {
+                                <div id="OtherImages">
+                                    @foreach (ahmadi.ViewModels.Slider.OtherImageViewModel item in Session["JanebiList"] as List<ahmadi.ViewModels.Slider.OtherImageViewModel>)
+                                    {
+                                        <div id="@item.Cover" class="OtherImageItem col-lg-3 col-md-4 col-sm-6 col-xs-12 text-center">
+                                            <img src="@(Url.Content("/Content/UploadFiles/") + item.Src)" style="width:110px;height:55px" class="img-responsive img-thumbnail" />
+                                            <p>  @item.Title </p>
+                                            <p>
+                                                <span data-id="@item.Cover" class="RemoveOtherImage glyphicon glyphicon-remove" style="cursor:pointer"></span>
+                                            </p>
+                                            <input type="hidden" id="Janebi-Cover-@item.Cover" value="@item.Cover" name="JanebiId">
+                                            <input id="Janebi-Title-@item.Cover" name="JanebiTitle" type="hidden" value="@item.Title">
+                                            <input id="Janebi-Link-@item.Cover" name="JanebiLink" type="hidden" value="@item.Link">
+                                        </div>
+                                    }
+                                    <div class="clearfix"></div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </fieldset>
+                <br />
+                <div class="form-group">
+                    <input type="submit" value="ذخیره" class="btn btn-primary" />
+                </div>
+            </div>
+                            }
+
+
+
+        @section Scripts{
+            <script src="~/Areas/Admin/Content/Scripts/View/EditSlider.js?v=1.2"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+            <script>
+                $('#title').simplyCountable({ counter: '.title', maxCount: 255, safeClass: 'safe', overClass: 'over' });
+            </script>
+        }
+</div>
+</div>

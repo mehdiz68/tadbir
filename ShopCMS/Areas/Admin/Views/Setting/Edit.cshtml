@@ -1,0 +1,614 @@
+﻿@model ahmadi.ViewModels.Setting.SettingViewModels
+@using ahmadi.Infrastructure.Helper
+<title> ویرایشِ @Model.SettingName</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ویرایشِ @Model.SettingName
+
+        </h1>
+        <br /><br />
+
+              <div class="form-horizontal">
+                  @using (Html.BeginForm())
+                  {
+                      @Html.AntiForgeryToken()
+
+                      @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                      @Html.HiddenFor(model => model.Id)
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام تنظیم").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام تنظیم").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.SettingName)
+                          </div>
+                          <div class="col-md-9">
+                              <p><span class="ContentSettingName"></span> کاراکتر باقی مانده.</p>
+                              @Html.EditorFor(model => model.SettingName, new { htmlAttributes = new { id = "ContentSettingName", @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.SettingName, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.WebSiteName)
+                          </div>
+                          <div class="col-md-9">
+                              <p><span class="ContentWebSiteName"></span> کاراکتر باقی مانده.</p>
+                              @Html.EditorFor(model => model.WebSiteName, new { htmlAttributes = new { id = "ContentWebSiteName", @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.WebSiteName, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.Address)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.Address2)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.Address2, new { htmlAttributes = new { @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.Address2, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.Tele)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.Tele, new { htmlAttributes = new { @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.Tele, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.Tele2)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.Tele2, new { htmlAttributes = new { @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.Tele2, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.Tele3)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.Tele3, new { htmlAttributes = new { @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.Tele3, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.Mobile)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.Mobile, new { htmlAttributes = new { @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.Mobile, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.PostalCode)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.PostalCode, new { htmlAttributes = new { @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              @Html.LabelFor(model => model.Email)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.FooterGoogleMapLatitude)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.FooterGoogleMapLatitude, new { htmlAttributes = new { @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.FooterGoogleMapLatitude, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.FooterGoogleMapLongitude)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.FooterGoogleMapLongitude, new { htmlAttributes = new { @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.FooterGoogleMapLongitude, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.FooterGoogleMapZoom)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.FooterGoogleMapZoom, new { htmlAttributes = new { @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.FooterGoogleMapZoom, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نام وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.TaxNumber)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.TaxNumber, new { htmlAttributes = new { @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.TaxNumber, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان اصلی وب سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان اصلی وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.WebSiteTitle)
+                          </div>
+                          <div class="col-md-9">
+                              <p><span class="ContentWebSiteTitle"></span> کاراکتر باقی مانده.</p>
+                              @Html.EditorFor(model => model.WebSiteTitle, new { htmlAttributes = new { id = "ContentWebSiteTitle", @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.WebSiteTitle, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "متای اصلی توضیحات وب سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "متای اصلی توضیحات وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.WebSiteMetaDescription)
+                          </div>
+                          <div class="col-md-9">
+                              <p><span class="ContentWebSiteMetaDescription"></span> کاراکتر باقی مانده.</p>
+                              @Html.TextAreaFor(model => model.WebSiteMetaDescription, htmlAttributes: new { id = "ContentWebSiteMetaDescription", @class = "form-control" })
+                              @Html.ValidationMessageFor(model => model.WebSiteMetaDescription, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "متای اصلی کلمات کلیدی وب سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "متای اصلی کلمات کلیدی وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.WebSiteMetakeyword)
+                          </div>
+                          <div class="col-md-9">
+                              <p><span class="ContentWebSiteMetakeyword"></span> کاراکتر باقی مانده.</p>
+                              @Html.EditorFor(model => model.WebSiteMetakeyword, new { htmlAttributes = new { id = "ContentWebSiteMetakeyword", @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.WebSiteMetakeyword, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "لوگوی وب سایت").Any()?Html.Raw( HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "لوگوی وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.Logo)
+                          </div>
+
+                          <div class="col-md-9">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب یا آپلود لوگو").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب یا آپلود لوگو").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                              @Ajax.ActionLink("انتخاب یا آپلود لوگو", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('Attachementcover',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-success OpenFileManager Attachementcover" })
+                              <div id="createView"></div>
+
+                              <div class="AttachementContainer text-left">
+
+                                  @if (Model.Logo.HasValue)
+                                  {
+                                      @Html.Displayattachment(Model.attachment.FileName, Model.WebSiteTitle, "SM", htmlAttributes: new { @class = "img-responsive", width = "220", height = "120", style = "display:inline-block;width:220px;height:120px" })
+                                  }
+                                  else
+                                  {
+
+                                      <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:220px;height:120px" />
+                                  }
+
+
+                                  @Html.EditorFor(model => model.Logo, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                                  @Html.ValidationMessageFor(model => model.Logo, "", new { @class = "text-danger" })
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "واترمارک وب سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "واترمارک وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.Watermark)
+                          </div>
+
+                          <div class="col-md-9">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب یا آپلود واترمارک").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب یا آپلود واترمارک").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                              @Ajax.ActionLink("انتخاب یا آپلود واترمارک", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('Attachementcover2',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-success OpenFileManager Attachementcover2" })
+
+
+                              <div class="AttachementContainer text-left">
+
+                                  @if (Model.Watermark.HasValue)
+                                  {
+                                      @Html.Displayattachment(Model.Watermarkattachment.FileName, Model.WebSiteTitle, "SM", htmlAttributes: new { @class = "img-responsive", width = "220", height = "120", style = "display:inline-block;width:220px;height:120px" })
+                                  }
+                                  else
+                                  {
+
+                                      <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:220px;height:120px" />
+                                  }
+
+
+                                  @Html.EditorFor(model => model.Watermark, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                                  @Html.ValidationMessageFor(model => model.Watermark, "", new { @class = "text-danger" })
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "لوگوی وب سایت").Any()?Html.Raw( HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "لوگوی وب سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.FactorLogo)
+                          </div>
+
+                          <div class="col-md-9">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب یا آپلود لوگو").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب یا آپلود لوگو").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                              @Ajax.ActionLink("انتخاب یا آپلود لوگوی فاکتور", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('Attachementcover3',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-success OpenFileManager Attachementcover3" })
+
+                              <div class="AttachementContainer text-left">
+
+                                  @if (Model.FactorLogo.HasValue)
+                                  {
+                                      @Html.Displayattachment(Model.FactorAttachment.FileName, Model.WebSiteTitle, "SM", htmlAttributes: new { @class = "img-responsive", width = "220", height = "120", style = "display:inline-block;width:220px;height:120px" })
+                                  }
+                                  else
+                                  {
+
+                                      <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:220px;height:120px" />
+                                  }
+
+
+                                  @Html.EditorFor(model => model.FactorLogo, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                                  @Html.ValidationMessageFor(model => model.FactorLogo, "", new { @class = "text-danger" })
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "موقعیت واترمارک").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "موقعیت واترمارک").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.WaterMarkPosition)
+                          </div>
+                          <div class="col-md-9">
+
+                              <select class="form-control" id="WaterMarkPosition" name="WaterMarkPosition">
+                                  <option value="0" selected="@(Model.WaterMarkPosition==0?true:false)">پایین چپ</option>
+                                  <option value="1" selected="@(Model.WaterMarkPosition==1?true:false)">پایین مرکز</option>
+                                  <option value="2" selected="@(Model.WaterMarkPosition==2?true:false)">پایین راست</option>
+                                  <option value="3" selected="@(Model.WaterMarkPosition==3?true:false)">مرکز چپ</option>
+                                  <option value="4" selected="@(Model.WaterMarkPosition==4?true:false)">مرکز مرکز</option>
+                                  <option value="5" selected="@(Model.WaterMarkPosition==5?true:false)">مرکز راست</option>
+                                  <option value="6" selected="@(Model.WaterMarkPosition==6?true:false)">بالا چپ</option>
+                                  <option value="7" selected="@(Model.WaterMarkPosition==7?true:false)">بالا مرکز</option>
+                                  <option value="8" selected="@(Model.WaterMarkPosition==8?true:false)">بالا راست</option>
+                              </select>
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "اعمال واترمارک برای عکس بزرگ").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "اعمال واترمارک برای عکس بزرگ").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.LargeImageWaremark)
+                          </div>
+                          <div class="col-md-9">
+
+                              <select class="form-control" id="LargeImageWaremark" name="LargeImageWaremark">
+                                  <option value="True" selected="@(Model.LargeImageWaremark?true:false)">فقط عکس اصلی</option>
+                                  <option value="False" selected="@(!Model.LargeImageWaremark?true:false)">همه عکس ها</option>
+                              </select>
+                          </div>
+                      </div>
+
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "آیکن هدر").Any()?Html.Raw( HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "آیکن هدر").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                              @Html.LabelFor(model => model.Favicon)
+                          </div>
+
+                          <div class="col-md-9">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب یا آپلود آیکن هدر").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب یا آپلود آیکن هدر").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                              @Ajax.ActionLink("انتخاب یا آپلود آیکن هدر", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('Attachementfavicon',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-success OpenFileManager Attachementfavicon" })
+
+                              <div class="AttachementContainer text-left">
+
+                                  @if (Model.Favicon.HasValue)
+                                  {
+                                      @Html.Displayattachment(Model.Faviconattachment.FileName, Model.WebSiteTitle, "SM", htmlAttributes: new { @class = "img-responsive", width = "32", height = "32", style = "display:inline-block;width:32px;height:32px" })
+                                  }
+                                  else
+                                  {
+
+                                      <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:32px;height:32px" />
+                                  }
+
+
+                                  @Html.EditorFor(model => model.Favicon, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                                  @Html.ValidationMessageFor(model => model.Favicon, "", new { @class = "text-danger" })
+                              </div>
+                          </div>
+                      </div>
+
+                      @Html.HiddenFor(x => x.StaticContentDomain)
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              @Html.LabelFor(model => model.StaticContentDomain)
+                          </div>
+                          <div class="col-md-9">
+                              ابتدا در سرور یا هاست خود یک زیر دامنه alias  بسازید و آن را به آدرس YourWebsiteRoot/Content/Uploadfiles متصل کنید و آن زیر دامنه را اینجا تایپ کنید. مثال درست : http://static.seotoday.com
+                              @Html.EditorFor(model => model.StaticContentDomain, new { htmlAttributes = new { @class = "form-control text-left Ltr" } })
+                              @Html.ValidationMessageFor(model => model.StaticContentDomain, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+
+
+                      @Html.HiddenFor(model => model.LargeSizeWidth)
+                      @Html.HiddenFor(model => model.LargeSizeHeight)
+                      @Html.HiddenFor(model => model.MediumSizeWidth)
+                      @Html.HiddenFor(model => model.MediumSizeHeight)
+                      @Html.HiddenFor(model => model.SmallSizeWidth)
+                      @Html.HiddenFor(model => model.SmallSizeHeight)
+                      @Html.HiddenFor(model => model.XsmallSizeWidth)
+                      @Html.HiddenFor(model => model.XsmallSizeHeight)
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "کدِ ثبت وب سایت در وب مستر تولز ( اسکریپت )").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "کدِ ثبت وب سایت در وب مستر تولز ( اسکریپت )").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.WebmasterVerification)
+                          </div>
+                          <div class="col-md-9">
+                              <p>برای ورود به وب مستر تولز گوگل ، <a target="_blank" href="http://google.com/webmasters/tools/home?hl=en"> اینجا </a> کلیک کنید.</p>
+
+                              @Html.TextAreaFor(model => model.WebmasterVerification, htmlAttributes: new { @class = "form-control" })
+                              @Html.ValidationMessageFor(model => model.WebmasterVerification, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "کدِ ثبت وب سایت در وب سایت های آماری ( اسکریپت )").Any()?Html.Raw( HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "کدِ ثبت وب سایت در وب سایت های آماری ( اسکریپت )").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.AnalyticsVerification)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.TextAreaFor(model => model.AnalyticsVerification, htmlAttributes: new { @class = "form-control" })
+                              @Html.ValidationMessageFor(model => model.AnalyticsVerification, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      @Html.HiddenFor(x => x.PopUpActive)
+                      @Html.HiddenFor(x => x.PopUpMessage)
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "https").Any()?Html.Raw( HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "https").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.HasHttps)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.HasHttps)
+                              @Html.ValidationMessageFor(model => model.HasHttps, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              @Html.LabelFor(model => model.yektanet)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.yektanet)
+                              @Html.ValidationMessageFor(model => model.yektanet, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "زمان اعلام قیمت سفارش استعلامی").Any()?Html.Raw( HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "زمان اعلام قیمت سفارش استعلامی").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.ShoppingEstelamMinutes)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.ShoppingEstelamMinutes, new { htmlAttributes = new { @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.AnalyticsVerification, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="control-label col-md-3">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "مهلت پرداخت سفارش استعلامی").Any()?Html.Raw( HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "مهلت پرداخت سفارش استعلامی").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              @Html.LabelFor(model => model.ShoppingPayEstelamMinutes)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.ShoppingPayEstelamMinutes, new { htmlAttributes = new { @class = "form-control" } })
+                              @Html.ValidationMessageFor(model => model.AnalyticsVerification, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+
+
+                      if (ViewBag.DefaultCurrency != null)
+                      {
+                          <br />
+                          <fieldset class="NewFieldset">
+                              <legend class="Newlegend">
+                                  <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نرخ ارز پیش فرض").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نرخ ارز پیش فرض").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                                  <span>نرخ ارز پیش فرض</span>
+                              </legend>
+                              <div>
+                                  <div class="form-group">
+                                      <div class="control-label col-md-3">
+                                          <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "ارز انتخابی سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "ارز انتخابی سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                                          @Html.LabelFor(model => model.DefaultCurrency)
+                                      </div>
+                                      <div class="col-md-9">
+                                          @Html.DropDownList("DefaultCurrency", null, htmlAttributes: new { @class = "form-control" })
+                                          @Html.ValidationMessageFor(model => model.DefaultCurrency, "", new { @class = "text-danger" })
+                                      </div>
+                                  </div>
+                                  <div class="form-group">
+                                      <div class="control-label col-md-3">
+                                          <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نرخ تبدیل ارز").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نرخ تبدیل ارز").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                                          @Html.LabelFor(model => model.CurrencyConvertionRate)
+                                      </div>
+                                      <div class="col-md-9">
+                                          @Html.EditorFor(model => model.CurrencyConvertionRate, new { htmlAttributes = new { @class = "form-control" } })
+                                          @Html.ValidationMessageFor(model => model.CurrencyConvertionRate, "", new { @class = "text-danger" })
+                                      </div>
+                                  </div>
+                              </div>
+                          </fieldset>
+                          <br />
+
+                      }
+                      else
+                      {
+                          @Html.Hidden("DefaultCurrency", 1)
+                      }
+
+
+                      <br />
+                      <fieldset class="NewFieldset">
+                          <legend class="Newlegend">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تنظیم ارزش عددی بن تخفیف").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تنظیم ارزش عددی بن تخفیف").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              <span>تنظیم ارزش عددی بن تخفیف</span>
+                          </legend>
+                          <div>
+                              <div class="form-group">
+                                  <div class="control-label col-md-3">
+                                      <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "ارزش عددی بن تخفیف").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "ارزش عددی بن تخفیف").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                                      @Html.LabelFor(model => model.BonPrice)
+                                  </div>
+                                  <div class="col-md-9">
+                                      @Html.EditorFor(model => model.BonPrice, new { htmlAttributes = new { @class = "form-control" } }) @CoreLib.Infrastructure.CommonFunctions.GetCurrency(Model.DefaultCurrency)
+                                      @Html.ValidationMessageFor(model => model.BonPrice, "", new { @class = "text-danger" })
+                                  </div>
+                              </div>
+                          </div>
+                      </fieldset>
+                      <br />
+                      <br />
+                      <fieldset class="NewFieldset">
+                          <legend class="Newlegend">
+                              <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تنظیم انقضای بن تخفیف").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تنظیم انقضای بن تخفیف").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                              <span>تنظیم انقضای بن تخفیف</span>
+                          </legend>
+                          <div>
+                              <div class="form-group">
+                                  <div class="control-label col-md-3">
+                                      <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تعداد روز برای انقضای بن تخفیف").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تعداد روز برای انقضای بن تخفیف").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                                      @Html.LabelFor(model => model.BonExpireDay)
+                                  </div>
+                                  <div class="col-md-9">
+                                      @Html.EditorFor(model => model.BonExpireDay, new { htmlAttributes = new { @class = "form-control" } })
+                                      @Html.ValidationMessageFor(model => model.BonExpireDay, "", new { @class = "text-danger" })
+                                  </div>
+                              </div>
+                          </div>
+                      </fieldset>
+                      <br />
+                      <br />
+
+
+                      @Html.HiddenFor(x => x.TaxRate)
+
+
+
+                      @Html.Hidden("LanguageId", Model.LanguageId)
+                      <div class="form-group">
+                          <div class="col-md-offset-2 col-md-9">
+                              <input type="submit" value="ذخیره تغییرات" class="btn btn-info" />
+                          </div>
+                      </div>
+
+
+                  }
+
+                  @{
+                      if (ViewBag.HeaderMainMenuVisibility == true)
+                      {
+
+                          <br />
+                          <fieldset class="NewFieldset">
+                              <legend class="Newlegend">
+                                  <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "آیتم های جست و جوی سایت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "آیتم های جست و جوی سایت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                                  <span>آیتم های جست و جوی سایت</span>
+                              </legend>
+                              <div class="ContentType">
+                                  @{
+                                      List<CoreLib.ViewModel.Xml.XContentType> ContentTypes = ViewBag.ContentTypes as List<CoreLib.ViewModel.Xml.XContentType>;
+                                      foreach (var item in ContentTypes)
+                                      {
+                                          if (item.InSearch)
+                                          {
+                                              <input checked type="checkbox" data-id="@(item.Id)" /><label>&nbsp; @item.Name &nbsp;&nbsp;</label>
+
+                                          }
+                                          else
+                                          {
+                                              <input type="checkbox" data-id="@(item.Id)" /><label>&nbsp; @item.Name &nbsp;&nbsp;</label>
+
+                                          }
+                                      }
+                                  }
+                                  <input type="button" id="BtnEditContentType" class="btn btn-primary" value="ثبت" />
+                              </div>
+                          </fieldset>
+                      }
+
+
+                  }
+                  @Html.HiddenFor(x => x.HelpActiveShowInDefault)
+              </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $('#ContentSettingName').simplyCountable({ counter: '.ContentSettingName', maxCount: 50, safeClass: 'safe', overClass: 'over' });
+        $('#ContentWebSiteName').simplyCountable({ counter: '.ContentWebSiteName', maxCount: 50, safeClass: 'safe', overClass: 'over' });
+        $('#ContentWebSiteTitle').simplyCountable({ counter: '.ContentWebSiteTitle', maxCount: 64, safeClass: 'safe', overClass: 'over' });
+        $('#ContentWebSiteMetaDescription').simplyCountable({ counter: '.ContentWebSiteMetaDescription', maxCount: 155, safeClass: 'safe', overClass: 'over' });
+        $('#ContentWebSiteMetakeyword').simplyCountable({ counter: '.ContentWebSiteMetakeyword', maxCount: 48, safeClass: 'safe', overClass: 'over' });
+
+    </script>
+    <script src="~/Areas/Admin/Content/Scripts/View/EditSetting.js"></script>
+    @Scripts.Render("~/bundles/Admin/FileManager/Js")
+    <script src="~/Scripts/tinymce/tinymce.min.js"></script>
+    <script src="~/Scripts/tinymce/tiny_mce_load.js"></script>
+}

@@ -1,0 +1,12 @@
+﻿@model IEnumerable<Domain.ViewModels.ProductItem>
+@{
+    int? w = ViewBag.w as int?;
+    w = w.HasValue ? w.Value : 1280;
+    int? h = ViewBag.h as int?;
+    h = h.HasValue ? h.Value : 1280;
+    string size = ViewBag.size as string;
+    size = size != null ? size : "LG";
+}
+<div class="item">
+    @Html.Partial("_ProductItem2", Model, new ViewDataDictionary { { "w", w }, { "h", h }, { "size", size } })
+</div>

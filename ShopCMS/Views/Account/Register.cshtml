@@ -1,0 +1,119 @@
+﻿@model ahmadi.Models.RegisterViewModel
+@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var setting = ViewBag.setting as Domain.Setting;
+    var RegisterPage = ViewBag.RegisterPage as Domain.Content;
+    var ReturnUrl = ViewBag.ReturnUrl as string;
+    Layout = "~/Views/Shared/_RegisterLayout.cshtml";
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+
+<section id="loginForm">
+    @if (ViewBag.Message != null)
+    {
+        <p class="alert alert-danger">@ViewBag.Message</p>
+    }
+    <div class=" Register-Form">
+        @if (ViewBag.Error != null)
+        {
+            <div class="text-center alert alert-danger">
+                <p><strong>@ViewBag.Error</strong></p>
+                <br /><br /><p>اکنون می توانید به صفحه ای که در آن بودید بازگردید و یا با تکمیل اطلاعات حساب کاربری خود به کلیه امکانات و سرویس ها دسترسی داشته باشد.</p>
+                <br /><br /> <p>
+                    <a class="btn btn-info" style="color:#fff;background-color:#ccc;border:0" href="javascript:void(0);" onclick="history.go(-3);">بازگشت به صفحه ای که در آن بودید</a>
+                    <a class="btn btn-info" style="color:#fff" href="/Profile/Edit?r=/Cart/Shipping/">تکمیل حساب کاربری</a>
+                </p>
+            </div>
+        }
+
+
+        <br /><br />
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <h4 class="ulLogin">
+                <a href="/account/Login">ورود به سایت</a>
+                <a href="/account/Register" class="active">ثبت نام</a>
+            </h4>
+
+            @Html.AntiForgeryToken()
+
+            @*@Html.ValidationSummary()*@
+            @Html.Hidden("r", ReturnUrl)
+
+            <div class="form-group">
+                @Html.TextBoxFor(m => m.Mobile, new { style = "border-radius: 0", placeholder = Html.DisplayNameFor(x => x.Mobile), @type = "number", @class = "form-control", autocomplete = "off" })
+                <div>
+                    &nbsp;
+                    @Html.ValidationMessageFor(m => m.Mobile, "", new { @class = "text-danger" })
+                </div>
+
+
+                <p class="info-p">کاربر گرامی شماره تلفن همراه با 09 شروع می شود</p>
+
+            </div>
+            <div class="form-group">
+                @Html.TextBoxFor(m => m.FirstName, new { style = "border-radius: 0", placeholder = Html.DisplayNameFor(x => x.FirstName), @class = "form-control", autocomplete = "off" })
+
+                <div>
+                    &nbsp;
+                    @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.TextBoxFor(m => m.LastName, new { style = "border-radius: 0", placeholder = Html.DisplayNameFor(x => x.LastName), @class = "form-control", autocomplete = "off" })
+
+                <div>
+                    &nbsp;
+                    @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.PasswordFor(m => m.Password, new { style = "border-radius: 0", placeholder = Html.DisplayNameFor(x => x.Password), @class = "form-control" })
+                <div>
+                    &nbsp;
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+                <p class="info-p">رمز عبور باید حداقل 6 کارکتر باشد.</p>
+            </div>
+            <div class="form-group">
+                @Html.PasswordFor(m => m.ConfirmPassword, new { style = "border-radius: 0", placeholder = Html.DisplayNameFor(x => x.ConfirmPassword), @class = "form-control" })
+                <div>
+                    &nbsp;
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+
+            <div class="form-group Agree">
+                @Html.CheckBox("Agree", true)<a href="@(RegisterPage != null ? Url.Action("Index", "Content", new { id = RegisterPage.Id, title = CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(RegisterPage.Title) }) : "#")" target="_blank"> شرایط و قوانین </a>  را مطالعه کرده و قبول دارم
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-8">
+                    <input type="submit" class="btn btn-info" value="ثبت" />
+                    <input type="hidden" id="Add" name="Add" />
+                </div>
+            </div>
+        }
+
+
+    </div>
+
+</section>
+
+@section Scripts{
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfeT2UcAAAAAADjGY2cpdG4iCHKwJ3KZjYu-WYw"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute('6LfeT2UcAAAAAADjGY2cpdG4iCHKwJ3KZjYu-WYw', { action: 'homepage' }).then(function (token) {
+                document.getElementById("Add").value = token;
+            });
+        });
+    </script>
+
+}

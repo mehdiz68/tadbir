@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Domain.ProductAttributeItem>
+@using ahmadi.Infrastructure.Helper
+@using Domain;
+
+<title>مقادیر خصوصیت @Model.First().ProductAttribute.Name</title>
+
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;">
+
+            <a href="@Url.Action("Items","ProductAttributes", new { AttributeId = @Model.First().ProductAttribute.Id})"> مقادیر خصوصیت ' @Model.First().ProductAttribute.Name '</a>
+
+        </h1>
+
+        <br /><br />
+        @if (ViewBag.AddPermission)
+            {
+            <p><a class="btn btn-success" href="@Url.Action("CreateItem", new { id = @Model.First().ProductAttribute.Id})"><span class="glyphicon glyphicon-plus"></span> ایجاد مقدار جدید </a></p>
+        }
+
+        
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+                                <span>مقدار</span>
+                           
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+
+                        <tr class="rowItem" id="@item.Id">
+                            <td class="text-center">
+                                @item.Value
+                            </td>
+
+                            <td class="text-center">
+                                @if (ViewBag.EditPermission)
+                                {
+                                    <a class="btn btn-success" href="@Url.Action("EditItem", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                }
+                                @if (ViewBag.DeletePermission)
+                                {
+                                    <a class="btn btn-danger" href="@Url.Action("DeleteItem", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+
+        @section Scripts{
+
+            @*View*@
+        <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+        <script src="~/Areas/Admin/Content/Scripts/View/SortItems.js"></script>
+
+
+        }
+
+
+        </div>
+</div>

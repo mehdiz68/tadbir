@@ -1,0 +1,189 @@
+﻿@model List<CoreLib.Infrastructure.licenseModules>
+@using Microsoft.AspNet.Identity
+@{
+    var setting = ViewBag.setting as Domain.Setting;
+}
+
+@if (Model.Any(x => x.HasAccess))
+{
+    if (Model.Any(x => x.Id == 1 && x.HasAccess))
+    {
+        <li>
+            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+
+                <i class="fa fa-home"></i> صفحه اصلی <span class="fa fa-chevron-down"></span>
+
+            </a>
+            <ul class="dropdown-menu dropdown-usermenu pull-right">
+                <li><a href="~/Admin">داشبرد</a></li>
+                <li><a href="~/Admin/Home/ChangePassword">تغییر رمز عبور</a></li>
+                <li><a href="~/Admin/UserManagement/Details?id=@User.Identity.GetUserId()">پروفایل من</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-table"></i> تنظیمات <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-usermenu pull-right">
+                <li><a href="~/Admin/ContentTypes">انواع محتوا</a></li>
+                <li><a href="~/Admin/Setting">تنظیمات سایت</a></li>
+                <li><a href="~/Admin/FileManager">فایل ها</a></li>
+                <li><a href="~/Admin/UserManagement">مدیریت کاربران</a></li>
+                <li><a href="~/Admin/EventLogs">رویدادها</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-desktop"></i> ابزار   <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-usermenu pull-right">
+                <li><a href="~/Admin/Socials">شبکه های اجتماعی</a></li>
+                <li><a href="~/Admin/Menus">منو</a></li>
+                <li><a href="~/Admin/Sliders">اسلایدشو</a></li>
+                <li><a href="~/Admin/PopUp">اعلانات ( پاپ آپ )</a></li>
+            </ul>
+        </li>
+
+        <li>
+
+            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-edit"></i> محتوا <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-usermenu pull-right">
+
+                <li><a href="~/Admin/StaticText">محتواهای ثابت</a></li>
+                @{
+                    CoreLib.ViewModel.Xml.XMLReader readXml = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+                    foreach (var item in readXml.ListOfXContentType())
+                    {
+                        if (item.Id == 0 || item.Id==9)
+                        {
+                            <li><a href="~/Admin/BaseContents">@item.Name</a></li>
+
+                        }
+                        else
+                        {
+                            <li><a href="~/Admin/Contents?ContentTypeId=@item.Id">@item.Name</a></li>
+
+                        }
+                    }
+                }
+                <li><a href="~/Admin/Tags">برچسب ها</a></li>
+                <li><a href="~/Admin/Comments">مدیریت نظرات</a></li>
+                <li><a href="~/Admin/ContactUs">گزارش تماس با ما</a></li>
+
+            </ul>
+        </li>
+
+        <li>
+            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-desktop"></i> پرسش و پاسخ   <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-usermenu pull-right">
+                <li><a href="~/Admin/TicketCategories">دسته بندی پرسش ها</a></li>
+                <li><a href="~/Admin/Tickets">پرسش ها</a></li>
+            </ul>
+        </li>
+
+
+    }
+
+    if (Model.Any(x => x.Id == 4 && x.HasAccess))
+    {
+        <li>
+            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-bar-chart-o"></i> تبلیغات <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-usermenu pull-right">
+                @*<li><a href="~/Admin/#">دفترچه تلفن</a></li>
+                    <li><a href="~/Admin/#">ارسال پیامک</a></li>
+                    <li><a href="~/Admin/#">خبرنامه</a></li>*@
+                <li><a href="~/Admin/adveresting">تبلیغات</a></li>
+            </ul>
+        </li>
+    }
+
+
+}
+
+
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu hide">
+    @if (Model.Any(x => x.HasAccess))
+    {
+        <div class="menu_section">
+            <h3>سیستم مدیریت محتوا</h3>
+            <ul class="nav side-menu">
+                @if (Model.Any(x => x.Id == 1 && x.HasAccess))
+                {
+                    <li>
+                        <a><i class="fa fa-home"></i> صفحه اصلی <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="~/Admin">داشبرد</a></li>
+                            <li><a href="~/Admin/Home/ChangePassword">تغییر رمز عبور</a></li>
+                            <li><a href="~/Admin/UserManagement/Details?id=@User.Identity.GetUserId()">پروفایل من</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a><i class="fa fa-table"></i> تنظیمات <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="~/Admin/ContentTypes">انواع محتوا</a></li>
+                            <li><a href="~/Admin/Setting">تنظیمات سایت</a></li>
+                            <li><a href="~/Admin/FileManager">فایل ها</a></li>
+                            <li><a href="~/Admin/UserManagement">مدیریت کاربران</a></li>
+                            <li><a href="~/Admin/EventLogs">رویدادها</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a><i class="fa fa-desktop"></i> ابزار   <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="~/Admin/Socials">شبکه های اجتماعی</a></li>
+                            <li><a href="~/Admin/Menus">منو</a></li>
+                            <li><a href="~/Admin/Sliders">اسلایدشو</a></li>
+                            <li><a href="~/Admin/PopUp">اعلانات ( پاپ آپ )</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a><i class="fa fa-edit"></i> محتوا <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="~/Admin/StaticText">محتواهای ثابت</a></li>
+                            @{
+                                CoreLib.ViewModel.Xml.XMLReader readXml = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+                                foreach (var item in readXml.ListOfXContentType())
+                                {
+                                    if (item.Id == 0)
+                                    {
+                                        <li><a href="~/Admin/BaseContents">@item.Name</a></li>
+
+                                    }
+                                    else
+                                    {
+                                        <li><a href="~/Admin/Contents?ContentTypeId=@item.Id">@item.Name</a></li>
+
+                                    }
+                                }
+                            }
+                            <li><a href="~/Admin/Tags">برچسب ها</a></li>
+                            <li><a href="~/Admin/Comments">مدیریت نظرات</a></li>
+                            <li><a href="~/Admin/ContactUs">گزارش تماس با ما</a></li>
+
+                        </ul>
+                    </li>
+                }
+                @if (Model.Any(x => x.Id == 4 && x.HasAccess))
+                {
+                    <li>
+                        <a><i class="fa fa-bar-chart-o"></i> تبلیغات <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            @*<li><a href="~/Admin/#">دفترچه تلفن</a></li>
+                                <li><a href="~/Admin/#">ارسال پیامک</a></li>
+                                <li><a href="~/Admin/#">خبرنامه</a></li>*@
+                            <li><a href="~/Admin/#">تبلیغات</a></li>
+                        </ul>
+                    </li>
+                }
+
+            </ul>
+        </div>
+    }
+</div>

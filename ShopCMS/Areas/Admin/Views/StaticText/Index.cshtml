@@ -1,0 +1,189 @@
+﻿@model IEnumerable<Domain.StaticTextCategory>
+@using PagedList.Mvc;
+@using CoreLib;
+@using ahmadi.Infrastructure.Helper;
+
+<title>محتواهای ثابت</title>
+
+@section Header{
+
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    @*Pagging*@
+    <link href="~/Content/Base/Css/PagedList.css" rel="stylesheet" type="text/css" />
+
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            محتواهای ثابت
+
+
+        </h1>
+
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2> جستجو / فیلتر</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content" style="display:none">
+
+
+                <div id="SearchPage">
+                    <div>
+                        <div>
+
+                            @using (Html.BeginForm("Index", "StaticText", FormMethod.Get))
+                            {
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("LanguagenameString", ViewBag.LanguagenameSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان ( وب سایت ) ", style = "width:90%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-language form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+
+                                <div class="clearfix"></div>
+
+                                <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                @Html.ActionLink("نمایش همه", "Index", null, htmlAttributes: new { @class = "btn btn-success" })
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+
+                        </th>
+                        <th class="text-center column-title">
+                            زبان
+                        </th>
+                        <th class="text-center column-title">
+                            عنوان
+                        </th>
+                        <th class="text-center column-title">
+                            تصویر
+                        </th>
+
+
+                        <th class="text-center column-title"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @if(item.LanguageId==1)
+                                {
+                                    <span>فارسی</span>
+                                }
+                                else
+                                {
+                                    <span>انگلیسی</span>
+                                }
+                            </td>
+                            <td>
+                                @item.staticTextType.EnumDisplayNameFor()
+                            </td>
+                            <td>
+
+                                <a href="@Html.DisplayattachmentUrl(item.attachment.FileName,"LG")">
+                                    @Html.Displayattachment(item.attachment.FileName, item.staticTextType.EnumDisplayNameFor(), "SM", htmlAttributes: new { @class = "img-responsive" })
+                                </a>
+
+                            </td>
+                          
+                            <td>
+
+                                <a class="btn btn-success" href="@Url.Action("Details", new { id=item.Id })"><span class="glyphicon glyphicon-list"></span> نمایش جزئیات </a>
+                                <br />
+                                <a class="DeleteContent btn btn-danger" href="@Url.Action("DeleteConfirmed", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> فعال/غیرفعال </a>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+         
+
+        </div>
+
+        @section Scripts{
+            <script src="~/Areas/Admin/Content/Scripts/View/IndexContactUs.js"></script>
+            @*Persian Calender*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $(".DeleteContent").click(function (e) {
+                        e.preventDefault();
+                        var $this = $(this);
+
+                        swal({
+                            title: "",
+                            text: "آیا مطمئن هستید؟",
+                            type: "success",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-success",
+                            confirmButtonText: "بلی",
+                            cancelButtonText: "خیر",
+                            cancelButtonClass: "btn-danger",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    $(".loading").show();
+                                    $.ajax({
+                                        type: "POST",
+                                        url: $this.attr("href"),
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                        success: function (response) {
+                                            if (response.statusCode == 400) {
+                                                swal({ title: "", text: response.message, type: "success", showCancelButton: false, confirmButtonClass: 'btn-error', confirmButtonText: 'بستن' });
+                                            }
+                                            else {
+                                                swal({ title: "", text: response.message, type: "error", showCancelButton: false, confirmButtonClass: 'btn-error', confirmButtonText: 'بستن' });
+                                            }
+
+                                            $(".loading").hide();
+                                        }
+                                    });
+                                    swal.close();
+                                } else {
+                                    swal.close();
+                                }
+                            });
+
+
+                    });
+                });
+            </script>
+        }
+    </div>
+</div>

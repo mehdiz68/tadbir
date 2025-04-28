@@ -1,0 +1,110 @@
+﻿@model IEnumerable<Domain.Holiday>
+@using ahmadi.Infrastructure.Helper
+<title>مدیریت روزهای تعطیل</title>
+@{
+    var setting = ViewBag.setting as Domain.Setting;
+    
+}
+
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+ 
+}
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+                <a href="@Url.Action("Index","Holidays")">  مدیریت روزهای تعطیل</a>
+            </h1>
+
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+    
+            <div id="View1" >
+
+                <br />
+                <p>
+                    @if (ViewBag.AddPermission)
+            {
+                        <a class="btn btn-success" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد روز تعطیل جدید </a>
+                    }
+                </p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>
+                              
+                            </th>
+                            <th>
+                               تاریخ تعطیلی
+                            </th>
+                            <th>
+                              توضیح
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+                        @{ int i = 1;}
+                        @foreach (var item in Model.OrderBy(x=>x.InsertDate))
+                        {
+                            <tr>
+                                <td>
+                                    @i
+                                </td>
+                                <td>
+                                   @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate)
+                                </td>
+                                <td>
+                                    @item.Description
+                                </td>
+                                <td>
+
+                                    @if (ViewBag.EditPermission)
+                                    {
+                                        <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                    }
+                                    @if (ViewBag.DeletePermission)
+                                    {
+                                        <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                                    }
+                                </td>
+                            </tr>
+                                            i++;
+                                        }
+
+                    </table>
+                </div>
+            </div>
+            
+
+       
+    </div>
+</div>
+
+
+
+
+
+@section Scripts{
+    <script>
+    </script>
+    <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+
+}

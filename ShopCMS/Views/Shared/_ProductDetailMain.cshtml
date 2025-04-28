@@ -1,0 +1,639 @@
+﻿@model Domain.ViewModels.ProductDetailItem
+@using ahmadi.Infrastructure.Helper;
+@{
+    string url = "/TFP/" + Model.ProductId + "/" + CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(Model.PageAddress);
+    var currentProductprice = ViewBag.currentProductprice as Domain.ProductPrice;
+    string classname = "";
+    string currentAttribute = "";
+    int i = 1;
+    int quantity = 0;
+    int maxQuantity = 0;
+    if (Model.offerQuantity > 0)
+    {
+        quantity = Model.offerQuantity;
+    }
+    else
+    {
+        quantity = Model.quantity;
+    }
+    if (Model.offerMaxQuantity > 0)
+    {
+        maxQuantity = Model.offerMaxQuantity;
+    }
+    else
+    {
+        maxQuantity = Model.Basketquantity;
+    }
+}
+<input id="pprid" type="hidden" value="@Model.Id" />
+<input id="pid" type="hidden" value="@Model.ProductId" />
+
+<div class="col-lg-4 col-md-4 mb-4 mb-md-0 row pr-image-container">
+    <div class="c-gallery ">
+        <div class="c-gallery__item">
+            <div class="c-gallery__options">
+                <div class="product_share">
+                    <ul class="social_icons">
+                        <li><a class="add_compare" title="مقایسه" href="#"><i class="icon-shuffle"></i> <span> مقایسه </span></a></li>
+                        <li><a class="add_wishlist" title="مورد علاقه" href="#" data-id="@Model.ProductId"><i class="icon-heart"></i><span>  مورد علاقه </span></a></li>
+                        <li><a class="add_bell add_letmeknow" title="به من اطلاع بده" href="#" data-id="@Model.ProductId"><i class="icon-bell"></i><span> به من اطلاع بده </span></a></li>
+                        <li><a target="_blank" title="اشتراک گذاری" href="https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]=@HttpContext.Current.Request.Url.AbsoluteUri"><i class="ion-social-facebook"></i><span> ارسال با فیسبوک </span></a></li>
+                        <li><a target="_blank" title="اشتراک گذاری" href="https://twitter.com/intent/tweet?url=@HttpContext.Current.Request.Url.AbsoluteUri"><i class="ion-social-twitter"></i><span> ارسال با توئیتر </span></a></li>
+                        <li><a target="_blank" title="اشتراک گذاری" href="https://wa.me?text=@HttpContext.Current.Request.Url.AbsoluteUri"><i class="ion-social-whatsapp"></i><span> ارسال با واتس اپ </span></a></li>
+                        <li><a id="link-copy" target="_blank" title="لینک محصول" href="https://@(HttpContext.Current.Request.Url.Host+Url.Action("Index","Product",new { id=Model.ProductId}))"><i class="ion-social-windows"></i><span> لینک محصول </span></a></li>
+                    </ul>
+                    <div class="modal fade" id="notificationmodal" tabindex="-1" role="dialog" aria-labelledby="notificationmodal" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="fa fa-remove" data-dismiss="modal"></span>
+                                </div>
+                                <div class="modal-body">
+                                    <h4>به من اطلاع بده</h4>
+                                    <div class="c-remodal-notification__content">
+                                        <form class="c-form-notification" id="incredible-observed-form">
+                                            <div class="c-form-notification__title">اطلاع به من در زمان:</div>
+                                            <div class="c-form-notification__row">
+                                                <div class="c-form-notification__col">
+                                                    <div class="c-form-notification__status">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="c-form-notification__row js-observe-modal-errors u-hidden-visually">
+                                                <div class="c-form-notification__col">
+                                                    <div class="c-message-light c-message-light--error js-form-error-items">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="c-form-notification__title">از طریق:</div>
+                                            <div class="c-form-notification__row">
+                                                <div class="c-form-notification__col">
+                                                    <ul class="c-form-notification__params">
+                                                        <li id="email-noti"><label class="c-form-notification__label">ایمیل به <span class="js-observed-user-email"></span></label><label class="c-ui-checkbox"><input type="checkbox"><span class="c-ui-checkbox__check"></span></label></li>
+                                                        <li id="mobile-noti"><label class="c-form-notification__label">پیامک به <span class="js-observed-user-number"></span></label><label class="c-ui-checkbox"><input type="checkbox"><span class="c-ui-checkbox__check"></span></label></li>
+                                                        <li id="msg-noti"><label class="c-form-notification__label">سیستم پیام شخصی</label><label class="c-ui-checkbox"><input type="checkbox" checked disabled><span class="c-ui-checkbox__check"></span></label></li>
+                                                    </ul>
+                                                </div>
+                                            </div><div class="c-form-notification__row c-form-notification__row--submit">
+                                                <div class="c-form-notification__col">
+                                                    <button type="button" id="add-to-incredible-observed" data-id="@Model.ProductId" class="btn btn-info">ثبت</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="c-gallery__items  nav_style1">
+                <!-- Hidden video div -->
+                @if (!String.IsNullOrEmpty(Model.Video))
+                {
+                    <div style="display:none;" id="video1">
+                        <video class="lg-video-object lg-html5 video-js vjs-default-skin no-videojs" controls preload="none">
+                            <source src="@Html.DisplayattachmentUrl(Model.Video)" type="video/mp4">
+                            Your browser does not support HTML5 video.
+                        </video>
+                    </div>
+                }
+                <ul id="other-images-gallery">
+                    <li class="main-img" data-thumb="@Html.DisplayattachmentUrl(Model.MainImageFileName, "MD", true)" data-src="@Html.DisplayattachmentUrl(Model.MainImageFileName)" data-sub-html="@Model.Name">
+                        <div class="c-gallery__img">
+                            @if (Model.MainImageFileName != null)
+                            {
+                                <img class="js-gallery-img product_img img-responsive" data-zoom-image="@Html.DisplayattachmentUrl(Model.MainImageFileName)" src="@Html.DisplayattachmentUrl(Model.MainImageFileName, "MD", true)" alt="@Model.Name" title="@Model.Title" />
+                            }
+                            else
+                            {
+
+                                <img class="js-gallery-img product_img img-responsive" src="~/Content/Default/images/default-thumbnail.jpg" />
+                            }
+
+
+                            @{i++; }
+
+
+
+                        </div>
+                    </li>
+                    @if (!String.IsNullOrEmpty(Model.Video))
+                    {
+                        <li data-video="@Model.Video" data-poster="@Html.DisplayattachmentUrl(Model.MainImageFileName)" data-thumb="@Html.DisplayattachmentUrl(Model.MainImageFileName, "MD", true)" data-sub-html="@Model.Name" data-html="#video1" class="js-product-thumb-img js-gallery-video">
+                            <div class="thumb-wrapper thumb-wrapper--blur">
+                                <img src="@Html.DisplayattachmentUrl(Model.MainImageFileName, "MD")" />
+                                <div class="c-gallery__count-circle video-circle">
+                                    <div class="btn-option btn-option--play-video fa fa-play"></div>
+                                    <span class="c-tooltip c-tooltip--left c-tooltip--short" title="نمایش ویدئو"></span>
+                                </div>
+                            </div>
+                        </li>
+                        i++;
+
+                    }
+
+                    @if (Model.OtherImages != null)
+                    {
+
+                        foreach (var item in Model.OtherImages)
+                        {
+                            <li class="js-product-thumb-img" data-thumb="@Html.DisplayattachmentUrl(item.Image.FileName, "XS", true)" data-src="@Html.DisplayattachmentUrl(item.Image.FileName)" data-sub-html="@item.Product.Name">
+                                <div class="thumb-wrapper">
+                                    <img title="@item.Product.Title" data-zoom-image="@Html.DisplayattachmentUrl(item.Image.FileName)" alt="@item.Product.Name" src="@Html.DisplayattachmentUrl(item.Image.FileName, "MD", true)">
+                                </div>
+                            </li>
+                            i++;
+                        }
+                    }
+                    @if (Model.ProductOtherImages != null)
+                    {
+                        foreach (var item in Model.ProductOtherImages)
+                        {
+                            <li class="js-product-thumb-img" data-thumb="@Html.DisplayattachmentUrl(item.Image.FileName, "XS", true)" data-src="@Html.DisplayattachmentUrl(item.Image.FileName)" data-sub-html="@item.Product.Name">
+                                <div class="thumb-wrapper">
+                                    <img title="@item.Product.Title" data-zoom-image="@Html.DisplayattachmentUrl(item.Image.FileName)" alt="@item.Product.Name" src="@Html.DisplayattachmentUrl(item.Image.FileName, "MD", true)">
+                                </div>
+                            </li>
+                            i++;
+                        }
+                    }
+
+                </ul>
+                <span class="fa fa-chevron-left" id="goToPrevSlide"></span>
+                <span class="fa fa-chevron-right" id="goToNextSlide"></span>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="col-lg-8 col-md-8 pr-info-container">
+    <div class="pr_detail">
+        <div class="product_description">
+            <h1 class="product_title"><a href="@url">@Model.Title</a></h1>
+            @if (!String.IsNullOrEmpty(Model.LatinName))
+            {
+                <h2 class="product_latinName">
+                    <span> @Model.Brand.Name </span>
+                    @if (currentProductprice.ProductAttributeSelectModelId.HasValue)
+                    {
+                        <span>@currentProductprice.ProductAttributeSelectModel.Value</span>
+                    }
+                    <span> @Model.LatinName </span>
+
+                </h2>
+            }
+            <div class="code-shop"><label>کد فروش : </label> @Model.Code </div>
+            @*<div class="pr_desc">
+                    <p>@Model.Abstract</p>
+                </div>*@
+            <div class="brand-row">
+                <div class="brand"><label>برند : </label> <a href="@Url.Action("Index","Brand",new {id=Model.Brand.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(Model.Brand.Name) })">@Model.Brand.Name</a></div>
+                @if (Model.countRankValue > 0)
+                {
+                    <div class="rating_wrap">
+                        <div class="rating">
+                            <div class="product_rate" style="width:@(Model.avgRankValue*20)%"></div>
+                        </div>
+                        <span class="rating_num">@Model.avgRankValue از 5</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="rating_wrap">
+                        <div class="rating">
+                            <div class="product_rate"></div>
+                        </div>
+                        <span class="rating_num"></span>
+                    </div>
+                }
+            </div>
+
+
+            @if (Model.hasoff)
+            {
+                if (Model.productoffertype)
+                {
+                    <div class="off-sale-flash ">
+                        <div class="row">
+                            <div class="col-md-5 off-sale-title">
+                                <h3> @Model.offTitle</h3>
+                            </div>
+                            <div class="col-md-7 off-sale-timer">
+                                <div class="deal_timer">
+                                    <div class="countdown_time countdown_style4" data-time="@Model.offExpireDate"></div>
+                                    <p>زمان باقی مانده : </p>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                }
+            }
+            @if (Model.ProductState.Id == 1 || Model.ProductState.Id == 2)
+            {
+                <div class="product_price">
+                    <span class="switch_lable"> قیمت : </span>    <span class="price">@string.Format("{0:n0}", Model.finalPrice) </span> <label class="toman">تومان</label>
+                    @if (Model.hasoff)
+                    {
+                        <del>@string.Format("{0:n0}", Model.Price)</del>
+                        <div class="on_sale">
+                            <span>@string.Format("{0:n0}", Model.offValue) @(Model.offtype == 2 ? "%" : "") Off</span>
+                        </div>
+                    }
+                </div>
+
+            }
+
+
+
+
+            @if (Model.Colors != null)
+            {
+                currentAttribute = currentProductprice.ProductAttributeSelectColorId.HasValue ? "Colors" : "";
+
+                <div class="pr_switch_wrap" id="Colors">
+                    <span class="switch_lable">رنگ :</span>
+                    <div class="product_color_switch">
+
+
+                        @foreach (var itemColor in Model.Colors.OrderBy(x => x.Color).Distinct())
+                        {
+                            classname = "";
+                            if (currentProductprice.ProductAttributeSelectColorId.HasValue)
+                            {
+                                if (itemColor.Id.ToString() == currentProductprice.ProductAttributeSelectColor.Value)
+                                {
+                                    classname = "select active";
+                                }
+                                else
+                                {
+                                    if (Model.ProductPrices.Any(x => x.ProductAttributeSelectColorId.HasValue && x.ProductAttributeSelectColor.Value == itemColor.Value) || currentAttribute == "Colors")
+                                    {
+
+                                        classname = "select";
+                                    }
+                                    else
+                                    {
+
+                                        classname = "unselect";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (Model.ProductPrices.Any(x => x.ProductAttributeSelectColorId.HasValue))
+                                {
+                                    if (Model.ProductPrices.Any(x => x.ProductAttributeSelectColorId.HasValue && x.ProductAttributeSelectColor.Value == itemColor.Value))
+                                    {
+
+                                        classname = "select";
+                                    }
+                                    else
+                                    {
+
+                                        classname = "unselect";
+                                    }
+                                }
+                                else
+                                {
+
+                                    classname = "unselect";
+                                }
+                            }
+                            <label class="@classname">
+                                <span data-id="@itemColor.Id" title="@itemColor.Color" data-color="@itemColor.Value"></span>
+                                <label>@itemColor.Color</label>
+                            </label>
+                        }
+
+                    </div>
+                </div>
+            }
+
+            @if (Model.ProductPrices.Any(x => x.ProductAttributeSelectSizeId != null))
+            {
+                currentAttribute = currentProductprice.ProductAttributeSelectSizeId.HasValue && currentAttribute == "" ? "Sizes" : currentAttribute;
+
+                <div class="pr_switch_wrap" id="Sizes">
+                    <span class="switch_lable">سایز :</span>
+                    <div class="product_size_switch">
+                        @foreach (var itemSize in Model.ProductPrices.Where(x => x.ProductAttributeSelectSizeId != null).OrderBy(x => x.ProductAttributeSelectSize.Value).Select(x => x.ProductAttributeSelectSize.Value).Distinct())
+                        {
+                            classname = "";
+                            if (currentProductprice.ProductAttributeSelectSizeId.HasValue)
+                            {
+                                if (itemSize == currentProductprice.ProductAttributeSelectSize.Value)
+                                {
+                                    classname = "select active";
+                                }
+                                else
+                                {
+                                    if (currentProductprice.ProductAttributeSelectColorId.HasValue)
+                                    {
+                                        if (Model.ProductPrices.Any(x => x.ProductAttributeSelectSizeId.HasValue && x.ProductAttributeSelectSize.Value == itemSize && (x.ProductAttributeSelectColorId.HasValue && x.ProductAttributeSelectColor.Value == currentProductprice.ProductAttributeSelectColor.Value)) || currentAttribute == "Sizes")
+                                        {
+
+                                            classname = "select";
+                                        }
+                                        else
+                                        {
+
+                                            classname = "unselect";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (currentAttribute == "Sizes")
+                                        {
+
+                                            classname = "select";
+                                        }
+                                        else
+                                        {
+
+                                            classname = "unselect";
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (currentProductprice.ProductAttributeSelectColorId.HasValue)
+                                {
+                                    if (Model.ProductPrices.Any(x => x.ProductAttributeSelectSizeId.HasValue && x.ProductAttributeSelectSize.Value == itemSize && (x.ProductAttributeSelectColorId.HasValue && x.ProductAttributeSelectColor.Value == currentProductprice.ProductAttributeSelectColor.Value)))
+                                    {
+
+                                        classname = "select";
+                                    }
+                                    else
+                                    {
+
+                                        classname = "unselect";
+                                    }
+                                }
+                                else
+                                {
+
+                                    classname = "unselect";
+                                }
+                            }
+
+
+                            <span class="@classname">@itemSize</span>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.ProductPrices.Count(x => x.ProductAttributeSelectModelId != null) > 1 && !Model.ProductPrices.Any(x => x.ProductAttributeSelectColorId != null) && !Model.ProductPrices.Any(x => x.ProductAttributeSelectSizeId != null))
+            {
+                currentAttribute = currentProductprice.ProductAttributeSelectModelId.HasValue && currentAttribute == "" ? "Models" : currentAttribute;
+                <div class="pr_switch_wrap" id="Models">
+                    <span class="switch_lable">مدل :</span>
+                    <div class="product_size_switch">
+                        @foreach (var itemModel in Model.ProductPrices.Where(x => x.ProductAttributeSelectModelId != null).OrderBy(x => x.ProductAttributeSelectModel.Value).Select(x => x.ProductAttributeSelectModel.Value).Distinct())
+                        {
+                            classname = "";
+                            if (currentProductprice.ProductAttributeSelectModelId.HasValue)
+                            {
+                                if (itemModel == currentProductprice.ProductAttributeSelectModel.Value)
+                                {
+                                    classname = "select active";
+                                }
+                                else
+                                {
+                                    if (Model.ProductPrices.Any(x => x.ProductAttributeSelectModelId.HasValue && x.ProductAttributeSelectModel.Value == itemModel) || currentAttribute == "Models")
+                                    {
+
+                                        classname = "select";
+                                    }
+                                    else
+                                    {
+
+                                        classname = "unselect";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (Model.ProductPrices.Any(x => x.ProductAttributeSelectModelId.HasValue))
+                                {
+                                    if (Model.ProductPrices.Any(x => x.ProductAttributeSelectModelId.HasValue && x.ProductAttributeSelectModel.Value == itemModel))
+                                    {
+
+                                        classname = "select";
+                                    }
+                                    else
+                                    {
+
+                                        classname = "unselect";
+                                    }
+                                }
+                                else
+                                {
+
+                                    classname = "unselect";
+                                }
+                            }
+
+                            <span class="@classname">@itemModel</span>
+
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.Garanties != null)
+            {
+                currentAttribute = currentProductprice.ProductAttributeSelectGarantyId.HasValue && currentAttribute == "" ? "Garanties" : currentAttribute;
+                <div class="pr_switch_wrap" id="Garanties">
+                    <span class="switch_lable">گارانتی :</span>
+                    <div class="product_size_switch">
+                        @foreach (var itemGaranty in Model.Garanties.OrderBy(x => x.Value).Distinct())
+                        {
+
+                            classname = "";
+                            if (currentProductprice.ProductAttributeSelectGarantyId.HasValue)
+                            {
+                                if (itemGaranty.Id.ToString() == currentProductprice.ProductAttributeSelectGaranty.Value)
+                                {
+                                    classname = "select active";
+                                }
+                                else
+                                {
+
+                                    if (currentProductprice.ProductAttributeSelectModelId.HasValue)
+                                    {
+                                        if (Model.ProductPrices.Any(x => int.Parse(x.ProductAttributeSelectGaranty.Value) == itemGaranty.Id && (x.ProductAttributeSelectModel.Value == currentProductprice.ProductAttributeSelectModel.Value)) || currentAttribute == "Garanties")
+                                        {
+
+                                            classname = "select";
+                                        }
+                                        else
+                                        {
+
+                                            classname = "unselect";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Model.ProductPrices.Any(x => int.Parse(x.ProductAttributeSelectGaranty.Value) == itemGaranty.Id) || currentAttribute == "Garanties")
+                                        {
+
+                                            classname = "select";
+                                        }
+                                        else
+                                        {
+
+                                            classname = "unselect";
+                                        }
+                                    }
+
+
+                                }
+                            }
+                            else
+                            {
+
+                                if (currentProductprice.ProductAttributeSelectModelId.HasValue)
+                                {
+                                    if (Model.ProductPrices.Any(x => int.Parse(x.ProductAttributeSelectGaranty.Value) == itemGaranty.Id && (x.ProductAttributeSelectModel.Value == currentProductprice.ProductAttributeSelectModel.Value)))
+                                    {
+
+                                        classname = "select";
+                                    }
+                                    else
+                                    {
+
+                                        classname = "unselect";
+                                    }
+                                }
+                                else
+                                {
+                                    if (Model.ProductPrices.Any(x => int.Parse(x.ProductAttributeSelectGaranty.Value) == itemGaranty.Id))
+                                    {
+
+                                        classname = "select";
+                                    }
+                                    else
+                                    {
+
+                                        classname = "unselect";
+                                    }
+                                }
+
+
+                            }
+
+
+                            <span data-id="@itemGaranty.Id" class="@classname">@itemGaranty.Value</span>
+                            if (!String.IsNullOrEmpty(itemGaranty.Descr))
+                            {
+                                <span tabindex="0" role="button" data-html="true" class="power-dismis" data-placement="top" data-toggle="popover" data-trigger="focus" data-content="@itemGaranty.Descr"><span class="fa fa-info-circle"></span></span>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.ProductState.Id == 1 || Model.ProductState.Id == 2)
+            {
+
+                <div class="pr_switch_wrap" id="Deliv">
+                    <span class="switch_lable" id="q-select">تعداد :</span>
+                    <div class="cart-product-quantity">
+                        <div class="quantity">
+                            <input type="button" value="-" class="minus full">
+                            <input id="Basket-quantity" name="quantity" value="1" max="@(quantity>maxQuantity?maxQuantity:quantity)" min="1" title="Qty" class="qty">
+                            <input type="button" value="+" class="@(quantity>1 && maxQuantity>1?"plus":"plus full")">
+
+                        </div>
+                        @if (Model.quantity < 5)
+                        {
+                            <span class="quantity-remain"> تنها <span class="quantity-bold persian"> @Model.quantity </span> عدد در انبار باقیست ! </span>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.ProductState.Id == 1 || Model.ProductState.Id == 2)
+            {
+                <div class="pr_switch_wrap">
+                    <span class="switch_lable">زمان ارسال  :</span>
+                    <div class="cart-product-DeliveryTimeout">
+                        @if (Model.DeliveryTimeout == 0)
+                        {
+                            <span class="quantity-remain">این کالا هم اکنون آماده ارسال است  </span>
+                        }
+                        else
+                        {
+                            <span class="quantity-remain">
+                                ارسال کالا از @Model.DeliveryTimeout روز کاری آینده
+                            </span>
+                        }
+
+                        <div class="cart_extra">
+
+
+                            <div class="cart_btn">
+                                <button class="btn btn-fill-out btn-addtocart" data-status="@Model.ProductState.Id" data-id="@Model.ProductId" type="button"> اضافه به سبد خرید <i class="basket-icon"></i></button>
+
+                            </div>
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+            else
+            {
+
+                <div class="pr_switch_wrap">
+                    <span class="switch_lable">&nbsp;</span>
+                    <div class="cart-product-DeliveryTimeout">
+                        <div class="cart_extra" id="not-exist-container">
+                            <div class="cart_btn" id="not-exist-extra">
+                                <div class="product_price">
+                                    <div class="c-promotion-box__cover c-promotion-box__cover--out-of-stock">
+                                        <div class="c-promotion-box__cover-text js-product-status">ناموجود</div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-fill-out  not-exist  add_letmeknow" data-id="@Model.ProductId" data-status="@Model.ProductState.Id" type="button"> موجود شد به من اطلاع بده </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+
+        </div>
+
+
+
+
+        @*<hr>
+            <ul class="product-meta">
+                     <li>SKU: <a href="#">BE45VGRT</a></li>
+                     <li>Category: <a href="#">Clothing</a></li>
+                     <li>Tags: <a href="#" rel="tag">Cloth</a>, <a href="#" rel="tag">printed</a> </li>
+                 </ul>*@
+
+
+    </div>
+</div>

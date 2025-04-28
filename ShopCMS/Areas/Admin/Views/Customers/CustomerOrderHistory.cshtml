@@ -1,0 +1,298 @@
+﻿@model PagedList.IPagedList<Domain.Order>
+@using ahmadi.Infrastructure.Helper;
+@using PagedList.Mvc;
+@using CoreLib.Infrastructure;
+@using CoreLib.Infrastructure.DateTime;
+@using CoreLib.ViewModel.Xml;
+
+@using CoreLib;
+@{
+    var user = ViewBag.user as Domain.ApplicationUser;
+    var setting = ViewBag.setting as Domain.Setting;
+}
+
+<title>سوابق خرید @user.FirstName @user.LastName</title>
+
+
+
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Content.css" rel="stylesheet" />
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    @*Pagging*@
+    <link href="~/Content/Base/Css/PagedList.css" rel="stylesheet" type="text/css" />
+    <style>
+        .tree li {
+            padding: 6px 5px 0px 5px;
+        }
+
+            .tree li a {
+                padding: 4px;
+                font-weight: normal;
+                font-size: 12px;
+            }
+    </style>
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left">
+            <a class="btn btn-success" href="~/Admin/Customers">
+                بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span>
+
+            </a>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <h3>
+                <a href="~/Admin/Customers/CustomerOrderHistory?UserId=@user.Id">  سوابق خرید @user.FirstName @user.LastName</a>
+            </h3>
+        </div>
+        <div class="clearfix"></div>
+
+        <br />
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2> جستجو / فیلتر</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+
+            <div class="x_content" style="display:none">
+                <div id="SearchPage">
+                    <div>
+
+                        @using (Html.BeginForm("CustomerOrderHistory", "Customers", FormMethod.Get))
+                        {
+                            @Html.Hidden("UserId", user.Id)
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>کد سفارش  :</p>
+                                @Html.TextBox("OrderIdString", ViewBag.OrderIdFilter as string, htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>تاریخ ثبت سفارش از : </p>
+                                <img src="~/Areas/Admin/Content/images/calender.gif" onclick="displayDatePicker('StartDateString');" alt="" />
+                                @Html.TextBox("StartDateString", ViewBag.StartDateFilter as string, htmlAttributes: new { style = "width:85%;display: inline-block", @class = "form-control" })
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>تا :</p>
+                                <img src="~/Areas/Admin/Content/images/calender.gif" onclick="displayDatePicker('EndDateString');" alt="" />
+                                @Html.TextBox("EndDateString", ViewBag.EndDateFilter as string, htmlAttributes: new { style = "width:85%;display: inline-block", @class = "form-control" })
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>تاریخ ویرایش از : </p>
+                                <img src="~/Areas/Admin/Content/images/calender.gif" onclick="displayDatePicker('UpdateDateStartString');" alt="" />
+                                @Html.TextBox("UpdateDateStartString", ViewBag.UpdateDateStartFilter as string, htmlAttributes: new { style = "width:85%;display: inline-block", @class = "form-control" })
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>تا :</p>
+                                <img src="~/Areas/Admin/Content/images/calender.gif" onclick="displayDatePicker('UpdateDateEndString');" alt="" />
+                                @Html.TextBox("UpdateDateEndString", ViewBag.UpdateDateEndFilter as string, htmlAttributes: new { style = "width:85%;display: inline-block", @class = "form-control" })
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>مبلغ :</p>
+                                @Html.DropDownList("PriceSearchString", ViewBag.PriceSearchSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>قیمت :</p>
+                                @Html.TextBox("TotalPriceString", ViewBag.TotalPriceFilter as string, htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                                <span>تومان</span>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>زبان ( وب سایت ) :</p>
+                                @Html.DropDownList("LanguagenameString", ViewBag.LanguagenameSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>استان :</p>
+                                @Html.DropDownList("StateString", ViewBag.StateSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>نوع سفارشات :</p>
+                                @Html.DropDownList("VisitedString", ViewBag.VisitedSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>آخرین وضعیت :</p>
+                                @Html.DropDownList("StateLastString", ViewBag.StateLastSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <input type="submit" value="جست و جو" class="btn btn-info" />
+                            @Html.ActionLink("نمایش همه", "Index", new { ContentTypeId = Request.QueryString["ContentTypeId"] }, htmlAttributes: new { @class = "btn btn-warning" })
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <hr class="search-hr" />
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="header-col">
+                        <th>
+                            <table style="width:100%">
+                                <tr>
+                                    <td>کد سفارش</td>
+                                </tr>
+                            </table>
+                        </th>
+                        <th>
+                            <table style="width:100%">
+                                <tr>
+                                    <td>
+                                        <p class="text-center">
+                                            <span>نام کاربر</span>
+                                            <span>
+                                                <a style="display:block" href="@Url.Action( "Index", new { sortOrder = "User", UserFilter = ViewBag.UserFilter, StateFilter = ViewBag.StateFilter, StateLastFilter = ViewBag.StateLastFilter, VisitedFilter = ViewBag.VisitedFilter, InsertDateFilter = ViewBag.InsertDateFilter, PriceFilter = ViewBag.PriceFilter, LanguagenameFilter = ViewBag.LanguagenameFilter })" title="مرتب سازی بر اساس نام کاربر صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                <a style="display:block" href="@Url.Action( "Index", new { sortOrder = "User_desc", UserFilter = ViewBag.UserFilter, StateFilter = ViewBag.StateFilter, StateLastFilter = ViewBag.StateLastFilter, VisitedFilter = ViewBag.VisitedFilter, InsertDateFilter = ViewBag.InsertDateFilter, PriceFilter = ViewBag.PriceFilter, LanguagenameFilter = ViewBag.LanguagenameFilter })" title="مرتب سازی بر اساس نام کاربر نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                            </span>
+                                        </p>
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </th>
+                        <th>
+                            <table style="width:100%">
+                                <tr>
+                                    <td>
+                                        <p class="text-center">
+                                            <span>استان</span>
+                                            <span>
+                                                <a style="display:block" href="@Url.Action( "Index", new { sortOrder = "State", UserFilter = ViewBag.UserFilter, StateFilter = ViewBag.StateFilter, StateLastFilter = ViewBag.StateLastFilter, VisitedFilter = ViewBag.VisitedFilter, InsertDateFilter = ViewBag.InsertDateFilter, PriceFilter = ViewBag.PriceFilter, LanguagenameFilter = ViewBag.LanguagenameFilter })" title="مرتب سازی بر اساس استان صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                <a style="display:block" href="@Url.Action( "Index", new { sortOrder = "State_desc", UserFilter = ViewBag.UserFilter, StateFilter = ViewBag.StateFilter, StateLastFilter = ViewBag.StateLastFilter, VisitedFilter = ViewBag.VisitedFilter, InsertDateFilter = ViewBag.InsertDateFilter, PriceFilter = ViewBag.PriceFilter, LanguagenameFilter = ViewBag.LanguagenameFilter })" title="مرتب سازی بر اساس استان نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                            </span>
+                                        </p>
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </th>
+                        <th>
+                            <table style="width:100%">
+                                <tr>
+
+                                    <td>
+                                        <p class="text-center">
+                                            <span>تاریخ سفارش</span>
+                                            <span>
+                                                <a style="display:block" href="@Url.Action( "Index", new { sortOrder = "InsertDate", UserFilter = ViewBag.UserFilter, StateFilter = ViewBag.StateFilter, StateLastFilter = ViewBag.StateLastFilter, VisitedFilter = ViewBag.VisitedFilter, InsertDateFilter = ViewBag.InsertDateFilter, PriceFilter = ViewBag.PriceFilter, LanguagenameFilter = ViewBag.LanguagenameFilter })" title="مرتب سازی بر اساس تاریخ سفارش صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                <a style="display:block" href="@Url.Action( "Index", new { sortOrder = "InsertDate_desc", UserFilter = ViewBag.UserFilter, StateFilter = ViewBag.StateFilter, StateLastFilter = ViewBag.StateLastFilter, VisitedFilter = ViewBag.VisitedFilter, InsertDateFilter = ViewBag.InsertDateFilter, PriceFilter = ViewBag.PriceFilter, LanguagenameFilter = ViewBag.LanguagenameFilter })" title="مرتب سازی بر اساس تاریخ سفارش نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                            </span>
+                                        </p>
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </th>
+                        <th>
+                            <table style="width:100%">
+                                <tr>
+                                    <td>
+                                        <p class="text-center">
+                                            <span>قیمت</span>
+                                            <span>
+                                                <a style="display:block" href="@Url.Action( "Index", new { sortOrder = "Price", UserFilter = ViewBag.UserFilter, StateFilter = ViewBag.StateFilter, StateLastFilter = ViewBag.StateLastFilter, VisitedFilter = ViewBag.VisitedFilter, InsertDateFilter = ViewBag.InsertDateFilter, PriceFilter = ViewBag.PriceFilter, LanguagenameFilter = ViewBag.LanguagenameFilter })" title="مرتب سازی بر اساس قیمت صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                <a style="display:block" href="@Url.Action( "Index", new { sortOrder = "Price_desc", UserFilter = ViewBag.UserFilter, StateFilter = ViewBag.StateFilter, StateLastFilter = ViewBag.StateLastFilter, VisitedFilter = ViewBag.VisitedFilter, InsertDateFilter = ViewBag.InsertDateFilter, PriceFilter = ViewBag.PriceFilter, LanguagenameFilter = ViewBag.LanguagenameFilter })" title="مرتب سازی بر اساس قیمت نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                            </span>
+                                        </p>
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </th>
+                        <th>
+                            <table style="width:100%">
+                                <tr>
+                                    <td>
+                                        <p class="text-center">
+                                            <span>آخرین وضعیت</span>
+                                            <span>
+                                                <a style="display:block" href="@Url.Action( "Index", new { sortOrder = "StateLast", UserFilter = ViewBag.UserFilter, StateFilter = ViewBag.StateFilter, StateLastFilter = ViewBag.StateLastFilter, VisitedFilter = ViewBag.VisitedFilter, InsertDateFilter = ViewBag.InsertDateFilter, PriceFilter = ViewBag.PriceFilter, LanguagenameFilter = ViewBag.LanguagenameFilter })" title="مرتب سازی بر اساس آخرین وضعیت صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                <a style="display:block" href="@Url.Action( "Index", new { sortOrder = "StateLast_desc", UserFilter = ViewBag.UserFilter, StateFilter = ViewBag.StateFilter, StateLastFilter = ViewBag.StateLastFilter, VisitedFilter = ViewBag.VisitedFilter, InsertDateFilter = ViewBag.InsertDateFilter, PriceFilter = ViewBag.PriceFilter, LanguagenameFilter = ViewBag.LanguagenameFilter })" title="مرتب سازی بر اساس آخرین وضعیت نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                            </span>
+                                        </p>
+                                    </td>
+
+
+                                </tr>
+                            </table>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+
+                        <tr class="ContentRow">
+                            <td style="width:25%">
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.User.FirstName)
+                                @Html.DisplayFor(modelItem => item.User.LastName)
+                            </td>
+                            <td>
+
+                                <span>@item.User.CityEntity.Name / @item.User.CityEntity.Province.Name</span>
+                            </td>
+                            <td>
+                                @DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate)
+                            </td>
+                            <td>
+                                <span>@string.Format("{0:n0}", item.OrderWallets.First().Wallet.Price) <span>@CoreLib.Infrastructure.CommonFunctions.GetCurrency(item.CurrencyId)</span></span>
+                            </td>
+                            <td>
+                                
+
+                                    @{
+                                        <span> @item.OrderStates.OrderByDescending(x => x.Id).Take(1).SingleOrDefault().state.EnumDisplayNameFor()</span>
+
+                                    }
+                                
+                            </td>
+                            @*<td>
+                                    @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId)
+                                </td>*@
+                            <td>
+                                @if (ViewBag.EditPermission)
+                                {
+                                    <a class="btn btn-info" target="_blank" href="@Url.Action("Edit","Orders", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> جزئیات </a>
+                                }
+
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount سفارش.
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, UserFilter = ViewBag.UserFilter, StateFilter = ViewBag.StateFilter, StateLastFilter = ViewBag.StateLastFilter, VisitedFilter = ViewBag.VisitedFilter, InsertDateFilter = ViewBag.InsertDateFilter, PriceFilter = ViewBag.PriceFilter, LanguagenameFilter = ViewBag.LanguagenameFilter }))
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @*Persian Calender*@
+    <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/View/Category.js"></script>
+}

@@ -1,0 +1,1520 @@
+﻿@model Domain.Order
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml;
+@using CoreLib.Infrastructure.DateTime;
+@using ahmadi.Infrastructure.Helper
+@using Domain;
+@using CoreLib;
+@{
+    var setting = ViewBag.setting as Domain.Setting;
+    int price = 0;
+    var wallet = Model.OrderWallets.First().Wallet;
+    var sendways = ViewBag.SendWays as IEnumerable<SelectListItem>;
+
+}
+<title>ویرایش و جزئیات سفارش @Model.CustomerOrderId</title>
+@section Header{
+    @*Bootstrap Select*@
+    <link href="~/areas/admin/content/scripts/component/bootstrp-dropdown/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/Areas/Admin/Content/Stylesheets/View/ProductPrice.css" rel="stylesheet" />
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+    <style>
+        #OrderStateId option[disabled='disabled'] {
+            background-color: #ccc;
+        }
+    </style>
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+
+        <div class="text-right col-md-6">
+            <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+                ویرایش و جزئیات سفارش @Model.CustomerOrderId
+
+            </h1>
+        </div>
+        <div class="text-left col-md-6">
+            <a target="_blank" href="/Admin/Orders/Report?id=@Model.Id&report=Factor" title="چاپ فاکتور" class="btn btn-info"><span class="fa fa-print"></span> <span> چاپ فاکتور </span></a>
+            <a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a>
+
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+        @if (ViewBag.result != null)
+        {
+            @Html.Raw(ViewBag.result)
+        }
+        <div class="x_panel" id="Customer-Info">
+            <div class="x_title">
+                <h2>مشخصات مشتری</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <label>نام سفارش دهنده:</label>
+                    @Model.User.FirstName @Model.User.LastName
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+                    <label>تلفن ثابت:</label>
+                    @{
+                        var result = "";
+                    }
+                    @if (!string.IsNullOrEmpty(Model.User.LandlinePhone))
+                    {
+                        result = Model.User.LandlinePhone;
+                    }
+                    else
+                    {
+                        result = "-";
+                    }
+                    @result
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+                    <label>تلفن همراه:</label>
+                    @if (!string.IsNullOrEmpty(Model.User.PhoneNumber))
+                    {
+                        result = Model.User.PhoneNumber;
+                    }
+                    else
+                    {
+                        result = "-";
+                    }
+                    @result
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+                    <label>استان/شهر:</label>
+                    @if (Model.User.CityId.HasValue)
+                    {
+                        result = Model.User.CityEntity.Province.Name;
+                    }
+                    else
+                    {
+                        result = "-";
+                    }
+                    @result
+                    <span>/</span>
+                    @if (Model.User.CityId.HasValue)
+                    {
+                        result = Model.User.CityEntity.Name;
+                    }
+                    else
+                    {
+                        result = "-";
+                    }
+                    @result
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+                    <label>کد پستی:</label>
+                    @if (!string.IsNullOrEmpty(Model.User.PostalCode))
+                    {
+                        result = Model.User.PostalCode;
+                    }
+                    else
+                    {
+                        result = "-";
+                    }
+                    @result
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+                    <label>آدرس:</label>
+                    @if (!string.IsNullOrEmpty(Model.User.Address))
+                    {
+                        result = Model.User.Address;
+                        if (!String.IsNullOrEmpty(Model.User.AddressNumber))
+                        {
+                            result += " ، پلاک  " + Model.User.AddressNumber;
+                        }
+                        if (!String.IsNullOrEmpty(Model.User.AddressUnit))
+                        {
+                            result += " ، واحد  " + Model.User.AddressUnit;
+                        }
+
+                    }
+                    else
+                    {
+                        result = "-";
+                    }
+                    @result
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+                    <label>ایمیل:</label>
+                    @if (!string.IsNullOrEmpty(Model.User.Email))
+                    {
+                        result = Model.User.Email;
+                    }
+                    else
+                    {
+                        result = "-";
+                    }
+                    @result
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+                    <label>کد ملی:</label>
+                    @if (!string.IsNullOrEmpty(Model.User.NationalCode))
+                    {
+                        result = Model.User.NationalCode;
+                    }
+                    else
+                    {
+                        result = "-";
+                    }
+                    @result
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+                    <label>شماره کارت:</label>
+                    @if (!string.IsNullOrEmpty(Model.User.CardNumber))
+                    {
+                        result = Model.User.CardNumber;
+                    }
+                    else
+                    {
+                        result = "-";
+                    }
+                    @result
+                </div>
+            </div>
+        </div>
+
+        <div class="x_panel" id="Address-Info">
+            <div class="x_title">
+                <h2>مشخصات تحویل گیرنده</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content" style="display:none">
+
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+                    <label>نام تحویل گیرنده:</label>
+                    @{
+                        var CustomerName = "";
+
+                        if (Model.OrderDeliveries.First().UserAddressId.HasValue)
+                        {
+                            CustomerName = Model.OrderDeliveries.First().UserAddress.FullName;
+                        }
+                        else
+                        {
+                            CustomerName = Model.User.FirstName + " " + Model.User.LastName;
+                        }
+                    }
+                    @CustomerName
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+                    <label>تلفن ثابت:</label>
+                    @{
+                        var CustomerPhone = "";
+
+                        if (Model.OrderDeliveries.First().UserAddressId.HasValue)
+                        {
+                            CustomerPhone = Model.OrderDeliveries.First().UserAddress.LandlinePhone;
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(Model.User.LandlinePhone))
+                            {
+                                CustomerPhone = Model.User.LandlinePhone;
+                            }
+                            else
+                            {
+                                CustomerPhone = "-";
+                            }
+                        }
+                    }
+                    @CustomerPhone
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+                    <label>تلفن همراه:</label>
+                    @{
+                        var CustomerMobile = "";
+
+                        if (Model.OrderDeliveries.First().UserAddressId.HasValue)
+                        {
+                            CustomerMobile = Model.OrderDeliveries.First().UserAddress.PhoneNumber;
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(Model.User.PhoneNumber))
+                            {
+                                CustomerMobile = Model.User.PhoneNumber;
+                            }
+                            else
+                            {
+                                CustomerMobile = "-";
+                            }
+                        }
+                    }
+                    @CustomerMobile
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+                    <label>استان/شهر:</label>
+                    @{
+                        var CustomerState = "";
+
+                        if (Model.OrderDeliveries.First().UserAddressId.HasValue)
+                        {
+                            CustomerState = Model.OrderDeliveries.First().UserAddress.CityEntity.Province.Name;
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(ViewBag.State))
+                            {
+                                CustomerState = ViewBag.State;
+                            }
+                            else
+                            {
+                                CustomerState = "-";
+                            }
+                        }
+
+                        var CustomerCity = "";
+
+                        if (Model.OrderDeliveries.First().UserAddressId.HasValue)
+                        {
+                            CustomerCity = Model.OrderDeliveries.First().UserAddress.CityEntity.Name;
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(Model.User.City))
+                            {
+                                CustomerCity = Model.User.City;
+                            }
+                            else
+                            {
+                                CustomerCity = "-";
+                            }
+                        }
+
+                    }
+                    @CustomerState / @CustomerCity
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+                    <label>کد پستی:</label>
+                    @{
+                        var CustomerPostal = "";
+
+                        if (Model.OrderDeliveries.First().UserAddressId.HasValue)
+                        {
+                            CustomerPostal = Model.OrderDeliveries.First().UserAddress.PostalCode;
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(Model.User.PostalCode))
+                            {
+                                CustomerPostal = Model.User.PostalCode;
+                            }
+                            else
+                            {
+                                CustomerPostal = "-";
+                            }
+                        }
+                    }
+                    @CustomerPostal
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12  form-group">
+                    <label>آدرس:</label>
+                    @{
+                        var CustomerAddress = "";
+
+                        if (Model.OrderDeliveries.First().UserAddressId.HasValue)
+                        {
+                            CustomerAddress = Model.OrderDeliveries.First().UserAddress.Address;
+                            if (!String.IsNullOrEmpty(Model.OrderDeliveries.First().UserAddress.AddressNumber))
+                            {
+                                CustomerAddress += " ، پلاک  " + Model.OrderDeliveries.First().UserAddress.AddressNumber;
+                            }
+                            if (!String.IsNullOrEmpty(Model.OrderDeliveries.First().UserAddress.AddressUnit))
+                            {
+                                CustomerAddress += " ، واحد  " + Model.OrderDeliveries.First().UserAddress.AddressUnit;
+                            }
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(Model.User.Address))
+                            {
+                                CustomerAddress = Model.User.Address;
+                                if (!String.IsNullOrEmpty(Model.User.AddressNumber))
+                                {
+                                    CustomerAddress += " ، پلاک  " + Model.User.AddressNumber;
+                                }
+                                if (!String.IsNullOrEmpty(Model.User.AddressUnit))
+                                {
+                                    CustomerAddress += " ، واحد  " + Model.User.AddressUnit;
+                                }
+                            }
+                            else
+                            {
+                                CustomerAddress = "";
+                            }
+                        }
+                    }
+                    @CustomerAddress
+                </div>
+            </div>
+        </div>
+
+        <div class="x_panel" id="State-Info">
+            <div class="x_title">
+                <h2>وضعیت و مشخصات کلی سفارش</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content">
+                <div class="card">
+                    @foreach (var Delivery in Model.OrderDeliveries)
+                    {
+                        <div class="text-center panel panel-info">
+                            <div class="panel-heading">
+                                زمان تحویل :
+                                @if (Delivery.RequestDate.HasValue)
+                                {
+
+                                    <span> @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Delivery.RequestDate.Value)</span> <span> - </span><span> <span> @Delivery.ProductSendWayWorkTime.StartTime.ToString(@"hh\:mm") </span> <span> تا </span> <span>@Delivery.ProductSendWayWorkTime.EndTime.ToString(@"hh\:mm") </span> </span>
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                                <a target="_blank" href="/Admin/Orders/Report?id=@Model.Id&DeliveryId=@Delivery.Id&report=label" title="چاپ لیبل" class="btn btn-info"><span class="fa fa-print"></span> <span> چاپ لیبل </span></a>
+                                &nbsp;
+                                <label>توضیحات کاربر:</label>
+                                @{
+                                    string description = "";
+                                }
+                                @if (Model.OrderAttributeSelects.Any(x => x.OrderAttribute.DataType == 18 && x.OrderDeliveryId == Delivery.Id))
+                                {
+                                    description = (Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 18 && x.OrderDeliveryId == Delivery.Id).FirstOrDefault().Value);
+                                }
+                                @description
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Stepper -->
+                            <div class="steps-form">
+                                <div class="steps-row setup-panel">
+                                    <div class="steps-step">
+                                        <span type="button" class="btn btn-default btn-circle @(Model.OrderStates.Any(x=>x.state==OrderStatus.در_انتظار_تایید && x.OrderDeliveryId==Delivery.Id)?"green":"gray")" disabled="disabled">1</span>
+
+                                        <p class="@(Model.OrderStates.Any(x=>x.state==OrderStatus.در_انتظار_تایید && x.OrderDeliveryId==Delivery.Id)?"text-green":"text-gray")">
+                                            در انتظار تایید سفارش
+                                            @if (Model.OrderStates.Any(x => x.state == OrderStatus.در_انتظار_تایید && x.OrderDeliveryId == Delivery.Id))
+                                            {
+                                                var date = Model.OrderStates.Where(x => x.state == OrderStatus.در_انتظار_تایید && x.OrderDeliveryId == Delivery.Id).First().LogDate;
+                                                <br />
+                                                <span>
+                                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(date)
+                                                </span> <span> - </span><span>
+                                                    @date.ToString("HH:mm")
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="steps-step">
+                                        <span type="button" class="btn btn-default btn-circle @(Model.OrderStates.Any(x=>x.state==OrderStatus.تایید_سفارش && x.OrderDeliveryId==Delivery.Id)?"green":"gray")" disabled="disabled">2</span>
+
+                                        <p class="@(Model.OrderStates.Any(x=>x.state==OrderStatus.تایید_سفارش && x.OrderDeliveryId==Delivery.Id)?"text-green":"text-gray")">
+                                            تایید سفارش
+                                            @if (Model.OrderStates.Any(x => x.state == OrderStatus.تایید_سفارش && x.OrderDeliveryId == Delivery.Id))
+                                            {
+                                                var date = Model.OrderStates.Where(x => x.state == OrderStatus.تایید_سفارش && x.OrderDeliveryId == Delivery.Id).First().LogDate;
+                                                <br />
+                                                <span>
+                                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(date)
+                                                </span> <span> - </span><span>
+                                                    @date.ToString("HH:mm")
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="steps-step">
+                                        <span type="button" class="btn btn-default btn-circle @(Model.OrderStates.Any(x=>x.state==OrderStatus.تایید_پرداخت && x.OrderDeliveryId==Delivery.Id)?"green":"gray")" disabled="disabled">3</span>
+
+                                        <p class="@(Model.OrderStates.Any(x=>x.state==OrderStatus.تایید_پرداخت && x.OrderDeliveryId==Delivery.Id)?"text-green":"text-gray")">
+                                            تایید پرداخت
+                                            @if (Model.OrderStates.Any(x => x.state == OrderStatus.تایید_پرداخت && x.OrderDeliveryId == Delivery.Id))
+                                            {
+                                                var date = Model.OrderStates.Where(x => x.state == OrderStatus.تایید_پرداخت && x.OrderDeliveryId == Delivery.Id).First().LogDate;
+                                                <br />
+                                                <span>
+                                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(date)
+                                                </span> <span> - </span><span>
+                                                    @date.ToString("HH:mm")
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="steps-step">
+                                        <span type="button" class="btn btn-default btn-circle @(Model.OrderStates.Any(x=>x.state==OrderStatus.پردازش_انبار && x.OrderDeliveryId==Delivery.Id)?"green":"gray")" disabled="disabled">4</span>
+
+                                        <p class="@(Model.OrderStates.Any(x=>x.state==OrderStatus.پردازش_انبار && x.OrderDeliveryId==Delivery.Id)?"text-green":"text-gray")">
+                                            پردازش انبار
+                                            @if (Model.OrderStates.Any(x => x.state == OrderStatus.پردازش_انبار && x.OrderDeliveryId == Delivery.Id))
+                                            {
+                                                var date = Model.OrderStates.Where(x => x.state == OrderStatus.پردازش_انبار && x.OrderDeliveryId == Delivery.Id).First().LogDate;
+                                                <br />
+                                                <span>
+                                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(date)
+                                                </span> <span> - </span><span>
+                                                    @date.ToString("HH:mm")
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="steps-step">
+                                        <span type="button" class="btn btn-default btn-circle @(Model.OrderStates.Any(x=>x.state==OrderStatus.آماده_ارسال && x.OrderDeliveryId==Delivery.Id)?"green":"gray")" disabled="disabled">5</span>
+
+                                        <p class="@(Model.OrderStates.Any(x=>x.state==OrderStatus.آماده_ارسال && x.OrderDeliveryId==Delivery.Id)?"text-green":"text-gray")">
+                                            آماده ارسال
+                                            @if (Model.OrderStates.Any(x => x.state == OrderStatus.آماده_ارسال && x.OrderDeliveryId == Delivery.Id))
+                                            {
+                                                var date = Model.OrderStates.Where(x => x.state == OrderStatus.آماده_ارسال && x.OrderDeliveryId == Delivery.Id).First().LogDate;
+                                                <br />
+                                                <span>
+                                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(date)
+                                                </span> <span> - </span><span>
+                                                    @date.ToString("HH:mm")
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="steps-step">
+                                        <span type="button" class="btn btn-default btn-circle @(Model.OrderStates.Any(x=>x.state==OrderStatus.ارسال_شده && x.OrderDeliveryId==Delivery.Id)?"green":"gray")" disabled="disabled">6</span>
+                                        <p class="@(Model.OrderStates.Any(x=>x.state==OrderStatus.ارسال_شده && x.OrderDeliveryId==Delivery.Id)?"text-green":"text-gray")">
+                                            ارسال شده
+                                            @if (Model.OrderStates.Any(x => x.state == OrderStatus.ارسال_شده && x.OrderDeliveryId == Delivery.Id))
+                                            {
+                                                var date = Model.OrderStates.Where(x => x.state == OrderStatus.ارسال_شده && x.OrderDeliveryId == Delivery.Id).First().LogDate;
+                                                <br />
+                                                <span>
+                                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(date)
+                                                </span> <span> - </span><span>
+                                                    @date.ToString("HH:mm")
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="steps-step">
+                                        <span type="button" class="btn btn-default btn-circle @(Model.OrderStates.Any(x=>x.state==OrderStatus.تحویل_داده_شده && x.OrderDeliveryId==Delivery.Id)?"green":"gray")" disabled="disabled">7</span>
+
+                                        <p class="@(Model.OrderStates.Any(x=>x.state==OrderStatus.تحویل_داده_شده && x.OrderDeliveryId==Delivery.Id)?"text-green":"text-gray")">
+                                            تحویل داده شد
+                                            @if (Model.OrderStates.Any(x => x.state == OrderStatus.تحویل_داده_شده && x.OrderDeliveryId == Delivery.Id))
+                                            {
+                                                var date = Model.OrderStates.Where(x => x.state == OrderStatus.تحویل_داده_شده && x.OrderDeliveryId == Delivery.Id).First().LogDate;
+                                                <br />
+                                                <span>
+                                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(date)
+                                                </span> <span> - </span><span>
+                                                    @date.ToString("HH:mm")
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+
+                                    <div class="steps-step">
+                                        <span type="button" class="btn btn-default btn-circle @(Model.OrderStates.Any(x=>x.state==OrderStatus.درخواست_لغو && x.OrderDeliveryId==Delivery.Id)?"green":"gray")" disabled="disabled">8</span>
+
+                                        <p class="@(Model.OrderStates.Any(x=>x.state==OrderStatus.درخواست_لغو && x.OrderDeliveryId==Delivery.Id)?"text-green":"text-gray")">
+                                            درخواست لغو
+                                            @if (Model.OrderStates.Any(x => x.state == OrderStatus.درخواست_لغو && x.OrderDeliveryId == Delivery.Id))
+                                            {
+                                                var date = Model.OrderStates.Where(x => x.state == OrderStatus.درخواست_لغو && x.OrderDeliveryId == Delivery.Id).First().LogDate;
+                                                <br />
+                                                <span>
+                                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(date)
+                                                </span> <span> - </span><span>
+                                                    @date.ToString("HH:mm")
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+
+                                    <div class="steps-step">
+                                        <span type="button" class="btn btn-default btn-circle @(Model.OrderStates.Any(x=>x.state==OrderStatus.عدم_تایید_درخواست_لغو && x.OrderDeliveryId==Delivery.Id)?"green":"gray")" disabled="disabled">9</span>
+
+                                        <p class="@(Model.OrderStates.Any(x=>x.state==OrderStatus.عدم_تایید_درخواست_لغو && x.OrderDeliveryId==Delivery.Id)?"text-green":"text-gray")">
+                                            عدم تایید درخواست لغو
+                                            @if (Model.OrderStates.Any(x => x.state == OrderStatus.عدم_تایید_درخواست_لغو && x.OrderDeliveryId == Delivery.Id))
+                                            {
+                                                var date = Model.OrderStates.Where(x => x.state == OrderStatus.عدم_تایید_درخواست_لغو && x.OrderDeliveryId == Delivery.Id).First().LogDate;
+                                                <br />
+                                                <span>
+                                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(date)
+                                                </span> <span> - </span><span>
+                                                    @date.ToString("HH:mm")
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+
+                                    <div class="steps-step">
+                                        <span type="button" class="btn btn-default btn-circle @(Model.OrderStates.Any(x=>x.state==OrderStatus.لغو_شده && x.OrderDeliveryId==Delivery.Id)?"green":"gray")" disabled="disabled">10</span>
+
+                                        <p class="@(Model.OrderStates.Any(x=>x.state==OrderStatus.لغو_شده && x.OrderDeliveryId==Delivery.Id)?"text-green":"text-gray")">
+                                            لغو شده
+                                            @if (Model.OrderStates.Any(x => x.state == OrderStatus.لغو_شده && x.OrderDeliveryId == Delivery.Id))
+                                            {
+                                                var date = Model.OrderStates.Where(x => x.state == OrderStatus.لغو_شده && x.OrderDeliveryId == Delivery.Id).First().LogDate;
+                                                <br />
+                                                <span>
+                                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(date)
+                                                </span> <span> - </span><span>
+                                                    @date.ToString("HH:mm")
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+
+                                    <div class="steps-step">
+                                        <span type="button" class="btn btn-default btn-circle @(Model.OrderStates.Any(x=>x.state==OrderStatus.درخواست_مرجوعی && x.OrderDeliveryId==Delivery.Id)?"green":"gray")" disabled="disabled">11</span>
+
+                                        <p class="@(Model.OrderStates.Any(x=>x.state==OrderStatus.مرجوعی && x.OrderDeliveryId==Delivery.Id)?"text-green":"text-gray")">
+                                            درخواست مرجوعی
+                                            @if (Model.OrderStates.Any(x => x.state == OrderStatus.درخواست_مرجوعی && x.OrderDeliveryId == Delivery.Id))
+                                            {
+                                                var date = Model.OrderStates.Where(x => x.state == OrderStatus.درخواست_مرجوعی && x.OrderDeliveryId == Delivery.Id).First().LogDate;
+                                                <br />
+                                                <span>
+                                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(date)
+                                                </span> <span> - </span><span>
+                                                    @date.ToString("HH:mm")
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="steps-step">
+                                        <span type="button" class="btn btn-default btn-circle @(Model.OrderStates.Any(x=>x.state==OrderStatus.عدم_تایید_درخواست_مرجوعی && x.OrderDeliveryId==Delivery.Id)?"green":"gray")" disabled="disabled">12</span>
+
+                                        <p class="@(Model.OrderStates.Any(x=>x.state==OrderStatus.عدم_تایید_درخواست_مرجوعی && x.OrderDeliveryId==Delivery.Id)?"text-green":"text-gray")">
+                                            عدم تایید درخواست مرجوعی
+                                            @if (Model.OrderStates.Any(x => x.state == OrderStatus.عدم_تایید_درخواست_مرجوعی && x.OrderDeliveryId == Delivery.Id))
+                                            {
+                                                var date = Model.OrderStates.Where(x => x.state == OrderStatus.عدم_تایید_درخواست_مرجوعی && x.OrderDeliveryId == Delivery.Id).First().LogDate;
+                                                <br />
+                                                <span>
+                                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(date)
+                                                </span> <span> - </span><span>
+                                                    @date.ToString("HH:mm")
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="steps-step">
+                                        <span type="button" class="btn btn-default btn-circle @(Model.OrderStates.Any(x=>x.state==OrderStatus.جبران_مرجوعی && x.OrderDeliveryId==Delivery.Id)?"green":"gray")" disabled="disabled">13</span>
+
+                                        <p class="@(Model.OrderStates.Any(x=>x.state==OrderStatus.جبران_مرجوعی && x.OrderDeliveryId==Delivery.Id)?"text-green":"text-gray")">
+                                            جبران مرجوعی
+                                            @if (Model.OrderStates.Any(x => x.state == OrderStatus.جبران_مرجوعی && x.OrderDeliveryId == Delivery.Id))
+                                            {
+                                                var date = Model.OrderStates.Where(x => x.state == OrderStatus.جبران_مرجوعی && x.OrderDeliveryId == Delivery.Id).First().LogDate;
+                                                <br />
+                                                <span>
+                                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(date)
+                                                </span> <span> - </span><span>
+                                                    @date.ToString("HH:mm")
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+
+                                    <div class="steps-step">
+                                        <span type="button" class="btn btn-default btn-circle @(Model.OrderStates.Any(x=>x.state==OrderStatus.مرجوعی && x.OrderDeliveryId==Delivery.Id)?"green":"gray")" disabled="disabled">14</span>
+
+                                        <p class="@(Model.OrderStates.Any(x=>x.state==OrderStatus.مرجوعی && x.OrderDeliveryId==Delivery.Id)?"text-green":"text-gray")">
+                                            مرجوعی
+                                            @if (Model.OrderStates.Any(x => x.state == OrderStatus.مرجوعی && x.OrderDeliveryId == Delivery.Id))
+                                            {
+                                                var date = Model.OrderStates.Where(x => x.state == OrderStatus.مرجوعی && x.OrderDeliveryId == Delivery.Id).First().LogDate;
+                                                <br />
+                                                <span>
+                                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(date)
+                                                </span> <span> - </span><span>
+                                                    @date.ToString("HH:mm")
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+
+                            @using (Html.BeginForm("StateUpdate", "Orders"))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                @Html.HiddenFor(model => model.Id)
+                                @Html.Hidden("OrderDeliveryId", Delivery.Id)
+
+                                <div class="form-horizontal">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <span style="color:red;">@ViewBag.error</span>
+
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">وضعیت سفارش</div>
+                                        <div class="panel-body">
+                                            <div class="col-md-4">
+                                                <div class="col-md-6">
+                                                    <label>انتخاب وضعیت</label>
+                                                </div>
+                                                @{
+
+                                                    var OrderState = Model.OrderStates.Where(x => x.OrderDeliveryId == Delivery.Id).OrderByDescending(s => s.Id).Take(1).Select(x => x.state).First();
+                                                }
+                                                <select id="OrderStateId" name="OrderStateId" class="form-control">
+
+                                                    <option value="@Convert.ToInt32(OrderStatus.در_انتظار_تایید)" selected="@(OrderState==OrderStatus.در_انتظار_تایید?true:false)">@OrderStatus.در_انتظار_تایید.EnumDisplayNameFor()</option>
+                                                    <option value="@Convert.ToInt32(OrderStatus.تایید_سفارش)" selected="@(OrderState==OrderStatus.تایید_سفارش?true:false)">@OrderStatus.تایید_سفارش.EnumDisplayNameFor()</option>
+                                                    <option value="@Convert.ToInt32(OrderStatus.عدم_تایید_سفارش)" selected="@(OrderState==OrderStatus.عدم_تایید_سفارش?true:false)">@OrderStatus.عدم_تایید_سفارش.EnumDisplayNameFor()</option>
+                                                    <option value="@Convert.ToInt32(OrderStatus.تایید_پرداخت)" selected="@(OrderState==OrderStatus.تایید_پرداخت?true:false)">@OrderStatus.تایید_پرداخت.EnumDisplayNameFor()</option>
+                                                    <option value="@Convert.ToInt32(OrderStatus.پردازش_انبار)" selected="@(OrderState==OrderStatus.پردازش_انبار?true:false)">@OrderStatus.پردازش_انبار.EnumDisplayNameFor()</option>
+                                                    <option value="@Convert.ToInt32(OrderStatus.آماده_ارسال)" selected="@(OrderState==OrderStatus.آماده_ارسال?true:false)">@OrderStatus.آماده_ارسال.EnumDisplayNameFor()</option>
+                                                    <option value="@Convert.ToInt32(OrderStatus.ارسال_شده)" selected="@(OrderState==OrderStatus.ارسال_شده?true:false)">@OrderStatus.ارسال_شده.EnumDisplayNameFor()</option>
+                                                    <option value="@Convert.ToInt32(OrderStatus.تحویل_داده_شده)" selected="@(OrderState==OrderStatus.تحویل_داده_شده?true:false)">@OrderStatus.تحویل_داده_شده.EnumDisplayNameFor()</option>
+                                                    <option value="@Convert.ToInt32(OrderStatus.لغو_شده)" selected="@(OrderState==OrderStatus.لغو_شده?true:false)">@OrderStatus.لغو_شده.EnumDisplayNameFor()</option>
+                                                    <option value="@Convert.ToInt32(OrderStatus.مرجوعی)" selected="@(OrderState==OrderStatus.مرجوعی?true:false)">@OrderStatus.مرجوعی.EnumDisplayNameFor()</option>
+                                                    <option value="@Convert.ToInt32(OrderStatus.جبران_مرجوعی)" selected="@(OrderState==OrderStatus.جبران_مرجوعی?true:false)">@OrderStatus.جبران_مرجوعی.EnumDisplayNameFor()</option>
+                                                    <option value="@Convert.ToInt32(OrderStatus.درخواست_لغو)" selected="@(OrderState==OrderStatus.درخواست_لغو?true:false)">@OrderStatus.درخواست_لغو.EnumDisplayNameFor()</option>
+                                                    <option value="@Convert.ToInt32(OrderStatus.درخواست_مرجوعی)" selected="@(OrderState==OrderStatus.درخواست_مرجوعی?true:false)">@OrderStatus.درخواست_مرجوعی.EnumDisplayNameFor()</option>
+                                                    <option value="@Convert.ToInt32(OrderStatus.عدم_تایید_درخواست_لغو)" selected="@(OrderState==OrderStatus.عدم_تایید_درخواست_لغو?true:false)">@OrderStatus.عدم_تایید_درخواست_لغو.EnumDisplayNameFor()</option>
+                                                    <option value="@Convert.ToInt32(OrderStatus.عدم_تایید_درخواست_مرجوعی)" selected="@(OrderState==OrderStatus.عدم_تایید_درخواست_مرجوعی?true:false)">@OrderStatus.عدم_تایید_درخواست_مرجوعی.EnumDisplayNameFor()</option>
+                                                </select>
+                                                @if (OrderState == OrderStatus.درخواست_لغو || OrderState == OrderStatus.لغو_شده)
+                                                {
+                                                    <p>
+                                                        <br />
+
+                                                        @if (Model.OrderStates.Where(x => x.OrderDeliveryId == Delivery.Id && x.state == OrderStatus.درخواست_لغو).Any())
+                                                        {
+                                                            if (Model.OrderStates.Where(x => x.OrderDeliveryId == Delivery.Id && x.state == OrderStatus.درخواست_لغو).First().cancelOrderReson.HasValue)
+                                                            {
+                                                                <span>علت لغو مرسوله : @Model.OrderStates.Where(x => x.OrderDeliveryId == Delivery.Id && x.state == OrderStatus.درخواست_لغو).First().cancelOrderReson.Value.EnumDisplayNameFor()</span>
+                                                            }
+                                                        }
+                                                    </p>
+                                                }
+
+
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="col-md-12">
+                                                    <label> روش ارسال </label>
+                                                </div>
+                                                @Html.DropDownList("SendWay", sendways, htmlAttributes: new { @class = "form-control SendWay", data_id = Delivery.SendWayId })
+                                            </div>
+                                            <div class="col-md-2 hide" id="trackingCode" style="display:none" data-sendtype="@Delivery.ProductSendWay.Id">
+                                                <div class="col-md-12">
+                                                    <label> نحوه پیگیری سفارش</label>
+                                                </div>
+                                                @Html.TextBox("trackingCode", Model.OrderAttributeSelects.Any(x => x.OrderAttribute.DataType == 17 && x.OrderDeliveryId == Delivery.Id) ? Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 17 && x.OrderDeliveryId == Delivery.Id).FirstOrDefault().Value : "", htmlAttributes: new { @class = "form-control col-md-5" })
+                                            </div>
+                                            <div class="col-md-2 hide" id="BarbariNumber" style="display:none">
+                                                <div class="col-md-12">
+                                                    <label>تلفن پیگیری سفارش </label>
+                                                </div>
+                                                @Html.TextBox("barbariNumber", Model.OrderAttributeSelects.Any(x => x.OrderAttribute.DataType == 21 && x.OrderDeliveryId == Delivery.Id) ? Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 21 && x.OrderDeliveryId == Delivery.Id).FirstOrDefault().Value : "", htmlAttributes: new { @class = "form-control col-md-5" })
+                                            </div>
+                                            <div class="col-md-2 hide" id="BarbariNumber2" style="display:none">
+                                                <div class="col-md-12">
+                                                    <label>تاریخ ارسال سفارش</label>
+                                                </div>
+                                                @Html.TextBox("barbariNumber2", Model.OrderAttributeSelects.Any(x => x.OrderAttribute.DataType == 27 && x.OrderDeliveryId == Delivery.Id) ? Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 27 && x.OrderDeliveryId == Delivery.Id).FirstOrDefault().Value : "", htmlAttributes: new { @class = "form-control col-md-5" })
+                                            </div>
+                                            <div class="col-md-4 hide" id="BarbariNumber3">
+                                                <div class="col-md-12">
+                                                    <label>شماره بارنامه</label>
+                                                </div>
+                                                @Html.TextBox("barbariNumber3", Model.OrderAttributeSelects.Any(x => x.OrderAttribute.DataType == 28 && x.OrderDeliveryId == Delivery.Id) ? Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 28 && x.OrderDeliveryId == Delivery.Id).FirstOrDefault().Value : "", htmlAttributes: new { @class = "form-control col-md-5" })
+
+                                                <p><span class="BarbariTitle"></span> کاراکتر باقی مانده.</p>
+                                            </div>
+                                            <div class="col-md-4 hide" id="ConfirmEstelamcc" data-paymenttype="@wallet.PaymentType">
+                                                <div class="col-md-5">
+                                                    <label>تایید قیمت و تعداد سفارش استعلامی</label>
+                                                </div>
+                                                @Html.CheckBox("ConfirmEstelam", wallet.WalletAttributeWallets.Any(x => x.WalletAttribute.DataType == 23 && x.OrderDeliveryId == Delivery.Id) ? (wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 23 && x.OrderDeliveryId == Delivery.Id).First().Value == "True" ? true : false) : false)
+                                                @if (wallet.WalletAttributeWallets.Any(x => x.WalletAttribute.DataType == 23 && x.OrderDeliveryId == Delivery.Id))
+                                                {
+                                                    if (wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 23 && x.OrderDeliveryId == Delivery.Id).First().Value == "True")
+                                                    {
+                                                        var shoppingDate = Model.OrderStates.Last().LogDate.AddMinutes(setting.ShoppingPayEstelamMinutes);
+                                                        <p>
+                                                            <br />
+                                                            <span>این سفارش تا   </span> <strong> @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsi(shoppingDate) <span> - </span> @shoppingDate.ToString("HH:mm:ss") </strong> <span> مهلت پرداخت دارد. </span>
+                                                        </p>
+                                                    }
+                                                }
+                                            </div>
+                                            <div class="col-md-4 hide" id="ConfirmCashPeikDiv" data-paymenttype="@wallet.PaymentType">
+                                                <div class="col-md-5">
+                                                    <label>تایید پرداخت به پیک نقدی</label>
+                                                </div>
+                                                @Html.CheckBox("ConfirmCashPeik", wallet.WalletAttributeWallets.Any(x => x.WalletAttribute.DataType == 19 && x.OrderDeliveryId == Delivery.Id) ? (wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 19 && x.OrderDeliveryId == Delivery.Id).First().Value == "True" ? true : false) : false)
+                                            </div>
+                                            <div class="col-md-4 hide" id="ConfirmPosPeikDiv" data-paymenttype="@wallet.PaymentType">
+                                                <div>
+                                                    <div class="col-md-5">
+                                                        <label>تایید پرداخت توسط دستگاه کارتخوان</label>
+                                                    </div>
+                                                    @Html.CheckBox("ConfirmPosPeik", wallet.WalletAttributeWallets.Any(x => x.WalletAttribute.DataType == 20 && x.OrderDeliveryId == Delivery.Id) ? (wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 20 && x.OrderDeliveryId == Delivery.Id).First().Value == "True" ? true : false) : false)
+                                                </div>
+                                                <div class="clearfix"></div><br />
+                                                <div>
+                                                    <div class="col-md-5">
+                                                        <label>کد پیگیری قبض دستگاه کارتخوان</label>
+                                                    </div>
+                                                    @Html.TextBox("PosCodePeigiry", wallet.WalletAttributeWallets.Any(x => x.WalletAttribute.DataType == 21 && x.OrderDeliveryId == Delivery.Id) ? wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 21 && x.OrderDeliveryId == Delivery.Id).FirstOrDefault().Value : "", htmlAttributes: new { @class = "form-control col-md-5" })
+                                                </div>
+
+                                                <div class="clearfix"></div><br />
+                                                <div>
+                                                    <div class="col-md-5">
+                                                        <label>تایید پرداخت توسط دستگاه کارتخوان</label>
+                                                    </div>
+                                                    @Html.TextBox("PosDateTime", wallet.WalletAttributeWallets.Any(x => x.WalletAttribute.DataType == 22 && x.OrderDeliveryId == Delivery.Id) ? wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 22 && x.OrderDeliveryId == Delivery.Id).FirstOrDefault().Value : "", htmlAttributes: new { @class = "form-control col-md-5" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
+                                                <br />
+                                                @Html.TextArea("description", Model.OrderAttributeSelects.Any(x => x.OrderAttribute.DataType == 19 && x.OrderDeliveryId == Delivery.Id) ? Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 19 && x.OrderDeliveryId == Delivery.Id).FirstOrDefault().Value : "", htmlAttributes: new { @class = "form-control", rows = 5, placeholder = "توضیح برای مشتری در صورت لزوم وارد نمایید..." })
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                            <br />
+                                            <div class="panel panel-success">
+                                                <div class="panel-heading">آیکن های پرینت لیبل</div>
+                                                <div class="panel-body" id="Icons">
+
+                                                    @foreach (var icon in ViewBag.LabelIcon as IEnumerable<Domain.labelIcon>)
+                                                    {
+                                                        <div class="col-lg-2">
+                                                            @Html.Displayattachment(icon.attachment.FileName, icon.Title, "SM", false, htmlAttributes: new { @class = "img-responsive", style = "display:inline-block;width:220px;height:120px" })
+                                                            @if (Delivery.labelIcons.Any(x => x.Id == icon.Id))
+                                                            {
+                                                                <input type="checkbox" data-id="@icon.Id" class="IconId" checked />
+                                                                <input type="hidden" name="IconId" value="@icon.Id" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <input type="checkbox" data-id="@icon.Id" class="IconId" />
+
+
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                                                <input type="submit" value="ذخیره" class="btn btn-primary" />
+                                            </div>
+
+                                            <div class="clearfix"></div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            }
+                        </div>
+
+                    }
+
+                    <div class="col-lg-4">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">پرداخت سفارش</div>
+                            <div class="panel-body">
+                                <div>
+                                    <label>نحوه پرداخت:</label>
+                                    @{
+
+                                        var PaymentDate = wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 18).FirstOrDefault();
+                                    }
+                                    @if (wallet.PaymentType == 6)
+                                    {
+                                        var FishNumber = wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 9).FirstOrDefault();
+                                        <text>واریز به حساب</text>
+                                        <div>
+                                            <p> شماره فیش : @(FishNumber != null ? FishNumber.Value : "-") </p>
+                                            <p> تاریخ پرداخت : @(PaymentDate != null ? DateTimeConverter.ChangeMiladiToShamsi(Convert.ToDateTime(PaymentDate.Value)) + " - " + Convert.ToDateTime(PaymentDate.Value).ToShortTimeString() : "-") </p>
+                                            @if (wallet.State == false)
+                                            {
+                                                <p>
+                                                    <span data-order-id="@Model.Id" data-href="@Url.Action("Edit","Orders",new {id=Model.Id })" id="Confirm-Variz-Payment" class="btn btn-info" data-id="@wallet.Id"> تایید </span>
+                                                </p>
+                                            }
+                                        </div>
+                                    }
+                                    else if (wallet.PaymentType == 3)
+                                    {
+                                        var Codepeigiry = wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 7).FirstOrDefault();
+                                        var SourceCardNumber = wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 8).FirstOrDefault();
+                                        <text>کارت به کارت</text>
+                                        <div>
+                                            <p> شماره کارت مبدا  : @(SourceCardNumber != null ? SourceCardNumber.Value : "-") </p>
+                                            <p> کد پیگیری  : @(Codepeigiry != null ? Codepeigiry.Value : "-") </p>
+                                            <p> تاریخ پرداخت : @(PaymentDate != null ? DateTimeConverter.ChangeMiladiToShamsi(Convert.ToDateTime(PaymentDate.Value)) + " - " + Convert.ToDateTime(PaymentDate.Value).ToShortTimeString() : "-") </p>
+                                            @if (wallet.State == false)
+                                            {
+                                                <p>
+                                                    <span data-order-id="@Model.Id" data-href="@Url.Action("Edit","Orders",new {id=Model.Id })" id="Confirm-Card-To-Card-Payment" class="btn btn-info" data-id="@wallet.Id"> تایید </span>
+                                                </p>
+                                            }
+                                        </div>
+                                    }
+                                    else if (wallet.PaymentType == 1)
+                                    {
+                                        var ConnectToBank = wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 14).FirstOrDefault();
+                                        var ConnectToBankCode = wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 15).FirstOrDefault();
+                                        var Codepeigiry = wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 17).FirstOrDefault();
+
+                                        if (wallet.BankAccount.BankId == 1)
+                                        {
+                                            <text>درگاه بانک ملت</text>
+                                        }
+                                        else if (wallet.BankAccount.BankId == 8)
+                                        {
+
+                                            <text>درگاه بانک سامان</text>
+                                        }
+                                        else
+                                        {
+
+                                            <text>درگاه </text>
+                                        }
+                                        <div>
+                                            <p> اتصال به بانک: @(ConnectToBank != null ? (ConnectToBank.Value == "0" ? "بلی" : "خیر") : "نامشخص") </p>
+                                            <p> شناسه اتصال به بانک : @(ConnectToBankCode != null ? ConnectToBankCode.Value : "-") </p>
+                                            <p> کد پیگیری پرداخت : @(Codepeigiry != null ? Codepeigiry.Value : "-") </p>
+                                            <p> تاریخ پرداخت : @(PaymentDate != null ? DateTimeConverter.ChangeMiladiToShamsi(Convert.ToDateTime(PaymentDate.Value)) + " - " + Convert.ToDateTime(PaymentDate.Value).ToShortTimeString() : "-") </p>
+                                        </div>
+                                    }
+                                    else if (wallet.PaymentType == 2)
+                                    {
+                                        var ConnectToBank = wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 10).FirstOrDefault();
+                                        var ConnectToBankCode = wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 11).FirstOrDefault();
+                                        var Codepeigiry = wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 13).FirstOrDefault();
+
+                                        <text>درگاه زرین پال</text>
+                                        <div>
+                                            <p> اتصال به بانک: @(ConnectToBank != null ? (ConnectToBank.Value == "100" ? "بلی" : "خیر") : "نامشخص") </p>
+                                            <p> شناسه اتصال به بانک : @(ConnectToBankCode != null ? ConnectToBankCode.Value : "-") </p>
+                                            <p> کد پیگیری پرداخت : @(Codepeigiry != null ? Codepeigiry.Value : "-") </p>
+                                            <p> تاریخ پرداخت : @(PaymentDate != null ? DateTimeConverter.ChangeMiladiToShamsi(Convert.ToDateTime(PaymentDate.Value)) + " - " + Convert.ToDateTime(PaymentDate.Value).ToShortTimeString() : "-") </p>
+                                        </div>
+                                    }
+                                    else if (wallet.PaymentType == 5)
+                                    {
+                                        var paymentState = wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 19).FirstOrDefault();
+
+                                        <text>پرداخت به پیک نقدی</text>
+                                        <div>
+                                            <p> تایید پرداخت نقدی : @(paymentState != null ? "بلی" : "خیر") </p>
+                                        </div>
+                                    }
+                                    else if (wallet.PaymentType == 4)
+                                    {
+                                        var paymentState = wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 20).FirstOrDefault();
+                                        var PosCodepeigiry = wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 21).FirstOrDefault();
+                                        var PosDateTime = wallet.WalletAttributeWallets.Where(x => x.WalletAttribute.DataType == 22).FirstOrDefault();
+
+                                        <text>پرداخت به پیک کارتخوان</text>
+                                        <div>
+                                            <p> تایید پرداخت  با دستگاه کارتخوان : @(paymentState != null ? "بلی" : "خیر") </p>
+                                            <p> کد پیگیری قبض دستگاه کارتخوان : @(PosCodepeigiry != null ? PosCodepeigiry.Value : "نامشخص") </p>
+                                            <p> تاریخ و زمان پرداخت قبض دستگاه کارتخوان : @(PosDateTime != null ? PosDateTime.Value : "نامشخص") </p>
+                                        </div>
+                                    }
+                                    <div>
+                                        <label>وضعیت پرداخت :</label>
+                                        @{
+                                            var walletOrder = Model.OrderWallets.Where(x => x.Wallet.DepositOrWithdrawal == false).FirstOrDefault();
+                                            if (walletOrder != null)
+                                            {
+                                                if (walletOrder.Wallet.State == true)
+                                                {
+                                                    <span style="background-color:green;padding:0 5px;color:#fff">تایید پرداخت</span>
+                                                }
+                                                else
+                                                {
+
+                                                    <span style="background-color:red;padding:0 5px;color:#fff">عدم تایید پرداخت</span>
+                                                    if (Model.payUnSuccessfulReason != null)
+                                                    {
+                                                        <span>@Model.payUnSuccessfulReason.Value.EnumDisplayNameFor()</span>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span style="background-color:red;padding:0 5px;color:#fff">عدم تایید پرداخت</span>
+                                                if (Model.payUnSuccessfulReason != null)
+                                                {
+                                                    <span>@Model.payUnSuccessfulReason.Value.EnumDisplayNameFor()</span>
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                <div>
+                                    <label>جمع کل محصولات:</label>
+                                    @string.Format("{0:n0}", Model.OrderRows.Sum(x => x.Price * x.Quantity))
+                                    <span>تومان</span>
+                                </div>
+                                <div>
+                                    <label>ارزش افزوده:</label>
+                                    @if (Model.OrderAttributeSelects.Any(x => x.OrderAttribute.DataType == 15))
+                                    {
+                                        price = Convert.ToInt32(Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 15).FirstOrDefault().Value);
+                                    }
+                                    @if (price > 0)
+                                    {
+                                        result = string.Format("{0:n0}", price) + " تومان ";
+                                    }
+                                    else
+                                    {
+                                        result = "-";
+                                    }
+                                    @result
+                                </div>
+
+                                <div>
+
+                                    <label>هزینه ارسال:</label>
+                                    @{ price = 0;}
+                                    @if (Model.OrderAttributeSelects.Any(x => x.OrderAttribute.DataType == 14))
+                                    {
+                                        foreach (var item in Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 14))
+                                        {
+
+                                            price += Convert.ToInt32(item.Value);
+                                        }
+                                    }
+                                    @if (price > 0)
+                                    {
+                                        result = string.Format("{0:n0}", price) + " تومان ";
+                                        price = 0;
+                                    }
+                                    else
+                                    {
+                                        var OffFreeSend = Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 29).FirstOrDefault();
+                                        if (OffFreeSend != null)
+                                        {
+                                            if (OffFreeSend.Value == "1")
+                                            {
+                                                result = "ارسال رایگان";
+                                            }
+                                            else
+                                            {
+                                                result = "-";
+                                            }
+                                        }
+                                        else
+                                        {
+                                            result = "-";
+                                        }
+                                    }
+                                    @result
+                                </div>
+
+                                <div>
+
+                                    <label>جمع قابل پرداخت:</label>
+
+                                    @string.Format("{0:n0}", Model.OrderWallets.FirstOrDefault().Wallet.Price)
+                                    <span>تومان</span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-4">
+
+                        <div class="panel panel-success">
+
+                            <div class="panel-heading">ارسال سفارش</div>
+
+                            @foreach (var Delivery in Model.OrderDeliveries)
+                            {
+                                <div class="panel-body">
+                                    <div>
+                                        <label>زمان تحویل :</label>
+
+                                        @if (Delivery.RequestDate.HasValue)
+                                        {
+                                            <span> @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Delivery.RequestDate.Value)</span> <span> - </span><span> <span> @Delivery.ProductSendWayWorkTime.StartTime.ToString(@"hh\:mm") </span> <span> تا </span> <span>@Delivery.ProductSendWayWorkTime.EndTime.ToString(@"hh\:mm") </span> </span>
+                                        }
+                                        else
+                                        {
+                                            <span>-</span>
+                                        }
+                                        <hr />
+                                    </div>
+                                    <div>
+                                        <label>نحوه ارسال:</label>
+                                        @{
+                                            var sendTypeName = Delivery.ProductSendWay.Title;
+
+                                        }
+                                        @sendTypeName
+                                    </div>
+
+                                    <div>
+
+                                        <label>هزینه ارسال:</label>
+
+                                        @if (Model.OrderAttributeSelects.Any(x => x.OrderAttribute.DataType == 14 && x.OrderDeliveryId == Delivery.Id))
+                                        {
+                                            price = Convert.ToInt32(Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 14 && x.OrderDeliveryId == Delivery.Id).FirstOrDefault().Value);
+                                        }
+                                        @if (price > 0)
+                                        {
+                                            result = string.Format("{0:n0}", price) + " تومان ";
+                                            price = 0;
+                                        }
+                                        else
+                                        {
+                                            result = "-";
+                                        }
+                                        @result
+                                        @if (Delivery.Insurance)
+                                        {
+                                            <span>-- بیمه دارد ---</span>
+                                        }
+                                    </div>
+
+                                    <div>
+                                        <label>تقاضای ارسال فاکتور:</label>
+                                        @{
+                                            int sendFactor = 0;
+                                        }
+                                        @if (Model.OrderAttributeSelects.Any(x => x.OrderAttribute.DataType == 25 && x.OrderDeliveryId == Delivery.Id))
+                                        {
+                                            sendFactor = Convert.ToInt32(Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 25 && x.OrderDeliveryId == Delivery.Id).FirstOrDefault().Value);
+                                        }
+                                        @if (sendFactor == 0)
+                                        {
+                                            result = "خیر";
+                                        }
+                                        else
+                                        {
+                                            result = "بلی";
+                                        }
+                                        @result
+                                    </div>
+
+                                    <div>
+
+                                        <label>توضیح کاربر:</label>
+                                        @{
+                                            string userdesc = "";
+                                        }
+                                        @if (Model.OrderAttributeSelects.Any(x => x.OrderAttribute.DataType == 18 && x.OrderDeliveryId == Delivery.Id))
+                                        {
+                                            userdesc = Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 18 && x.OrderDeliveryId == Delivery.Id).FirstOrDefault().Value;
+                                        }
+                                        @if (userdesc == "")
+                                        {
+                                            result = "-";
+                                        }
+                                        else
+                                        {
+                                            result = userdesc;
+                                        }
+                                        @result
+                                    </div>
+
+
+                                    <hr />
+
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">تخفیف سفارش</div>
+                            <div class="panel-body">
+                                @if (Model.OrderAttributeSelects.Any(x => x.OrderAttribute.DataType == 23))
+                                {
+                                    var OffType = Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 24).FirstOrDefault();
+                                    <div>
+                                        <label>نوع تخفیف:</label>
+                                        @if (OffType != null)
+                                        {
+                                            @*if (OffType.Value == "1")
+                                                {
+                                                    <span>تخفیف ویژه</span>
+                                                }
+                                                else if (OffType.Value == "2")
+                                                {
+                                                    <span>تخفیف شگفت انگیز</span>
+                                                }*@
+                                            if (OffType.Value == "3")
+                                            {
+                                                <span>بن تخفیف</span>
+                                            }
+                                            else if (OffType.Value == "4")
+                                            {
+                                                <span>کد تخفیف</span>
+                                                if (Model.UserCodeGiftLogs.Any())
+                                                {
+                                                    <label>| کد تخفیف:</label>
+
+                                                    <span>@Model.UserCodeGiftLogs.FirstOrDefault().UserCodeGift.Code</span>
+                                                    <span>- @Model.UserCodeGiftLogs.First().UserCodeGift.Offer.Title</span>
+                                                }
+                                                if (Model.GeneralCodeGiftLogs.Any())
+                                                {
+                                                    <label>| کد تخفیف:</label>
+
+                                                    <span>@Model.GeneralCodeGiftLogs.FirstOrDefault().GeneralCodeGift.Code</span>
+                                                    <span>- @Model.GeneralCodeGiftLogs.First().GeneralCodeGift.Offer.Title</span>
+                                                }
+                                            }
+                                            @*else if (OffType.Value == "5")
+                                                {
+                                                    <span>ارسال رایگان</span>
+                                                }*@
+                                            else
+                                            {
+                                                <span>-</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span>-</span>
+                                        }
+                                    </div>
+
+                                    <div>
+                                        <label>مقدار تخفیف:</label>
+                                        @{
+                                            long OffPrice = 0;
+
+                                            OffPrice = Convert.ToInt32(Model.OrderAttributeSelects.Where(x => x.OrderAttribute.DataType == 23).FirstOrDefault().Value);
+
+                                        }
+                                        @string.Format("{0:n0}", OffPrice)
+                                        <span>تومان</span>
+
+                                    </div>
+                                }
+                                <div>
+                                    <label>بن تخفیف دریافتی :</label>
+                                    @{
+                                        int bonGive = 0;
+                                    }
+                                    @if (Model.UserBons.Any())
+                                    {
+                                        bonGive = Convert.ToInt32(Model.UserBons.Sum(x => x.Value));
+                                    }
+                                    @if (bonGive > 0)
+                                    {
+                                        result = string.Format("{0:n0}", bonGive) + " عدد ";
+                                        bonGive = 0;
+                                    }
+                                    else
+                                    {
+                                        result = "-";
+                                    }
+                                    @result
+                                </div>
+                                <div>
+                                    <label>بن تخفیف استفاده شده:</label>
+                                    @{
+                                        int bon = 0;
+                                    }
+                                    @if (Model.UserBonLogs.Any())
+                                    {
+                                        bon = Convert.ToInt32(Model.UserBonLogs.Sum(x => x.Value));
+                                    }
+                                    @if (bon > 0)
+                                    {
+                                        result = string.Format("{0:n0}", bon) + " تومان ";
+                                        bon = 0;
+                                    }
+                                    else
+                                    {
+                                        result = "-";
+                                    }
+                                    @result
+                                </div>
+                                <div>
+                                    <label>کد تخفیف استفاده شده:</label>
+                                    @{
+                                        int CodePrice = 0;
+                                    }
+                                    @if (Model.UserCodeGiftLogs.Any())
+                                    {
+                                        CodePrice = Convert.ToInt32(Model.UserCodeGiftLogs.First().Value);
+                                    }
+                                    @if (CodePrice > 0)
+                                    {
+                                        result = string.Format("{0:n0}", CodePrice) + " تومان ";
+                                        CodePrice = 0;
+                                    }
+                                    else
+                                    {
+                                        result = "-";
+                                    }
+                                    @result
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+
+
+
+
+                </div>
+                <!-- Steps form -->
+            </div>
+
+        </div>
+
+
+        <div class="x_panel" id="Product-Info">
+            <div class="x_title">
+                <h2>محصولات خریداری شده</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content">
+                <div class="table-responsive">
+                    <table class="table table-striped jambo_table bulk_action">
+                        <thead>
+                            <tr class="headings">
+                                <th class="text-center column-title">
+
+                                </th>
+                                <th class="text-center column-title">
+
+                                </th>
+                                @*<th class="text-center column-title">
+                                        وضعیت
+                                    </th>*@
+                                <th class="text-center column-title">
+                                    کد فروش
+                                </th>
+                                <th class="text-center column-title">
+                                    عنوان تنوع
+                                </th>
+                                <th class="text-center column-title">
+                                    گروه کالا
+                                </th>
+                                <th class="text-center column-title">
+                                    زمان تحویل
+                                </th>
+                                <th class="text-center column-title">
+                                    قیمت اصلی
+                                </th>
+
+                                <th class="text-center column-title">
+                                    قیمت نهایی
+                                </th>
+                                <th class="text-center column-title">
+                                    نوع تخفیف
+                                </th>
+                                <th class="text-center column-title">
+                                    تعداد
+                                </th>
+                                <th class="text-center column-title">
+                                    عملیات
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 1; }
+                            @foreach (var item in Model.OrderRows)
+                            {
+                                <tr class="ContentRow">
+
+                                    <td class="text-center">@i</td>
+                                    <td>
+                                        <a href="/TFP/@item.ProductId/@CommonFunctions.NormalizeAddress(item.Product.Title)" target="_blank">
+                                            @if (item.ProductPrice.ProductImages.Any())
+                                            {
+
+                                                if (item.ProductPrice.ProductImages.Where(x => x.IsMain).Any())
+                                                {
+
+                                                    @Html.Displayattachment(item.ProductPrice.ProductImages.Where(x => x.IsMain).First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.Displayattachment(item.ProductPrice.ProductImages.First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (item.ProductPrice.Product.ProductImages.Any())
+                                                {
+                                                    if (item.ProductPrice.Product.ProductImages.Where(x => x.IsMain).Any())
+                                                    {
+                                                        @Html.Displayattachment(item.ProductPrice.Product.ProductImages.First(x => x.IsMain).Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.Displayattachment(item.ProductPrice.Product.ProductImages.First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:110px;height:60px" />
+
+
+                                                }
+                                            }
+                                        </a>
+                                    </td>
+
+                                    <td class="text-center">@item.ProductPrice.code</td>
+                                    <td>
+                                        <a href="/Admin/ProductPrice/Edit/@item.ProductPrice.Id">
+
+
+                                            <span> @item.ProductPrice.Product.Name | </span>
+                                            @if (item.ProductPrice.ProductAttributeSelectModelId.HasValue)
+                                            {
+                                                <span>مدل @item.ProductPrice.ProductAttributeSelectModel.Value |</span>
+                                            }
+                                            @if (item.ProductPrice.ProductAttributeSelectSizeId.HasValue)
+                                            {
+                                                <span>سایز @item.ProductPrice.ProductAttributeSelectSize.Value |</span>
+                                            }
+                                            @if (item.ProductPrice.ProductAttributeSelectColorId.HasValue)
+                                            {
+                                                <span>@Html.DisplaySelectColorAttribute(int.Parse(item.ProductPrice.ProductAttributeSelectColor.Value)) |</span>
+                                            }
+                                            @if (item.ProductPrice.ProductAttributeSelectGarantyId.HasValue)
+                                            {
+                                                <span>@Html.DisplaySelectAttribute(int.Parse(item.ProductPrice.ProductAttributeSelectGaranty.Value)) |</span>
+                                            }
+                                            @if (item.ProductPrice.ProductAttributeSelectWeightId.HasValue)
+                                            {
+                                                <span>@item.ProductPrice.ProductAttributeSelectweight.Value |</span>
+                                            }
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        <ul class="ProductCategories">
+                                            <li>@item.ProductPrice.Product.ProductCategories.First().Name</li>
+                                        </ul>
+                                    </td>
+                                    <td class="text-center">
+                                        @if (item.OrderDelivery.RequestDate.HasValue)
+                                        {
+                                            <span> @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.OrderDelivery.RequestDate.Value)</span> <span> - </span><span>@item.OrderDelivery.ProductSendWayWorkTime.StartTime.ToString(@"hh\:mm") <span> تا </span> <span>@item.OrderDelivery.ProductSendWayWorkTime.EndTime.ToString(@"hh\:mm") </span></span>
+                                        }
+                                        else
+                                        {
+                                            <span>-</span>
+                                        }
+                                    </td>
+
+                                    <td class="text-center" data-version="0"><input disabled="disabled" data-old-value="@string.Format("{0:n0}",item.RawPrice)" value="@string.Format("{0:n0}",item.RawPrice)" style="width:100px" /></td>
+                                    <td class="text-center PriceContainer" data-version="0"><input class="Price" data-old-value="@string.Format("{0:n0}",item.Price)" value="@string.Format("{0:n0}",item.Price)" style="width:100px" /></td>
+                                    <td class="text-center">
+                                        @if (item.ProductOfferId.HasValue)
+                                        {
+                                            if (item.ProductOffer.Offer.CodeTypeValueCode == 2)
+                                            {
+                                                <span>تخفیف و حراج</span>
+                                            }
+                                            else
+                                            {
+                                                <span>تخفیف شگفت انگیز</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span>-</span>
+                                        }
+                                    </td>
+                                    <td class="text-center QuantityContainer" data-version="0"> <input type="number" min="1" class="Quantity" data-old-value="@item.Quantity" value="@item.Quantity" style="width:50px" />   </td>
+
+
+
+                                    <td>
+                                        <a href="#" data-id="@item.Id" class="Edit-Now btn btn-default">تایید</a><br /><br />
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+
+        </div>
+
+        @section Scripts{
+            <script src="~/Areas/Admin/Content/Scripts/Component/Bootstrp-DropDown/bootstrap-select.min.js"></script>
+
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/View/OrderManager.js?v=2.5.1"></script>
+        }
+    </div>
+</div>

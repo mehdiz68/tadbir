@@ -1,0 +1,68 @@
+﻿@model Domain.ProductAttributeTab
+  
+<title>ویرایش تب @Model.Name</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ویرایش تب @Model.Name
+
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @if (ViewBag.message != null)
+                {
+                    <p class="alert alert-danger">@ViewBag.message</p>
+                }
+                                @Html.HiddenFor(x => x.DisplayOrder)
+                                @Html.HiddenFor(x => x.LanguageId)
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { placeholder = "مقدار", @class = "form-control" } })
+
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="control-label col-md-1">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-11">
+
+                        @Html.TextBoxFor(m => m.Icon, new { @class = "form-control", placeholder = "آیکن", @readonly = "readonly" })
+                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                        <p>
+                            <label type="button" class="btn btn-primary" data-toggle="modal" data-target="#IconsModalLong">
+                                <label class="fa fa-hand-o-left"></label> لیست آیکن ها
+                            </label>
+
+                            @Html.Action("GetIconList", "Home")
+                        </p>
+                    </div>
+                </div>
+
+
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <input type="submit" value="ویرایش" class="btn btn-success" />
+                </div>
+            </div>
+        }
+
+        @section Scripts{
+
+            <script src="~/Areas/Admin/Content/Scripts/Component/IconList.js"></script>
+
+        }
+    </div>
+</div>

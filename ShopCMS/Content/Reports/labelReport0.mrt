@@ -1,0 +1,738 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StiSerializer version="1.02" type="Net" application="StiReport">
+  <Dictionary Ref="1" type="Dictionary" isKey="true">
+    <BusinessObjects isList="true" count="1">
+      <labelbill Ref="2" type="Stimulsoft.Report.Dictionary.StiBusinessObject" isKey="true">
+        <Alias>labelbill</Alias>
+        <BusinessObjects isList="true" count="0" />
+        <Category>labelbill</Category>
+        <Columns isList="true" count="14">
+          <value>WebsiteName,System.String</value>
+          <value>WebsiteAddress,System.String</value>
+          <value>WebsitePhoneNumber,System.String</value>
+          <value>CustomerFullName,System.String</value>
+          <value>CustomerMobile,System.String</value>
+          <value>CustomerProvience,System.String</value>
+          <value>CustomerCity,System.String</value>
+          <value>CustomerAddress,System.String</value>
+          <value>CustomerPostalCode,System.String</value>
+          <value>CustomerTele,System.String</value>
+          <value>OrderDate,System.String</value>
+          <value>OrderTime,System.String</value>
+          <value>OrderPayWay,System.String</value>
+          <value>OrderSendWay,System.String</value>
+        </Columns>
+        <Dictionary isRef="1" />
+        <Guid>f9174f6bcaae4d4395bc2824c0a759ab</Guid>
+        <Name>labelbill</Name>
+      </labelbill>
+    </BusinessObjects>
+    <Databases isList="true" count="0" />
+    <DataSources isList="true" count="0" />
+    <Relations isList="true" count="0" />
+    <Report isRef="0" />
+    <Resources isList="true" count="0" />
+    <Variables isList="true" count="7">
+      <value>,Logo,Logo,,System.Byte,,False,False,False,False</value>
+      <value>,label1,label1,,System.Nullable`1[System.Byte],null,False,False,False,False</value>
+      <value>,label2,label2,,System.Nullable`1[System.Byte],null,False,False,False,False</value>
+      <value>,label3,label3,,System.Nullable`1[System.Byte],null,False,False,False,False</value>
+      <value>,label4,label4,,System.Nullable`1[System.Byte],null,False,False,False,False</value>
+      <value>,label5,label5,,System.Nullable`1[System.Byte],,False,False,False,False</value>
+      <value>,label6,label6,,System.Nullable`1[System.Byte],,False,False,False,False</value>
+    </Variables>
+  </Dictionary>
+  <EngineVersion>EngineV2</EngineVersion>
+  <GlobalizationStrings isList="true" count="0" />
+  <Key>420bbf3e653947578c826a1a093edf08</Key>
+  <MetaTags isList="true" count="0" />
+  <Pages isList="true" count="1">
+    <Page1 Ref="3" type="Page" isKey="true">
+      <Border>All;Black;1;Solid;False;4;Black</Border>
+      <Brush>Transparent</Brush>
+      <Components isList="true" count="15">
+        <Panel1 Ref="4" type="Panel" isKey="true">
+          <Border>Right, Bottom;Black;1;Solid;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,0,1.6,1</ClientRectangle>
+          <Components isList="true" count="4">
+            <Image1 Ref="5" type="Image" isKey="true">
+              <AspectRatio>True</AspectRatio>
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>0.1,0.1,1.4,0.8</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <HorAlignment>Center</HorAlignment>
+              <ImageData>{Logo}</ImageData>
+              <Margins>0,0,0,0</Margins>
+              <Name>Image1</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Stretch>True</Stretch>
+              <VertAlignment>Center</VertAlignment>
+            </Image1>
+            <Image2 Ref="6" type="Image" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,0,0,0</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Margins>0,0,0,0</Margins>
+              <Name>Image2</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+            </Image2>
+            <Image4 Ref="7" type="Image" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,0,0,0</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Margins>0,0,0,0</Margins>
+              <Name>Image4</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+            </Image4>
+            <Image6 Ref="8" type="Image" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,0,0,0</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Margins>0,0,0,0</Margins>
+              <Name>Image6</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+            </Image6>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>Panel1</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </Panel1>
+        <Panel2 Ref="9" type="Panel" isKey="true">
+          <Border>Left, Bottom;Black;1;Solid;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1.6,0,2.14,1</ClientRectangle>
+          <Components isList="true" count="5">
+            <Text1 Ref="10" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>1.5,0.1,0.6,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,8</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text1</Name>
+              <Page isRef="3" />
+              <Parent isRef="9" />
+              <Text>: فرستنده </Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text1>
+            <Text2 Ref="11" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <CanBreak>True</CanBreak>
+              <ClientRectangle>0.1,0.1,1.3,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,9,Bold</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text2</Name>
+              <Page isRef="3" />
+              <Parent isRef="9" />
+              <Text>{labelbill.WebsiteName}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </Text2>
+            <Text3 Ref="12" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>0.1,0.4,2,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,8</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text3</Name>
+              <Page isRef="3" />
+              <Parent isRef="9" />
+              <Text>{labelbill.WebsiteAddress}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </Text3>
+            <Text4 Ref="13" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>1.5,0.7,0.6,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,8</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text4</Name>
+              <Page isRef="3" />
+              <Parent isRef="9" />
+              <Text> : پشتیبانی </Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text4>
+            <Text5 Ref="14" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>0.1,0.7,1.3,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text5</Name>
+              <Page isRef="3" />
+              <Parent isRef="9" />
+              <Text>{labelbill.WebsitePhoneNumber}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text5>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>Panel2</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </Panel2>
+        <Panel3 Ref="15" type="Panel" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,1,3.7,0.4</ClientRectangle>
+          <Components isList="true" count="1">
+            <Text6 Ref="16" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>3.1,0.1,0.6,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,9</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text6</Name>
+              <Page isRef="3" />
+              <Parent isRef="15" />
+              <Text> : گیرنده</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text6>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>Panel3</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </Panel3>
+        <Panel4 Ref="17" type="Panel" isKey="true">
+          <Border>Top, Right, Bottom;Black;1;Solid;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,1.4,1.6,0.4</ClientRectangle>
+          <Components isList="true" count="1">
+            <Text8 Ref="18" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>0.1,0.1,1.4,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,10,Bold</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text8</Name>
+              <Page isRef="3" />
+              <Parent isRef="17" />
+              <Text>{labelbill.CustomerMobile}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </Text8>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>Panel4</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </Panel4>
+        <Panel5 Ref="19" type="Panel" isKey="true">
+          <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1.6,1.4,2.14,0.4</ClientRectangle>
+          <Components isList="true" count="1">
+            <Text7 Ref="20" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>0.1,0.1,1.9,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,12,Bold</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text7</Name>
+              <Page isRef="3" />
+              <Parent isRef="19" />
+              <Text>{labelbill.CustomerFullName}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </Text7>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>Panel5</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </Panel5>
+        <Panel6 Ref="21" type="Panel" isKey="true">
+          <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1.6,1.8,2.14,0.4</ClientRectangle>
+          <Components isList="true" count="1">
+            <Text9 Ref="22" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>0.1,0.1,1.9,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,8,Bold</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text9</Name>
+              <Page isRef="3" />
+              <Parent isRef="21" />
+              <Text>{labelbill.CustomerProvience}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </Text9>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>Panel6</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </Panel6>
+        <Panel7 Ref="23" type="Panel" isKey="true">
+          <Border>Top, Right, Bottom;Black;1;Solid;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,1.8,1.6,0.4</ClientRectangle>
+          <Components isList="true" count="1">
+            <Text10 Ref="24" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>0.1,0.1,1.4,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text10</Name>
+              <Page isRef="3" />
+              <Parent isRef="23" />
+              <Text>{labelbill.CustomerCity}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </Text10>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>Panel7</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </Panel7>
+        <Text11 Ref="25" type="Text" isKey="true">
+          <Border>None;[0:31:53];1;None;False;4;Black</Border>
+          <Brush>EmptyBrush</Brush>
+          <ClientRectangle>0.1,2.3,3.5,0.2</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>B Nazanin,9</Font>
+          <HorAlignment>Right</HorAlignment>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text11</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>{labelbill.CustomerAddress}</Text>
+          <TextBrush>Black</TextBrush>
+          <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+          <VertAlignment>Center</VertAlignment>
+        </Text11>
+        <Panel8 Ref="26" type="Panel" isKey="true">
+          <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1.6,2.7,2.14,0.2</ClientRectangle>
+          <Components isList="true" count="2">
+            <Text12 Ref="27" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>1.4,0,0.6,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,8</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text12</Name>
+              <Page isRef="3" />
+              <Parent isRef="26" />
+              <Text>: کد پستی</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text12>
+            <Text13 Ref="28" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>0.1,0,1.3,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,9,Bold</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text13</Name>
+              <Page isRef="3" />
+              <Parent isRef="26" />
+              <Text>{labelbill.CustomerPostalCode}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text13>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>Panel8</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </Panel8>
+        <Panel9 Ref="29" type="Panel" isKey="true">
+          <Border>Top, Right, Bottom;Black;1;Solid;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,2.7,1.6,0.2</ClientRectangle>
+          <Components isList="true" count="1">
+            <Text14 Ref="30" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>0.1,0,1.4,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,9</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text14</Name>
+              <Page isRef="3" />
+              <Parent isRef="29" />
+              <Text>{labelbill.CustomerTele}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text14>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>Panel9</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </Panel9>
+        <Panel10 Ref="31" type="Panel" isKey="true">
+          <Border>Bottom;Black;1;Solid;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1.6,2.9,2.14,0.2</ClientRectangle>
+          <Components isList="true" count="2">
+            <Text15 Ref="32" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>1.4,0,0.6,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,7</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text15</Name>
+              <Page isRef="3" />
+              <Parent isRef="31" />
+              <Text> : تاریخ</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text15>
+            <Text16 Ref="33" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>0.1,0,1.3,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,7</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text16</Name>
+              <Page isRef="3" />
+              <Parent isRef="31" />
+              <Text>{labelbill.OrderDate}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text16>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>Panel10</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </Panel10>
+        <Panel11 Ref="34" type="Panel" isKey="true">
+          <Border>Top, Right, Bottom;Black;1;Solid;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,2.9,1.6,0.84</ClientRectangle>
+          <Components isList="true" count="3">
+            <Image3 Ref="35" type="Image" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.1,0.2,0.33,0.44</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <HorAlignment>Center</HorAlignment>
+              <ImageBytes>/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkI
+CQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQ
+EBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAiACEDASIA
+AhEBAxEB/8QAHQAAAgICAwEAAAAAAAAAAAAAAAYHCQQIAQIDBf/EADYQAAEEAQQCAAEGDwEAAAAA
+AAECAwQGBQAHCBESIRMUFSIxQVEJFxhCUlZXYnGRlaOzw9LT/8QAFAEBAAAAAAAAAAAAAAAAAAAA
+AP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/ANcuSPJa802/YyDFq23uXdyVTr2d
+m5DP0zHZadKmz8XHmSHHJMtpxwguvr8UAhCEBKUpATpAg8md5snX8ra4O1G0juIwjkdrITBthgQ0
+w4+VBlBJje1L8HCEjskIWeukkjx5L1nN3PfSl1CtQHJ2WzdJomPgxmx2p593BQEIQP4qUBq4TjHw
+R2G40UGPHzWAwtisymUu5vP5dhDqVvkdENId7Qy2nyUlPQCiCfIkqOgq/rO/ubiScNZc5U9mMrSs
+iw3jslm17U4yNFw+XkxHHAyQmL8WSuN0lxSWwErKQnyCVBRweO/I6zbj7+UDb6x7f7W/NFjskDFS
+1wKDisdLSy8+ltS2ZMZlDzDqQryS42sKSoAg+tXAb3cTOPfIylS65Z6fiG1LL3yTMYlptiVClH6J
+dQ42AFKCkgFK/JJ8elDVM+2ezVl4/fhDKJtHa1odnV+/4hpMhtJSiUwqS0tl9IP1BbakK6+zvr7N
+A4flv8sf25WL+z/56NQdo0DJyYtGdpe99StVYyDsDLYyg0t+FLaPTkd4V6F4uoP5q0k+SVD2FAEe
+xqIcFaLLkLJGbn2LJyU5TIx1zkvS3FiUr4yVdugn6Z8vf0u/fvUt8t61Y5u49dmQ6/k347m3tN8H
+W4jikL8cDDSrxUB0elJUk9fUUkfWDpe2wsuBp+K+adw+Psm2Kh5RvM4yWy+9jZTbyUhKo77qWlqf
+irKGyWx4KSUqKFpK1dhgb/WWxxt5dya/HsGSaxabtmZIgoluJjh75W6n4nwwfHy69eXXfWmfi5bb
+RcOXGy0y12DIZiRCtWDgR3p0hTzjcduUj4bQUok+KeyAO/Q9D1qMbW1erva81csrWp5n57IScnK+
+BAcS38Z9xTi/Edeh5KPQ+7UmcPKpaWuVe0jzlayyW2rlinXFmE4AhCZKCpRPj6SACST6ABJ0HydG
+uOx+kn+Y0aDZLlxvJu9tryU3Bpu3W6twquAg5hZi4rC5yVBhsFxKXFlDLK0oT5LUpR6A7Uok+ydQ
+49yV5Gve3t/9yHD+9ap5/wBujRoO7fJrki0nxa5BblIH3Jtk8D/LphoHIDfm03yt1qzb237L4jK5
+eHDn4+fZJsiNLjuPIS4060twpcQpJIUlQIIJBGjRoL0/xb7d/qFXP6Wx/wA6NGjQf//Z</ImageBytes>
+              <Margins>0,0,0,0</Margins>
+              <Name>Image3</Name>
+              <Page isRef="3" />
+              <Parent isRef="34" />
+            </Image3>
+            <Image5 Ref="36" type="Image" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.6,0.2,0.33,0.34</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <ImageBytes>/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkI
+CQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQ
+EBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAiACEDASIA
+AhEBAxEB/8QAHAAAAQQDAQAAAAAAAAAAAAAAAAUHCAkBAgYE/8QAOhAAAQMDBAEBAQoPAAAAAAAA
+AQIDBAUGBwAIERIhMQkXIjc4QVF2d7S2ExQYUlZXYoGRlaOzw9LT/8QAFAEBAAAAAAAAAAAAAAAA
+AAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AI5bkdy182bf1MgxbWx7V3al
+advV2bUK/ZlOq06VNn0uPMkOOSZbTjhBdfX1QCEIQEpSkBOk/H9+7rMpwKXVbA2/YtrEOtVh6gQH
+2sZW8ht+oNRVSnI4UtgAKDCVL88DhJ4PI40228D4T6B9Xll/d+DqwL2YdFfyDtbocCgVFCJli5Zb
+rVRjqZC3FRyw0OWyFBSOUuKBV6FIdTwrnQRwyFS99WKrQqF+5A2tY0pFApYbVMmrxvbTiWQtaUJK
+g2ypXHZSRzxwOfOuV26bj7oyRnrH2P7mx7iwUq47jgUuYqn2FSqfLQ088lClsSYzLbzDqQrshxta
+VJUAQfGrVvaT1mnUbZRkxdRdQkS4cWGyFAnu85MZSgDj5efP7uT41Sls4+NhiD6a0f7U3oHw/Lf3
+Y/ryuL+j/wA9GmO0aBQ3gfCfQPq8sv7vwdLOyXd5ee0vJTlVolLbrdBuQMwq1R3XiyJCUqP4J1tz
+g9HUFauCQQQpQI8gjz7t7auObke3ZkO36m/Hcx7ZvR1uI4pC+tBhpV1UBweFJUk8ehSR6g6bOxYE
+e3LhZqt641uKvQo/v0Q4spdPUXAQUqLpYdPUcegAJ+caCWftP9414ZkyPVsBR6Qmh2rj6vy4rraJ
+Bdcqs1hamRIcPACUpHfo2OeO6iSo8dY8bOPjYYg+mtH+1N60z3c/u05Dq+SqFiG4LbqVxT5NTqrS
+5rk9l2Q84VqLQ/F21NpBJ96Sr5PTjSxs8tS6Wt1eJHnLaqyW2rypTrizCcAQhMlBUonr4SACST4A
+BJ0CTo1jkfnJ/iNGgklu4zJl7Gu5TINm46yreFq0CDWFmLSqLXJUGGwXEpcWUMsrShPZalKPAHKl
+EnyTpnHtyu417y9n/JDh/auqef8ALo0aDdvc1uRaT1a3BZKQPmTdk8D+7robA3AZ5um/Lbtq5s23
+9V6RVavDhz6fPuSbIjS47jyEuNOtLcKXEKSSFJUCCCQRo0aC9P3N8d/oFbn8rY/10aNGg//Z</ImageBytes>
+              <Margins>0,0,0,0</Margins>
+              <Name>Image5</Name>
+              <Page isRef="3" />
+              <Parent isRef="34" />
+            </Image5>
+            <Image7 Ref="37" type="Image" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.1,0.2,0.34,0.34</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <ImageBytes>/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkI
+CQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQ
+EBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAiACIDASIA
+AhEBAxEB/8QAGwAAAgMAAwAAAAAAAAAAAAAAAAgGBwkBBAX/xAA+EAABAwMDAQQCDQ0AAAAAAAAB
+AgMEBQYHAAgREgkTITEUQRUYIzc4WHZ3gZa0tdMWJCYzNTZFUVNiZHSz/8QAFAEBAAAAAAAAAAAA
+AAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AF03Jblb5s2+aNEjWtj6
+rv1W0Ler8+oV+zadV50qbPprEuQtyRLaccI719YSgEIQgJSlIA1A4m4/OE60qhfkPDuK3repUxiB
+NqSMV0Mx2JDyVqabUv0XgKUG1H6Bz5jnw94Pvj2v829lfcMPT37fL5wQjsqL/XOxRUpNvUOSaVcb
+BmMiXVKk+YfVPbc6elstrktFsKBKRGQDz6wSy39x2cLrgVyqW5h7FNRiW3B9k6s8xiyhqTDi94hv
+vXD6N4DrcQPpJ8gSOnQt3d+y65TokvG+HHWHpbLbjZxnRUBaCsAjqRHChyD5pII9RB8dOF2YmRsQ
+2xtnzqzIxpKq823KK9XLpelPNdNbhFmSGoKE8e5oS20sHqKuVPLPlwBnAp63ZGRkyLRhzYlEdrKV
+06PNdS6+zGLwLaHFpAClBPAKgByRzwNA6WY9225PG2Xb4x3ZuY7gg0C1rkqdFpUUuIeLEONKcZZb
+LjiVLX0toSOpSio8ckk+OjVR7nPhJ5Y+XFd+3vaNBFt4Pvj2v829lfcMPTJ4GfZT2Q2em1PICjdz
+A6Soc/rKT6tL9u3tq45t/wBqS4dv1N9hzHFmhDrcRxSFlNDiIVwoDg8KSpJ48ikjzB03dv8AaVY4
+ottwbee2CNSExorLD6uI6UvrQhKSsp9BPiSnnx50FU9nk603t53dBx1CCceHjqUBz+bVDSUWz+8d
+K/3mP+idads9pzjCMhxuP2fDDSHk9LiUCOkLH8iBB8R4nSNZSq1UzDuFqGRLXxLUbZgV+sxnotFi
+wlLTFHuaO7T3baAeSknwSPE6CZ7nPhJ5Y+XFd+3vaNcbmyFbkssEEEG+K6Qef897RoLa3e5iy5jT
+cpf9m44ynd9q0CFVlLjUqiVyVBhsKcSlxwoZZWlCSpalKVwPFSiT4k6p/wBs9uV+MNkz62z/AMXR
+o0B7Z7cr8YbJn1tn/i6E7m9yTpDbm4PJS0LPSpKrsnkEHzBHe6NGg3VsHHWPvyFtz9Bbe/ZMP+Fs
+f0U/26NGjQf/2Q==</ImageBytes>
+              <Margins>0,0,0,0</Margins>
+              <Name>Image7</Name>
+              <Page isRef="3" />
+              <Parent isRef="34" />
+            </Image7>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>Panel11</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </Panel11>
+        <Panel12 Ref="38" type="Panel" isKey="true">
+          <Border>Bottom;Black;1;Solid;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1.6,3.1,2.14,0.2</ClientRectangle>
+          <Components isList="true" count="2">
+            <Text17 Ref="39" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>1.4,0,0.6,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,7</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text17</Name>
+              <Page isRef="3" />
+              <Parent isRef="38" />
+              <Text>: ساعت</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text17>
+            <Text20 Ref="40" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>0.1,0,1.3,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,8</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text20</Name>
+              <Page isRef="3" />
+              <Parent isRef="38" />
+              <Text>{labelbill.OrderTime}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text20>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>Panel12</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <RightToLeft>True</RightToLeft>
+        </Panel12>
+        <Panel13 Ref="41" type="Panel" isKey="true">
+          <Border>Bottom;Black;1;Solid;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1.6,3.3,2.14,0.2</ClientRectangle>
+          <Components isList="true" count="2">
+            <Text18 Ref="42" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>1.4,0,0.6,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,7</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text18</Name>
+              <Page isRef="3" />
+              <Parent isRef="41" />
+              <Text> : نحوه ارسال</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text18>
+            <Text21 Ref="43" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>0.1,0,1.3,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,8</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text21</Name>
+              <Page isRef="3" />
+              <Parent isRef="41" />
+              <Text>{labelbill.OrderSendWay}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text21>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>Panel13</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </Panel13>
+        <Panel14 Ref="44" type="Panel" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1.6,3.5,2.14,0.2</ClientRectangle>
+          <Components isList="true" count="2">
+            <Text19 Ref="45" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>1.4,0,0.6,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,7</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text19</Name>
+              <Page isRef="3" />
+              <Parent isRef="44" />
+              <Text> : نحوه پرداخت</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text19>
+            <Text22 Ref="46" type="Text" isKey="true">
+              <Border>None;[0:31:53];1;None;False;4;Black</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>0.1,0,1.3,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,8</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text22</Name>
+              <Page isRef="3" />
+              <Parent isRef="44" />
+              <Text>{labelbill.OrderPayWay}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text22>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>Panel14</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </Panel14>
+      </Components>
+      <Conditions isList="true" count="0" />
+      <Guid>705aaa8d1d3740edaa5ab7f946c4e0b7</Guid>
+      <Margins>0.1,0.1,0.1,0.1</Margins>
+      <Name>Page1</Name>
+      <PageHeight>3.94</PageHeight>
+      <PageWidth>3.94</PageWidth>
+      <Report isRef="0" />
+      <RightToLeft>True</RightToLeft>
+    </Page1>
+  </Pages>
+  <ReferencedAssemblies isList="true" count="8">
+    <value>System.Dll</value>
+    <value>System.Drawing.Dll</value>
+    <value>System.Windows.Forms.Dll</value>
+    <value>System.Data.Dll</value>
+    <value>System.Xml.Dll</value>
+    <value>Stimulsoft.Controls.Dll</value>
+    <value>Stimulsoft.Base.Dll</value>
+    <value>Stimulsoft.Report.Dll</value>
+  </ReferencedAssemblies>
+  <ReportAlias>Report</ReportAlias>
+  <ReportChanged>12/6/2020 6:46:52 PM</ReportChanged>
+  <ReportCreated>6/23/2020 6:09:46 PM</ReportCreated>
+  <ReportFile>d:\my-projects\gearbestshopping2\shopcms\content\reports\labelreport0.mrt</ReportFile>
+  <ReportGuid>5e010358a09d4f058c46c36baf34bcff</ReportGuid>
+  <ReportName>Report</ReportName>
+  <ReportUnit>Inches</ReportUnit>
+  <ReportVersion>2020.2.1.0</ReportVersion>
+  <Script>using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Data;
+using Stimulsoft.Controls;
+using Stimulsoft.Base.Drawing;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Dialogs;
+using Stimulsoft.Report.Components;
+
+namespace Reports
+{
+    public class Report : Stimulsoft.Report.StiReport
+    {
+        public Report()        {
+            this.InitializeComponent();
+        }
+
+        #region StiReport Designer generated code - do not modify
+		#endregion StiReport Designer generated code - do not modify
+    }
+}
+</Script>
+  <ScriptLanguage>CSharp</ScriptLanguage>
+  <Styles isList="true" count="0" />
+</StiSerializer>

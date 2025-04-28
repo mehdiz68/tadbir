@@ -1,0 +1,235 @@
+﻿@model PagedList.IPagedList<Domain.Comment>
+@using PagedList.Mvc;
+
+<title>مدیریت نظرات</title>
+
+@{
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule; ;
+}
+
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Comment.css" rel="stylesheet" />
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    @*Pagging*@
+    <link href="~/Content/Base/Css/PagedList.css" rel="stylesheet" type="text/css" />
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+
+        <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            مدیریت نظرات
+
+        </h1>
+
+        <br /><br />
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><span class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").First().Abstract:"")"></span> جستجو / فیلتر</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content" style="display:none">
+                <div id="SearchPage">
+                    <div>
+                        <div>
+                            @using (Html.BeginForm("Index", "Comments", FormMethod.Get))
+                            {
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("FullNameString", ViewBag.FullNameFilter as string, htmlAttributes: new { placeholder = "نام و نام خانوادگی", style = "width:90%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("InsertDateStart", ViewBag.InsertDateStartFilter as string, htmlAttributes: new { placeholder = "تاریخ ثبت از", style = "width:90%;display: inline-block", @class = "form-control", onclick = "displayDatePicker('InsertDateStart');" })
+                                    <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("InsertDateEnd", ViewBag.InsertDateEndFilter as string, htmlAttributes: new { placeholder = "تا", style = "width:90%;display: inline-block", @class = "form-control", onclick = "displayDatePicker('InsertDateEnd');" })
+                                    <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="clearfix"></div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("LanguagenameString", ViewBag.LanguagenameSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان ( وب سایت )", style = "width:90%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-language form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("IsVisit", ViewBag.IsVisit as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-eye form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("IsActive", ViewBag.IsActive as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-eye-slash form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+
+
+                                <div class="clearfix"></div>
+
+                                <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                @Html.ActionLink("نمایش همه", "Index", null, htmlAttributes: new { @class = "btn btn-success" })
+                            }
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>نام و نام خانوادگی</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "FullName", FullNameFilter = ViewBag.FullNameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, IsActiveFilter = ViewBag.IsActiveFilter, IsVisitFilter = ViewBag.IsVisitFilter })" title="مرتب سازی بر اساس نام و نام خانوادگی صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "FullName_desc", FullNameFilter = ViewBag.FullNameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, IsActiveFilter = ViewBag.IsActiveFilter, IsVisitFilter = ViewBag.IsVisitFilter })" title="مرتب سازی بر اساس نام و نام خانوادگی نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+                        <th class="text-center column-title">
+                            ایمیل
+                        </th>
+                        <th class="text-center column-title" style="width: 200px;">
+                            محتوا
+                        </th>
+                        <th class="text-center column-title">
+                            پیام
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>تاریخ ثبت</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "InsertDate", FullNameFilter = ViewBag.FullNameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, IsActiveFilter = ViewBag.IsActiveFilter, IsVisitFilter = ViewBag.IsVisitFilter })" title="مرتب سازی بر اساس تاریخ ثبت صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "InsertDate_desc", FullNameFilter = ViewBag.FullNameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, IsActiveFilter = ViewBag.IsActiveFilter, IsVisitFilter = ViewBag.IsVisitFilter })" title="مرتب سازی بر اساس تاریخ ثبت نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>دیده شده؟</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "IsVisit", FullNameFilter = ViewBag.FullNameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, IsActiveFilter = ViewBag.IsActiveFilter, IsVisitFilter = ViewBag.IsVisitFilter })" title="مرتب سازی بر اساس دیده نشده ها"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "IsVisit_desc", FullNameFilter = ViewBag.FullNameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, IsActiveFilter = ViewBag.IsActiveFilter, IsVisitFilter = ViewBag.IsVisitFilter })" title="مرتب سازی بر اساس دیده شده ها">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>تایید شده؟</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "IsActive", FullNameFilter = ViewBag.FullNameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, IsActiveFilter = ViewBag.IsActiveFilter, IsVisitFilter = ViewBag.IsVisitFilter })" title="مرتب سازی بر اساس تایید نشده ها"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "IsActive_desc", FullNameFilter = ViewBag.FullNameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, IsActiveFilter = ViewBag.IsActiveFilter, IsVisitFilter = ViewBag.IsVisitFilter })" title="مرتب سازی بر اساس تایید شده ها">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+
+                        <th class="text-center column-title"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+
+                        <tr class="@(item.Visited?"visited":"Notvisited") @(item.IsActive?"actived":"Notactived") @(item.IsAuthorSeen?"AuthorVisited":"NotAuthorVisited")">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FullName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+
+                                <a href="~/Content/@item.ContentId/@CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.Content.Title)" target="_blank">@Html.DisplayFor(modelItem => item.Content.Title)</a>
+                            </td>
+                            <td>
+                                @if (item.Message.Length > 50)
+                                {
+                                    <span>@item.Message.Substring(0, 49) ...</span>
+                                }
+                                else
+                                {
+                                    <span>@item.Message</span>
+
+                                }
+                            </td>
+
+                            <td>
+                                @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate) <br /> @item.InsertDate.ToShortTimeString()
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Visited)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsActive)
+                            </td>
+                            <td>
+
+                                <a class="btn btn-success" href="@Url.Action("Details", new { id=item.Id })"><span class="glyphicon glyphicon-list"></span>    جزئیات و پاسخ</a>
+                                <a class="btn btn-success" href="@Url.Action("Edit", new { id=item.Id })"><span class="glyphicon glyphicon-list"></span> ویرایش </a>
+                                <br />
+                                @if (ViewBag.DeletePermission)
+                                {
+                                    <a class="DeleteContent btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                }
+                                @if (item.IsActive == false)
+                                {
+                                    <a class="btn btn-primary Active" data-url="@Url.Action("Index","Comments", new { id = item.Id })" href="@Url.Action("Active", new { id = item.Id })"><span class="glyphicon glyphicon-check"></span> تایید </a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-primary DeActive" data-url="@Url.Action("Index","Comments", new { id = item.Id })" href="@Url.Action("Deactive", new { id = item.Id })"><span class="glyphicon glyphicon-unchecked"></span> عدم تایید</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount نظر
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, FullNameFilter = ViewBag.FullNameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, InsertDateStartFilter = ViewBag.InsertDateStartFilter, InsertDateEndFilter = ViewBag.InsertDateEndFilter, IsActiveFilter = ViewBag.IsActiveFilter, IsVisitFilter = ViewBag.IsVisitFilter }))
+
+
+        </div>
+        <
+
+        @section Scripts{
+            <script src="~/Areas/Admin/Content/Scripts/View/IndexComment.js"></script>
+            @*Persian Calender*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+        }
+</div>
+</div>

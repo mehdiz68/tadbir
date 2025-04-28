@@ -1,0 +1,79 @@
+﻿.post-classic h4{font-size:1em}
+.ContentTypeContent {
+    border-bottom: 1px dashed #fff;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    background-color: #fff;
+    border: 1px solid #f0f1f2;
+    box-shadow: 0 2px 2px #edeef0;
+    border-radius: 4px;
+}
+.ContentTypeContent h2{
+    margin: 0;
+    font-size: 18px;
+    padding: 0 20px;
+    border-bottom: 1px solid #eaeaea;
+    background-color: #f8f8f8;
+}
+
+.ContentTypeContent h2 a {
+    font-size: 18px;
+    display: inline-block;
+    height: 44px;
+    line-height: 44px;
+    margin: 0;
+    padding-left: 11px;
+    border-bottom: 2px solid #11afcb;
+}
+.ContentTypeContent .ContentTypeContentDate {
+    font-size: 12px;
+}
+.ContentTypeContent p {
+    margin: 4px 17px;
+}
+.ContentTypeContent img, .body-content .categoryImg, .SingleContent .imgcover {
+    display: inline-block;
+    height: auto;
+    max-width: 100%;
+    padding: 4px;
+    line-height: 1.428571429;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+.site-content .MainContentType{padding: 5px 10px;border: 1px dashed #11afcb;background-color: #f8f8f8;margin-bottom: 10px;}
+.site-content .MainContentType h1{font-size:20px;}
+#LeftSideContentType h2,.ContentTypeCategory h2 {
+    margin: 0;
+    padding: 0 20px;
+    line-height: 40px;
+    font-size: 14px;
+    border-bottom: 1px solid #eaeaea;
+    background-color: #f8f8f8;
+}
+#LeftSideContentType,.ContentTypeCategory {
+    background-color: #fff;
+    border: 1px solid #f0f1f2;
+    box-shadow: 0 2px 2px #edeef0;
+    border-radius: 4px;
+}
+#LeftSideContentType h2 span,.ContentTypeCategory h2 span {
+    display: inline-block;
+    line-height: 40px;
+    border-bottom: 2px solid #11afcb;
+    padding-left: 11px;
+}
+.contentLefSide,.ContentTypeCategoryItem {
+    padding: 15px 0;
+    text-align: center;
+    background-color: #fff;
+
+}
+.contentLefSide h3,.ContentTypeCategory h5,.ContentTypeCategory a {
+    font-size: 14px;
+}
+.contentLefSide p {
+    font-size: 12px;
+}

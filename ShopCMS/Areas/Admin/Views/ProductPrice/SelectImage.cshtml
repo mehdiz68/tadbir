@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Domain.ProductImage>
+@using ahmadi.Infrastructure.Helper
+@{
+    var ProductPrice = ViewBag.ProductPrice as Domain.ProductPrice;
+    var product = ViewBag.product as Domain.Product;
+}
+<title>مدیریت انتخاب تصویر از تصاویر بلااستفاده محصولِ @product.Name</title>
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-md-8">
+            <h1 style="display:inline-block;font-size: 1.5em;" class="box-title">
+                <a href="/admin/ProductPrice/?ProductId=@ProductPrice.ProductId&id=@ProductPrice.Id"> مدیریت انتخاب تصویر از تصاویر بلااستفاده محصولِ @product.Name</a>
+
+            </h1>
+        </div>
+        <div class="col-md-4 text-left" style="padding-left: 4px;">
+
+            <a class="btn btn-success" href="/Admin/ProductPrice/Images/@ProductPrice.Id"><span class="glyphicon glyphicon-list-alt"></span> بازگشت به لیست تصاویر</a>
+
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+                            ردیف
+                        </th>
+                        <th class="text-center column-title">
+                            تصویر
+                        </th>
+
+                        <th class="text-center column-title">
+                           تصویر اصلی تنوع؟
+                        </th>
+                        <th class="text-center column-title">
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int i = 1; }
+                    @foreach (var item in Model)
+                    {
+                        <tr class="ContentRow">
+
+                            <td class="text-center">@i</td>
+                            
+                            <td>@Html.Displayattachment(item.AttachementId, "SM", htmlAttributes: new { @class = "img-responsive", width = "110", height = "60", style = "display:inline-block;width:110px;height:60px" })</td>
+                           
+                            <td class="text-center">
+                                    <input type="checkbox" checked="@item.IsMain"  disabled="disabled" />
+                            </td>
+                            <td>
+                                @using (Html.BeginForm("SelectImage", "ProductPrice", FormMethod.Post))
+                                {
+                                                                @Html.Hidden("ImageId", item.Id)
+                                                                @Html.Hidden("ProductPriceId", ProductPrice.Id)
+                                    <input type="submit" class="btn btn-success" value="انتخاب" />
+                                }
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</div>
+

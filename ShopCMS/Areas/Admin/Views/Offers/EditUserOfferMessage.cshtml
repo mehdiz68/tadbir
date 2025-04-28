@@ -1,0 +1,149 @@
+﻿@model Domain.UserOfferMessage
+@using CoreLib;
+
+<title>ویرایش پیام تخفیف</title>
+
+
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("UserOfferMessages",new {id=Model.OfferId })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ویرایش پیام تخفیف
+        </h1>
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(x => x.OfferId)
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.InsertDate)
+            @Html.HiddenFor(x => x.state)
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+                    @Html.LabelFor(x => x.OfferMessageType)
+
+                    <select id="OfferMessageType" name="OfferMessageType" class="form-control">
+                        @if (Model.OfferMessageType == Domain.OfferMessageType.Public)
+                        {
+
+                            <option selected="selected" value="@Domain.OfferMessageType.Public">@Domain.OfferMessageType.Public.EnumDisplayNameFor()</option>
+                        }
+                        else
+                        {
+
+                            <option value="@Domain.OfferMessageType.Public">@Domain.OfferMessageType.Public.EnumDisplayNameFor()</option>
+                        }
+
+                        @if (Model.OfferMessageType == Domain.OfferMessageType.Private)
+                        {
+                            <option selected="selected" value="@Domain.OfferMessageType.Private">@Domain.OfferMessageType.Private.EnumDisplayNameFor()</option>
+                        }
+                        else
+                        {
+
+                            <option value="@Domain.OfferMessageType.Private">@Domain.OfferMessageType.Private.EnumDisplayNameFor()</option>
+                        }
+                    </select>
+                    <div class="private-message" style="@(Model.OfferMessageType == Domain.OfferMessageType.Private?"style='display:block'":"style='display:none'")">
+                        <p>
+                            <br />
+                            *** می توانید از فیلدهای زیر در متن پیام استفاده نمایید.
+                        </p>
+                        <div class="col-md-6">
+                            <input type="checkbox" data-val="%Name" id="chkName" /> <label> نام مشتری </label>
+                        </div>
+
+                        <div class="col-md-6">
+                            <input type="checkbox" data-val="%FullName" id="chkFullName" /> <label> نام خانوادگی مشتری </label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="checkbox" data-val="%Mobile" id="chkMobile" /> <label> شماره موبایل </label>
+                        </div>
+
+                        <div class="col-md-6">
+                            <input type="checkbox" data-val="%Title" id="chkTitle" /> <label> عنوان تخفیف </label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="checkbox" data-val="%StartDate" id="chkTitle" /> <label> تاریخ شروع تخفیف </label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="checkbox" data-val="%EndDate" id="chkTitle" /> <label> تاریخ پایان تخفیف </label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="checkbox" data-val="%Groups" id="chkTitle" /> <label> گروههای مجاز </label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="checkbox" data-val="%Value" id="chkValue" /> <label> میزان تخفیف </label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="checkbox" data-val="%CodeGift" id="chkValue" /> <label> کد تخفیف </label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="checkbox" data-val="%CountUse" id="chkValue" /> <label> سقف تعداد استفاده کد تخفیف </label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="checkbox" data-val="%MaxUse" id="chkValue" /> <label> سقف مبلغ در هر استفاده کد تخفیف</label>
+                        </div>
+                    </div>
+
+                    @Html.ValidationMessageFor(model => model.OfferMessageType, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group has-feedback col-lg-8 col-md-8 col-sm-8 col-xs-12">
+
+                    @Html.LabelFor(x => x.Text)
+
+                    @Html.TextAreaFor(model => model.Text, new { placeholder = "متن پیام", @class = "form-control", rows = "7" })
+                    @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
+
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <input type="submit" value="ویرایش" class="btn btn-primary" />
+                </div>
+
+            </div>
+        }
+
+        @section Scripts{
+            <script>
+                $(document).ready(function () {
+
+                    $("#OfferMessageType").change(function () {
+                        var $this = $(this);
+                        if ($this.val() == "Private")
+                            $(".private-message").show();
+                        else
+                            $(".private-message").hide();
+                    });
+
+                    $(".private-message input[type='checkbox']").click(function () {
+                        var $this = $(this);
+                        if ($this.is(":checked")) {
+                            var cursorPos = $('#Text').prop('selectionStart');
+                            var v = $('#Text').val();
+                            var textBefore = v.substring(0, cursorPos);
+                            var textAfter = v.substring(cursorPos, v.length);
+                            $('#Text').val(textBefore + $this.attr("data-val") + textAfter);
+                        }
+                        else {
+                            $("#Text").val($("#Text").val().replace($this.attr("data-val"), ""));
+                        }
+                        $("#Text").focus();
+                    });
+                });
+            </script>
+        }
+    </div>
+</div>

@@ -1,0 +1,290 @@
+﻿@model PagedList.IPagedList<Domain.attachment>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper;
+@{
+
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+}
+@Styles.Render("~/bundles/Admin/FileManager/Css")
+
+
+<input type='hidden' value='@Request.QueryString["FolderId"]' id='HdnFolderId' />
+
+<div id="FileManager" class="container" style="margin:0;padding:0">
+    <div id="Upload">
+
+    </div>
+    <div class="col-lg-3 col-md-3 col-sx-3 col-x12" style="padding:0;padding-top: 13px;">
+        <div id="SearchPageShow"> <span class="glyphicon glyphicon-chevron-down"></span> جستجو / فیلتر <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "جست و جو").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "جست و جو").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span></div>
+    </div>
+    <div class="col-lg-9 col-md-9 col-sx-9 col-x12 text-left" style="padding:0">
+        <div class="table-responsive">
+            <table class="table text-center sorts" style="margin:0" cellpadding="0" cellspacing="0">
+                <tr>
+
+                    <td style="vertical-align:bottom;text-align:left!important">
+
+                        <button class="cancel" type="button" id="Cancel_btn_fileManager" style="background-color:transparent;border:0">
+                            <i class="glyphicon glyphicon-ban-circle"></i>
+                            <span>بستن</span>
+                        </button>
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+
+
+    <div id="SearchPage">
+        <div>
+            <div class="text-left">
+                <span class="cancel glyphicon glyphicon-remove" type="button" id="Cancel_btn_SearchFileManager">
+
+                </span>
+            </div>
+
+
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                @using (Ajax.BeginForm("OpenAttachement", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode()", InsertionMode = InsertionMode.Replace }, new { @class = "ajax-form-manager" }))
+                {
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, htmlAttributes: new { placeholder = "نام فایل", style = "width:90%;display: inline-block", @class = "form-control" })
+                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                        @Html.TextBox("StartDateInput", ViewBag.currentStartDateInputFiltering as string, htmlAttributes: new {placeholder= "تاریخ درج از ", style = "width:90%;display: inline-block", @class = "form-control" })
+                        <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                        @Html.TextBox("EndDateInput", ViewBag.currentEndDateInputFiltering as string, htmlAttributes: new {placeholder="تا", style = "width:90%;display: inline-block", @class = "form-control", onclick = "displayDatePicker('EndDateInput');" })
+                        <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                    </div>
+                    <div class="clearfix">
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                        <p> نوع فایل :</p>
+                        @Html.DropDownList("FileTypeId", ViewBag.FileTypeId as SelectList, "--انتخاب نمایید--", htmlAttributes: new { style = "width:99%;display: inline-block", @class = "form-control" })
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                        <p>  حجم فایل :</p>
+                        @Html.DropDownList("CapacityList", null, htmlAttributes: new { style = "width:99%;display: inline-block", @class = "form-control" })
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                        <p>فعال/غیرفعال :</p>
+                        @Html.DropDownList("IsActive", ViewBag.IsActive as SelectList, "--انتخاب نمایید--", htmlAttributes: new { style = "width:99%;display: inline-block", @class = "form-control" })
+
+                    </div>
+                    <div class="clearfix"></div>
+
+
+                    <input type="submit" value="جست و جو" class="btn btn-primary" />
+                    @Ajax.ActionLink("نمایش همه", "OpenAttachement", new { sortOrder = ViewBag.CurrentSort }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode()", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary" })
+                    }
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                <div><span class="glyphicon glyphicon-sort"></span>@Ajax.ActionLink("مرتب سازی بر اساس عنوان ( الف-ی )", "OpenAttachement", new { sortOrder = "Title", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode()", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "ajax-form-manager", @title = "مرتب سازی بر اساس عنوان صعودی" })</div>
+                <div><span class="glyphicon glyphicon-sort"></span>@Ajax.ActionLink("مرتب سازی بر اساس عنوان ( ی-الف )", "OpenAttachement", new { sortOrder = "Title_desc", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode()", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "ajax-form-manager", @title = "مرتب سازی بر اساس عنوان نزولی" })</div>
+
+                <div><span class="glyphicon glyphicon-sort"></span>@Ajax.ActionLink("مرتب سازی بر اساس کم حجم ترین فایل ها", "OpenAttachement", new { sortOrder = "Capacity_desc", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode()", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "ajax-form-manager", @title = "مرتب سازی بر اساس حجم فایل نزولی" })</div>
+                <div><span class="glyphicon glyphicon-sort"></span>@Ajax.ActionLink("مرتب سازی بر اساس پر حجم ترین فایل ها", "OpenAttachement", new { sortOrder = "Capacity", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode()", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "ajax-form-manager", @title = "مرتب سازی بر اساس حجم فایل صعودی" })</div>
+
+                <div><span class="glyphicon glyphicon-sort"></span>@Ajax.ActionLink("مرتب سازی بر اساس فایل های کمتر استفاده شده", "OpenAttachement", new { sortOrder = "UseCount_desc", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode()", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "ajax-form-manager", @title = "مرتب سازی بر اساس تعداد استفاده نزولی" })</div>
+                <div><span class="glyphicon glyphicon-sort"></span>@Ajax.ActionLink("مرتب سازی بر اساس فایل های بیشتر استفاده شده", "OpenAttachement", new { sortOrder = "UseCount", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode()", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "ajax-form-manager", @title = "مرتب سازی بر اساس تعداد استفاده صعودی" })</div>
+
+                <div><span class="glyphicon glyphicon-sort"></span>@Ajax.ActionLink("مرتب سازی بر اساس قدیمی تر ها", "OpenAttachement", new { sortOrder = "InsertDate_desc", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode()", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "ajax-form-manager", @title = "مرتب سازی بر اساس تاریخ ایجاد نزولی" })</div>
+                <div><span class="glyphicon glyphicon-sort"></span>@Ajax.ActionLink("مرتب سازی بر اساس جدید تر ها", "OpenAttachement", new { sortOrder = "InsertDate", currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode()", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "ajax-form-manager", @title = "مرتب سازی بر اساس تاریخ ایجاد صعودی" })</div>
+
+
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <hr class="search-hr" />
+    <div class="tree col-lg-3 col-md-3 col-sm-3 col-xs-3" style="padding:0">
+        <h5 style="padding-right:5px">
+            <span class="glyphicon glyphicon-list-alt"></span>
+            فیتلر با دسته بندی
+        </h5>
+        <ul id="treeContainer" style="margin:0;padding:0">
+            <li>
+                <label>
+                    <span data-id="0" data-url="@Url.Action("OpenAttachement", new { FolderId = 0, currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering })">
+                        بدون دسته بندی ها
+                    </span>
+                </label>
+            </li>
+            <li>
+                <label>
+                    <span data-url="@Url.Action("OpenAttachement")">
+                        همه
+                    </span>
+                </label>
+                @(Html.TreeView(ViewBag.Folders as IEnumerable<Domain.Folder>).EmptyContent("پوشه ای وجود ندارد!").Children(m => m.ChildFolder).HtmlAttributes(new { id = "tree" }).ChildrenHtmlAttributes(new { @class = "subItem" }).ItemText(m => m.FolderName).ItemTemplate(@<text><span data-id="@item.Id" data-url="@Url.Action("OpenAttachement", new { FolderId = item.Id, currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering })">@item.FolderName</span></text>))
+            </li>
+        </ul>
+
+    </div>
+
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+
+        <div id="SelectAttachement">
+            <div style="background-color: #eeeeee; padding: 5px">
+                <div style="float: right">انتخاب فایل</div>
+                <div style="float: left">
+                    <span style="cursor:pointer;color:red;font-size:18px" id="CloseSelectAttachement" class="glyphicon glyphicon-remove-circle"></span>
+                </div>
+                <div style="clear: both"></div>
+            </div>
+            <div>
+                <fieldset id="EditorFieldset" style="display:none">
+                    <legend>
+                        افزودن به ویرایشگر
+                        <span  style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "افزودن به ویرایشگر").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "افزودن به ویرایشگر").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                    </legend>
+                    <div>
+                        <p>
+                            عنوان :
+                            <input type="text" id="txtTitleToContent" />
+                        </p>
+                        <p id="Sizes">
+                            اندازه :
+                            <input id="RdbLG" type="radio" name="Size" checked="checked" title="480*880" />بزرگ<input id="RdbMD" type="radio" name="Size" title="240*440" />متوسط<input id="RdbSM" type="radio" name="Size" title="120*220" />کوچک<input id="RdbXS" type="radio" value="" name="Size" title="60*110" />بسیار کوچک
+                        </p>
+                        <p id="Place">
+                            مکان :
+                            <input id="RdbTop" type="radio" name="Place" checked="checked" />بالا<input id="RdbBottom" type="radio" name="Place" />پایین<input id="RdbLeft" type="radio" name="Place" />چپ<input id="RdbRight" type="radio" value="" name="Place" />راست
+                        </p>
+                        <p id="imgClass">
+                            کلاس :<br />
+                            <input checked id="RdbResponsive" type="checkbox" name="imgClass" />طول و عرضِ واکنش گرا
+                            <br />
+                            <input id="RdbThumbnail" type="checkbox" name="imgClass" />گوشه گرد و حاشیه دار
+                        </p>
+                        <p id="UrlType">
+                            آدرس فایل:<br />
+
+                            <input id="RdbOrdinal" type="radio" name="UrlType" checked="checked" />استفاده از آدرس معمولی
+                            <br />
+                            <input id="RdbFreeCookie" type="radio" name="UrlType"  />استفاده از دامنه بدون کوکی
+                        </p>
+                        <input type="button" id="BtnAddToContent" value="درج" class="btn btn-primary" />
+                    </div>
+                </fieldset>
+                <fieldset id="CoverFieldset" style="display:none">
+                    <legend>
+                        انتخاب 
+                        <span  style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب برای تصویر").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب برای تصویر").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                    </legend>
+                    <div>
+                        <input type="button" id="BtnAddToCoverAllType" value="انتخاب" class="btn btn-primary" />
+                    </div>
+                </fieldset>
+                <fieldset id="OtherImageFieldset" style="display:none">
+                    <legend>
+                        تصاویر جانبی
+                        <span  style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تصاویر جانبی").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تصاویر جانبی").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                    </legend>
+                    <p>
+                        عنوان :<br />
+                        <input class="form-control" placeholder="عنوان" type="text" id="txtTitleToJanebi" />
+                    </p>
+                    <div>
+                        <input type="button" id="BtnAddToJanebi" value="درج" class="btn btn-primary" />
+                    </div>
+                </fieldset>
+                <fieldset id="FileFieldset" style="display:none">
+                    <legend>
+                        انتخاب برای فایل ( به عنوان مثال ویدئو)
+                        <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب برای ویدئو").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "انتخاب برای ویدئو").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                    </legend>
+                    <div>
+                        <input type="button" id="BtnAddToVideo" value="انتخاب" class="btn btn-primary" />
+                    </div>
+                </fieldset>
+            </div>
+
+        </div>
+
+        <div id="FilesList">
+            <span id="StaticContentDomain" style="display:none">@ViewBag.StaticContentDomain</span>
+            @{ 
+                int k = 0;
+            }
+            @foreach (var item in Model)
+            { @Html.Partial("_AttachmentSimpleItem", item)  
+                k++;
+                if(k%5==0)
+                {
+                    <div class="clearfix"></div>
+                }
+            }
+            <div class="clearfix"></div>
+        </div>
+        <hr style="border: 1px dashed rgb(204, 204, 204);margin:4px 0">
+
+        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+            <p style="margin:4px 0">
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount فایل.
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("OpenAttachement", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentFileTypeIdFiltering = ViewBag.currentFileTypeIdFiltering, currentCapacityListFiltering = ViewBag.currentCapacityListFiltering, currentFolderIdFiltering = ViewBag.currentFolderIdFiltering, currentLanguageIdFiltering = ViewBag.currentLanguageIdFiltering, currentIsActiveIdFiltering = ViewBag.currentIsActiveIdFiltering }))
+
+
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 text-left" style="padding:25px 0 0 0">
+            @if (ViewBag.AddPermission)
+            {
+                @Ajax.ActionLink(" آپلود فایل تکی و گروهی ", "AddAttachement", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "Upload", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();Init_Upload();", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary add-file" })
+            }
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
+
+
+    <ul id="ContexMenuFolder" style="width: 150px; text-align: center; display: none">
+        <li id="NewSubFolder"><span>افزودن زیر پوشه</span></li>
+    </ul>
+
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div  id="Folder-Modal" style="position: fixed;top: 20%;background-color: #fff;border: 1px solid #ccc;z-index: 999999;padding: 21px;display:none">
+            <div class="header">
+                <span class="glyphicon glyphicon-remove" style="color:red;position:absolute;cursor:pointer"></span>
+                <h4 class="modal-title"></h4>
+                <hr /><br />
+            </div>
+            <div class="body">
+
+                <input type="text" placeholder="نام پوشه..." />
+                <span class="btn btn-primary"> ذخیره </span>
+            </div>
+            <br />
+            <hr /><br />
+            <div class="footer">
+                <button type="button" class="close-folder">بستن</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+

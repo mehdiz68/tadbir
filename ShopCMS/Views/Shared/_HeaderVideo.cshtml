@@ -1,0 +1,235 @@
+﻿@model ahmadi.ViewModels.Home.Master
+@using ahmadi.Infrastructure.Helper
+@using Microsoft.AspNet.Identity;
+@{ var Menu = Model.HeaderMainMenu;
+                bool IsRoot = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home";
+                int i = 0; }
+
+
+<!-- preloader Start -->
+<div id="preloader">
+    <div id="status">
+        <img src="~/Content/video/images/horoscope.gif" id="preloader_image" alt="loader">
+    </div>
+</div>
+<!-- prs navigation Start -->
+<div class="prs_navigation_main_wrapper menu_fixed animated fadeInDown">
+    <div class="container-fluid">
+
+        <div class="prs_navi_left_main_wrapper">
+            <div class="prs_logo_main_wrapper">
+                <a href="/">
+                    @Html.DisplayattachmentCookieFree(Model.StaticContentUrl, Model.HeaderLogo, Model.WebSiteName, "LG", true, new { @class = "img-responsive" })
+                </a>
+            </div>
+            <div class="prs_menu_main_wrapper">
+                <nav class="navbar navbar-default">
+                    <div id="dl-menu" class="xv-menuwrapper responsive-menu">
+                        <button class="dl-trigger">
+                            <img src="~/Content/video/images/bars.png" alt="bar_png">
+                        </button>
+                        <div class="clearfix"></div>
+                        <ul class="dl-menu">
+                            @foreach (var item in Menu.Where(x => x.parentId == 0).OrderBy(x => x.DisplayOrder))
+                            {
+                                if (!Menu.Any(x => x.parentId == item.Id))
+                                {
+
+                <li class="parent"><a href="@(item.IsRoot ? "/" : item.Link)">@item.Title</a></li> }
+                                else
+                                {
+
+                <li class="parent">
+                    <a href="@(item.IsRoot ? "/" : item.Link)">@item.Title</a>
+                    <ul class="lg-submenu">
+                        @foreach (var item2 in Menu.Where(x => x.parentId == item.Id).OrderBy(x => x.DisplayOrder))
+                        {
+    <li><a href="@(item2.IsRoot ? "/" : item2.Link)">@item2.Title</a></li>}
+
+                    </ul>
+
+                </li>}
+                            }
+
+
+                        </ul>
+                    </div>
+                    <!-- /dl-menuwrapper -->
+                </nav>
+            </div>
+        </div>
+        <div class="prs_navi_right_main_wrapper">
+            <div class="prs_slidebar_wrapper">
+                <button class="second-nav-toggler" type="button">
+                    <img src="~/Content/video/images/bars.png" alt="bar_png">
+                </button>
+            </div>
+            <div class="prs_top_login_btn_wrapper">
+                <div class="prs_animate_btn1">
+                    <ul>
+                        <li>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                <a href="~/Profile" class="button button--tamaya" data-text="پروفایل">
+                    <span>پروفایل</span>
+                </a> }
+                            else
+                            {
+
+                <a href="~/Account/Login" class="button button--tamaya" data-text="ورود">
+                    <span>ورود</span>
+                </a>}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="SearchContainer">
+                <div class="con">
+                    @*<select style="display: none;">
+                            <option>All Categories</option>
+                            <option>Movie</option>
+                            <option>Video</option>
+                            <option>Music</option>
+                            <option>TV-Show</option>
+                        </select>
+                        <div class="nice-select" tabindex="0"><span class="current">All Categories</span><ul class="list"><li data-value="All Categories" class="option selected">All Categories</li><li data-value="Movie" class="option">Movie</li><li data-value="Video" class="option">Video</li><li data-value="Music" class="option">Music</li><li data-value="TV-Show" class="option">TV-Show</li></ul></div>*@
+                    <div id="search_bar">
+                        @*<div class="input-group-prepend">
+                                <div class="custom_select">
+                                    <select class="first_null not_chosen">
+                                        <option value="">All Category</option>
+                                        <option value="Dresses">Dresses</option>
+                                        <option value="Shirt-Tops">Shirt &amp; Tops</option>
+                                        <option value="T-Shirt">T-Shirt</option>
+                                        <option value="Pents">Pents</option>
+                                        <option value="Jeans">Jeans</option>
+                                    </select>
+                                </div>
+                            </div>*@
+                        <input class="form-control search_input" placeholder="جستجو..." type="text" />
+
+                        <div id="SearchList">
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+
+                                <div class="ProductCategoryList">
+                                    <div class="st">
+                                        <span>گروه کالا </span>&nbsp;&nbsp;&nbsp;<span class="fa fa-list-alt"></span>
+                                    </div>
+                                    <div class="content">
+                                    </div>
+
+                                    <div class="continue"></div>
+                                </div>
+                                <div class="ProductList">
+                                    <div class="st">
+                                        <span>محصولات </span>&nbsp;&nbsp;&nbsp;<span class="fa fa-list-alt"></span>
+                                    </div>
+                                    <div class="content">
+                                    </div>
+
+                                    <div class="continue"></div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ContentTypeLists">
+                                <div class="CategoryList">
+                                    <div class="st">
+                                        <span>دسته بندی مطالب</span>&nbsp;&nbsp;&nbsp;<span class="fa fa-list-alt"></span>
+                                    </div>
+                                    <div class="content">
+                                    </div>
+
+                                    <div class="continue"></div>
+                                </div>
+                                <div class="TagList">
+                                    <div class="st">
+                                        <span>برچسب</span>&nbsp;&nbsp;&nbsp;<span class="fa fa-tag"></span>
+                                    </div>
+                                    <div class="content">
+                                    </div>
+
+                                    <div class="continue"></div>
+                                </div>
+
+                                @if (Model.ContentTypes != null)
+                                {
+                                    i = 0;
+                                    foreach (var item in Model.ContentTypes.Where(x => x.InSearch))
+                                    {
+                    <div data-id="@item.Id" id="ContentTypeList@(item.Id)" class="ContentTypeList">
+                        <div class="st">
+                            <span>@item.Name</span>&nbsp;&nbsp;&nbsp;<span class="fa fa-pencil"></span>
+                        </div>
+                        <div class="content">
+                        </div>
+                        <div class="continue"></div>
+                    </div> i = i + 1;
+                                        if (i % 2 == 0)
+                                        {
+                    <div class="clearfix"></div>}
+                                    }
+
+                                }
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div id="mobile-nav" data-prevent-default="true" data-mouse-events="true">
+            <div class="mobail_nav_overlay"></div>
+            <div class="mobile-nav-box">
+                <div class="mobile-logo">
+
+                    <a href="#" class="manu-close"><i class="fa fa-times"></i></a>
+                </div>
+                <ul class="mobile-list-nav">
+                    @if (Model.VideoCategories != null)
+                    {
+                        foreach (var item in Model.VideoCategories.Where(x => x.ParrentId == null))
+                        {
+        <li>
+            <a href="@Url.Action("Index", "VideoCategory", new { id = item.Id, title = CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) })">@item.Name</a>
+            @if (Model.VideoCategories.Any(x => x.ParrentId == item.Id))
+            {
+<ul>
+    @foreach (var item2 in Model.VideoCategories.Where(x => x.ParrentId == item.Id))
+    {
+<li>
+
+    <a href="@Url.Action("Index", "VideoCategory", new { id = item.Id, title = CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) })">@item.Name</a>
+</li>}
+
+</ul>}
+        </li>}
+                    }
+
+                    <li><a href="/blog">وبلاگ</a></li>
+
+                </ul>
+
+                <div class="achivement-blog">
+                    <ul class="flat-list">
+                        @foreach (var item in Model.HeaderSocialNetworks)
+                        {
+            <li>
+                <a href="@item.Link">
+                    <i class="@item.Icon"></i>
+                </a>
+            </li>}
+
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- prs navigation End -->

@@ -1,0 +1,150 @@
+﻿@model Domain.ProductSendWayDetail
+
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml
+
+
+@{
+
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+    var Setting = ViewBag.setting as Domain.Setting;
+    var ProductSendWayBox = ViewBag.ProductSendWayBox as Domain.ProductSendWayBox;
+}
+
+<title>ایجاد جزئیات باکس @ProductSendWayBox.SendwayBox.Title برای روش ارسال @ProductSendWayBox.ProductSendWay.Title</title>
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Detail","SendWays",new {id=ProductSendWayBox.ProductSendWay.Id })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        @*<span style="cursor:pointer" data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")" title="راهنمای این صفحه"></span>*@
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ایجاد جزئیات باکس @ProductSendWayBox.SendwayBox.Title برای روش ارسال @ProductSendWayBox.ProductSendWay.Title
+
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.Hidden("ProductSendWayBoxId", ProductSendWayBox.Id)
+
+        <div class="col-md-3">
+            <p>
+                <span>@Html.LabelFor(x => x.CityId)</span>
+
+            </p>
+            @Html.DropDownList("ProvinceId", ViewBag.ProvinceList as IEnumerable<SelectListItem>, "--انتخاب--", new { @class = "form-control" })
+            <select id="CityId" name="CityId" class="form-control"></select>
+        </div><br />
+        @*<div class="col-md-3">
+            <p>
+                <span>
+                    @Html.LabelFor(x => x.From)
+                    @if (ProductSendWayBox.ProductSendWay.InvoiceType)
+                    {
+                        <span>(گرم)</span>
+                    }
+                    else
+                    {
+                        <span>(تومان)</span>
+                    }
+                </span>
+
+            </p>
+            @Html.TextBoxFor(model => model.From, htmlAttributes: new { type = "number", @class = "form-control", placeholder = "از محدوده" })
+            @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
+
+        </div>
+        <div class="col-md-3">
+            <p>
+                <span>
+                    @Html.LabelFor(x => x.To)
+                    @if (ProductSendWayBox.ProductSendWay.InvoiceType)
+                    {
+                        <span>(گرم)</span>
+                    }
+                    else
+                    {
+                        <span>(تومان)</span>
+                    }
+                </span>
+
+            </p>
+            @Html.TextBoxFor(model => model.To, htmlAttributes: new { @class = "form-control", placeholder = "تا محدوده" })
+            @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
+        </div>*@
+        <div class="col-md-3">
+            <p>
+                <span>@Html.LabelFor(x => x.Value)</span>
+
+            </p>
+            @Html.TextBoxFor(model => model.Value, htmlAttributes: new { @class = "form-control", placeholder = "هزینه" })
+            @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
+            <br />
+
+           
+
+        </div>
+        <div class="col-md-3">
+        
+
+        <p>
+            <span>@Html.LabelFor(x => x.Limitation)</span>
+
+        </p>
+        @Html.TextBoxFor(model => model.Limitation, htmlAttributes: new { @class = "form-control", placeholder = Html.DisplayNameFor(x => x.Limitation) })
+        @Html.ValidationMessageFor(model => model.Limitation, "", new { @class = "text-danger" })
+
+
+
+    </div>
+                <div class="clearfix"></div>
+                <br />
+
+                <input type="submit" value="ثبت" class="btn btn-primary" style="border-radius:0" />
+            </div>
+        }
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <script>
+        $(document).ready(function () {
+            $("#ProvinceId").change(function () {
+                if ($("#ProvinceId").val() == "")
+                    $("#CityId option").remove();
+                else {
+
+                    $(".loading").show();
+                    $.ajax({
+                        type: "Get",
+                        url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#ProvinceId").val(),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            $("#CityId option").remove();
+                            $("#CityId").append("<option value='0'>--همه--</option>");
+                            for (var i = 0; i < response.data.length; i++) {
+
+                                $("#CityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                            }
+
+                            $(".loading").hide();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+}

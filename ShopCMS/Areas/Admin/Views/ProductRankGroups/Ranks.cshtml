@@ -1,0 +1,97 @@
+﻿@model IEnumerable<Domain.ProductRankGroupSelect>
+@using ahmadi.Infrastructure.Helper
+@using Domain;
+@{
+    var group = ViewBag.Group as Domain.ProductRankGroup;
+}
+
+<title>مدیریت آیتم های امتیازدهی گروه @group.Title</title>
+
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <h1 style="display:inline-block;font-size: 2em;">
+
+                <a href="@Url.Action("Ranks","ProductRankGroups",new {Id=group.Id })"> مدیریت آیتم های امتیازدهی گروه @group.Title </a>
+
+            </h1>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-left">
+            <a class="btn btn-success" href="@Url.Action("Index")">
+                بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+        </div>
+        <div class="clearfix"></div>
+
+        <br /><br />
+        @if (ViewBag.AddPermission)
+            {
+            <p><a class="btn btn-success" href="@Url.Action("CreateRank","ProductRankGroups",new {Id=group.Id })"><span class="glyphicon glyphicon-plus"></span> ایجاد آیتم جدید</a></p>
+        }
+
+
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+                            <span>عنوان</span>
+
+                        </th>
+                        <th class="text-center column-title">
+                            <span>زبان</span>
+
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+
+                        <tr class="rowItem" id="@item.Id" data-Group-Id="@item.GroupId">
+                            <td class="text-center">
+                                @item.ProductRank.Name
+                            </td>
+                            <td>
+                                @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.ProductRank.LanguageId)
+                            </td>
+
+                            <td class="text-center">
+                                @if (ViewBag.EditPermission)
+                                {
+                                    <a class="btn btn-success" href="@Url.Action("EditRank", new { id = item.RankId,GroupId=item.GroupId})"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                }
+                                @if (ViewBag.DeletePermission)
+                                {
+                                    <a class="btn btn-danger" href="@Url.Action("DeleteRank", new { id = item.RankId, GroupId = item.GroupId })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+
+        @section Scripts{
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+        <script src="~/Areas/Admin/Content/Scripts/View/SortRanks.js"></script>
+        }
+    </div>
+</div>

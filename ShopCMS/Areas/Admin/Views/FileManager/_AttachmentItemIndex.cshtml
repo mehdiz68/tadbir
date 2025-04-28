@@ -1,0 +1,45 @@
+﻿@model Domain.ViewModel.Attachement
+@using ahmadi.Infrastructure.Helper;
+
+<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" style="border: 1px dotted #ccc;text-align:center">
+    <div>
+        <div>@Html.Displayattachment(Model.FileName, Model.Title, "XS", true, htmlAttributes: new {@class="img-responsive" })</div>
+    </div>
+    <hr />
+    <p class="text-bold" style="height:25px;overflow:hidden" title="@Model.Title">
+        @Html.DisplayFor(modelItem => Model.Title)
+
+    </p>
+    <div style="font-size:12px">
+        <p>
+            @Html.DisplayFor(modelItem => Model.HasMultiSize)
+            @Html.Label(" با تغییر اندازه ")
+        </p>
+        <p>
+            @Html.DisplayFor(modelItem => Model.HasWatermark)
+            @Html.Label("استفاده از واتر مارک")
+        </p>
+        <p>
+            @Html.Label("تعداد استفاده : ")
+            @Html.DisplayFor(modelItem => Model.UseCount)
+        </p>
+        <p>
+            @Html.Label("حجم : ")
+            @Html.DisplayFor(modelItem => Model.Capacity) <sup style="color:#169F85;">kb</sup>
+        </p>
+    </div>
+    <div>
+        @if (ViewBag.EditPermission)
+        {
+            <a class="btn btn-success" href="@Url.Action("Edit", new { id = Model.Id })"><span class="glyphicon glyphicon-edit"></span>ویرایش</a>
+        }
+        else
+        {
+
+            <span class="btn btn-success" ><span class="glyphicon glyphicon-edit"></span><span style="text-decoration:line-through"> ویرایش </span></span>
+        }
+        <a class="btn btn-success" href="@Url.Action("Details", new { id = Model.Id })"><span class="glyphicon glyphicon-list"></span>جزئیات</a><br /><br />
+        <a class="btn btn-success" href="@Url.Action("Delete", new { id = Model.Id })"><span class="glyphicon glyphicon-remove"></span>حذف</a><br /><br />
+    </div>
+</div>
+

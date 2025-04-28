@@ -1,0 +1,130 @@
+﻿@model Domain.FreeSendOffer
+<title>ویرایش ارسال رایگان</title>
+
+@{
+    var setting = ViewBag.setting as Domain.Setting;
+    int? OfferId = ViewBag.OfferId as int?;
+}
+@section Header{
+
+<link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+@*View*@
+<link href="~/Areas/Admin/Content/Stylesheets/View/ProductCategories.css" rel="stylesheet" />
+<link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+@*Bootstrap Select*@
+<link href="~/areas/admin/content/scripts/component/bootstrp-dropdown/bootstrap-select.min.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Detail",new { id = ViewBag.OfferId })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ویرایش ارسال رایگان
+        </h1>
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(x => x.Id)
+            @Html.Hidden("OfferId", OfferId)
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+        <div class="form-group has-feedback col-lg-3 col-md-3 col-sm-12 col-xs-12">
+
+            <label>گروه و زیرگروه یا محصول</label>
+
+            @Html.DropDownList("ProductTypeId", ViewBag.ProductTypeId as IEnumerable<SelectListItem>, new { @class = "form-control selectpicker", data_live_search = "true" })
+            @Html.Action("OpenProductCategories", "Products", new { CurrentCatId = (Model.CatId != null ? Convert.ToInt32(Model.CatId) : 0), ProductTypeId = (ViewBag.ProductTypeFilter != null ? Convert.ToInt32(ViewBag.ProductTypeFilter) : 1) })
+
+            <select id="ProductId" name="ProductId" class="form-control">
+                <option value="">--هیچکدام--</option>
+            </select>
+
+
+        </div>
+
+        <div class="form-group has-feedback col-lg-3 col-md-3 col-sm-12 col-xs-12">
+
+            @Html.LabelFor(x => x.BrandId)
+
+            @Html.DropDownList("BrandId", ViewBag.BrandList as IEnumerable<SelectListItem>, "--برند را انتخاب نمایید--", new { @class = "form-control selectpicker", data_live_search = "true" })
+            <span class="fa fa-chain-broken form-control-feedback right" aria-hidden="true"></span>
+            @Html.ValidationMessageFor(model => model.BrandId, "", new { @class = "text-danger" })
+
+        </div>
+
+
+
+        <div class="form-group has-feedback col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            @Html.LabelFor(x => x.OrderSum)
+            @Html.EditorFor(model => model.OrderSum, new { htmlAttributes = new { @class = "form-control", placeholder = Html.DisplayFor(x => x.OrderSum) } })
+            @Html.ValidationMessageFor(model => model.OrderSum, "", new { @class = "text-danger" })
+
+
+
+        </div>
+
+        <div class="form-group has-feedback col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            @Html.LabelFor(x => x.MaxCost)
+            @Html.EditorFor(model => model.MaxCost, new { htmlAttributes = new { @class = "form-control", placeholder = Html.DisplayFor(x => x.OrderSum) } })
+            @Html.ValidationMessageFor(model => model.MaxCost, "", new { @class = "text-danger" })
+
+
+
+        </div>
+
+
+        <div class="clearfix"></div>
+        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <input type="submit" value="ویرایش" class="btn btn-primary" />
+        </div>
+
+    </div>
+}
+
+        @section Scripts{
+
+            <script src="~/Areas/Admin/Content/Scripts/Component/Bootstrp-DropDown/bootstrap-select.min.js"></script>
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/View/ProductCategories.js"></script>
+            @*Product Category*@
+            <script src="~/Areas/Admin/Content/Scripts/View/_CategoryManager.js"></script>
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+            <script src="~/Scripts/tinymce/tinymce.min.js"></script><script src="~/Scripts/tinymce/tiny_mce_load.js"></script>
+
+            <script>
+                $(document).ready(function () {
+
+                    $("body").on("change", ".CategoryManager select", function () {
+                        var $this = $(this);
+                        $.ajax({
+                            type: "GET",
+                            url: '/Admin/Products/GetCategoryProducts/?CatId=' + $this.val(),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (response) {
+                                if (response.statusCode == 200) {
+
+                                    $("#ProductId").val(null); $("#ProductId").html("<option value=''>--هیچکدام--</option>");
+                                    for (var i = 0; i < response.data.length; i++) {
+
+                                        html = "<option id='" + response.data[i].Id + "' value='" + response.data[i].Id + "'>" + response.data[i].Title + "</option>";
+                                        $("#ProductId").append(html);
+                                    }
+                                }
+                            }
+
+                        });
+                    });
+                });
+            </script>
+        }
+    </div>
+</div>

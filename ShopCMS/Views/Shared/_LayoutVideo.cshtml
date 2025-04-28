@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="fa" class="js flexbox canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers no-applicationcache svg inlinesvg smil svgclippaths">
+<head>
+    @RenderSection("Meta", required: false)
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- SITE TITLE -->
+    <title>عدل جو</title>
+
+
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/animate.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/fonts.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/flaticon.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/owl.carousel.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/owl.theme.default.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/dl-menu.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/nice-select.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/magnific-popup.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/venobox.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/layers.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/navigation.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/settings.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/style.css?v=1.2">
+    <link rel="stylesheet" type="text/css" href="~/Content/video/css/responsive.css">
+    <!-- Video Js -->
+    <link href="~/Content/Base/Scripts/VideoPlayer/dist/mediaelementplayer.css?v=1.2" rel="stylesheet" />
+    <link href="~/Content/Base/Scripts/VideoPlayer/dist/jump-forward/jump-forward.css" rel="stylesheet" />
+    <link href="~/Content/Base/Scripts/VideoPlayer/dist/skip-back/skip-back.css" rel="stylesheet" />
+    <link href="~/Content/Base/Scripts/VideoPlayer/dist/speed/speed.css" rel="stylesheet" />
+
+
+    @RenderSection("Header", required: false)
+
+    @Html.Action("GetJsTools", "Home")
+
+</head>
+<body>
+
+    @Html.Action("GetHeaderVideo", "Home")
+
+
+    @RenderBody()
+
+    @Html.Action("GetFooterVideo", "Home")
+
+
+    <!--main js file start-->
+    <script src="~/Content/video/js/jquery_min.js"></script>
+    <script src="~/Content/video/js/modernizr.js"></script>
+    <script src="~/Content/video/js/bootstrap.js"></script>
+    <script src="~/Content/video/js/owl.carousel.js"></script>
+    <script src="~/Content/video/js/jquery.dlmenu.js"></script>
+    <script src="~/Content/video/js/jquery.sticky.js"></script>
+    <script src="~/Content/video/js/jquery.nice-select.min.js"></script>
+    <script src="~/Content/video/js/jquery.magnific-popup.js"></script>
+    <script src="~/Content/video/js/jquery.bxslider.min.js"></script>
+    <script src="~/Content/video/js/venobox.min.js"></script>
+    <script src="~/Content/video/js/smothscroll_part1.js"></script>
+    <script src="~/Content/video/js/smothscroll_part2.js"></script>
+    <script src="~/Content/video/js/jquery.themepunch.revolution.min.js"></script>
+    <script src="~/Content/video/js/jquery.themepunch.tools.min.js"></script>
+    <script src="~/Content/video/js/revolution.addon.snow.min.js"></script>
+    <script src="~/Content/video/js/revolution.extension.actions.min.js"></script>
+    <script src="~/Content/video/js/revolution.extension.carousel.min.js"></script>
+    <script src="~/Content/video/js/revolution.extension.kenburn.min.js"></script>
+    <script src="~/Content/video/js/revolution.extension.layeranimation.min.js"></script>
+    <script src="~/Content/video/js/revolution.extension.migration.min.js"></script>
+    <script src="~/Content/video/js/revolution.extension.navigation.min.js"></script>
+    <script src="~/Content/video/js/revolution.extension.parallax.min.js"></script>
+    <script src="~/Content/video/js/revolution.extension.slideanims.min.js"></script>
+    <script src="~/Content/video/js/revolution.extension.video.min.js"></script>
+
+    <!-- Video Js -->
+    <script src="~/Content/Base/Scripts/VideoPlayer/dist/mediaelement-and-player.min.js"></script>
+    <script src="~/Content/Base/Scripts/VideoPlayer/dist/jump-forward/jump-forward.js"></script>
+    <script src="~/Content/Base/Scripts/VideoPlayer/dist/skip-back/skip-back.js"></script>
+    <script src="~/Content/Base/Scripts/VideoPlayer/dist/speed/speed.min.js"></script>
+    <script src="~/Content/video/js/custom.js"></script>
+    <!--main js file end-->
+
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @RenderSection("scripts", required: false)
+</body>
+
+
+
+</html>

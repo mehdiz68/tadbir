@@ -1,0 +1,137 @@
+﻿@model Domain.attachment
+@using Domain
+@using ahmadi.Infrastructure.Helper;
+
+<title>ویرایش فایل</title>
+
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+    var IsSecondAttachement = ViewBag.IsSecondAttachement as Domain.attachment;
+}
+@section Header{
+    @*Uploader*@
+    <link href="~/Content/Base/Css/Uploader-style.css" type="text/css" rel="stylesheet" />
+    <style>
+        .tree li a {
+            font-size: 12px;
+        }
+
+        .tree:before {
+            border: 0;
+        }
+
+        .SelectedCategory {
+            background: #3c8dbc;
+            color: #ffffff !important;
+            border: 1px solid #3c8dbc;
+        }
+    </style>
+}
+
+<div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+<div class="x_panel">
+    <div class="x_panel">
+
+        <h2 style="font-size: 2em;display:inline-block">
+            <i class="flaticon-clipboard"></i> ویرایشِ فایل
+        </h2>
+
+        <span data-html="true" data-toggle="tooltip" data-placement="right" style="cursor:pointer" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+     
+        
+        <br /><br />
+        <fieldset>
+            <legend>ویرایش فایلِ فایل</legend>
+            <div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FileName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+
+                        @Ajax.ActionLink("  افزودن فایل جدید و تغییر فایل", "Upload", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('" + Model.Id + "','True')", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary" })
+                        <div id="createView"></div>
+
+                        <div id="AttachementContainer" class="text-left">
+
+                            @Html.Displayattachment(Model.FileName, Model.Title, "SM", htmlAttributes: new { @class = "img-responsive", width = "220", height = "120", style = "display:inline-block;width:220px;height:120px" })
+
+                            @Html.EditorFor(model => model.FileName, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.FileName, "", new { @class = "text-danger" })
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <br /><br />
+        <fieldset>
+            <legend>ویرایش اطلاعاتِ فایل</legend>
+            <div>
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="tree col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <ul>
+                            <li>
+                                <a href="#" data-id="0">بدون دسته بندی</a>
+                            </li>
+                            <li>
+                                @(Html.TreeView(ViewBag.Folders as IEnumerable<Folder>).EmptyContent("پوشه ای وجود ندارد!").Children(m => m.ChildFolder).HtmlAttributes(new { id = "tree" }).ChildrenHtmlAttributes(new { @class = "subItem" }).ItemText(m => m.FolderName).ItemTemplate(@<text>
+                                    <a href="#" data-id="@item.Id">@item.FolderName</a></text>))
+                            </li>
+                        </ul>
+
+                        <input type='hidden' name='FolderId' id="FolderId" value="@(Model.FolderId.HasValue?Model.FolderId.Value:0)" />
+                    </div>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => model.Id)
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    <div class="checkbox">
+                                        @Html.EditorFor(model => model.IsActive)
+                                        @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            @Html.HiddenFor(x => x.DisplaySort)
+
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="ذخیره" class="btn btn-primary" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+
+                }
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+
+@section Scripts{
+    @*Modal Popup*@
+    <script src="~/Content/Base/Scripts/BlockUI/jquery.blockUI.js" type="text/javascript"></script>
+    @*View*@
+    <script src="~/Areas/Admin/Content/Scripts/View/EditAttachement.js?v=1.5"></script>
+}

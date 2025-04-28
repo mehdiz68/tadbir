@@ -1,0 +1,292 @@
+﻿@model Domain.Offer
+<title>تعریف تخفیف</title>
+
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+    var setting = ViewBag.setting as Domain.Setting;
+}
+@section Header{
+    <link href="~/Content/Base/Scripts/PersianDateJs/persian-datepicker.min.css" rel="stylesheet" />
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    @*Bootstrap Select*@
+    <link href="~/areas/admin/content/scripts/component/bootstrp-dropdown/bootstrap-select.min.css" rel="stylesheet" />
+    <style>
+
+        .timeSelectorPlugin {
+            position: absolute;
+            background-color: #c3c4b0;
+            border: 1px solid #ccc;
+            min-width: 200px;
+            min-height: 50px;
+            z-index: 999999;
+            padding-top: 8px;
+            text-align: center;
+        }
+
+            .timeSelectorPlugin p {
+                cursor: pointer;
+                margin: 5px;
+                padding: 5px;
+                background-color: red;
+                color: #fff;
+                border: 1px solid #fff
+            }
+    </style>
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        <span style="cursor:pointer" data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            تعریف تخفیف
+        </h1>
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group has-feedback col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+
+                    <label class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></label> @Html.LabelFor(x => x.Title)
+
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { placeholder = "عنوان", @class = "form-control" } })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+
+                </div>
+
+
+                <div class="form-group has-feedback col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                    <label class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تاریخ انقضا").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تاریخ انقضا").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></label> @Html.LabelFor(x => x.CodeTypeValueCode)
+
+                    @Html.DropDownList("CodeTypeValueCode", ViewBag.TypeListId as List<SelectListItem>, "--هیچکدام--", htmlAttributes: new { placeholder = "نوع تخفیف را انتخاب نمایید", style = "width:99%;display: inline-block", @class = "form-control" })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                    @Html.ValidationMessageFor(model => model.CodeTypeValueCode, "", new { @class = "text-danger" })
+                </div>
+
+
+
+                <div class="clearfix"></div>
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                    <label class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تاریخ شروع").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تاریخ شروع").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></label> @Html.LabelFor(x => x.StartDate)
+
+                    @Html.TextBox("StartDate", null, new { placeholder = "تاریخ شروع", @readonly = "readonly", @class = "psdate form-control" })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                    @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                </div>
+
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                    <label class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تاریخ انقضا").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تاریخ انقضا").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></label> @Html.LabelFor(x => x.ExpireDate)
+
+                    @Html.TextBox("ExpireDate", null, new { placeholder = "تاریخ شروع", @readonly = "readonly", @class = "psdate form-control" })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                    @Html.ValidationMessageFor(model => model.ExpireDate, "", new { @class = "text-danger" })
+                </div>
+
+                @{
+                    CoreLib.ViewModel.Xml.XMLReader readXml = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+                    var languages = readXml.ListOfXLanguage();
+                }
+                @if (languages.Count == 1)
+                {
+                    @Html.Hidden("LanguageId", languages.First().Id)
+                }
+                else
+                {
+                    <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        @Html.LabelFor(model => model.LanguageId, "زبان ( وب سایت )", htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.DropDownList("LanguageId", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.LanguageId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="cats">
+                        <label>گروههای مجاز محصول</label>
+                        @Html.DropDownList("CatId", ViewBag.productCategories as IEnumerable<SelectListItem>, new { @class = "form-control selectpicker", data_live_search = "true", multiple = "multiple" })
+                    </div>
+                    <div class="users" style="display:none">
+                        <label>گروههای مجاز کاربری</label>
+                        @Html.DropDownList("UserGroupId", ViewBag.UserGroups as IEnumerable<SelectListItem>, new { @class = "form-control selectpicker", data_live_search = "true", multiple = "multiple" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="defalut" style="display:none">
+                    <div class="form-group has-feedback col-md-4">
+                        @Html.LabelFor(x => x.DefalutCode)
+                        @Html.EditorFor(model => model.DefalutCode, new { htmlAttributes = new { placeholder = Html.DisplayNameFor(x => x.DefalutCode), @class = "form-control" } })
+                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                        @Html.ValidationMessageFor(model => model.DefalutCode, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group has-feedback col-md-4">
+                        @Html.LabelFor(x => x.DeflautValue)
+                        @Html.EditorFor(model => model.DeflautValue, new { htmlAttributes = new {Value="0", placeholder = Html.DisplayNameFor(x => x.DeflautValue), @class = "form-control" } })
+                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                        @Html.ValidationMessageFor(model => model.DeflautValue, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group has-feedback col-md-4">
+                        @Html.LabelFor(x => x.DefaultCodeType)
+                        @Html.DropDownList("DefaultCodeType", ViewBag.defaultCodeTypeListItem as List<SelectListItem>, null, htmlAttributes: new { placeholder = "--نوع ارزش کد تخفیف پیش فرض--", style = "width:99%;display: inline-block", @class = "form-control" })
+                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                        @Html.ValidationMessageFor(model => model.DefaultCodeType, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group has-feedback col-md-4">
+                        @Html.LabelFor(x => x.DefalutMaxValue)
+                        @Html.EditorFor(model => model.DefalutMaxValue, new { htmlAttributes = new { Value = "0", placeholder = Html.DisplayNameFor(x => x.DefalutMaxValue), @class = "form-control" } })
+                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                        @Html.ValidationMessageFor(model => model.DefalutMaxValue, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group has-feedback col-md-4">
+                        @Html.LabelFor(x => x.DefalutCountUse)
+                        @Html.EditorFor(model => model.DefalutCountUse, new { htmlAttributes = new { Value = "0", placeholder = Html.DisplayNameFor(x => x.DefalutCountUse), @class = "form-control" } })
+                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                        @Html.ValidationMessageFor(model => model.DefalutCountUse, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group has-feedback col-md-4">
+                        @Html.LabelFor(x => x.codeUseType)
+                        @Html.DropDownList("CodeUseType", ViewBag.CodeUseTypeList as List<SelectListItem>, null, htmlAttributes: new { @class = "form-control" })
+                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                        @Html.ValidationMessageFor(model => model.codeUseType, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group has-feedback col-md-4">
+                        @Html.LabelFor(x => x.DefaultDayExpire)
+                        @Html.EditorFor(model => model.DefaultDayExpire, new { htmlAttributes = new { placeholder = Html.DisplayNameFor(x => x.DefaultDayExpire), @class = "form-control" } })
+                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                        @Html.ValidationMessageFor(model => model.DefaultDayExpire, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div id="createView"></div>
+                    <div class="col-md-6">
+                        <label>انتخاب کاور:</label><br />
+                        @Ajax.ActionLink("انتخاب یا آپلود", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager" })
+                        <span class="btn btn-danger deleteCover hide">عدم انتخاب</span>
+
+                        <div id="AttachementContainer">
+                            <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" width="220" height="120" style="display:inline-block;width:220px;height:120px" />
+                            @Html.EditorFor(model => model.Cover, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.Cover, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+                <br /><br />
+                @Html.CheckBox("IsActive", true, new { @class = "js-switch" }) @Html.LabelFor(m => m.IsActive)
+                @Html.CheckBox("ShowinSuerdeal", false, new { @class = "js-switch" }) @Html.LabelFor(m => m.ShowinSuerdeal)
+
+
+
+                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <input type="submit" value="ایجاد" class="btn btn-primary" />
+                </div>
+
+            </div>
+        }
+
+        @section Scripts{
+            <script src="~/Content/Base/Scripts/PersianDateJs/persian-date.min.js"></script>
+            <script src="~/Content/Base/Scripts/PersianDateJs/persian-datepicker.min.js"></script>
+            @*Persian Calender*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+            <script>
+                $(document).ready(function () {
+
+                    $("#CodeTypeValueCode").change(function () {
+                        if ($(this).val() == "4") {
+                            $(".users").show();
+                            $(".cats").show();
+                            $(".defalut").show();
+                        }
+                        else if ($(this).val() == "5") {
+                            $(".users").hide();
+                            $(".cats").show();
+                            $(".defalut").hide();
+                        }
+                        else {
+                            $(".users").hide();
+                            $(".cats").show();
+                            $(".defalut").hide();
+                        }
+                    });
+
+                    $(".psdate").pDatepicker({
+                        responsive: true,
+                        initialValue: false,
+                        format: "YYYY/MM/DD HH:mm:ss",
+                        timePicker: {
+                            enabled: true
+                        },
+                        calendar: {
+                            persian: {
+                                locale: 'en'
+                            }
+                        }
+
+                    });
+
+
+                    $(".timeSelector").click(function () {
+                        var input = $("#" + $(this).attr("data-id-selector"));
+                        var top = input.offset().top;
+                        var left = input.offset().left;
+                        var heightElement = input.outerHeight(true); 0
+                        $(".timeSelectorPlugin").remove();
+                        $("body").prepend("<div class='timeSelectorPlugin' style='left:" + left + "px;top:" + (parseInt(top) + parseInt(heightElement)).toString() + "px'><lable>دقیقه</lable><select class='MinuteSelector'><option value='00'>00</option><option value='01'>01</option><option value='02'>02</option><option value='03'>03</option><option value='04'>04</option><option value='05'>05</option><option value='06'>06</option><option value='07'>07</option><option value='08'>08</option><option value='09'>09</option><option value='10'>10</option><option value='11'>11</option><option value='12'>12</option><option value='13'>13</option><option value='14'>14</option><option value='15'>15</option><option value='16'>16</option><option value='17'>17</option><option value='18'>18</option><option value='19'>19</option><option value='20'>20</option><option value='21'>21</option><option value='22'>22</option><option value='23'>23</option><option value='24'>24</option><option value='25'>25</option><option value='26'>26</option><option value='27'>27</option><option value='28'>28</option><option value='29'>29</option><option value='30'>30</option><option value='31'>31</option><option value='32'>32</option><option value='33'>33</option><option value='34'>34</option><option value='35'>35</option><option value='36'>36</option><option value='37'>37</option><option value='38'>38</option><option value='39'>39</option><option value='40'>40</option><option value='41'>41</option><option value='42'>42</option><option value='43'>43</option><option value='44'>44</option><option value='45'>45</option><option value='46'>46</option><option value='47'>47</option><option value='48'>48</option><option value='49'>49</option><option value='50'>50</option><option value='51'>51</option><option value='52'>52</option><option value='53'>53</option><option value='54'>54</option><option value='55'>55</option><option value='56'>56</option><option value='57'>57</option><option value='58'>58</option><option value='59'>59</option></select><span> : </span><select class='HourSelector'><option value='01'>01</option><option value='02'>02</option><option value='03'>03</option><option value='04'>04</option><option value='05'>05</option><option value='06'>06</option><option value='07'>07</option><option value='08'>08</option><option value='09'>09</option><option value='10'>10</option><option value='11'>11</option><option selected value='12'>12</option><option value='13'>13</option><option value='14'>14</option><option value='15'>15</option><option value='16'>16</option><option value='</'>17</option><option value='18'>18</option><option value='19'>19</option><option value='20'>20</option><option value='21'>21</option><option value='22'>22</option><option value='23'>23</option></select><p>بستن</p></div> ");
+                        if (input.val())
+                            input.val(input.val().substring(0, 10) + " 12:00");
+                        else
+                            input.val("1396/01/01 12:00");
+
+                        $(".HourSelector").change(function () {
+                            var hour = $(this).val();
+                            var minute = $(".MinuteSelector").val();
+                            if (input.val())
+                                input.val(input.val().substring(0, 10) + " " + hour + ":" + minute);
+                            else
+                                input.val("1396/01/01 " + hour + ":" + minute);
+
+                        });
+                        $(".MinuteSelector").change(function () {
+                            var minute = $(this).val();
+                            var hour = $(".HourSelector").val();
+                            if (input.val())
+                                input.val(input.val().substring(0, 10) + " " + hour + ":" + minute);
+                            else
+                                input.val("1396/01/01 " + hour + ":" + minute);
+
+                        });
+
+                        $(".timeSelectorPlugin p").click(function () {
+                            $(this).parent().remove();
+                            $("#datepicker").remove();
+                        });
+                    });
+                });
+            </script>
+
+            <script src="~/Areas/Admin/Content/Scripts/Component/Bootstrp-DropDown/bootstrap-select.min.js"></script>
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+            <script src="~/Scripts/tinymce/tinymce.min.js"></script>
+            <script src="~/Scripts/tinymce/tiny_mce_load.js"></script>
+        }
+    </div>
+</div>

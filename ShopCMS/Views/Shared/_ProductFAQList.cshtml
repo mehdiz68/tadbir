@@ -1,0 +1,111 @@
+﻿@model PagedList.IPagedList<Domain.ViewModels.ProductFAQList>
+@using Microsoft.AspNet.Identity;
+@using ahmadi.Infrastructure.Helper;
+@using Microsoft.AspNet.Identity.Owin;
+@using Microsoft.Owin.Security;
+@using PagedList.Mvc;
+@{
+    int productid = ViewBag.productid;
+    int sort = ViewBag.sort;
+}
+
+
+
+@if (Model.Any())
+{
+    <div class="c-faq__filter">
+        <p class="c-faq__filter-title">
+            پرسش ها و پاسخ ها
+        </p>
+        <ul class="c-faq__filter-items js-filter-items" data-title="مرتب‌سازی بر اساس:">
+            <li><a href="@("/Product/GetQuestion?productid=" + productid + "&page=1&sort=1")" class="@(sort == 1 ? "is-active" : "")" data-sort-mode="newest">جدیدترین پرسش </a></li>
+            <li><a href="@("/Product/GetQuestion?productid=" + productid + "&page=1&sort=2")" class="@(sort == 2 ? "is-active" : "")" data-sort-mode="most_answers">بیشترین پاسخ به پرسش</a></li>
+            <li><a href="@("/Product/GetQuestion?productid=" + productid + "&page=1&sort=3")" class="@(sort == 3 ? "is-active" : "")" data-sort-mode="users_questions_only">پرسش های شما</a></li>
+        </ul>
+    </div>
+}
+<div id="product-questions-list">
+
+    @foreach (var item in Model.Where(x => !x.parrentid.HasValue))
+    {
+
+
+
+        <ul class="c-faq__list">
+            <li class="is-question">
+                <div class="section">
+                    <div class="c-faq__header c-faq__header--question header">
+                        <p class="h5">
+                            پرسش
+                            <span>@item.FullName</span>
+                        </p>
+                    </div>
+                    <p>@item.Text</p>
+                    <div class="footer">
+                        <em>@item.InsertDate</em>
+                        <a href="#" class="btn-link-spoiler js-add-answer-btn" data-question-id="@item.Id">
+                            به این پرسش پاسخ
+                            دهید  (@item.ChildComment.Count())
+                        </a>
+                    </div>
+                </div>
+            </li>
+            @foreach (var item2 in item.ChildComment)
+            {
+                <li class="is-answer">
+                    <div class="section">
+                        <div class="header header--seller">
+                            <p class="h5">
+                                پاسخ
+                                @if (item2.AdminAnswer)
+                                {
+                                    <span> کارشناس فروش </span>
+                                }
+                                else
+                                {
+
+                                    <span>@item2.User.FirstName @item2.User.LastName </span>
+                                }
+                            </p>
+                        </div>
+                        <ul class="attaches">
+                            @foreach (var attache in item2.attachments)
+                            {
+                                <li>
+                                    <a href="@Html.DisplayattachmentUrl(attache.FileName)" target="_blank">
+                                        @Html.Displayattachment(attache.FileName, attache.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail" })
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                        <p>@item2.Message</p>
+
+                        <div class="footer">
+                            <em>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item2.InsertDate)</em>
+                            <div class="c-faq__likes js-answer-like-container" id="answer-like-container">
+                                آیا این پاسخ برایتان مفید بود ؟
+                                <button class="btn-like js-answer-like" data-counter="@item2.Like" data-answer="@item2.Id">
+                                    بله
+                                </button>
+                                <button class="btn-like js-answer-dislike" data-counter="@item2.UnLike" data-answer="@item2.Id">
+                                    خیر
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            }
+
+
+        </ul>
+    }
+
+</div>
+
+
+
+@if (Model.Any())
+{
+    @Html.PagedListPager(Model, Page => "/Product/GetQuestion?productid=" + productid + "&page=" + Page + "&sort=" + sort)
+
+}

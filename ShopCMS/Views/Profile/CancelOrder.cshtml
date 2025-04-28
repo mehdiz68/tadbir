@@ -1,0 +1,167 @@
+﻿@model Domain.OrderDelivery
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml;
+@using ahmadi.Infrastructure.Helper;
+@using CoreLib;
+
+@{
+    var setting = ViewBag.setting as Domain.Setting;
+    int price = 0;
+    var wallet = Model.Order.OrderWallets.First().Wallet;
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var result = "";
+    int i = 1;
+    @Html.Partial("_Meta", Meta)
+}
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+
+<div class="o-box container" id="cancel-order">
+    <h1>
+        <span>  لغو مرسوله </span>
+        <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+    </h1>
+    @if (ViewBag.status != null)
+    {
+        if (ViewBag.status as string == "1")
+        {
+            <p class="alert alert-success">@ViewBag.msg</p>
+        }
+        else
+        {
+            <p class="alert alert-error">@ViewBag.msg</p>
+        }
+    }
+    else
+    {
+
+        <div class="c-profile-order__list-item">
+            <div class="c-profile-order__list-item-details">
+                <div class="c-profile-order__list-item-details-top">
+                    <div>
+                        <div>
+
+                            <p>
+                                در صورت لغو مرسوله کالاهای زیر برای شما ارسال نخواهند شد.
+                                <br />
+                                همچنین مبلغ مرسوله حداکثر طی 48 ساعت به شماره کارت
+                                @if (ViewBag.userCard == null)
+                                {
+                                    <span>-</span>
+                                }
+                                else
+                                {
+                                    @ViewBag.userCard
+                                }
+                                (
+                                <a href="/Profile/Edit?returnurl=/Profile/CancelOrder/@Model.Id">ویرایش اطلاعات کاربری</a>
+                                )
+                                واریز خواهد شد.
+                                <br />
+
+                            </p>
+                        </div>
+                        <div class="c-profile-order__list-item-products">
+                            @foreach (var item in Model.OrderRows)
+                            {
+                                <div class="c-profile-order__list-item-product">
+                                    <a href="@Url.Action("Index","Product",new {id=item.ProductId,name=CommonFunctions.NormalizeAddress(item.Product.Title) })" class="c-profile-order__list-item-product-img">
+                                        @if (item.ProductPrice.ProductImages.Any())
+                                        {
+
+                                            if (item.ProductPrice.ProductImages.Where(x => x.IsMain).Any())
+                                            {
+
+                                                @Html.Displayattachment(item.ProductPrice.ProductImages.Where(x => x.IsMain).First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                            }
+                                            else
+                                            {
+                                                @Html.Displayattachment(item.ProductPrice.ProductImages.First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (item.ProductPrice.Product.ProductImages.Any())
+                                            {
+                                                if (item.ProductPrice.Product.ProductImages.Where(x => x.IsMain).Any())
+                                                {
+                                                    @Html.Displayattachment(item.ProductPrice.Product.ProductImages.First(x => x.IsMain).Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.Displayattachment(item.ProductPrice.Product.ProductImages.First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:110px;height:60px" />
+
+
+                                            }
+                                        }
+                                        <span class="c-profile-order__list-item-parcel-product-qty">@item.Quantity</span>
+                                    </a>
+                                    <div class="c-profile-order__list-item-product-content">
+                                        <div class="c-profile-order__list-item-product-top-bar">
+                                            <div class="c-profile-order__list-item-product-title">@item.Product.Name</div>
+                                        </div>
+                                        <div class="c-profile-order__list-item-details-row">
+                                            <div class="c-profile-order__list-item-detail c-profile-order__list-item-detail--currency">
+                                                <span class="c-profile-order__list-item-detail-title">قیمت واحد:</span>
+                                                @item.Price
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+                @using (Html.BeginForm("CancelOrder", "Profile", FormMethod.Post))
+                {
+                    @Html.Hidden("DeliveryId", Model.Id)
+                    @Html.Hidden("OrderId", Model.Order.Id)
+
+                    <p>در صورت اطمینان از لغو مرسوله، لطفا دلیل لغو را مشخص کنید.</p>
+                    <div>
+                        <p>
+                            <input type="radio" name="cancelOrderReson" value="@Domain.CancelOrderReson.InvalidEdit" id="R1" /> <label for="R1">@Domain.CancelOrderReson.InvalidEdit.EnumDisplayNameFor()</label>
+                        </p>
+                        <p>
+                            <input type="radio" name="cancelOrderReson" value="@Domain.CancelOrderReson.DulicateOrder" id="R2" /> <label for="R2">@Domain.CancelOrderReson.DulicateOrder.EnumDisplayNameFor()</label>
+                        </p>
+                        <p>
+                            <input type="radio" name="cancelOrderReson" value="@Domain.CancelOrderReson.InvalidPrice" id="R3" /> <label for="R3">@Domain.CancelOrderReson.InvalidPrice.EnumDisplayNameFor()</label>
+                        </p>
+                        <p>
+                            <input type="radio" name="cancelOrderReson" value="@Domain.CancelOrderReson.InvalidSendPrice" id="R4" /> <label for="R4">@Domain.CancelOrderReson.InvalidSendPrice.EnumDisplayNameFor()</label>
+                        </p>
+                        <p>
+                            <input type="radio" name="cancelOrderReson" value="@Domain.CancelOrderReson.InvalidSendway" id="R5" /> <label for="R5">@Domain.CancelOrderReson.InvalidSendway.EnumDisplayNameFor()</label>
+                        </p>
+                        <p>
+                            <input type="radio" name="cancelOrderReson" value="@Domain.CancelOrderReson.InvalidCodeGift" id="R6" /> <label for="R6">@Domain.CancelOrderReson.InvalidCodeGift.EnumDisplayNameFor()</label>
+                        </p>
+                        <p>
+                            <input type="radio" checked name="cancelOrderReson" value="@Domain.CancelOrderReson.InvalidCancel" id="R7" /> <label for="R7">@Domain.CancelOrderReson.InvalidCancel.EnumDisplayNameFor()</label>
+                        </p>
+                    </div>
+                    <input type="submit" class="btn btn-info" value="لغو مرسوله" />
+                }
+            </div>
+
+
+        </div>
+    }
+
+
+
+
+</div>
+
+

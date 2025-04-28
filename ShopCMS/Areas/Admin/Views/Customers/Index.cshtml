@@ -1,0 +1,265 @@
+﻿@model PagedList.IPagedList<Domain.ApplicationUser>
+@using PagedList.Mvc;
+@using Domain;
+@using ahmadi.Infrastructure.Helper;
+
+    <title>مشتریان</title>
+@{
+    var HelpModule = ViewBag.HelpModule as HelpModule;
+}
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Usermanagement.css" rel="stylesheet" />
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+    @*Pagging*@
+    <link href="~/Content/Base/Css/PagedList.css" rel="stylesheet" type="text/css" />
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="box-title container" style="padding:0;    width: 100%;">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <i class="flaticon-user-filled-person-shape"></i>@Html.ActionLink("مشتریان", "Index")
+                <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <br />
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><span class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").First().Abstract:"")"></span> جستجو / فیلتر</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content" style="display:none">
+
+                <div id="SearchPage">
+                    <div>
+                        <div>
+
+                            @using (Html.BeginForm("Index", "Customers", FormMethod.Get))
+                            {
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                    <p>نام کاربری(ایمیل) :</p>
+                                    @Html.TextBox("UsernameString", ViewBag.UsernameFilter as string, htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                    <p>تاریخ ایجاد از : </p>
+                                    <img src="~/Areas/Admin/Content/images/calender.gif" onclick="displayDatePicker('CreationStartDateInput');" alt="" />
+                                    @Html.TextBox("CreationStartDateInput", ViewBag.currentStartDateInputFiltering as string, htmlAttributes: new { style = "width:83%;display: inline-block", @class = "form-control" })
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                    <p>تا :</p>
+                                    <img src="~/Areas/Admin/Content/images/calender.gif" onclick="displayDatePicker('CreationEndDateInput');" alt="" />
+                                    @Html.TextBox("CreationEndDateInput", ViewBag.currentEndDateInputFiltering as string, htmlAttributes: new { style = "width:83%;display: inline-block", @class = "form-control" })
+                                </div>
+                                <div class="clearfix">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                    <p>جنسیت :</p>
+                                    @Html.DropDownList("Gender", ViewBag.GenderSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+
+
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                    <p>زمان آخرین ورود: </p>
+                                    <img src="~/Areas/Admin/Content/images/calender.gif" onclick="displayDatePicker('LastActivityStartDateInput');" alt="" />
+                                    @Html.TextBox("LastActivityStartDateInput", ViewBag.currentLastActivityStartDateInputFiltering as string, htmlAttributes: new { style = "width:83%;display: inline-block", @class = "form-control" })
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                    <p>تا :</p>
+                                    <img src="~/Areas/Admin/Content/images/calender.gif" onclick="displayDatePicker('LastActivityEndDateInput');" alt="" />
+                                    @Html.TextBox("LastActivityEndDateInput", ViewBag.currentLastActivityEndDateInputFiltering as string, htmlAttributes: new { style = "width:83%;display: inline-block", @class = "form-control" })
+
+
+                                </div>
+                                <div class="clearfix"></div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                    <p>وضعیت ایمیل کاربر :</p>
+                                    @Html.DropDownList("EmailConfirmId", ViewBag.EmailConfirmSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                    <p>وضعیت تلفن همراه کاربر :</p>
+                                    @Html.DropDownList("PhoneNumberConfirmId", ViewBag.PhoneNumberSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+
+                                    <p>کاربران فعال/غیر فعال:</p>
+                                    @Html.DropDownList("Disable", ViewBag.DisableSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                    <p>تلفن همراه :</p>
+                                    @Html.TextBox("PhoneNumberString", ViewBag.PhoneNumberFilter as string, htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                    <p>نام و نام خانوادگی :</p>
+                                    @Html.TextBox("FullName", ViewBag.FullNameFilter as string, htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                                </div>
+                                <div class="clearfix"></div>
+                                <br />
+                                <input type="submit" value="جست و جو" class="btn btn-success" />
+                                @Html.ActionLink("نمایش همه", "Index", null, htmlAttributes: new { @class = "btn btn-success" })
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                <tr class="header-col">
+                    <th class="text-center">
+                        #
+                    </th>
+                    <th>
+                        آواتار
+                    </th>
+                    <th class="text-center">
+                        <p class="text-center">
+                            <span>نام کاربری ( ایمیل)</span>
+                            <span>
+                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "UserName", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, CurrentRoleIdFiltering = ViewBag.CurrentRoleIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس نام کاربری صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "UserName_desc", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, CurrentRoleIdFiltering = ViewBag.CurrentRoleIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس نام کاربری نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                            </span>
+                        </p>
+                    </th>
+                    <th class="text-center">
+                        <p class="text-center">
+                            <span>نام و نام خانوادگی</span>
+                            <span>
+                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "FullName", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, CurrentRoleIdFiltering = ViewBag.CurrentRoleIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس نام و نام خانوادگی صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "FullName_desc", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, CurrentRoleIdFiltering = ViewBag.CurrentRoleIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس نام و نام خانوادگی نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                            </span>
+                        </p>
+                    </th>
+                    <th class="text-center">
+                        <p class="text-center">
+                            <span>جنسیت</span>
+                            <span>
+                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Gender", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, CurrentRoleIdFiltering = ViewBag.CurrentRoleIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس زن ها"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Gender", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, CurrentRoleIdFiltering = ViewBag.CurrentRoleIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس مردها">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                            </span>
+                        </p>
+                    </th>
+
+                    <th class="text-center">
+                        
+                    </th>
+
+                </tr>
+                    </thead>
+                <tbody>
+                    @{
+                        int i = 0;
+                        foreach (var item in Model)
+                        {
+                            i++;
+                            <tr>
+                                <td>
+                                    @i
+                                </td>
+                                <td>
+                                    @if (item.Avatar.HasValue)
+                                    {
+                                        @Html.Displayattachment(item.Avatarattachment.FileName,item.FirstName + " " + item.LastName, "LG", htmlAttributes: new { @class = "img-responsive", width = "80", height = "80", style = "display:inline-block;width:80px;height:80px" })
+                                    }
+                                    else
+                                    {
+                                        if (item.Gender == true)
+                                        {
+                                            <img src="~/Content/Default/images/man-avatar.jpg" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Content/Default/images/woman-avatar.gif" />
+                                        }
+
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.UserName)
+                                </td>
+
+                                <td class="text-center">
+
+                                    @item.FirstName @item.LastName
+                                </td>
+
+                                <td class="text-center">
+                                    @if (item.Gender == true)
+                                    {
+                                        <span>مرد</span>
+                                    }
+                                    else
+                                    {
+                                        <span>زن</span>
+                                    }
+                                </td>
+
+
+                                <td>
+                                    <p class="text-center">
+                                        <a class="btn btn-success" href="@Url.Action("Edit","UserManagement", new { id=item.Id })"><span class="glyphicon glyphicon-dashboard"></span> جزئیات مشخصات فردی </a>
+                                        <a class="btn btn-success" href="~/Admin/Customers/CustomerOrderHistory?UserId=@item.Id"><span class="glyphicon glyphicon-shopping-cart"></span> سوابق خرید </a>
+                                        <a class="btn btn-success" href="~/Admin/Customers/CustomerComments?UserId=@item.Id"><span class="glyphicon glyphicon-comment"></span> نظرات </a>
+                                    </p>
+                                    <p class="text-center">
+                                        <a class="btn btn-success" href="~/Admin/Customers/CustomerQuestions?UserId=@item.Id"><span class="glyphicon glyphicon-question-sign"></span> پرسش و پاسخ ها </a>
+                                        <a class="btn btn-success" href="~/Admin/Customers/CustomerFavorates?UserId=@item.Id"><span class="glyphicon glyphicon-heart"></span> مورد علاقه ها </a>
+                                        <a class="btn btn-success" href="~/Admin/Customers/CustomerNotifications?UserId=@item.Id"><span class="glyphicon glyphicon-envelope"></span> اطلاع رسانی ها</a>
+
+                                    </p>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            <hr style="border: 1px dashed rgb(204, 204, 204);">
+
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount مشتری.
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter }))
+
+        </div>
+    </div>
+        </div>
+        @section Scripts{
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/View/Usermanagement.js"></script>
+            @*Persian Calender*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+
+        }

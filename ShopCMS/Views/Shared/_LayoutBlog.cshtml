@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html lang="fa" >
+<head>
+    @RenderSection("Meta", required: false)
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- SITE TITLE -->
+    <title>عدل جو</title>
+
+    <link rel="stylesheet" href="~/Content/blog/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/blog/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/blog/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/blog/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/blog/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/blog/css/style.css" type="text/css">
+
+    @RenderSection("Header", required: false)
+
+    @Html.Action("GetJsTools", "Home")
+
+</head>
+<body>
+
+    @Html.Action("GetHeaderBlog", "Home")
+
+
+        @RenderBody()
+
+    @Html.Action("GetFooterBlog", "Home")
+
+
+    <script src="~/Content/blog/js/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <script src="~/Content/blog/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="~/Content/blog/js/jquery.slicknav.js" type="text/javascript"></script>
+    <script src="~/Content/blog/js/owl.carousel.min.js" type="text/javascript"></script>
+    <script src="~/Content/blog/js/main.js" type="text/javascript"></script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @RenderSection("scripts", required: false)
+</body>
+
+
+
+</html>

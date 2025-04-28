@@ -1,0 +1,76 @@
+﻿
+@model Domain.EmailSender
+<title>حذفِ @Model.Email</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-warning" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            <i class="flaticon-gears-configuration-tool"></i> حذفِ @Model.Email
+        </h1>
+            <h4 style="color:red"><i class="glyphicon glyphicon-remove"></i> آیا مطمئن به حذف این رکورد هستید؟</h4>
+            <br /><br />
+            <p class="text text-danger"><strong>@ViewBag.Erorr</strong></p>
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Setting.SettingName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Setting.SettingName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Password)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DecryptedPassword)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.MailServer)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.MailServer)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsActive)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.IsActive)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.DisplaySort)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DisplaySort)
+                </dd>
+
+            </dl>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                    <input type="submit" value="حذف" class="btn btn-primary" />
+                </div>
+            }
+</div>
+</div>

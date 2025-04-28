@@ -1,0 +1,66 @@
+﻿@model Domain.ViewModels.BasketShort
+@using ahmadi.Infrastructure.Helper
+
+
+
+
+@if (!Request.Browser.IsMobileDevice)
+{
+    <a class="nav-link cart_trigger" href="#" data-toggle="dropdown"><i class="linearicons-cart"></i><span class="cart_count">@(Model.ProductBasketItems!=null? Model.ProductBasketItems.Count():0)</span><label>سبد</label></a>
+    if (Model.ProductBasketItems != null)
+    {
+        <div class="cart_box dropdown-menu dropdown-menu-right">
+            <ul class="cart_list">
+                @if (Model.ProductBasketItems.Any())
+                {
+                    foreach (var item in Model.ProductBasketItems.OrderByDescending(x => x.InsertDate))
+                    {
+
+                        <li>
+                            <a href="@Url.Action("Index", "Product", new { id = item.ProductId, name = CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) })">
+                                @Html.Displayattachment(item.MainImageFileName, item.Name, "SM", true, new { @class = "img-responsive" })
+                                <span>@item.Title</span>
+                            </a>
+                            <span title="حذف" class="delete-bas"><span class="fa fa-remove remove-basket-item" data-id="@item.Id"></span></span>
+                            <span class="cart_quantity"> <span class="qq-nt"> @item.UserQuantity x </span> <span class="pr-irce"> @string.Format("{0:n0}", item.finalPrice)  تومان </span></span>
+
+                        </li>
+                    }
+                    <li class="sum-price-cart">
+                        <div class="col-sm-6">
+                            تعداد کالا(ها) : @Model.ProductBasketItems.Sum(x => x.UserQuantity)
+                        </div>
+                        <div class="col-sm-6 total-cart">
+
+                            <p class="cart_total"><span class="cart_price"></span>@string.Format("{0:n0}", Model.ProductBasketItems.Sum(x => x.finalPrice * x.UserQuantity)) <span> تومان </span></p>
+                        </div>
+                        <div class="clearfix"></div>
+
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a href="/">
+                            <span>سبد شما خالی ست</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+            @if (Model.ProductBasketItems.Any())
+            {
+                <div class="cart_footer">
+                    <p class="cart_buttons">
+                        <a href="/Cart" id="show-cart-1" class="btn btn-info view-cart">نمایش سبد</a><span>
+                        </span>
+                    </p>
+                </div>
+            }
+        </div>
+    }
+}
+else
+{
+
+    <a class="nav-link cart_trigger" href="/Cart"><i class="linearicons-cart"></i><span class="cart_count">@(Model.ProductBasketItems!=null? Model.ProductBasketItems.Count():0)</span><label>سبد</label></a>
+}

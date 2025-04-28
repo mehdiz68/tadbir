@@ -1,0 +1,259 @@
+﻿@model ahmadi.ViewModels.Basket.ProfileOrder
+
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    int? tab = ViewBag.tab as int?;
+    int i = 1;
+}
+
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+<div class="container" id="orders">
+    <h1>
+        <span> تاریخچه سفارشات</span>
+        <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+    </h1>
+    <ul class="nav nav-tabs sc-wrapper ">
+        <li><a class="@(tab.HasValue?tab.Value==0?"active":"":"active")" data-toggle="tab" href="#Order0"><label>همه</label> @*<span class="order-counter">@Model.AllOrders.Count</span>*@</a></li>
+        <li><a class="@(tab.HasValue?tab.Value==1?"active":"":"")" data-toggle="tab" href="#Order1"><label>جاری</label> @*<span class="order-counter">@Model.CurrentOrders.Count</span>*@</a></li>
+        <li><a class="@(tab.HasValue?tab.Value==6?"active":"":"")" data-toggle="tab" href="#Order6"><label>استعلامی</label> @*<span class="order-counter">@Model.EstelamOrders.Count</span>*@</a></li>
+        <li><a class="@(tab.HasValue?tab.Value==7?"active":"":"")" data-toggle="tab" href="#Order7"><label>پردازش انبار</label> @*<span class="order-counter">@Model.EstelamOrders.Count</span>*@</a></li>
+        <li><a class="@(tab.HasValue?tab.Value==8?"active":"":"")" data-toggle="tab" href="#Order6"><label>ارسال شده</label> @*<span class="order-counter">@Model.EstelamOrders.Count</span>*@</a></li>
+        <li><a class="@(tab.HasValue?tab.Value==2?"active":"":"")" data-toggle="tab" href="#Order2"><label>تحویل شده</label> @*<span class="order-counter">@Model.DeliveredOrders.Count</span>*@</a></li>
+        <li><a class="@(tab.HasValue?tab.Value==3?"active":"":"")" data-toggle="tab" href="#Order3"><label>مرجوعی</label> @*<span class="order-counter">@Model.ReturnedOrders.Count</span>*@</a></li>
+        <li><a class="@(tab.HasValue?tab.Value==4?"active":"":"")" data-toggle="tab" href="#Order4"><label>درخواست لغو</label> @*<span class="order-counter">@Model.CancelWaitOrders.Count</span>*@</a></li>
+        <li><a class="@(tab.HasValue?tab.Value==5?"active":"":"")" data-toggle="tab" href="#Order5"><label>لغوشده</label> @*<span class="order-counter">@Model.CancelOrders.Count</span>*@</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="Order0" class="@(tab.HasValue?tab.Value==0?"tab-pane fade in active show":"tab-pane fade":"tab-pane fade in active show")">
+            <div class="row">
+                @foreach (var item in Model.AllOrders.OrderByDescending(x => x.InsertDate))
+                {
+                    <section class="order">
+
+                        @Html.Partial("_OrderProfile", item)
+                    </section>
+
+                }
+
+            </div>
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Model.AllOrders.TotalItemCount ، صفحه @(Model.AllOrders.PageCount < Model.AllOrders.PageNumber ? 0 : Model.AllOrders.PageNumber) از @Model.AllOrders.PageCount
+                </strong>
+                <br /> <br />
+
+                @Html.PagedListPager(Model.AllOrders, Page => "/Profile/Orders?page=" + Page + "&tab=0")
+
+            </div>
+        </div>
+        <div id="Order1" class="@(tab.HasValue?tab.Value==1?"tab-pane fade in active show":"tab-pane fade":"tab-pane fade")">
+            <div class="row">
+                @foreach (var item in Model.CurrentOrders.OrderByDescending(x => x.InsertDate))
+                {
+                    <section class="order">
+
+                        @Html.Partial("_OrderProfile", item)
+                    </section>
+
+                }
+
+            </div>
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Model.CurrentOrders.TotalItemCount ، صفحه @(Model.CurrentOrders.PageCount < Model.CurrentOrders.PageNumber ? 0 : Model.CurrentOrders.PageNumber) از @Model.CurrentOrders.PageCount
+                </strong>
+                <br /> <br />
+
+                @Html.PagedListPager(Model.CurrentOrders, Page => "/Profile/Orders?page=" + Page + "&tab=1")
+
+            </div>
+        </div>
+        <div id="Order6" class="@(tab.HasValue?tab.Value==6?"tab-pane fade in active show":"tab-pane fade":"tab-pane fade")">
+            <div class="row">
+                @foreach (var item in Model.EstelamOrders.OrderByDescending(x => x.InsertDate))
+                {
+                    <section class="order">
+
+                        @Html.Partial("_OrderProfile", item)
+                    </section>
+
+                }
+
+            </div>
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Model.EstelamOrders.TotalItemCount ، صفحه @(Model.EstelamOrders.PageCount < Model.EstelamOrders.PageNumber ? 0 : Model.EstelamOrders.PageNumber) از @Model.EstelamOrders.PageCount
+                </strong>
+                <br /> <br />
+
+                @Html.PagedListPager(Model.EstelamOrders, Page => "/Profile/Orders?page=" + Page + "&tab=6")
+
+            </div>
+        </div>
+        <div id="Order7" class="@(tab.HasValue?tab.Value==7?"tab-pane fade in active show":"tab-pane fade":"tab-pane fade")">
+            <div class="row">
+                @foreach (var item in Model.ProccessOrders.OrderByDescending(x => x.InsertDate))
+                {
+                    <section class="order">
+
+                        @Html.Partial("_OrderProfile", item)
+                    </section>
+
+                }
+
+            </div>
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Model.ProccessOrders.TotalItemCount ، صفحه @(Model.ProccessOrders.PageCount < Model.ProccessOrders.PageNumber ? 0 : Model.ProccessOrders.PageNumber) از @Model.ProccessOrders.PageCount
+                </strong>
+                <br /> <br />
+
+                @Html.PagedListPager(Model.ProccessOrders, Page => "/Profile/Orders?page=" + Page + "&tab=7")
+
+            </div>
+        </div>
+        <div id="Order8" class="@(tab.HasValue?tab.Value==8?"tab-pane fade in active show":"tab-pane fade":"tab-pane fade")">
+            <div class="row">
+                @foreach (var item in Model.SentOrders.OrderByDescending(x => x.InsertDate))
+                {
+                    <section class="order">
+
+                        @Html.Partial("_OrderProfile", item)
+                    </section>
+
+                }
+
+            </div>
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Model.SentOrders.TotalItemCount ، صفحه @(Model.SentOrders.PageCount < Model.SentOrders.PageNumber ? 0 : Model.SentOrders.PageNumber) از @Model.SentOrders.PageCount
+                </strong>
+                <br /> <br />
+
+                @Html.PagedListPager(Model.SentOrders, Page => "/Profile/Orders?page=" + Page + "&tab=8")
+
+            </div>
+        </div>
+        <div id="Order2" class="@(tab.HasValue?tab.Value==2?"tab-pane fade in active show":"tab-pane fade":"tab-pane fade")">
+            <div class="row">
+                @foreach (var item in Model.DeliveredOrders.OrderByDescending(x => x.InsertDate))
+                {
+                    <section class="order">
+
+                        @Html.Partial("_OrderProfile", item)
+                    </section>
+
+                }
+
+            </div>
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Model.DeliveredOrders.TotalItemCount ، صفحه @(Model.DeliveredOrders.PageCount < Model.DeliveredOrders.PageNumber ? 0 : Model.DeliveredOrders.PageNumber) از @Model.DeliveredOrders.PageCount
+                </strong>
+                <br /> <br />
+
+                @Html.PagedListPager(Model.DeliveredOrders, Page => "/Profile/Orders?page=" + Page + "&tab=2")
+
+            </div>
+
+        </div>
+        <div id="Order3" class="@(tab.HasValue?tab.Value==3?"tab-pane fade in active show":"tab-pane fade":"tab-pane fade")">
+            <div class="row">
+                @foreach (var item in Model.ReturnedOrders.OrderByDescending(x => x.InsertDate))
+                {
+                    <section class="order">
+
+                        @Html.Partial("_OrderProfile", item)
+                    </section>
+
+                }
+
+            </div>
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Model.ReturnedOrders.TotalItemCount ، صفحه @(Model.ReturnedOrders.PageCount < Model.ReturnedOrders.PageNumber ? 0 : Model.ReturnedOrders.PageNumber) از @Model.ReturnedOrders.PageCount
+                </strong>
+                <br /> <br />
+
+                @Html.PagedListPager(Model.ReturnedOrders, Page => "/Profile/Orders?page=" + Page + "&tab=3")
+
+            </div>
+
+        </div>
+        <div id="Order4" class="@(tab.HasValue?tab.Value==4?"tab-pane fade in active show":"tab-pane fade":"tab-pane fade")">
+            <div class="row">
+                @foreach (var item in Model.CancelWaitOrders.OrderByDescending(x => x.InsertDate))
+                {
+                    <section class="order">
+
+                        @Html.Partial("_OrderProfile", item)
+                    </section>
+
+                }
+
+            </div>
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Model.CancelWaitOrders.TotalItemCount ، صفحه @(Model.CancelWaitOrders.PageCount < Model.CancelWaitOrders.PageNumber ? 0 : Model.CancelWaitOrders.PageNumber) از @Model.CancelWaitOrders.PageCount
+                </strong>
+                <br /> <br />
+
+                @Html.PagedListPager(Model.CancelWaitOrders, Page => "/Profile/Orders?page=" + Page + "&tab=4")
+
+            </div>
+
+        </div>
+        <div id="Order5" class="@(tab.HasValue?tab.Value==5?"tab-pane fade in active show":"tab-pane fade":"tab-pane fade")">
+            <div class="row">
+                @foreach (var item in Model.CancelOrders.OrderByDescending(x => x.InsertDate))
+                {
+                    <section class="order">
+
+                        @Html.Partial("_OrderProfile", item)
+                    </section>
+
+                }
+
+            </div>
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Model.CancelOrders.TotalItemCount ، صفحه @(Model.CancelOrders.PageCount < Model.CancelOrders.PageNumber ? 0 : Model.CancelOrders.PageNumber) از @Model.CancelOrders.PageCount
+                </strong>
+                <br /> <br />
+
+                @Html.PagedListPager(Model.CancelOrders, Page => "/Profile/Orders?page=" + Page + "&tab=5")
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+@section Scripts{
+    <script src="~/Content/Base/Scripts/scroll/dragscrollable.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.sc-wrapper').dragscrollable({
+                dragSelector: 'li',
+                acceptPropagatedEvent: false
+            });
+        });
+    </script>
+} 

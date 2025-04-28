@@ -1,0 +1,99 @@
+﻿@model PagedList.IPagedList<Domain.UserCodeGift>
+
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var UserBonLogs = ViewBag.UserBonLogs as PagedList.IPagedList<Domain.UserBonLog>;
+}
+
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+<div class="container" id="UserBons">
+    <h1>
+        <span>  کد های تخفیف </span>
+        <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+    </h1>
+
+    <div>
+        <div>
+            <h6>کدهای تخفیفی که از روش های مختلف دریافت نمودید، در اینجا قابل مشاهده است.</h6><br />
+            @if (!Model.Any())
+            {
+
+                <p class="alert alert-danger">شما تاکنون کد تخفیفی دریافت نکردید !</p>
+            }
+
+            <div class="">
+                @foreach (var item in Model)
+                {
+                    <div class="UserBon">
+                        <p><strong>عنوان : </strong>@item.Offer.Title</p>
+                        <p><strong>تاریخ : </strong>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.Offer.InsertDate)</p>
+                        <p><strong>کد تخفیف : </strong>@item.Code</p>
+                        <p><strong>سقف تعداد استفاده : </strong> @item.CountUse</p>
+                        <p><strong>سقف مبلغ استفاده : </strong> @string.Format("{0:n0}", item.MaxValue) تومان </p>
+                        <p><strong>فعال ؟  </strong>@(item.IsActive?"بله":"خیر")</p>
+                        <p>
+                            <strong>تاریخ انقضا : </strong>
+                            @if (item.Offer.ExpireDate.HasValue)
+                            {
+                                <span>
+                                    @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.Offer.ExpireDate.Value)
+                                </span>
+                            }
+                            else
+                            {
+                                <span>نامعلوم</span>
+                            }
+                        </p>
+                        <ul>
+                            <li><strong>مصرف شده در : </strong></li>
+                            @if (item.UserCodeGiftLogs.Any())
+                            {
+                                foreach (var item2 in item.UserCodeGiftLogs)
+                                {
+                                    <li>
+                                        <p><label>تاریخ: </label> @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item2.InsertDate) ، <label>در سفارش به شماره : </label> @item2.Order.BankOrderId <label> ، به  مقدار :  </label> @string.Format("{0:n0}", item2.Value) تومان </p>
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                <li><p>این کد تا بحال مصرف نشده است !</p></li>
+                            }
+                        </ul>
+                        <hr />
+                    </div>
+
+                }
+
+            </div>
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+                </strong>
+                <br /> <br />
+
+                @Html.PagedListPager(Model, Page => "/Profile/GiftCode?page=" + Page)
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+
+</div>
+

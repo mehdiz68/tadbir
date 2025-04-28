@@ -1,0 +1,84 @@
+﻿@model Domain.Setting
+<title>مدیریت موقعیت جغرافیایی فروشگاه</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left">
+            <a class="btn btn-success" href="@Url.Action("InnerState")"> استان های همجوار <span class="glyphicon glyphicon-briefcase"></span></a>
+            <a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a>
+        </div>
+        @*<span style="cursor:pointer" data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")" title="راهنمای این صفحه"></span>*@
+
+    <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+         موقعیت جغرافیایی فروشگاه
+
+    </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.error</p>
+
+        @using (Html.BeginForm())
+        {
+
+            @Html.AntiForgeryToken()
+
+            <div>
+                <div>
+                    <h4> استان کنونی فروشگاه</h4>
+                    <hr />
+                </div>
+                <div>
+
+                    @Html.DropDownList("ProvinceId", ViewBag.ProvinceList as SelectList, htmlAttributes: new { @class = "form-control col-md-2" })
+
+
+                </div>
+
+            </div>
+
+            <div>
+                <br /><br />
+                <br /><br />
+                <h4>
+
+                    شهر کنونی فروشگاه
+                </h4>
+                <hr />
+                @Html.DropDownList("CityId", ViewBag.CityList as SelectList, htmlAttributes: new { @class = "form-control col-md-2" })
+
+
+            </div>
+
+
+            <br />
+            <br />
+            <input type="submit" value="ویرایش" class="btn btn-primary" style="border-radius:0" />
+        }
+    </div>
+</div>
+@section Scripts{
+    <script src="~/Areas/Admin/Content/Scripts/View/SendWays.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#ProvinceId").change(function () {
+                $(".loading").show();
+                $.ajax({
+                    type: "Get",
+                    url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#ProvinceId").val(),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $("#CityId option").remove();
+                        for (var i = 0; i < response.data.length; i++) {
+
+                            $("#CityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                        }
+
+                        $(".loading").hide();
+                    }
+                });
+            });
+        });
+    </script>
+
+}

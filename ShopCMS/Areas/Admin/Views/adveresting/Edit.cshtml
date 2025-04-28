@@ -1,0 +1,234 @@
+﻿@model Domain.Adveresting
+<title>ویرایش تبلیغ</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+    var setting = ViewBag.setting as Domain.Setting;
+}
+@section Header{
+    @*Persian Calender*@
+    <link href="~/Areas/Admin/Content/Stylesheets/Component/calendar.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ویرایش تبلیغ
+
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @if (ViewBag.message != null)
+                {
+                    <p class="alert alert-danger">@ViewBag.message</p>
+                }
+                <div class="form-group">
+                    <div class="control-label col-md-3">
+                        <span class="glyphicon glyphicon-question-sign js-mytooltip-click type-inline-block style-block style-block-three system-mytooltip--base" data-mytooltip-action="click" data-mytooltip-custom-class="align-center" data-mytooltip-direction="left" data-mytooltip-content="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                        @Html.LabelFor(model => model.Title)
+                    </div>                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { Id = "ContentTitle", @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-3">
+                        <span class="glyphicon glyphicon-question-sign js-mytooltip-click type-inline-block style-block style-block-three system-mytooltip--base" data-mytooltip-action="click" data-mytooltip-custom-class="align-center" data-mytooltip-direction="left" data-mytooltip-content="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "فعال").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "فعال").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                        @Html.LabelFor(model => model.IsActive)
+                    </div>                    <div class="col-md-9">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.IsActive, new { @checked = "checked", @class = "js-switch" })
+                            @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                @{
+                    CoreLib.ViewModel.Xml.XMLReader readXml = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+                    var languages = readXml.ListOfXLanguage();
+                }
+                @if (languages.Count == 1)
+                {
+                    @Html.HiddenFor(x => x.LanguageId)
+                }
+                else
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.LanguageId, "زبان ( وب سایت )", htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.DropDownList("LanguageId", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.LanguageId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+
+                <fieldset class="NewFieldset">
+                    <legend class="Newlegend"><span class="glyphicon glyphicon-question-sign js-mytooltip-click type-inline-block style-block style-block-three system-mytooltip--base" data-mytooltip-action="click" data-mytooltip-custom-class="align-center" data-mytooltip-direction="left" data-mytooltip-content="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "محل نمایش تبلیغ").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "محل نمایش تبلیغ").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span> محل نمایش تبلیغ </legend>
+                    <div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TypeId, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.TypeId, ViewBag.TypeIdSelectListItem as List<SelectListItem>, null, htmlAttributes: new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TypeId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group" id="SearchContainer" style="display:none">
+                            <label class="control-label col-md-3">جستجو در محتواها</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" id="SearchContent" placeholder="عنوان را وارد نمایید..." style="display:inline-block;width:40%" />
+
+                            </div>
+                        </div>
+
+                        <span id="CurrentLinkId" style="display:none">@Model.LinkId</span>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LinkId, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.LinkId, ViewBag.LinkIdSelectListItem as List<SelectListItem>, null, htmlAttributes: new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.LinkId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </div>
+                </fieldset>
+
+                <br />
+                <div class="form-group">
+                    <div class="control-label col-md-3">
+                        <span class="glyphicon glyphicon-question-sign js-mytooltip-click type-inline-block style-block style-block-three system-mytooltip--base" data-mytooltip-action="click" data-mytooltip-custom-class="align-center" data-mytooltip-direction="left" data-mytooltip-content="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تاریخ شروع").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تاریخ شروع").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                        @Html.LabelFor(model => model.StartDate)
+                    </div>
+                    <div class="col-md-9">
+                        <img src="~/Areas/Admin/Content/images/calender.gif" onclick="displayDatePicker('StartDate');" alt="" />
+                        @if (Model.StartDate.HasValue)
+                        {
+                            @Html.TextBox("StartDate", CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsi(Model.StartDate.Value), htmlAttributes: new { style = "width:200px;display: inline-block", @class = "form-control" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.StartDate, htmlAttributes: new { style = "width:200px;display: inline-block", @class = "form-control" })
+                        }
+                        @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <br />
+                <div class="form-group">
+                    <div class="control-label col-md-3">
+                        <span class="glyphicon glyphicon-question-sign js-mytooltip-click type-inline-block style-block style-block-three system-mytooltip--base" data-mytooltip-action="click" data-mytooltip-custom-class="align-center" data-mytooltip-direction="left" data-mytooltip-content="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تاریخ پایان").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "تاریخ پایان").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                        @Html.LabelFor(model => model.ExpireDate)
+                    </div>
+                    <div class="col-md-9">
+                        <img src="~/Areas/Admin/Content/images/calender.gif" onclick="displayDatePicker('ExpireDate');" alt="" />
+                        @if (Model.ExpireDate.HasValue)
+                        {
+                            @Html.TextBox("ExpireDatestr", CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsi(Model.ExpireDate.Value), htmlAttributes: new { style = "width:200px;display: inline-block", @class = "form-control" })
+
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.ExpireDatestr, htmlAttributes: new { style = "width:200px;display: inline-block", @class = "form-control" })
+                        }
+                        @Html.ValidationMessageFor(model => model.ExpireDatestr, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div id="createView"></div>
+                <div class="form-group">
+                    <div class="control-label col-md-3">
+                        <span class="glyphicon glyphicon-question-sign js-mytooltip-click type-inline-block style-block style-block-three system-mytooltip--base" data-mytooltip-action="click" data-mytooltip-custom-class="align-center" data-mytooltip-direction="left" data-mytooltip-content="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "کاور(تصویر)").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "کاور(تصویر)").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                        @Html.LabelFor(model => model.Cover)
+                    </div>
+                    <div class="col-md-9">
+                        @Ajax.ActionLink("انتخاب یا آپلود", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager" })
+                        <div id="AttachementContainer">
+                            <img src="@(Url.Content("/Content/UploadFiles/") + Model.attachment.FileName)" class="img-responsive" style="display:inline-block;" />
+                            @Html.EditorFor(model => model.Cover, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.Cover, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-3">
+                        <span class="glyphicon glyphicon-question-sign js-mytooltip-click type-inline-block style-block style-block-three system-mytooltip--base" data-mytooltip-action="click" data-mytooltip-custom-class="align-center" data-mytooltip-direction="left" data-mytooltip-content="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "موقعیت نمایش").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "موقعیت نمایش").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                        @Html.LabelFor(model => model.Position)
+                    </div>
+                    <div class="col-md-9">
+                        <select id="Position" name="Position" class="form-control">
+                            @foreach (var item in ViewBag.Position as List<SelectListItem>)
+                            {
+                                <option @(item.Selected ? "Selected" : "") value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        @*@Html.DropDownListFor(model => model.Position, ViewBag.Position as List<SelectListItem>, null, htmlAttributes: new { @class = "form-control" })*@
+                        @Html.ValidationMessageFor(model => model.Position, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="control-label col-md-3">
+                        <span class="glyphicon glyphicon-question-sign js-mytooltip-click type-inline-block style-block style-block-three system-mytooltip--base" data-mytooltip-action="click" data-mytooltip-custom-class="align-center" data-mytooltip-direction="left" data-mytooltip-content="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "اندازه").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "اندازه").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                        @Html.LabelFor(model => model.AdverestingSizeId)
+                    </div>
+                    <div class="col-md-9">
+                        <select id="AdverestingSizeId" name="AdverestingSizeId" class="form-control">
+                            @foreach (var item in ViewBag.AdverestingSizeId as List<SelectListItem>)
+                            {
+                                <option @(item.Selected ? "Selected" : "") value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        @*@Html.DropDownListFor(model => model.AdverestingSizeId, ViewBag.AdverestingSizeId as List<SelectListItem>, null, htmlAttributes: new { @class = "form-control" })*@
+                        @Html.ValidationMessageFor(model => model.AdverestingSizeId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="control-label col-md-3">
+                        <span class="glyphicon glyphicon-question-sign js-mytooltip-click type-inline-block style-block style-block-three system-mytooltip--base" data-mytooltip-action="click" data-mytooltip-custom-class="align-center" data-mytooltip-direction="left" data-mytooltip-content="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "لینک").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "لینک").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                        @Html.LabelFor(model => model.Link)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.Link, htmlAttributes: new { style = "width:90%;display: inline-block;text-align:left;direction:ltr", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Link, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="control-label col-md-3">
+                        <span class="glyphicon glyphicon-question-sign js-mytooltip-click type-inline-block style-block style-block-three system-mytooltip--base" data-mytooltip-action="click" data-mytooltip-custom-class="align-center" data-mytooltip-direction="left" data-mytooltip-content="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نوع لینک").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "نوع لینک").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                        @Html.LabelFor(model => model.TypeLink)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.RadioButtonFor(model => model.TypeLink, true, new { @checked = "checked" }) لینک غیر مستقیم و پیشرفته همراه با آمار
+                        @Html.RadioButtonFor(model => model.TypeLink, false) لینک ساده بدون آمار
+                    </div>
+                </div>
+
+                @Html.HiddenFor(x => x.InsertDate)
+                @Html.HiddenFor(x => x.DisplaySort)
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <input type="submit" value="ویرایش" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+                    }
+
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/Areas/Admin/Content/Scripts/View/EditAds.js?v=1.2"></script>
+    <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+    @Scripts.Render("~/bundles/Admin/FileManager/Js")
+    @*Persian Calender*@
+    <script src="~/Areas/Admin/Content/Scripts/Component/calendar.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/Component/Pcalender.js"></script>
+}
+

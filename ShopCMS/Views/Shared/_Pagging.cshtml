@@ -1,0 +1,116 @@
+﻿@model Domain.ViewModel.PagingViewModel
+@{
+    double totalPageD = (double)Model.Count / Model.PerPage;
+    var totalPage = Math.Ceiling(totalPageD);
+    string href = string.Empty;
+    int c = 0;
+}
+@if (totalPage > 1)
+{
+    <nav  aria-label="Page navigation example" >
+        <ul class="pagination">
+
+            @if (Model.CurentPage > 2)
+            {
+                string RawHref = Model.RawUrl.Substring(0, Model.RawUrl.IndexOf("?"));
+
+                if (Model.RawUrl.Contains("page="))
+                {
+                    href = Model.RawUrl.Replace(string.Concat("page=", Model.CurentPage), string.Concat("page=", Model.CurentPage - 1));
+                }
+                else
+                {
+                    href = Model.RawUrl.Contains("?") ? string.Concat(Model.RawUrl, "&page=", Model.CurentPage - 1) :
+                         string.Concat(Model.RawUrl, "?page=", Model.CurentPage - 1);
+                }
+                <li class="page-item">
+                    <a class="page-link page-click" href="@RawHref" aria-label="First">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">اولین</span>
+                    </a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link page-click" href="@href" aria-label="Previous">
+                        <span aria-hidden="true">&lt;</span>
+                        <span class="sr-only">قبلی</span>
+                    </a>
+                </li>
+
+                <li class="page-item"><a class="page-link page-click" href="@href">@(Model.CurentPage-1)</a></li>
+            }
+            else if (Model.CurentPage > 1)
+            {
+
+                if (Model.RawUrl.Contains("page="))
+                {
+                    href = Model.RawUrl.Replace(string.Concat("page=", Model.CurentPage), string.Concat("page=", Model.CurentPage - 1));
+                }
+                else
+                {
+                    href = Model.RawUrl.Contains("?") ? string.Concat(Model.RawUrl, "&page=", Model.CurentPage - 1) :
+                         string.Concat(Model.RawUrl, "?page=", Model.CurentPage - 1);
+                }
+              
+
+                <li class="page-item">
+                    <a class="page-link page-click" href="@href" aria-label="Previous">
+                        <span aria-hidden="true">&lt;</span>
+                        <span class="sr-only">قبلی</span>
+                    </a>
+                </li>
+
+                <li class="page-item"><a class="page-link page-click" href="@href">@(Model.CurentPage-1)</a></li>
+            }
+            @{
+                int CurentPage = Model.CurentPage;
+            }
+
+            @if (!Model.RawUrl.Contains("page="))
+            {
+                href = Model.RawUrl.Contains("?") ? string.Concat(Model.RawUrl, "&page=", Model.CurentPage) : string.Concat(Model.RawUrl, "?page=", Model.CurentPage);
+            }
+            <li class="page-item"><a class="@(Model.CurentPage==CurentPage?"CurentPage page-link page-click":"page-link page-click")" href="@href">@(Model.CurentPage)</a></li>
+
+            @while (CurentPage < int.Parse(totalPage.ToString()) && c < 4)
+            {
+                CurentPage++;
+
+                if (Model.RawUrl.Contains("page="))
+                {
+                    href = Model.RawUrl.Replace(string.Concat("page=", Model.CurentPage), string.Concat("page=", CurentPage));
+                }
+                else
+                {
+                    href = Model.RawUrl.Contains("?") ? string.Concat(Model.RawUrl, "&page=", CurentPage) : string.Concat(Model.RawUrl, "?page=", CurentPage);
+                }
+                <li class="page-item"><a class="@(Model.CurentPage==CurentPage?"CurentPage page-link page-click":"page-link page-click")" href="@href">@(CurentPage)</a></li>
+
+                c++;
+            }
+            @{
+
+                href = Model.RawUrl.Contains("?") ? string.Concat(Model.RawUrl, "&page=", CurentPage + 1) : string.Concat(Model.RawUrl, "?page=", CurentPage + 1);
+            }
+            <li class="page-item">
+                <a class="page-link page-click" href="@href" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">بعدی</span>
+                </a>
+            </li>
+
+            @{
+
+                href = Model.RawUrl.Contains("?") ? string.Concat(Model.RawUrl, "&page=", totalPage) : string.Concat(Model.RawUrl, "?page=", totalPage);
+            }
+            @if (totalPage > 5)
+            {
+                <li class="page-item"><a class="page-link page-click" href="@href">@(totalPage)</a></li>
+            }
+            <li class="page-info">
+                <span>صفحه @Model.CurentPage از @totalPage . تعداد @Model.Count محصول پیدا شد.</span>
+            </li>
+
+        </ul>
+    </nav>
+}

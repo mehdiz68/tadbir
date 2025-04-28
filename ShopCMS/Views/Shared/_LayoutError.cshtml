@@ -1,0 +1,48 @@
+﻿@using Combres.Mvc
+<!DOCTYPE html>
+<html lang="fa" dir='rtl'>
+<head>
+    @{
+
+        bool IsCart = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "cart";
+    }
+    @RenderSection("Meta", required: false)
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta -->
+
+    <meta name="robots" content="noindex">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SITE TITLE -->
+    <title>عدل جو</title>
+
+    @Styles.Render("~/bundles/SiteCss")
+
+
+    @RenderSection("Header", required: false)
+
+    @Html.Action("GetJsTools", "Home")
+
+</head>
+<body class="@(IsCart?"Cart-on":"Cart-off")">
+
+    @if (!Request.IsAuthenticated)
+    {
+        @Html.Partial("LoginModal")
+    }
+
+    @Html.Action("GetHeader", "Home")
+
+
+    <div class="main_content">
+        @RenderBody()
+    </div>
+
+    @RenderSection("scripts", required: false)
+</body>
+
+
+
+</html>

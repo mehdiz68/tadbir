@@ -1,0 +1,279 @@
+﻿@model Domain.Tag
+@using CoreLib.Infrastructure
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure
+@using PagedList.Mvc;
+@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var sliders = ViewBag.Sliders as IEnumerable<Domain.Slider>;
+    var setting = ViewBag.setting as Domain.ViewModel.SettingDto;
+    var ads = ViewBag.Ads as IEnumerable<Domain.Adveresting>;
+    CoreLib.ViewModel.Xml.XMLReader readxml = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+    var ContentType = readxml.DetailOfXContentType(ViewBag.contentTypeId) as CoreLib.ViewModel.Xml.XContentType;
+
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+@section Header{
+    <link href="~/Content/Base/Css/view/tagContent.css" rel="stylesheet" />
+}
+
+
+
+<div class="body-content outer-top-xs">
+    <div class="container">
+        @if (ads.Where(x => x.Position == 1).Any())
+        {
+            <div class="content">
+                <div class="clearfix filters-container m-t-20">
+                    <div class="row adv-row">
+
+                        @if (ads.Where(x => x.Position == 1).Any())
+                        {
+                            int SumSize = 0;
+                            <div class="adv-box">
+                                @foreach (var Adveresting in ads.Where(x => x.Position == 1).OrderBy(x => x.DisplaySort))
+                                {
+                                    SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+
+                                    <div class="adv-image Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? " lastbox":"" )">
+                                        <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : " Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+                                            @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+                                        </a>
+                                    </div>
+                                    if (SumSize == 12)
+                                    {
+                                        SumSize = 0;
+                                        <div class="clearfix"></div>
+                                    }
+                                }
+                                <div class="clearfix"></div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+            <br /><br />
+        }
+
+        <div class="row">
+            <div class="col-md-9 col-sm-12 col-xs-12 sidebar">
+
+                <ol class="breadcrumb" itemscope="" itemtype="http://schema.org/BreadcrumbList">
+                    <li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem" class="breadcrumb-item"><a itemprop="item" href="/"><span itemprop="name"> صفحه اصلی</span></a><meta itemprop="position" content="0"></li>
+                    <li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem" class="breadcrumb-item"><a itemprop="item" href="@Url.Action(null, "contentTag", new { contentTypeId = ViewBag.contentTypeId, id = Model.Id, title = CommonFunctions.NormalizeAddress(Model.TagName) })"><span itemprop="name">@Model.TagName</span></a><meta itemprop="position" content="0"></li>
+                </ol>
+
+                <div class="detail-block">
+                    <h1 class="content-titr">@Model.TagName</h1>
+                    <p class="description">
+                        لیست تمام @ContentType.Name مرتبط با @Model.TagName
+                    </p>
+
+                    @if (sliders != null)
+                    {
+                        if (sliders.Any())
+                        {
+                            int j = 0;
+                            foreach (var slider in ViewBag.Sliders as IEnumerable<Domain.Slider>)
+                            {
+                                @Html.Partial("_BootStrapSlideShowCaption", slider, new ViewDataDictionary { { "Index", j.ToString() }, { "staticUrl", Meta.StaticContentUrl } })
+                                j++;
+                            }
+                        }
+                    }
+
+                    @if (ads.Where(x => x.Position == 2).Any())
+                    {
+                        <div class="content">
+                            <div class="clearfix filters-container m-t-20">
+                                <div class="row adv-row">
+
+                                    @if (ads.Where(x => x.Position == 2).Any())
+                                    {
+                                        int SumSize = 0;
+                                        <div class="adv-box">
+                                            @foreach (var Adveresting in ads.Where(x => x.Position == 2).OrderBy(x => x.DisplaySort))
+                                            {
+                                                SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+
+                                                <div class="adv-image Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? " lastbox":"" )">
+                                                    <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : " Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+                                                        @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+                                                    </a>
+                                                </div>
+                                                if (SumSize == 12)
+                                                {
+                                                    SumSize = 0;
+                                                    <div class="clearfix"></div>
+                                                }
+                                            }
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+
+                    }
+                </div>
+
+
+                <div class="detail-block m-t-20">
+
+                    @{
+
+                        var TagAds = ViewBag.LatestContent as PagedList.IPagedList<Domain.Content>;
+                        bool IsVideo = ContentType.IsVideo;
+
+                        <div class="widget-header">
+                            <h4 class="widget-title">@Model.TagName در @ContentType.Name</h4>
+
+                        </div>
+                        <hr />
+
+                        foreach (var itemContent in TagAds)
+                        {
+                            <div class="tag-detail m-t-10">
+                                <h4 class="titr">
+                                    <a href="@Url.Action("Index",IsVideo?"Video":"Content", new { id = itemContent.Id, title = CommonFunctions.NormalizeAddress(itemContent.PageAddress) })">
+                                        @itemContent.Title
+                                    </a>
+                                </h4>
+                                <hr>
+                                <div class="imge">
+                                    <a href="@Url.Action("Index",IsVideo?"Video":"Content", new { id = itemContent.Id, title = CommonFunctions.NormalizeAddress(itemContent.PageAddress) })">
+
+                                        @if (itemContent.Cover.HasValue)
+                                        {
+                                            @Html.DisplayattachmentCookieFree(Meta.StaticContentUrl, itemContent.attachment.FileName, itemContent.Title, "MD", true, new { @class = "img-responsive" });
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Content/images/default-thumbnail.jpg" class="img-responsive" />
+                                        }
+                                    </a>
+                                </div>
+
+                                <div class="writing-info">
+                                    @*<p class="author">نویسنده : <span>@itemContent.User.FirstName @itemContent.User.LastName</span></p>*@
+                                    <p class="date">تاریخ درج : <span>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(itemContent.InsertDate)</span></p>
+                                    <p class="seen-num"> تعداد بازدید : <span>@itemContent.Visits</span></p>
+                                </div>
+                                <p class="summary">
+                                    @itemContent.Abstract
+                                </p>
+                                <a href="@Url.Action("Index",IsVideo?"Video":"Content", new { id = itemContent.Id, title = CommonFunctions.NormalizeAddress(itemContent.PageAddress) })" class="tag-read-more">بیشتر بخوانیم...</a>
+
+                            </div>
+
+
+                        }
+
+                        if (TagAds.PageCount > 1)
+                        {
+                            <p>
+                                <strong style="color: #900">
+                                    صفحه  @(TagAds.PageCount < TagAds.PageNumber ? 0 : TagAds.PageNumber) از @TagAds.PageCount از میانِ @TagAds.TotalItemCount @ContentType.Name .
+                                </strong>
+                            </p>
+                            @Html.PagedListPager(TagAds, page => Url.Action(null, "ContentTag", new { id = Model.Id, title = CommonFunctions.NormalizeAddress(Model.TagName), page }))
+                        }
+
+
+
+
+                    }
+
+
+
+
+                </div>
+
+
+            </div>
+            <div class="col-md-3 col-sm-12 col-xs-12">
+
+                @if (ads.Where(x => x.Position == 4).Any())
+                {
+                    int SumSize = 0;
+                    <div class="sidebar-widget m-t-10">
+                        @foreach (var Adveresting in ads.Where(x => x.Position == 4))
+                        {
+
+                            SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+
+
+                            <div class="home-banner Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? " lastbox":"" )">
+                                <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : " Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+                                    @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+                                </a>
+                            </div>
+                            if (SumSize == 12)
+                            {
+                                SumSize = 0;
+                                <div class="clearfix"></div>
+                            }
+                        }
+
+                        <div class="clearfix"></div>
+
+                    </div>
+
+                }
+
+                <!-- ============================================== SIDEBAR CATEGORY : END ============================================== -->
+
+
+            </div>
+            <!-- /.sidebar -->
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+        @if (ads.Where(x => x.Position == 3).Any())
+        {
+            <div class="content">
+                <div class="clearfix filters-container m-t-20">
+                    <div class="row adv-row">
+
+                        @if (ads.Where(x => x.Position == 3).Any())
+                        {
+                            int SumSize = 0;
+                            <div class="adv-box">
+                                @foreach (var Adveresting in ads.Where(x => x.Position == 3).OrderBy(x => x.DisplaySort))
+                                {
+                                    SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(Adveresting.AdverestingSizeId);
+
+                                    <div class="adv-image Adveresting Position-@Adveresting.Position Size-@Adveresting.AdverestingSizeId @(SumSize == 12 ? " lastbox":"" )">
+                                        <a href="@(Adveresting.TypeLink == false ? Adveresting.Link : " Ads/" + Adveresting.Id)" title="@Adveresting.Title">
+                                            @Html.Displayattachment(Adveresting.attachment.FileName, Adveresting.Title, "LG", true, new { @Class = "img-responsive" })
+                                        </a>
+                                    </div>
+                                    if (SumSize == 12)
+                                    {
+                                        SumSize = 0;
+                                        <div class="clearfix"></div>
+                                    }
+                                }
+                                <div class="clearfix"></div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+
+        }
+
+
+
+    </div>
+    <!-- /.container -->
+
+</div>
+
+

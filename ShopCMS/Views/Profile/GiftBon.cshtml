@@ -1,0 +1,92 @@
+﻿@model PagedList.IPagedList<Domain.UserBon>
+
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var UserBonLogs = ViewBag.UserBonLogs as PagedList.IPagedList<Domain.UserBonLog>;
+}
+
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+<div class="container" id="UserBons">
+    <h1>
+        <span> بن های تخفیف </span>
+        <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+    </h1>
+
+
+
+    <div>
+        <div>
+            <h6>بن های تخفیفی که از روش های مختلف دریافت نمودید، در اینجا قابل مشاهده است.</h6><br />
+            @if (Model.Any())
+            {
+                <p class="alert alert-info">
+                    <span> شما تا بحال <strong> @Model.Sum(x => x.Value) </strong> بن تخفیف دریافت کرده و <strong>@Model.Sum(x => x.UsedValue)</strong> عدد از آن را مصرف کرده اید. در حال حاضر <strong> @Model.Sum(x => x.Value - x.UsedValue) </strong> عدد بن تخفیف قابل استفاده دارید. لطفا به تاریخ های انقضا توجه فرمایید. </span>
+                </p>
+            }
+
+            else
+            {
+                <p class="alert alert-danger">شما تاکنون بن تخفیفی دریافت نکردید !</p>
+            }
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="UserBon">
+                        <p><strong>تاریخ : </strong>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate)</p>
+                        <p><strong>بن تخفیف کسب شده : </strong> @item.Value</p>
+                        <p><strong>بن تخفیف مصرف شده : </strong> @item.UsedValue</p>
+                        <p><strong>باقی مانده : </strong>@(item.Value-item.UsedValue)</p>
+                        <p><strong>تاریخ انقضا : </strong>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.ExpireDate)</p>
+                        <ul>
+                            <li><strong>مصرف شده در : </strong></li>
+                            @if (item.UserBonLogs.Any())
+                            {
+                                foreach (var item2 in item.UserBonLogs)
+                                {
+                                    <li>
+                                        <p><label>تاریخ: </label> @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item2.InsertDate) ، <label>در سفارش به شماره : </label> @item2.Order.BankOrderId <label> ، به  مقدار :  </label> @item2.Value عدد </p>
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                <li><p>این بن تا بحال مصرف نشده است !</p></li>
+                            }
+                        </ul>
+                        <hr />
+                    </div>
+
+                }
+
+            </div>
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+                </strong>
+                <br /> <br />
+
+                @Html.PagedListPager(Model, Page => "/Profile/GiftBon?page=" + Page)
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+
+</div>
+

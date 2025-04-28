@@ -1,0 +1,90 @@
+﻿@model PagedList.IPagedList<Domain.ViewModels.ProductItem>
+
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var Productcomments = ViewBag.Productcomments as PagedList.IPagedList<Domain.ViewModels.ProductCommentViewModel>;
+    int? tab = ViewBag.tab as int?;
+    }
+
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+<div class="container" id="Comments">
+    <h1>
+        <span> نظرات </span>
+        <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+    </h1>
+
+    <ul class="nav nav-tabs">
+        <li><a class="@(tab.HasValue?tab.Value==1?"active":"":"active")" data-toggle="tab" href="#CommentWaiting">در انتظار ثبت نظر</a></li>
+        <li><a class="@(tab.HasValue?tab.Value==2?"active":"":"")" data-toggle="tab" href="#MyComment">نظرات من</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="CommentWaiting" class="@(tab.HasValue?tab.Value==1?"tab-pane fade in active show":"tab-pane fade":"tab-pane fade in active show")">
+            <h2>نظرتان درباره کالاهایی که خریده‌اید چیست؟</h2>
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="product Comment">
+                        @Html.Partial("_PItem", item)
+
+                        <div class="options">
+                           <a href="/TFPComment/@item.Id">  ثبت دیدگاه  <span class="fa fa-chevron-left"></span> </a>
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+                </strong>
+                <br /> <br />
+
+                @Html.PagedListPager(Model, Page => "/Profile/Comments?page=" + Page + "&tab=1")
+
+            </div>
+
+
+
+        </div>
+        <div id="MyComment" class="@(tab.HasValue?tab.Value==2?"tab-pane fade in active show":"tab-pane fade":"tab-pane fade")">
+            <div class="row">
+                @foreach (var item in Productcomments)
+                {
+                    <div class="product Comment">
+                        @Html.Partial("_ProductCommentItem", item)
+
+                      
+                    </div>
+
+                }
+
+            </div>
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Productcomments.TotalItemCount ، صفحه @(Productcomments.PageCount < Productcomments.PageNumber ? 0 : Productcomments.PageNumber) از @Productcomments.PageCount
+                </strong>
+                <br /> <br />
+
+                @Html.PagedListPager(Productcomments, Page => "/Profile/Comments?page=" + Page+"&tab=2")
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+

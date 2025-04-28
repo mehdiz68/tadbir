@@ -1,0 +1,126 @@
+﻿@model Domain.ProductComment
+
+@{
+    bool? IsBuyUser = ViewBag.IsBuyUser as bool?;
+    bool? AllowAddComment = ViewBag.AllowAddComment as bool?;
+    string customerOrderId = ViewBag.customerOrderId as string;
+}
+
+<div class="section-sm section-bottom-0">
+    <!-- RD Mailform-->
+    @*@using (Ajax.BeginForm("AddComment", "Product", null, new AjaxOptions { HttpMethod = "POST", OnBegin = "onBeginSubmitAddComment", OnSuccess = "ShowCommentSuccess", OnFailure = "ShowCommentFailure", InsertionMode = InsertionMode.Replace }, new { id = "AddComment", @class = "rd-form rd-mailform", enctype = "multipart/form-data" }))*@
+
+    @using (Html.BeginForm("AddComment", "Product", FormMethod.Post, new { id = "AddComment" }))
+    {
+
+        @Html.AntiForgeryToken()
+
+        if (!String.IsNullOrEmpty(customerOrderId))
+        {
+            @Html.Hidden("customerOrderId", customerOrderId)
+        }
+        @Html.HiddenFor(model => model.ProductId)
+        @Html.HiddenFor(model => model.IsTemp)
+
+
+        if (IsBuyUser.Value)
+        {
+            <br />
+            <div class="form-wrap">
+                <label class="form-label-outside" for="comment-message">آیا خرید این کالا را به دیگران هم توصیه می کنید؟</label>
+                <select id="Satisfaction" name="Satisfaction" class="form-control">
+                    @*<option value="0">کاملا راضی و پیشنهاد میکنم</option>*@
+                    <option value="1">راضی و پیشنهاد میکنم</option>
+                    <option value="2">نظری ندارم</option>
+                    <option value="3">ناراضی و پیشنهاد نمی کنم</option>
+                    @*<option value="4">کاملا ناراضی و پیشنهاد نمی کنم</option>*@
+                </select>
+            </div>
+
+
+        }
+
+        <div class="form-wrap advantages">
+            <label class="form-label-outside" for="comment-email">نقاط قوت</label>
+            <input type="text" name="advantages" class="form-control txbAdvantage" /> <span class="fa fa-plus"></span> &nbsp; <span class="fa fa-minus"></span>
+
+        </div>
+        <div class="form-wrap Disadvantages">
+            <label class="form-label-outside" for="comment-email">نقاط ضعف</label>
+            <input type="text" name="Disadvantages" class="form-control txbDisadvantage" /> <span class="fa fa-plus"></span> &nbsp; <span class="fa fa-minus"></span>
+
+        </div>
+
+        <div class="form-wrap">
+            <label class="form-label-outside" for="comment-first-name">عنوان نظر شما</label>
+            @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+        </div>
+
+
+        <div class="form-wrap">
+            <label class="form-label-outside" for="comment-message">متن نظر شما</label>
+            @Html.TextAreaFor(model => model.Text, new { @class = "form-control", rows = "5" })
+            @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
+        </div>
+
+        <div id="RankValues"></div>
+
+        <div class="form-wrap">
+            <label class="form-label-outside" for="comment-message">ارسال محتوا (حداکثر ۵ عکس هر کدام تا 1 مگابایت)</label>
+            <div class="form-control">
+
+                <ul class="nav navbar-nav navbar-right Upload-container" style="float:none!important;width:115px;text-align:center">
+                    <li style="float:none">
+                        @if (AllowAddComment.Value == true)
+                        {
+
+                            <label class="btn-success user-profile" id="open-file-attachement" for="UploadedFiles2">
+                                <span class="fa fa-plus"></span>
+                                <span>انتخاب محتوا</span>
+                            </label>
+                        }
+                        <ul class="pull-right">
+                            <li class="fileinput-button  fileinput-button">
+
+                                <input type="file" name="UploadedFiles2" id="UploadedFiles2" multiple />
+
+                                <div class="progress CustomProgress hide">
+                                    <div id="FileProgress2" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                                        <span></span>
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </li>
+                </ul>
+                <ul id="janebi-images" class="row">
+                    @if (Model.Id > 0)
+                    {
+                        @Html.Partial("_AttachmentJanebi", Model.attachments.ToList())
+
+                    }
+                </ul>
+
+
+            </div>
+        </div>
+
+        if (AllowAddComment.Value == true)
+        {
+            <input type="submit" class="btn btn-info" value="ثبت نظر" />
+        }
+        if (ViewBag.msg != null)
+        {
+            <p class="alert alert-info alert-add">@ViewBag.msg   </p>
+        }
+    }
+
+
+
+
+</div>
+
+
+

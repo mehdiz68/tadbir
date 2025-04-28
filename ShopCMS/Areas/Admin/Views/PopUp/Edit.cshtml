@@ -1,0 +1,90 @@
+﻿@model ahmadi.ViewModels.Setting.SettingViewModels
+@using ahmadi.Infrastructure.Helper
+<title>ویرایش پاپ آپ</title>
+
+
+<h1 style="display:inline-block;font-size: 2em;">
+    <i class="flaticon-gears-configuration-tool"></i> ویرایش پاپ آپ
+
+</h1>
+
+<br /><br />
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="form-horizontal">
+
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.Hidden("SettingId", Model.Id)
+
+
+
+                <div class="form-group  col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <p>
+                        @Html.CheckBox("PopUpActive", true, new { @class = "js-switch" }) @Html.LabelFor(m => m.PopUpActive)
+                    </p>
+
+                    <div>
+                        @if (Model.PopUpType)
+                {
+                            <p>
+                                @Html.RadioButtonFor(model => model.PopUpType, "True", new { id = "PopUpTypeTrue", Checked = "checked", @class = "flat" })
+                                <span>@Html.LabelFor(model => model.PopUpType) : محتوا (متن ، تصویر و ... با هم )</span>
+                            </p>
+                            <p>
+                                @Html.RadioButtonFor(model => model.PopUpType, "False", new { id = "PopUpTypeFalse", @class = "flat" })
+                                <span>@Html.LabelFor(model => model.PopUpType) :  فقط تصویر</span>
+                            </p>
+                        }
+                        else
+                        {
+                            <p>
+                                @Html.RadioButtonFor(model => model.PopUpType, "True", new { id = "PopUpTypeTrue", @class = "flat" })
+                                <span>محتوا (متن ، تصویر و ... با هم)</span>
+                            </p>
+                            <p>
+                                @Html.RadioButtonFor(model => model.PopUpType, "False", new { id = "PopUpTypeFalse", Checked = "checked", @class = "flat" })
+                                <span>فقط تصویر</span>
+                            </p>
+
+                        }
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="form-group has-feedback col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                    <p>
+                        @Html.LabelFor(model => model.PopUpMessage)
+                    </p>
+
+                    @Ajax.ActionLink("استفاده از فایل ها", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',1)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager" })
+                    <div id="createView"></div>
+                    <br />
+                    @Html.TextAreaFor(model => model.PopUpMessage, htmlAttributes: new { Id = "txt_Content", @class = "form-control elm1", rows = "5" })
+                    @Html.ValidationMessageFor(model => model.PopUpMessage, "", new { @class = "text-danger" })
+
+                </div>
+
+
+
+                <div class="form-group">
+                    <input type="submit" value="ذخیره تغییرات" class="btn btn-success" />
+                </div>
+
+
+            }
+
+        </div>
+
+        @section Scripts{
+
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+            <script src="~/Scripts/tinymce/tinymce.min.js"></script><script src="~/Scripts/tinymce/tiny_mce_load.js"></script>
+        }
+</div>
+</div>

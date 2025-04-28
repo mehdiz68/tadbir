@@ -1,0 +1,219 @@
+﻿@model Domain.ProductAttribute
+<title>ویرایش خصوصیت</title>
+@{
+
+    var setting = ViewBag.setting as Domain.Setting;
+}
+
+@section Header{
+    <link href="~/Areas/Admin/Content/Scripts/Component/spectrum/spectrum.css" rel="stylesheet" />
+}
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;">
+            ویرایشِ خصوصیت
+        </h1>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { placeholder = "نام خصوصیت", @class = "form-control" } })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { placeholder = Html.DisplayNameFor(x => x.Title), @class = "form-control" } })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                </div>
+
+                @if (Model.DataType < 11)
+                {
+                    <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        @Html.DropDownList("DataType", null, null, htmlAttributes: new { placeholder = "نوع داده", style = "width:99%;display: inline-block", @class = "form-control" })
+                        <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                        @Html.ValidationMessageFor(model => model.DataType, "", new { @class = "text-danger" })
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        @Html.HiddenFor(x => x.DataType)
+                    </div>
+                }
+
+                <!-- Modal -->
+                @*<div id="ItemModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">لیست مقادیر خصوصیت لیستی</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div id="ProductAttributeItemAdd">
+                                    <input id="AddedValue" placeholder="مقدار..." class="form-control" style="display:inline-block;width:auto" />
+                                    <span class="btn btn-primary" id="Add-Item" style="display:inline-block!important">افزودن</span>
+                                    <span class="btn btn-primary" id="Edit-Item" style="display:none!important">ویرایش</span>
+                                </div>
+                                <br /><br />
+                                <div id="ProductAttributeItemList" class="table-responsive">
+                                    <table class="table table-striped jambo_table bulk_action">
+                                        <thead>
+                                            <tr class="headings">
+                                                <th class="text-center column-title">
+                                                    مقدار
+                                                </th>
+                                                <th class="text-center column-title">
+
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.ProductAttributeItems)
+                                            {
+                                                <tr>
+                                                    <td>@item.Value</td>
+                                                    <td><span class="btn btn-danger">حذف</span><span class="btn btn-primary">ویرایش</span></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>*@
+
+                <!-- ColorModal -->
+                @*<div id="ItemColorModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">لیست مقادیر خصوصیت رنگی</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div id="ProductAttributeItemColorAdd">
+                                    <input id="AddedValueColor" placeholder="عنوان رنگ..." class="form-control" style="display:inline-block;width:auto" />
+                                    <input id="AddedValueValue" placeholder="رنگ..." class="form-control InputColor" style="display:inline-block;width:auto" />
+                                    <span class="btn btn-primary" id="Add-Item-Color" style="display:inline-block!important">افزودن</span>
+                                    <span class="btn btn-primary" id="Edit-Item-Color" style="display:none!important">ویرایش</span>
+                                </div>
+                                <br /><br />
+                                <div id="ProductAttributeItemColorList" class="table-responsive">
+                                    <table class="table table-striped jambo_table bulk_action">
+                                        <thead>
+                                            <tr class="headings">
+                                                <th class="text-center column-title">
+                                                    رنگ
+                                                </th>
+                                                <th class="text-center column-title">
+                                                    مقدار
+                                                </th>
+                                                <th class="text-center column-title">
+
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.ProductAttributeItemColors.OrderBy(x => x.Color))
+                                            {
+                                                <tr>
+                                                    <td>@item.Color</td>
+                                                    <td>@item.Value <br /> <span style="display:inline-block;background-color:@item.Value;width:25px;height:25px;border:1px solid #aaa"></span></td>
+                                                    <td><span class="btn btn-danger">حذف</span><span class="btn btn-primary">ویرایش</span></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>*@
+                <div class="clearfix"></div>
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.EditorFor(model => model.Unit, new { htmlAttributes = new { placeholder = "واحد", @class = "form-control" } })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                    @Html.ValidationMessageFor(model => model.Unit, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.EditorFor(model => model.DefaultValue, new { htmlAttributes = new { placeholder = "مقدار پیش فرض", @class = "form-control" } })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                    @Html.ValidationMessageFor(model => model.DefaultValue, "", new { @class = "text-danger" })
+                </div>
+
+                @Html.HiddenFor(x => x.PriceEffect)
+                @*<div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                    @Html.CheckBox("PriceEffect", Model.PriceEffect, new { @class = "js-switch" }) @Html.LabelFor(m => m.PriceEffect)
+                </div>*@
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                    @Html.CheckBox("HasMultipleValue", Model.HasMultipleValue, new { @class = "js-switch" }) @Html.LabelFor(m => m.HasMultipleValue)
+                </div>
+
+
+                <div class="clearfix"></div>
+
+                @{
+                    CoreLib.ViewModel.Xml.XMLReader readXml = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+                    var languages = readXml.ListOfXLanguage();
+                }
+                @if (languages.Count == 1)
+                {
+                    @Html.Hidden("LanguageId", languages.First().Id)
+                }
+                else
+                {
+                    <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        @Html.LabelFor(model => model.LanguageId, "زبان ( وب سایت )", htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.DropDownList("LanguageId", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.LanguageId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="ذخیره" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        }
+
+        @section Scripts{
+
+            <script src="~/Areas/Admin/Content/Scripts/Component/spectrum/spectrum.js"></script>
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/View/ProductAttributes.js"></script>
+
+        }
+    </div>
+</div>

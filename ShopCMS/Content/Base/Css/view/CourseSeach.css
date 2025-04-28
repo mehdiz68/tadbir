@@ -1,0 +1,46 @@
+﻿h1{font-size:1.3em;margin:0}
+#cat-filter .btn{min-width:150px;margin:10px 0}
+#Search-box{    background-color: #fff;border: 1px solid #e8e8e8;padding: 10px 20px;margin:0 5% 20px }
+#Form-Search button{display:inline-block;padding:10px 20px;position: relative;bottom: 1px;}
+#Form-Search input[type=text]{display:inline-block;width:auto!important}
+aside h3{font-size:1.2em}
+.checkbox label .toggle, .checkbox-inline .toggle{margin:0}
+.noUi-target{border: 1px solid #cca720!important;box-shadow: inset 0 1px 1px #efc325, 0 3px 6px -5px #BBB!important;background-color:#efc325!important}
+.price-range{margin:20px 0}
+.aside-box {border: 1px solid #e8e8e8;background-color: #fff;padding: 25px;margin-bottom: 25px;border-radius: 10px;}
+.filter-category h3, .filter-layer h3 {padding-bottom: 15px;border-bottom: 1px solid #e8e8e8;margin-bottom: 10px;}
+#Contents{margin:0 5%}
+#Contents > .col-lg-3{padding-right:0!important}
+#Contents > .col-lg-9{padding-left:0!important}
+.btn-group>.btn, .btn-group-vertical>.btn{float:right}
+.btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle){    border-top-left-radius: 0;border-bottom-left-radius: 0;}
+.term-box {margin-bottom: 25px;}
+.term-box article {background-color: #fff;border: 1px solid #dfdfdf;border-radius: 3px;-moz-border-radius: 3px;-webkit-border-radius: 3px;position: relative;overflow: hidden;}
+.term-box article .img-layer {position: relative;padding-bottom: 1px;border-bottom: 1px solid #dfdfdf;}
+.term-box article .img-layer:before {position: absolute;width: 100%;height: 100%;background-color: rgba(0,0,0,.8);content: '';right: 0;top: 0;opacity: 0;-webkit-transition: all .2s linear 0s;
+    -moz-transition: all .2s linear 0s;
+    -ms-transition: all .2s linear 0s;
+    -o-transition: all .2s linear 0s;
+    transition: all .2s linear 0s;}
+.term-box article:hover .img-layer .description, .term-box article:hover .img-layer:before {opacity: 1;}
+.term-box article .img-layer .description {width: 88%;height: 85%;top: 8%;margin: 0 auto;right: 0;left: 0;position: absolute;z-index: 15;opacity: 0;}
+.term-box article:hover .img-layer .description, .term-box article:hover .img-layer:before {opacity: 1;}
+.term-box article .img-layer .description:before {width: 60px;height: 100%;position: absolute;right: 0;top: 0;border-top: 1px solid #efc325;border-right: 1px solid #efc325;content: '';}
+.term-box article .img-layer .description ul {width: 90%;display: table;margin: 45px auto 30px;}
+.term-box article .img-layer .description ul li {float: right;width: 33%;text-align: center;font-size: 14px;line-height: 25px;color: #fff;min-width: 40px;}
+.term-box article .img-layer .description ul li i {font-size: 16px;margin-left: 3px;position: relative;top: 2px;}
+.term-box article .img-layer .description .more {width: 80%;margin: 0 auto;line-height: 22px;font-size: 14px;padding: 7px 15px;text-align: center;background-color: #efc325;color: #0f5845;display: block;border-radius: 20px;-moz-border-radius: 20px;-webkit-border-radius: 20px;}
+.term-box article .img-layer .description:after {width: 60px;height: 100%;position: absolute;left: 0;bottom: 0;border-bottom: 1px solid #efc325;border-left: 1px solid #efc325;content: '';}
+.term-box article h2 {height: 55px;overflow: hidden;}
+.term-box article h2 a {display: block;line-height: 22px;text-align: center;padding: 11px 8px;border-bottom: 1px solid #d6d5dd;font-size: 14px;}
+.term-box article .footer {padding: 15px;position: relative;}
+.term-box article .footer .time {line-height: 25px;font-size: 13px;float: right;top: 3px;position: relative;color: #626d6f;}
+.term-box article .footer label, .term-box article .footer a {float: left;line-height: 28px;font-size: 14px;padding: 2px 18px;background-color: #efc325;color: #fff;border-radius: 20px;-moz-border-radius: 20px;-webkit-border-radius: 20px;margin: 0;}
+.price-range .startPrice span,.price-range .EndPrice span{font-size:0.8em;margin-top:12px;    display: inline-block;}
+
+
+
+@media(max-width:768px){
+#Contents > .col-lg-3{padding-right: .9375rem!important}
+#Contents > .col-lg-9{    padding-right: .9375rem!important}
+}

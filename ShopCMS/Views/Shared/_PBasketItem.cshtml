@@ -1,0 +1,143 @@
+﻿@model Domain.ViewModels.ProductBasketItem
+@using ahmadi.Infrastructure.Helper;
+
+@{string url = "/TFP/" + Model.ProductId + "/" + CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(Model.PageAddress);
+    var productSendWay = ViewBag.productSendWay as Domain.ProductSendWay;
+
+    int ProductPriceQuantity = 0;
+
+    if (Model.offerMaxQuantity > 0 && Model.offerQuantity > 0)
+    {
+        if (Model.offerMaxQuantity < Model.offerQuantity)
+        {
+            ProductPriceQuantity = Model.offerMaxQuantity;
+        }
+        else
+        {
+
+            ProductPriceQuantity = Model.offerQuantity;
+        }
+    }
+    else
+    {
+        ProductPriceQuantity = Model.ProductPriceQuantity;
+    }
+}
+
+<div class="c-cart-item">
+    <div class="c-cart-item__thumb">
+        <a class="c-cart-item__thumb-img" href="@url" target="_blank">
+            @if (Model.MainImageFileName != null)
+            {
+                @Html.Displayattachment(Model.MainImageFileName, Model.Title, "MD", htmlAttributes: new { @class = "img-responsive" })
+            }
+            else
+            {
+                <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" />
+            }
+        </a>
+        <a class="c-cart-item__thumb-amazing-section " href="@url" target="_blank">
+            @if (Model.hasoff)
+            {
+                <span class="pr_flash bg-danger">@string.Format("{0:n0}", Model.offValue) @(Model.offtype == 2 ? "%" : "") Off</span>
+            }
+        </a>
+    </div>
+    <div class="c-cart-item__data">
+        <div class="c-cart-item__title">
+            @Model.Title
+        </div>
+        @if (Model.color != null)
+        {
+            <div class="c-cart-item__product-data c-cart-item__product-data--color">
+                <div class="pr_switch_wrap" id="Colors">
+                    <span class="switch_lable">رنگ :</span>
+                    <div class="product_color_switch">
+                        <span data-id="@Model.color.Id" title="@Model.color.Color" data-color="@Model.color.Value"></span>
+                    </div>
+                </div>
+
+
+            </div>
+        }
+        @if (Model.code != null)
+        {
+            <div class="c-cart-item__product-data c-cart-item__product-data--warranty">
+                <span>کد فروش : @Model.code</span>
+            </div>
+        }
+
+        @*@if (Model.garanty != null)
+        {
+        <div class="c-cart-item__product-data c-cart-item__product-data--warranty">
+            <span>گارانتی : @Model.garanty.Value</span>
+        </div>
+        }
+        @if (!String.IsNullOrEmpty(Model.model))
+        {
+            <div class="c-cart-item__product-data c-cart-item__product-data--warranty">
+                <span>مدل : @Model.model</span>
+            </div>
+        }
+        @if (!String.IsNullOrEmpty(Model.size))
+        {
+            <div class="c-cart-item__product-data c-cart-item__product-data--warranty">
+                <span>سایز : @Model.size</span>
+            </div>
+        }
+        @if (!String.IsNullOrEmpty(Model.weight))
+        {
+            <div class="c-cart-item__product-data c-cart-item__product-data--warranty">
+                <span>وزن : @Model.weight</span>
+            </div>
+        }*@
+        @if (productSendWay != null)
+        {
+            <div class="c-cart-item__product-data c-cart-item__product-data--no-lead-time">
+
+                <span class="c-cart-item__product-sender-data">
+                    ارسال توسط @productSendWay.Title
+                </span>
+            </div>
+        }
+        @if (Model.hasoff)
+        {
+            <div class="c-cart-item__discount">
+                تخفیف
+                <span>
+                    @string.Format("{0:n0}", Model.offFinalValue * Model.UserQuantity)
+                </span>
+                تومان
+            </div>
+
+        }
+    </div>
+
+    <div class="c-cart-item__data2">
+        <div class="c-cart-item__price-row">
+            <div class="c-cart-item__quantity-row">
+                <div class="quantity">
+                    <input type="button" value="-" class="@(Model.UserQuantity==1?"minus qchange full":"minus qchange ")">
+                    <input name="quantity" value="@Model.UserQuantity" max="@ProductPriceQuantity" min="1" data-id="@Model.Id" class="qty Basket-quantity">
+                    <input type="button" value="+" class="@(ProductPriceQuantity>1 && Model.UserQuantity<ProductPriceQuantity?"plus qchange":"plus qchange full")">
+                </div>
+                <a class="c-cart-item__delete js-remove-from-cart" data-id="@Model.Id">
+                    حذف
+                </a>
+            </div><div class="c-cart-item__product-price">
+                @string.Format("{0:n0}", Model.finalPrice * Model.UserQuantity)
+                <span>
+                    تومان
+                </span>
+            </div>
+        </div>
+        <div class="c-cart-item__price-row">
+            <div>
+            </div>
+            <div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

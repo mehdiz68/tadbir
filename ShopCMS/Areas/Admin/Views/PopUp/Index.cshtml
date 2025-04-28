@@ -1,0 +1,66 @@
+﻿@model IEnumerable<CoreLib.ViewModel.Xml.XLanguage>
+@{
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+}
+<title>اعلانات (پاپ آپ)</title>
+<span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+<div class="x_panel">
+    <div class="x_content">
+        <h1 style="display:inline-block;font-size: 2em;">
+            <a href="@Url.Action("Index","PopUp")"> اعلانات (پاپ آپ)</a>
+
+
+        </h1>
+        <br /><br />
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr>
+
+                        <th class="text-center column-title">ردیف</th>
+
+                        <th class="text-center column-title">
+                            زبان ( وب سایت)
+                        </th>
+
+
+                        <th class="text-center column-title"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                int i = 1;
+                    }
+                    @foreach (var item in Model)
+            {
+            <tr>
+                <td class="text-center">
+                    @i
+                </td>
+                <td class="text-center">
+                    @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.Id)
+                </td>
+
+                <td class="text-center">
+
+                    @if (ViewBag.EditPermission)
+                        {
+                        <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                        }
+                        else
+                        {
+                        <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                        }
+                </td>
+            </tr>
+                i++;
+            }
+                </tbody>
+
+            </table>
+        </div>
+</div>
+</div>

@@ -1,0 +1,155 @@
+﻿@model PagedList.IPagedList<Domain.Seller>
+@using PagedList.Mvc;
+
+<title>مدیریت فروشنده(انبار)</title>
+
+
+
+
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Tag.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            فروشنده(انبار)
+
+        </h1>
+
+        <br /><br />
+        @if (ViewBag.AddPermission)
+        {
+            <p><a class="btn btn-success" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد فروشنده(انبار) جدید </a></p>
+        }
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2> جستجو / فیلتر</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content" style="display:none">
+
+
+                <div id="SearchPage">
+                    <div>
+                        <div>
+
+                            @using (Html.BeginForm("Index", "Seller", FormMethod.Get))
+                            {
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("nameString", ViewBag.nameFilter as string, htmlAttributes: new { placeholder = "عنوان", style = "width:90%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                @Html.ActionLink("نمایش همه", "Index", null, htmlAttributes: new { @class = "btn btn-success" })
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>عنوان</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Name", nameFilter = ViewBag.nameFilter})" title="مرتب سازی بر اساس عنوان صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Name_desc", nameFilter = ViewBag.nameFilter})" title="مرتب سازی بر اساس عنوان نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+                        <th class="text-center column-title">
+                            استان/شهر
+                        </th>
+                        <th class="text-center column-title">
+                            تعداد کل تنوع ها
+                        </th>
+                        <th class="text-center column-title">
+                            تعداد کل تنوع های فعال
+                        </th>
+
+                        <th class="text-center column-title"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.User.LastName)
+                        </td>
+                        <td>
+                            @item.User.CityEntity.Province.Name / @item.User.CityEntity.Name 
+                        </td>
+                        <td>
+                            @item.ProductPrices.Count
+                        </td>
+                        <td>
+                            @item.ProductPrices.Where(x => x.IsActive).Count()
+                        </td>
+                        <td>
+
+                            @if (ViewBag.EditPermission)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                            }
+                            else
+                            {
+                                <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                            }
+                            @if (ViewBag.DeletePermission)
+                            {
+                                <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                            }
+                            else
+                            {
+                                <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                            }
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, nameFilter = ViewBag.nameFilter }))
+
+
+        </div>
+
+
+        @section Scripts{
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/View/Tag.js"></script>
+
+        }
+    </div>
+</div>

@@ -1,0 +1,113 @@
+﻿@model Domain.ViewModels.ProductItem
+@using CoreLib;
+
+@{
+    string url = "/TFP/" + Model.Id + "/" + CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(Model.PageAddress);
+    int? w = ViewBag.w as int?;
+    w = w.HasValue ? w.Value : 1280;
+    int? h = ViewBag.h as int?;
+    h = h.HasValue ? h.Value : 1280;
+    string size = ViewBag.size as string;
+    size = size != null ? size : "LG";
+    }
+
+@if (Model.hasoff)
+{
+    <span class="pr_flash bg-danger">@string.Format("{0:n0}", Model.offValue) @(Model.offtype == 2 ? "%" : "") Off</span>
+}
+else if (Model.ProductIcon != null)
+{
+    <span class="pr_flash">@Model.ProductIcon.Title</span>
+}
+@*else if (Model.ProductStateTitle != null)
+{
+    switch (Model.ProductStateId)
+    {
+        case 2:
+            <span class="pr_flash bg-danger">@Model.ProductStateTitle</span> break;
+        case 4:
+            <span class="pr_flash bg-warning">@Model.ProductStateTitle</span>break;
+        case 5:
+            <span class="pr_flash bg-info">@Model.ProductStateTitle</span>break;
+        default:
+            break;
+    }
+}*@
+<div class="product_img">
+    <a href="@url">
+        @if (Model.MainImageFileName != null)
+        {
+            @*@Html.Displayattachment(Model.MainImageFileName, Model.Title, "SM", htmlAttributes: new { @class = "img-responsive" })*@
+
+            <img class="lazy img-responsive" data-original="/tf-Products/@Model.MainImageFileName.GetFileName()/@Model.MainImageFileName.GetFolderName()/@w/@h/@size" width="@(w-2)" height="@(h-2)" />
+
+        }
+        else
+        {
+
+            <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" />
+        }
+    </a>
+    @*<div class="product_action_box">
+            <ul class="list_none pr_action_btn">
+                <li class="add-to-cart"><a href="@url"><i class="icon-basket-loaded"></i> خرید</a></li>
+                <li><a href="@url" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
+                <li><a href="@url" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
+                <li><a href="@url"><i class="icon-heart"></i></a></li>
+            </ul>
+        </div>*@
+</div>
+<div class="product_info">
+    <h6 class="product_title"><a href="@url">@Model.Title</a></h6>
+    <div class="product_price">
+        @if (Model.ProductStateId == 1 || Model.ProductStateId==2)
+        {
+            <span class="price">@string.Format("{0:n0}", Model.finalPrice) </span> <label class="toman">تومان</label>
+            if (Model.hasoff)
+            {
+                <del>@string.Format("{0:n0}", Model.Price)</del>
+                @*<div class="on_sale">
+                        <span>@string.Format("{0:n0}", Model.offValue) @(Model.offtype == 2 ? "%" : "") Off</span>
+                    </div>*@
+            }
+        }
+        else 
+        {
+            <div class="c-promotion-box__cover c-promotion-box__cover--out-of-stock">
+                <div class="c-promotion-box__cover-text js-product-status">@Model.ProductStateTitle</div>
+            </div>
+        }
+    </div>
+    @*@if (Model.countRankValue > 0)
+        {
+            <div class="rating_wrap">
+                <div class="rating">
+                    <div class="product_rate" style="width:@(Model.avgRankValue*20)%"></div>
+                </div>
+                <span class="rating_num">(@Model.countRankValue)</span>
+            </div>
+        }
+        else
+        {
+            <div class="rating_wrap">
+                <div class="rating">
+                    <div class="product_rate" ></div>
+                </div>
+                <span class="rating_num"></span>
+            </div>
+        }*@
+    <div class="pr_desc">
+        <p>@Model.Descr</p>
+    </div>
+    @if (Model.Colors != null)
+    {
+        <div class="pr_switch_wrap">
+            <div class="product_color_switch">
+                @foreach (var itemColor in Model.Colors)
+                {
+                    <span data-color="@itemColor"></span>
+                }
+            </div>
+        </div>
+    }
+</div>

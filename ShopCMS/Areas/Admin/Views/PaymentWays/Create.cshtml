@@ -1,0 +1,316 @@
+﻿@model Domain.BankAccount
+@using CoreLib.ViewModel.Xml;
+<title>ایجاد حساب بانکی</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+    var Setting = ViewBag.setting as Domain.Setting;
+    <style>
+        .control-label {
+            padding-top: 0 !important;
+        }
+    </style>
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h3 class="box-title">
+             ایجاد حساب بانکی
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")" ></span>
+
+        </h3>
+        <br /><br />
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+           <div class="form-group">
+
+            <div class="control-label col-md-5">
+
+                @Html.LabelFor(model => model.ProductSendWayId, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                @Html.DropDownList("ProductSendWayId", ViewBag.ProductSendWays as SelectList,new {@class="form-control" })
+                @Html.ValidationMessageFor(model => model.AccountName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-5">
+                <span cyle="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "بانک").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "بانک").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                بانک
+            </div>
+            <div class="col-md-7">
+                @{
+                    XMLReader xr = new XMLReader(Setting.StaticContentDomain);
+                    var bank = new SelectList(xr.ListOfXBank(), "Id", "Name");
+                }
+                @Html.DropDownList("BankId", bank, "--انتخاب نمایید--", htmlAttributes: new { @class = "form-control " })
+                @Html.ValidationMessageFor(model => model.BankId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+
+            <div class="control-label col-md-5">
+
+                @Html.LabelFor(model => model.AccountName, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.AccountName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AccountName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+
+            <div class="control-label col-md-5">
+                <span cyle="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "شماره کارت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "شماره کارت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                @Html.LabelFor(model => model.CardNumber, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.CardNumber, new { htmlAttributes = new { id = "CardNumber", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CardNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-5">
+                <span cyle="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "شماره حساب").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "شماره حساب").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                @Html.LabelFor(model => model.AccountNumber, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.AccountNumber, new { htmlAttributes = new { id = "AccountNumber", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AccountNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-5">
+                <span cyle="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پرداخت نقدی").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پرداخت نقدی").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                @Html.LabelFor(model => model.HasFish, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                @Html.CheckBoxFor(model => model.HasFish, new { htmlAttributes = new { id = "HasFishType", @class = "form-control" } })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="control-label col-md-5">
+
+                @Html.LabelFor(model => model.HasFishHours, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.HasFishHours, new { htmlAttributes = new { type = "number", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HasFishHours, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-5">
+                <span cyle="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پرداخت کارت به کارت").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پرداخت کارت به کارت").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                @Html.LabelFor(model => model.HasCardToCard, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                @Html.CheckBoxFor(model => model.HasCardToCard, new { htmlAttributes = new { id = "HasCardToCard", @class = "form-control" } })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="control-label col-md-5">
+
+                @Html.LabelFor(model => model.CardNumberHours, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.CardNumberHours, new { htmlAttributes = new { type = "number", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CardNumberHours, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-5">
+                <span cyle="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پرداخت به پیک نقدی").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پرداخت به پیک نقدی").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                @Html.LabelFor(model => model.HasCourierDeliveryCash, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                @Html.CheckBoxFor(model => model.HasCourierDeliveryCash, new { htmlAttributes = new { id = "HasCardToCard", @class = "form-control" } })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="control-label col-md-5">
+
+                @Html.LabelFor(model => model.HasCourierDeliveryCashHours, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.HasCourierDeliveryCashHours, new { htmlAttributes = new { type = "number", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HasCourierDeliveryCashHours, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-5">
+                <span cyle="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پرداخت به پیک کارتخوان").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پرداخت به پیک کارتخوان").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                @Html.LabelFor(model => model.HasCourierDeliveryPos, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                @Html.CheckBoxFor(model => model.HasCourierDeliveryPos, new { htmlAttributes = new { id = "HasCardToCard", @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-5">
+
+                @Html.LabelFor(model => model.HasCourierDeliveryPosHours, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.HasCourierDeliveryPosHours, new { htmlAttributes = new { type = "number", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HasCourierDeliveryPosHours, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="control-label col-md-5">
+                <span cyle="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پرداخت با درگاه بانک").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پرداخت با درگاه بانک").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                پرداخت با درگاه بانک
+            </div>
+            <div class="col-md-7">
+                <input type="checkbox" name="OnlineType" />
+                <div>
+                    @Html.LabelFor(model => model.BankAccountOnlineInfo.TerminalId, "شناسه ترمینال", htmlAttributes: new { @class = "control-label" })
+                    @Html.TextBox("TerminalId", "", new { htmlAttributes = new { id = "TerminalId", @class = "form-control" } })
+
+                    @Html.LabelFor(model => model.BankAccountOnlineInfo.UserName, "شناسه کاربری", htmlAttributes: new { @class = "control-label" })
+                    @Html.TextBox("UserName", "", new { htmlAttributes = new { id = "UserName", @class = "form-control" } })
+
+                    @Html.LabelFor(model => model.BankAccountOnlineInfo.Password, "رمز کاربری", htmlAttributes: new { @class = "control-label" })
+                    @Html.TextBox("Password", "", new { htmlAttributes = new { id = "Password", @class = "form-control" } })
+
+
+                    @Html.LabelFor(model => model.BankAccountOnlineInfo.CallbackUrl, null, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextBox("callbackBank", "", new { htmlAttributes = new { @class = "form-control" } })
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="control-label col-md-5">
+                <span cyle="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پرداخت با درگاه واسط").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پرداخت با درگاه واسط").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                پرداخت با درگاه واسط
+
+            </div>
+            <div class="col-md-7">
+                <input type="checkbox" name="InterfaceType" />
+                <div>
+                    @Html.LabelFor(model => model.MerchantId, null, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextBox("MerchantId", "", new { htmlAttributes = new { id = "MerchantId", @class = "form-control" } })
+
+                    @Html.LabelFor(model => model.CallbackUrl, null, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextBox("CallbackUrl", "", new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-5">
+
+                @Html.LabelFor(model => model.OnliePaymentHours, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                @Html.EditorFor(model => model.OnliePaymentHours, new { htmlAttributes = new { type = "number", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.OnliePaymentHours, "", new { @class = "text-danger" })
+            </div>
+
+
+
+        </div>
+        <div class="form-group">
+            <div class="control-label col-md-5">
+                <span cyle="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "توضیحات").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "توضیحات").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+
+                @Html.LabelFor(model => model.Description, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                <div>
+                    @Html.TextAreaFor(model => model.Description, new { id = "Description", @class = "form-control", @cols = 35, @rows = 5 })
+                </div>
+            </div>
+        </div>
+
+
+
+
+        @{
+            CoreLib.ViewModel.Xml.XMLReader readXml = new CoreLib.ViewModel.Xml.XMLReader(Setting.StaticContentDomain);
+            var languages = readXml.ListOfXLanguage();
+        }
+        @if (languages.Count == 1)
+        {
+
+
+            @Html.Hidden("LanguageId", languages.First().Id)
+        }
+        else
+        {
+
+            <div class="form-group">
+                <div class="control-label col-md-5">
+
+                    @Html.LabelFor(model => model.LanguageId, "زبان ( وب سایت )", htmlAttributes: new { @class = "control-label " })
+                </div>
+                <div class="col-md-7">
+                    <div>
+                        @Html.DropDownList("LanguageId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.LanguageId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+            </div>
+
+        }
+
+
+        <div class="form-group">
+            <div class="control-label col-md-5">
+
+                @Html.LabelFor(model => model.IsActive, null, htmlAttributes: new { @class = "control-label " })
+            </div>
+            <div class="col-md-7">
+                <div>
+                    @Html.CheckBoxFor(model => model.IsActive, new { @class = "js-switch", @checked = true })
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-8">
+                <input type="submit" value="ایجاد" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+                            }
+    </div>
+</div>
+@section Scripts{
+    @*View*@
+    <script src="~/Areas/Admin/Content/Scripts/View/BankAccount.js?v=2.1"></script>
+
+}

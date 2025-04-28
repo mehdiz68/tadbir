@@ -1,0 +1,45 @@
+﻿@model Domain.ViewModels.NewCategoryProduct
+@using CoreLib;
+
+@{
+    var ProductItems = ViewBag.ProductItems as IEnumerable<Domain.ViewModels.ProductItem>;
+    string catUrl = "/TFC/" + Model.CatId + "/" + CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(Model.CatName);
+}
+<div class="item">
+    <div class="category">
+        @if (!String.IsNullOrEmpty(Model.CatImage))
+        {
+            @*@Html.Displayattachment(Model.CatImage, Model.CatName, "MD", htmlAttributes: new { @class = "img-responsive" })*@
+
+            <img class="lazy img-responsive" data-original="/tf-Products/@Model.CatImage.GetFileName()/@Model.CatImage.GetFolderName()/356/356/SM" width="355" height="355" />
+
+
+
+        }
+        else
+        {
+
+            <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" />
+        }
+        <div class="description">
+            <h2><a href="@catUrl">@Model.CatName</a></h2>
+            <p>@Model.CatDescription</p>
+        </div>
+    </div>
+
+    @Html.Partial("_ProductItem", ProductItems, new ViewDataDictionary { { "w", 254 }, { "h", 254 }, { "size", "SM" } })
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+

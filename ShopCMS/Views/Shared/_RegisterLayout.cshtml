@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir='rtl'>
+<head>
+    @RenderSection("Meta", required: false)
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta -->
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="Anil z" name="author">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Shopwise is Powerful features and You Can Use The Perfect Build this Template For Any eCommerce Website. The template is built for sell Fashion Products, Shoes, Bags, Cosmetics, Clothes, Sunglasses, Furniture, Kids Products, Electronics, Stationery Products and Sporting Goods.">
+    <meta name="keywords" content="ecommerce, electronics store, Fashion store, furniture store,  bootstrap 4, clean, minimal, modern, online store, responsive, retail, shopping, ecommerce store">
+
+    <!-- SITE TITLE -->
+    <title></title>
+    <!-- Favicon Icon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/Content/Default/images/favicon.png">
+    <!-- Animation CSS -->
+    <link href="~/Content/Base/Scripts/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/Content/Base/Css/animate.css">
+    <!-- Latest Bootstrap min CSS -->
+    <link rel="stylesheet" href="/Content/Base/Css/bootstrap.min.css">
+    <link href="~/Content/Default/Register.css?v=1.2" rel="stylesheet" />
+
+    @RenderSection("Header", required: false)
+
+</head>
+<body>
+    @Html.Action("GetRegisterHeader", "Home", new { langId = ViewBag.langId })
+    <div class="main_content">
+        @RenderBody()
+    </div>
+    <footer>
+        Copyright © 2018-@DateTime.Now.Year ahmadi.com. All Rights Reserved.
+    </footer>
+
+    <!-- Latest jQuery -->
+    <script src="/Content/Base/scripts/jquery-1.12.4.min.js"></script>
+    <!-- popper min js -->
+    <!-- Latest compiled and minified Bootstrap -->
+    <script src="/Content/Base/scripts/bootstrap.min.js"></script>
+    <script src="/Content/Base/scripts/jquery.countdown.min.js"></script>
+
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/Content/Base/Scripts/jquery.unobtrusive-ajax.js" ></script>
+    <script src="~/Content/Base/Scripts/jquery.validate.js" ></script>
+    <script src="~/Content/Base/Scripts/jquery.validate.unobtrusive.js" ></script>
+
+    @RenderSection("scripts", required: false)
+</body>
+
+
+
+</html>

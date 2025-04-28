@@ -1,0 +1,29 @@
+﻿@model Domain.ProductRandomSetting
+@using ahmadi.Infrastructure.Helper
+
+<title>حذفِ  @Model.productCategory.Name</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <h1 style="display:inline-block;font-size: 2em;">
+            حذفِ  @Model.productCategory.Name
+        </h1>
+        <h4 style="color:red"><i class="glyphicon glyphicon-remove"></i> آیا مطمئن به حذف این رکورد هستید؟</h4>
+        <br /><br />
+        <p class="text text-danger"><strong>@ViewBag.Erorr</strong></p>
+
+
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(x=>x.SettingId)
+            <div class="form-actions no-color">
+                <input type="submit" value="حذف" class="btn btn-danger" />
+            </div>
+        }
+    </div>
+</div>

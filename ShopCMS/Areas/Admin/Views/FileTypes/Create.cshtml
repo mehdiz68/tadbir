@@ -1,0 +1,48 @@
+﻿@model Domain.FileType
+<title>تعریف پسوند جدید</title>
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+
+            تعریف پسوند جدید
+        </h1>
+            <br /><br />
+            <p class="text text-danger">@ViewBag.Error</p>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @if (ViewBag.Error != null)
+                {
+                        <p class="text text-danger">پسوند وارد شده ، وجود دارد.</p>
+                    }
+                    <div class="form-group">
+                        <div class="control-label col-md-3">
+                            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پسوند( مثلِ jpg.)").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "پسوند( مثلِ jpg.)").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span>
+                            @Html.LabelFor(model => model.FileTypeName)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.FileTypeName, new { htmlAttributes = new { @class = "form-control", @style = "text-align:left;direction:ltr" } })
+                            @Html.ValidationMessageFor(model => model.FileTypeName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="ایجاد" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+</div>
+</div>

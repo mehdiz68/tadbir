@@ -1,0 +1,40 @@
+﻿@model Domain.ContactUs
+<script src="~/Content/Base/Scripts/View/_ContactUs.js"></script>
+
+<h4><span class="glyphicon glyphicon-phone"></span>Contact us</h4>
+@using (Ajax.BeginForm("ContactUs", "Home", null, new AjaxOptions { HttpMethod = "POST", OnBegin = "onBeginSubmitContactUs", OnSuccess = "ShowContactUsSuccess", OnFailure = "ShowContactUsFailure", InsertionMode = InsertionMode.Replace }, new { id = "AddContactUs" }))
+{
+
+
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model=>model.ContentId)
+    @Html.Hidden("LangId", "1");
+
+    <div>
+        <p>@Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })</p>
+        <p>@Html.TextBoxFor(model => model.FullName, new { @placeholder = "Full Name...", @class = "form-control" })</p>
+    </div>
+
+    <div>
+        <p>@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })</p>
+        <p>@Html.TextBoxFor(model => model.Email, new { @placeholder = "Email...", @class = "form-control" })</p>
+
+    </div>
+
+    <div>
+        <p>@Html.ValidationMessageFor(model => model.Tele, "", new { @class = "text-danger" })</p>
+        <p>@Html.TextBoxFor(model => model.Tele, new { @placeholder = "Phone...", @class = "form-control" })</p>
+
+        <p>@Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })</p>
+        <p>@Html.TextAreaFor(model => model.Message, new { @placeholder = "Message...", @class = "form-control", rows = "5" })</p>
+    </div>
+
+    @Html.Action("Captcha", "Home")
+
+    <br />
+
+    <input type="submit" class="btn btn-primary py-3 px-5" value="Send" />
+
+}
+
+

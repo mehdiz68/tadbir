@@ -1,0 +1,75 @@
+﻿@model Domain.ViewModels.ProductCommentViewModel
+@using ahmadi.Infrastructure.Helper;
+
+@{string url = "/TFP/" + Model.ProductItem.Id + "/" + CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(Model.ProductItem.Title); }
+
+
+<div class="product_img">
+    <a href="@url">
+        @if (Model.ProductItem.MainImage != null)
+        {
+            @Html.Displayattachment(Model.ProductItem.MainImage.Image.FileName, Model.Title, "MD", htmlAttributes: new { @class = "img-responsive" })
+        }
+        else
+        {
+
+            <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" />
+        }
+    </a>
+
+</div>
+
+<div class="comment-info">
+    <h3 class="Comment-Title">@Model.Title</h3>
+
+    <div class="Comment-point">
+        <span class="@(Model.AvgPoint<3?"negative-point":"positive-point")">@Model.AvgPoint</span>
+        @if (Model.Satisfaction.HasValue)
+        {
+            if (Model.Satisfaction.Value < (Domain.ProductCommentSatisfaction)2)
+            {
+
+                <span> <span class="fa fa-like"></span> <span>خرید این محصول را توصیه می‌کنم.</span></span>
+            }
+            else
+            {
+                <span> <span class="fa fa-unlike"></span> <span>خرید این محصول را توصیه نمی‌کنم.</span></span>
+            }
+
+        }
+    </div>
+
+    <p class="comment-text">
+        @Model.Text
+    </p>
+</div>
+
+<div class="comment-review">
+    <div class="comment-state">
+        @if (Model.IsActive)
+        {
+            <span class="comment-confirm">تایید شده</span>
+        }
+        else
+        {
+            <span class="comment-Deactive">غیرفعال</span>
+        }
+    </div>
+    <div class="options">
+        <span class="fa fa-bars"></span>
+        <p class="delete" data-id="@Model.Id">
+            حذف از لیست
+        </p>
+        @if (!Model.IsActive)
+        {
+        <p class="edit">
+            <a href="/TFPComment/@Model.ProductItem.Id">ویرایش نظر</a>
+        </p>
+        }
+    </div>
+</div>
+
+@if (Model.Useful > 0)
+{
+    <p class="useful">@Model.Useful <span> نفر این نظر برایشان مفید بوده است. </span></p>
+}

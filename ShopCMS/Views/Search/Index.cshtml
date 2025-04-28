@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Domain.ViewModels.ProductItem>
+@using ahmadi.Infrastructure.Helper
+
+@using CoreLib.Infrastructure;
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    int i = 0;
+    var paggingModel = (Domain.ViewModel.PagingViewModel)TempData["PaggingModel"];
+    int? sort = ViewBag.sort as int?;
+    string a = Request.RawUrl;
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+<div id="Brand">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb" itemscope="" itemtype="http://schema.org/BreadcrumbList">
+                    <li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem" class="breadcrumb-item"><a itemprop="item" href="/"><span itemprop="name"> صفحه اصلی</span></a><meta itemprop="position" content="0" /></li>
+                    <li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem" class="breadcrumb-item"><a itemprop="item" href="/Search?q=@ViewBag.q"><span itemprop="name">جستجوی '@ViewBag.q'</span></a><meta itemprop="position" content="1" /></li>
+
+                </ol>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 sidebar" style="margin-bottom: 20px;">
+                <div class="content">
+                    <div class="clearfix filters-container m-t-20" id="main-desc">
+                        <div class="row">
+                            <div class="col-md-12 titr-col row sidebar-widget">
+                                <h1>جستجوی '@ViewBag.q'</h1>
+                            </div>
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                    <div class="search-result-container filters-container">
+                        <div class="row">
+                            <div class="col-md-12 row sidebar-widget">
+                                <div class="col-md-9 Brand-Sort">
+                                    <ul>
+                                        <li><span>مرتب سازی :</span></li>
+                                        <li><a class="@(sort!=null?sort.Value==4?"active":"":"active")" href="@(Request.RawUrl.LastIndexOf("&")>0? Request.RawUrl.Substring(0,Request.RawUrl.LastIndexOf("&"))+"&sort=4":Request.RawUrl+"?sort=4")">جدیدترین</a></li>
+                                        <li><a class="@(sort!=null && sort.Value==1?"active":"")" href="@(Request.RawUrl.LastIndexOf("&")>0? Request.RawUrl.Substring(0,Request.RawUrl.LastIndexOf("&"))+"&sort=1":Request.RawUrl+"?sort=1")">پربازدیدترین</a></li>
+                                        <li><a class="@(sort!=null && sort.Value==2?"active":"")" href="@(Request.RawUrl.LastIndexOf("&")>0? Request.RawUrl.Substring(0,Request.RawUrl.LastIndexOf("&"))+"&sort=2":Request.RawUrl+"?sort=2")">پرفروش ترین</a></li>
+                                        <li><a class="@(sort!=null && sort.Value==3?"active":"")" href="@(Request.RawUrl.LastIndexOf("&")>0? Request.RawUrl.Substring(0,Request.RawUrl.LastIndexOf("&"))+"&sort=3":Request.RawUrl+"?sort=3")">محبوب ترین</a></li>
+                                        <li><a class="@(sort!=null && sort.Value==5?"active":"")" href="@(Request.RawUrl.LastIndexOf("&")>0? Request.RawUrl.Substring(0,Request.RawUrl.LastIndexOf("&"))+"&sort=5":Request.RawUrl+"?sort=5")">ارزان ترین</a></li>
+                                        <li><a class="@(sort!=null && sort.Value==6?"active":"")" href="@(Request.RawUrl.LastIndexOf("&")>0? Request.RawUrl.Substring(0,Request.RawUrl.LastIndexOf("&"))+"&sort=6":Request.RawUrl+"?sort=6")">گران ترین</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="col-md-12 row" id="Products">
+                                    @foreach (var item in Model)
+                                    {
+                                        <div class="item">
+                                            <div class="product">
+                                                @Html.Partial("_PItem", item)
+
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                                @Html.Partial("_Pagging", paggingModel)
+                            </div>
+
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script src="~/Content/Base/Scripts/view/Brand.js"></script>
+}

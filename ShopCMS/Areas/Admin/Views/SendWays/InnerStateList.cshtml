@@ -1,0 +1,53 @@
+﻿@model ICollection<Domain.SettingState>
+
+<title>لیست استان های همجوار</title>
+
+@{
+}
+@section Header{
+
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="text-left"><a class="btn btn-success" href="@Url.Action("InnerState")"> بازگشت  <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+
+        <a class="btn btn-success" href="@Url.Action("CreateInnerState",new {id=ViewBag.id })">استان جدید</a><br /><br />
+        <hr style="margin:0;border:1px solid #c23321" />
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>
+                       استان
+                    </th>
+
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.OrderBy(x=>x.Province.Name))
+                {
+                    <tr>
+                        <td>
+                            @item.Province.Name
+                        </td>
+                        <td>
+                           <a class="btn btn-danger" href="@Url.Action("InnerStateRemove", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts{
+
+
+
+}

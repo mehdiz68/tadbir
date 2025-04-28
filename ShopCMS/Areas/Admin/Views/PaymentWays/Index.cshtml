@@ -1,0 +1,205 @@
+﻿@model IEnumerable<Domain.BankAccount>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml
+
+<title>مدیریت حساب های بانکی</title>
+
+@{
+
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+    var Setting = ViewBag.setting as Domain.Setting;
+}
+@section Header{
+
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <a href="@Url.Action("Index", "PaymentWays", new { id = ViewBag.BankId })">  حساب های بانکی </a>
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")" ></span>
+
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left" >
+            <a style="cursor:pointer" class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule.HelpModuleSections.Where(x => x.Name == "مرتب سازی").Any() ? HelpModule.HelpModuleSections.Where(x => x.Name == "مرتب سازی").First().Abstract : "")" href="@Url.Action("Sort", "PaymentWays", new { id = ViewBag.BankId })">
+            <span class="glyphicon glyphicon-list-alt"></span> مرتب سازی 
+             </a>
+
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+
+        @if (ViewBag.AddPermission)
+        {
+            <p><a class="btn btn-success" dadata-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد حساب بانکی").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد حساب بانکی").First().Abstract:"")" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد حساب های بانکی جدید </a></p>
+        }
+
+        <hr style="margin:0;border:1px solid #c23321" />
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>
+                        روش ارسال
+                    </th>
+                    <th>
+                        بانک
+                    </th>
+                    <th>
+                        شماره کارت
+                    </th>
+                    <th>
+                        شماره حساب
+                    </th>
+                    <th>
+                        پرداخت با فیش بانکی
+                    </th>
+                    <th>
+                        پرداخت کارت به کارت
+                    </th>
+                    <th>
+                        تحویل به پیک نقدی
+                    </th>
+                    <th>
+                        تحویل به پیک کارتخوان
+                    </th>
+                    <th>
+                        درگاه پرداخت آنلاین مستقیم
+                    </th>
+                    <th>
+                        درگاه پرداخت آنلاین غیر مستقیم با زرین پال
+                    </th>
+                    <th></th>
+                </tr>
+
+                @{
+
+    XMLReader xr=new XMLReader(Setting.StaticContentDomain);
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.ProductSendWay.Title
+                        </td>
+                        <td>
+                            @xr.DetailOfXBank(item.BankId).Name
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CardNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AccountNumber)
+                        </td>
+                        <td>
+                            @if (item.HasFish)
+                            {
+                                <span class="btn btn-success">
+                                    فعال
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="btn btn-danger">
+                                    غیر فعال
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.HasCardToCard)
+                            {
+                                <span class="btn btn-success">
+                                    فعال
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="btn btn-danger">
+                                    غیر فعال
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.HasCourierDeliveryCash)
+                            {
+                                <span class="btn btn-success">
+                                    فعال
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="btn btn-danger">
+                                    غیر فعال
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (item.HasCourierDeliveryPos)
+                            {
+                                <span class="btn btn-success">
+                                    فعال
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="btn btn-danger">
+                                    غیر فعال
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.BankAccountOnlineInfo != null)
+                            {
+                                <span class="btn btn-success">
+                                    فعال
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="btn btn-danger">
+                                    غیر فعال
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.MerchantId != null)
+                            {
+                                <span class="btn btn-success">
+                                    فعال
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="btn btn-danger">
+                                    غیر فعال
+                                </span>
+                            }
+                        </td>
+                        <td>
+
+                            @if (ViewBag.EditPermission)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                            }
+                            else
+                            {
+                                <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                            }
+
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts{
+
+
+
+}

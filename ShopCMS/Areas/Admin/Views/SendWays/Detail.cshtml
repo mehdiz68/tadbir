@@ -1,0 +1,248 @@
+﻿@model PagedList.IPagedList<Domain.ProductSendWayDetail>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml
+
+
+@{
+
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+    var Setting = ViewBag.setting as Domain.Setting;
+    var ProductSendWayBox = ViewBag.ProductSendWayBox as Domain.ProductSendWayBox;
+}
+
+<title>جزئیات باکس @ProductSendWayBox.SendwayBox.Title برای روش ارسال @ProductSendWayBox.ProductSendWay.Title</title>
+
+@section Header{
+    <style>
+        .table > tbody > tr > th a{color:#000}
+        .table>tbody>tr>th{border:0}
+    </style>
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <a href="@Url.Action("Detail", "SendWays",new {id= ProductSendWayBox.ProductSendWayId})">  جزئیات باکس @ProductSendWayBox.SendwayBox.Title برای روش ارسال @ProductSendWayBox.ProductSendWay.Title  </a>
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+            <a class="btn btn-success" href="@Url.Action("Index", "SendWays")">
+                <span class="glyphicon glyphicon-list-alt"></span> بازگشت
+            </a>
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+
+        @if (ViewBag.AddPermission)
+        {
+            <p><a class="btn btn-success" dadata-html="true" data-toggle="tooltip" data-placement="right"  href="@Url.Action("CreatePrice","SendWays",new {id=ProductSendWayBox.Id })"><span class="glyphicon glyphicon-plus"></span> ایجاد جزئیات جدید</a></p>
+        }
+        <div class="x_panel">
+            <div class="x_title">
+                <h2> جستجو / فیلتر</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content" style="display:none">
+
+                <div id="SearchPage">
+                    <div>
+                        <div>
+
+                            @using (Html.BeginForm("Detail", "SendWays", FormMethod.Get))
+                            {
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("proviencId", ViewBag.ProvinceList as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان ( وب سایت )", style = "width:90%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-language form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("cityId", ViewBag.CityList as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان ( وب سایت )", style = "width:90%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-language form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="clearfix"></div>
+                                @Html.Hidden("id", ViewBag.id as string)
+
+                                <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                @Html.ActionLink("نمایش همه", "Detail", new { id = ViewBag.id }, htmlAttributes: new { @class = "btn btn-success" })
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th>
+                            <span>استان</span>
+                            <span>
+                                <a style="display:block" href="@Url.Action("Detail", new { sortOrder = "proviencId", cityFilter = ViewBag.cityFilter, provienceFilter = ViewBag.provienceFilter})" title="مرتب سازی بر اساس استان صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                <a style="display:block" href="@Url.Action("Detail", new { sortOrder = "proviencId_desc", cityFilter = ViewBag.cityFilter, provienceFilter = ViewBag.provienceFilter})" title="مرتب سازی بر اساس استان نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                            </span>
+                        </th>
+                        <th>
+                            <span>شهر</span>
+                            <span>
+                                <a style="display:block" href="@Url.Action("Detail", new { sortOrder = "cityId", cityFilter = ViewBag.cityFilter, provienceFilter = ViewBag.provienceFilter})" title="مرتب سازی بر اساس شهر صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                <a style="display:block" href="@Url.Action("Detail", new { sortOrder = "cityId_desc", cityFilter = ViewBag.cityFilter, provienceFilter = ViewBag.provienceFilter})" title="مرتب سازی بر اساس شهر نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                            </span>
+                        </th>
+                        @*<th>
+                            <span>از</span>
+                            <span>
+                                <a style="display:block" href="@Url.Action("Detail", new { sortOrder = "From", cityFilter = ViewBag.cityFilter, provienceFilter = ViewBag.provienceFilter})" title="مرتب سازی بر اساس از صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                <a style="display:block" href="@Url.Action("Detail", new { sortOrder = "From_desc", cityFilter = ViewBag.cityFilter, provienceFilter = ViewBag.provienceFilter})" title="مرتب سازی بر اساس از نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                            </span>
+                        </th>
+                        <th>
+                            <span>تا</span>
+                            <span>
+                                <a style="display:block" href="@Url.Action("Detail", new { sortOrder = "To", cityFilter = ViewBag.cityFilter, provienceFilter = ViewBag.provienceFilter})" title="مرتب سازی بر اساس تا صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                <a style="display:block" href="@Url.Action("Detail", new { sortOrder = "To_desc", cityFilter = ViewBag.cityFilter, provienceFilter = ViewBag.provienceFilter})" title="مرتب سازی بر اساس تا نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                            </span>
+                        </th>*@
+                        <th>
+                            <span>قیمت</span>
+                            <span>
+                                <a style="display:block" href="@Url.Action("Detail", new { sortOrder = "Price", cityFilter = ViewBag.cityFilter, provienceFilter = ViewBag.provienceFilter})" title="مرتب سازی بر اساس قیمت صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                <a style="display:block" href="@Url.Action("Detail", new { sortOrder = "Price_desc", cityFilter = ViewBag.cityFilter, provienceFilter = ViewBag.provienceFilter})" title="مرتب سازی بر اساس قیمت نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                            </span>
+                        </th>
+                        <th>
+                            <span>محدودیت ارسال، تعداد در ساعت</span>
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+
+                                @item.City.Province.Name
+                            </td>
+                            <td>
+                                @item.City.Name
+                            </td>
+                            @*<td>
+                                @item.From
+                                @if (item.ProductSendWayBox.ProductSendWay.InvoiceType)
+                                {
+                                    <span>گرم</span>
+                                }
+                                else
+                                {
+                                    <span>تومان</span>
+                                }
+                            </td>
+                            <td>
+                                @item.To
+                                @if (item.ProductSendWayBox.ProductSendWay.InvoiceType)
+                                {
+                                    <span>گرم</span>
+                                }
+                                else
+                                {
+                                    <span>تومان</span>
+                                }
+                            </td>*@
+                            <td>
+                                @item.Value
+                            </td>
+                            <td>
+                                @item.Limitation
+                            </td>
+                            <td>
+
+                                @if (ViewBag.EditPermission)
+                                {
+                                    <a class="btn btn-success" href="@Url.Action("EditPrice", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+
+                                    <a class="btn btn-danger" href="@Url.Action("deletePrice", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                }
+
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+                <p>
+                    <strong style="color: #900">
+                        صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount @ViewBag.ContentTypeShortName
+                    </strong>
+                </p>
+                @Html.PagedListPager(Model, page => Url.Action("Detail", new { page, sortOrder = ViewBag.CurrentSort, cityFilter = ViewBag.cityFilter, provienceFilter = ViewBag.provienceFilter }))
+
+
+            </div>
+        </div>
+</div>
+@section Scripts{
+
+    <script>
+
+        $(document).ready(function () {
+            if ($("#proviencId").val() != "") {
+                var CityId = $("#cityId option:selected").val();
+                $.ajax({
+                    type: "Get",
+                    url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#proviencId").val(),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $("#cityId option").remove();
+                        $("#cityId").append("<option value='0'>--همه--</option>");
+                        for (var i = 0; i < response.data.length; i++) {
+
+                            $("#cityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                        }
+                        $("#cityId option[value='" + CityId + "']").prop("selected", true);
+                        $(".loading").hide();
+                    }
+                });
+            }
+
+            $("#proviencId").change(function () {
+                if ($("#proviencId").val() == "")
+                    $("#cityId option").remove();
+                else {
+
+                    $(".loading").show();
+                    $.ajax({
+                        type: "Get",
+                        url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#proviencId").val(),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            $("#cityId option").remove();
+                            $("#cityId").append("<option value='0'>--همه--</option>");
+                            for (var i = 0; i < response.data.length; i++) {
+
+                                $("#cityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                            }
+
+                            $(".loading").hide();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+}

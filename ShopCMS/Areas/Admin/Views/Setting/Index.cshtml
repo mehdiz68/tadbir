@@ -1,0 +1,119 @@
+﻿@model IEnumerable<Domain.Setting>
+@using ahmadi.Infrastructure.Helper
+<title>تنظیمات سایت</title>
+@{
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+    var setting = ViewBag.setting as Domain.Setting;
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            تنظیمات سایت
+        </h1>
+        <br /><br />
+
+        <p>
+            @{
+                CoreLib.ViewModel.Xml.XMLReader xr = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+                var Languages = xr.ListOfXLanguage();
+            }
+            @if (Languages.Count > Model.Count())
+            {
+
+                if (ViewBag.AddPermission)
+                {
+                    <a style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد تنظیم جدید").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد تنظیم جدید").First().Abstract:"")" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد تنظیم جدید </a>
+                }
+
+            }
+
+
+            <a style="cursor:pointer" class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="مدیریت ایمیل های اطلاع رسان").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="مدیریت ایمیل های اطلاع رسان").First().Abstract:"")" href="@Url.Action("Index","EmailSenders")"><span class="glyphicon glyphicon-send"></span> مدیریت ایمیل های اطلاع رسان </a>
+            <a style="cursor:pointer" class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="مدیریت سرویس های sms اطلاع رسان").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="مدیریت سرویس های sms اطلاع رسان").First().Abstract:"")" href="@Url.Action("Index","SmsSenders")"><span class="glyphicon glyphicon-send"></span> مدیریت سرویس های sms اطلاع رسان </a>
+            <a style="cursor:pointer" class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="مدیریت پسوندهای مجاز").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="مدیریت پسوندهای مجاز").First().Abstract:"")" href="@Url.Action("Index", "FileTypes")"><span class="glyphicon glyphicon-list-alt"></span> مدیریت پسوندهای مجاز </a>
+            <a style="cursor:pointer" class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="مدیریت پوشه ها").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="مدیریت پوشه ها").First().Abstract:"")" href="@Url.Action("Index", "Folders")"><span class="glyphicon glyphicon-list-alt"></span> مدیریت پوشه ها</a>
+        </p>
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Logo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SettingName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.WebSiteName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.WebSiteTitle)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.WebSiteMetaDescription)
+                    </th>
+                    <th>
+                        زبان ( وب سایت )
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (item.attachment != null)
+                            {
+                                @Html.Displayattachment(item.attachment.FileName, item.attachment.Title, "MD", true, htmlAttributes: new { @class = "img-responsive", width = "100" })
+
+                            }
+                            else
+                            {
+                                <span>لوگو تعریف نشده است</span>
+                            }
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SettingName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.WebSiteName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.WebSiteTitle)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.WebSiteMetaDescription)
+                        </td>
+                        <td>
+                            @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId.Value)
+                        </td>
+                        <td>
+                            @if (ViewBag.EditPermission)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                            }
+
+                            @if (ViewBag.DeletePermission)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                            }
+                            @if (ViewBag.EditPermission)
+                            {
+                                <div>
+                                    <a class="btn btn-success" href="@Url.Action("ProductRandom", new { settingId = item.Id })"><span class="glyphicon glyphicon-edit"></span> گروههای انتخاب محصول تصادفی </a>
+
+                                </div>
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+
+    </div>
+
+</div>

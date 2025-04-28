@@ -1,0 +1,79 @@
+﻿@model Domain.ProductCategory
+@using ahmadi.Infrastructure.Helper
+
+<title>حذف گروه و زیر گروه محصول</title>
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index","ProductCategories")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            حذف گروه و زیر گروه محصول
+        </h1>
+        <h4 style="color:red"><i class="glyphicon glyphicon-remove"></i> آیا مطمئن به حذف این رکورد هستید؟</h4>
+        <br /><br />
+        <p class="text text-danger"><strong>@ViewBag.Erorr</strong></p>
+        <dl class="dl-horizontal">
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+            <content><br /></content>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Cover)
+            </dt>
+
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Descr)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Descr)
+            </dd>
+            <content><br /></content>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Abstract)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Abstract)
+            </dd>
+
+            <content><br /></content>
+            <dt>
+                زبان ( وب سایت )
+            </dt>
+
+            <dd>
+                @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(Model.LanguageId.Value)
+            </dd>
+            <content><br /></content>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Sort)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Sort)
+            </dd>
+            <content><br /></content>
+
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="حذف" class="btn btn-danger" />
+            </div>
+        }
+</div>
+</div>

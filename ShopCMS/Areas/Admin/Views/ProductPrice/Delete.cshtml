@@ -1,0 +1,48 @@
+﻿@model Domain.ProductPrice
+<title>حذفِ تنوعِ محصول</title>
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index",new { id = Model.ProductId })"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h3 class="box-title">
+            <i class="flaticon-file-outlined-blank-paper-sheet"></i> حذفِ تنوع محصول
+        </h3>
+
+        @if (Model.OrderRows.Any())
+        {
+            <h4 style="color:red"><i class="glyphicon glyphicon-remove"></i>به دلیل فروش این تنوع محصول و موجود بودن در سفارشات ، قادر به حذف این محصول نمی باشید!</h4>
+        }
+        else
+        {
+            <h4 style="color:red"><i class="glyphicon glyphicon-remove"></i>مطمئن به حذف هستید؟</h4>
+        }
+        <br /><br />
+        <p class="text text-danger"><strong>@ViewBag.Error</strong></p>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Id)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Id)
+            </dd>
+
+         
+
+        </dl>
+
+        @if (!Model.OrderRows.Any())
+        {
+            using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+
+                <div class="form-actions no-color">
+                    <input type="submit" value="حذف" class="btn btn-danger" />
+                </div>
+            }
+        }
+    </div>
+</div>

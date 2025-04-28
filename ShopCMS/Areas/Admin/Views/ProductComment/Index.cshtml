@@ -1,0 +1,194 @@
+﻿@model PagedList.IPagedList<Domain.ProductComment>
+@using PagedList.Mvc;
+<title>مدیریت نظرات محصول</title>
+@{
+
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+}
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Category.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            <span>نظرات محصول</span>
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")" title="راهنمای این صفحه"></span>
+
+        </h1>
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><span class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").First().Abstract:"")"></span> جستجو / فیلتر</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content" style="display:none">
+                <div id="SearchPage">
+                    <div>
+                        @using (Html.BeginForm("Index", "ProductComment", FormMethod.Get))
+                        {
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>نام کاربر(نام و نام خانوادگی را با یک فاصله از هم جدا نمایید) :</p>
+                                @Html.TextBox("UserString", ViewBag.UserFilter as string, htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>نام محصول :</p>
+                                @Html.TextBox("ProductString", ViewBag.ProductFilter as string, htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>عنوان نظر : </p>
+                                @Html.TextBox("TitleString", ViewBag.TitleFilter as string, htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <p>وضعیت : </p>
+                                @Html.DropDownList("ActiveString", ViewBag.ActiveSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { style = "width:90%;display: inline-block", @class = "form-control" })
+                            </div>
+
+                            <div class="clearfix"></div><br />
+                            <input type="submit" value="جست و جو" class="btn btn-success" />
+                            @Html.ActionLink("نمایش همه", "Index", null, htmlAttributes: new { @class = "btn btn-success" })
+                        }
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="header-col">
+                        <th>
+                            <p class="text-center">
+                                <span>نام کاربر</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "User", UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, TitleFilter = ViewBag.TitleFilter, ActiveFilter = ViewBag.ActiveFilter })" title="مرتب سازی بر اساس نام کاربر صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "User_desc", UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, TitleFilter = ViewBag.TitleFilter, ActiveFilter = ViewBag.ActiveFilter })" title="مرتب سازی بر اساس نام کاربر نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+                        <th>
+                            <p class="text-center">
+                                <span>نام محصول</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Product", UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, TitleFilter = ViewBag.TitleFilter, ActiveFilter = ViewBag.ActiveFilter })" title="مرتب سازی بر اساس نام محصول صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Product_desc", UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, TitleFilter = ViewBag.TitleFilter, ActiveFilter = ViewBag.ActiveFilter })" title="مرتب سازی بر اساس نام محصول نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+
+                        </th>
+                        <th>
+                            <p class="text-center">
+                                <span>عنوان نظر</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Title", UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, TitleFilter = ViewBag.TitleFilter, ActiveFilter = ViewBag.ActiveFilter })" title="مرتب سازی بر اساس عنوان نظر صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Title_desc", UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, TitleFilter = ViewBag.TitleFilter, ActiveFilter = ViewBag.ActiveFilter })" title="مرتب سازی بر اساس عنوان نظر نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+
+                        </th>
+                        <th>
+                            <p class="text-center">
+                                <span>وضعیت</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Confirm", UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, TitleFilter = ViewBag.TitleFilter, ActiveFilter = ViewBag.ActiveFilter })" title="مرتب سازی بر اساس وضعیت صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Confirm_desc", UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, TitleFilter = ViewBag.TitleFilter, ActiveFilter = ViewBag.ActiveFilter })" title="مرتب سازی بر اساس وضعیت نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+
+                        </th>
+                        <th>
+                            <p class="text-center">
+                                <span>تاریخ ثبت</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Date", UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, TitleFilter = ViewBag.TitleFilter, ActiveFilter = ViewBag.ActiveFilter })" title="مرتب سازی بر اساس تاریخ ثبت صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Date_desc", UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, TitleFilter = ViewBag.TitleFilter, ActiveFilter = ViewBag.ActiveFilter })" title="مرتب سازی بر اساس تاریخ ثبت نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+
+                        </th>
+                        <th>
+                           
+                            <p class="text-center">
+                                <span>خریدار محصول</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "IsBuy", UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, TitleFilter = ViewBag.TitleFilter, ActiveFilter = ViewBag.ActiveFilter })" title="مرتب سازی بر اساس تاریخ ثبت صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "IsBuy_desc", UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, TitleFilter = ViewBag.TitleFilter, ActiveFilter = ViewBag.ActiveFilter })" title="مرتب سازی بر اساس تاریخ ثبت نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+                        <th>
+                            </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var visited = "background-color:#f8baba";
+                        if (item.Visited)
+                        {
+                            visited = "background-color:#41f8bb";
+                        }
+                        <tr style="@visited">
+                            <td>
+                                @item.User.FirstName  @item.User.LastName
+                            </td>
+                            <td>
+                                @item.Product.Name
+                            </td>
+                            <td>
+                                @item.Title
+                            </td>
+
+                            <td>
+                                @if (item.IsActive)
+                                {
+                                    <text>تایید</text>
+                                }
+                                else
+                                {
+                                    <text>عدم تایید</text>
+                                }
+                            </td>
+                            <td>
+                                @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate) <br /> @item.InsertDate.ToShortTimeString()
+                            </td>
+                            <td>
+                                <input type="checkbox" checked="@item.IsBuy" disabled="disabled" />
+                            </td>
+                            <td>
+                                <a class="btn btn-info" href="@Url.Action("Details", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> جزییات </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount نظر.
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, UserFilter = ViewBag.UserFilter, ProductFilter = ViewBag.ProductFilter, TitleFilter = ViewBag.TitleFilter }))
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="~/Areas/Admin/Content/Scripts/View/Category.js"></script>
+}

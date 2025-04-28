@@ -1,0 +1,897 @@
+﻿@model Domain.ViewModels.Videos
+@using CoreLib.Infrastructure
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure
+@using PagedList.Mvc;
+
+@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+
+    var sliders = ViewBag.Sliders as IEnumerable<Domain.Slider>;
+    var MostSort = ViewBag.MostSort as IEnumerable<Domain.Content>;
+    int i = 1;
+    var ads = ViewBag.Ads as IEnumerable<Domain.Adveresting>;
+    var latestContent = ViewBag.LatestContent as PagedList.IPagedList<Domain.Content>;
+    var setting = ViewBag.setting as Domain.Setting;
+    Layout = "~/Views/Shared/_LayoutVideo.cshtml";
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+@section Header{
+    <link href="~/Content/Base/Css/view/All-Video.css" rel="stylesheet" />
+
+}
+
+@if (Model.TopAdveresting.Any())
+{
+    foreach (var item in Model.TopAdveresting)
+    {
+
+        <!-- prs video section Start -->
+        <div class="prs_video_section_main_wrapper" style="background:@("url("+Html.DisplayattachmentUrl(item.attachment.FileName,"LG")+") "))">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="prs_video_sec_icon_wrapper">
+                            <ul>
+                                <li>
+                                    <a class="test-popup-link button" href="@item.Link" title="@item.Title"><i class="flaticon-play-button"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- prs video section End -->
+    }
+}
+
+
+<!-- prs Slider Start -->
+<div id="slider-main">
+
+    @foreach (var item in Model.Sliders)
+    {
+        <div class="prs_vp_center_slider">
+            <div class="owl-carousel owl-theme owl-drag">
+                @foreach (var item2 in item.SliderImages)
+                {
+                    <div class="item">
+                        <div class="prs_vp_center_slider_img_wrapper">
+                            <a href="@item2.Link">
+                                @Html.Displayattachment(item2.attachment.FileName,item2.attachment.Title, "LG")
+                            </a>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    }
+</div>
+
+
+<!-- prs Slider End -->
+<!-- prs upcomung Slider Start -->
+<div class="prs_upcom_slider_main_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_heading_section_wrapper">
+                    <h1>New @Model.Name</h1>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_upcome_tabs_wrapper">
+                    <ul class="nav nav-tabs" role="tablist">
+                        @foreach (var item in Model.TopCatContentsByNew)
+                        {
+                            <li role="presentation" class="@(i==1?"active":"")">
+                                <a href="@("#TopNewCat"+i)" aria-controls="@("TopNewCat"+i)" role="tab" data-toggle="tab">@item.Name</a>
+                            </li>
+                            i++;
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="tab-content">
+                @{i = 1;}
+                @foreach (var item in Model.TopCatContentsByNew)
+                {
+                    <div role="tabpanel" class="@(i==1?"tab-pane fade in active":"tab-pane fade in")" id="@("TopNewCat"+i)">
+                        <div class="prs_upcom_slider_slides_wrapper">
+                            <div class="owl-carousel owl-theme owl-drag">
+                                <div class="item">
+                                    <div class="row">
+                                        @foreach (var item2 in item.TopContentList.Skip(0).Take(5))
+                                        {
+                                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 prs_upcom_slide_first">
+                                                <div class="prs_upcom_movie_box_wrapper">
+                                                    <div class="prs_upcom_movie_img_box">
+                                                        @Html.Displayattachment(item2.attachment.FileName, item2.attachment.Title, "MD")
+                                                        <div class="prs_upcom_movie_img_overlay"></div>
+                                                        <div class="prs_upcom_movie_img_btn_wrapper">
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">view</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">detail</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box">
+                                                        <div class="prs_upcom_movie_content_box_inner">
+                                                            <h2><a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">@item2.Title</a></h2>
+                                                            <p>@item2.User.FirstName @item2.User.LastName</p>
+                                                            @*<i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star-o"></i>
+                                                                <i class="fa fa-star-o"></i>*@
+                                                        </div>
+                                                        @*<div class="prs_upcom_movie_content_box_inner_icon">
+                                                                <ul>
+                                                                    <li>
+                                                                        <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        <div class="cc_featured_second_section">
+                                            @foreach (var item2 in item.TopContentList.Skip(5).Take(5))
+                                            {
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 prs_upcom_slide_first">
+                                                    <div class="prs_upcom_movie_box_wrapper">
+                                                        <div class="prs_upcom_movie_img_box">
+                                                            @Html.Displayattachment(item2.attachment.FileName, item2.attachment.Title, "MD")
+                                                            <div class="prs_upcom_movie_img_overlay"></div>
+                                                            <div class="prs_upcom_movie_img_btn_wrapper">
+                                                                <ul>
+                                                                    <li>
+                                                                        <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">view</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">detail</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="prs_upcom_movie_content_box">
+                                                            <div class="prs_upcom_movie_content_box_inner">
+                                                                <h2><a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">@item2.Title</a></h2>
+                                                                <p>@item2.User.FirstName @item2.User.LastName</p>
+                                                                @*<i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star-o"></i>
+                                                                    <i class="fa fa-star-o"></i>*@
+                                                            </div>
+                                                            @*<div class="prs_upcom_movie_content_box_inner_icon">
+                                                                    <ul>
+                                                                        <li>
+                                                                            <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>*@
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        @foreach (var item2 in item.TopContentList.Skip(10).Take(5))
+                                        {
+                                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 prs_upcom_slide_first">
+                                                <div class="prs_upcom_movie_box_wrapper">
+                                                    <div class="prs_upcom_movie_img_box">
+                                                        @Html.Displayattachment(item2.attachment.FileName, item2.attachment.Title, "MD")
+                                                        <div class="prs_upcom_movie_img_overlay"></div>
+                                                        <div class="prs_upcom_movie_img_btn_wrapper">
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">view</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">detail</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box">
+                                                        <div class="prs_upcom_movie_content_box_inner">
+                                                            <h2><a href="@Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) })">@item2.Title</a></h2>
+                                                            <p>@item2.User.FirstName @item2.User.LastName</p>
+                                                            @*<i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star-o"></i>
+                                                                <i class="fa fa-star-o"></i>*@
+                                                        </div>
+                                                        @*<div class="prs_upcom_movie_content_box_inner_icon">
+                                                                <ul>
+                                                                    <li>
+                                                                        <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <div class="cc_featured_second_section">
+                                            @foreach (var item2 in item.TopContentList.Skip(15).Take(5))
+                                            {
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 prs_upcom_slide_first">
+                                                    <div class="prs_upcom_movie_box_wrapper">
+                                                        <div class="prs_upcom_movie_img_box">
+                                                            @Html.Displayattachment(item2.attachment.FileName, item2.attachment.Title, "MD")
+                                                            <div class="prs_upcom_movie_img_overlay"></div>
+                                                            <div class="prs_upcom_movie_img_btn_wrapper">
+                                                                <ul>
+                                                                    <li>
+                                                                        <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">view</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">detail</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="prs_upcom_movie_content_box">
+                                                            <div class="prs_upcom_movie_content_box_inner">
+                                                                <h2><a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">@item2.Title</a></h2>
+                                                                <p>@item2.User.FirstName @item2.User.LastName</p>
+                                                                @*<i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star-o"></i>
+                                                                    <i class="fa fa-star-o"></i>*@
+                                                            </div>
+                                                            @*<div class="prs_upcom_movie_content_box_inner_icon">
+                                                                    <ul>
+                                                                        <li>
+                                                                            <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>*@
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="prs_animate_btn1 prs_upcom_main_wrapper">
+                                        <ul>
+                                            <li>
+                                                <a href="@("/En"+Url.Action("Index","VideoCategory",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))" class="button button--tamaya prs_upcom_main_btn" data-text="نمایش همه"><span>view All</span></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    i++;
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- prs upcomung Slider End -->
+@if (Model.RightAdveresting.Any())
+{
+    foreach (var item in Model.RightAdveresting)
+    {
+
+        <!-- prs video section Start -->
+        <div class="prs_video_section_main_wrapper" style="background:@("url("+Html.DisplayattachmentUrl(item.attachment.FileName,"LG")+") "))">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="prs_video_sec_icon_wrapper">
+                            <ul>
+                                <li>
+                                    <a class="test-popup-link button" href="@item.Link" title="@item.Title"><i class="flaticon-play-button"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- prs video section End -->
+    }
+}
+<!-- prs web series Slider Start -->
+<div class="prs_upcom_slider_main_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_heading_section_wrapper">
+                    <h2>Most View</h2>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_upcome_tabs_wrapper">
+                    <ul class="nav nav-tabs" role="tablist">
+                        @{ i = 1;}
+                        @foreach (var item in Model.TopCatContentsByNew)
+                        {
+                            <li role="presentation" class="@(i==1?"active":"")">
+                                <a href="@("#TopVisitCat"+i)" aria-controls="@("TopVisitCat"+i)" role="tab" data-toggle="tab">@item.Name</a>
+                            </li>
+                            i++;
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="tab-content">
+                @{i = 1;}
+                @foreach (var item in Model.TopCatContentsByVisit)
+                {
+                    <div role="tabpanel" class="@(i==1?"tab-pane fade in active":"tab-pane fade in")" id="@("TopVisitCat"+i)">
+                        <div class="prs_upcom_slider_slides_wrapper">
+                            <div class="owl-carousel owl-theme owl-drag">
+                                <div class="item">
+                                    <div class="row">
+                                        @foreach (var item2 in item.TopContentList.Skip(0).Take(5))
+                                        {
+                                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 prs_upcom_slide_first">
+                                                <div class="prs_upcom_movie_box_wrapper">
+                                                    <div class="prs_upcom_movie_img_box">
+                                                        @Html.Displayattachment(item2.attachment.FileName, item2.attachment.Title, "MD")
+                                                        <div class="prs_upcom_movie_img_overlay"></div>
+                                                        <div class="prs_upcom_movie_img_btn_wrapper">
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">view</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">detail</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box">
+                                                        <div class="prs_upcom_movie_content_box_inner">
+                                                            <h2><a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">@item2.Title</a></h2>
+                                                            <p>@item2.User.FirstName @item2.User.LastName</p>
+                                                            @*<i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star-o"></i>
+                                                                <i class="fa fa-star-o"></i>*@
+                                                        </div>
+                                                        @*<div class="prs_upcom_movie_content_box_inner_icon">
+                                                                <ul>
+                                                                    <li>
+                                                                        <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        <div class="cc_featured_second_section">
+                                            @foreach (var item2 in item.TopContentList.Skip(5).Take(5))
+                                            {
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 prs_upcom_slide_first">
+                                                    <div class="prs_upcom_movie_box_wrapper">
+                                                        <div class="prs_upcom_movie_img_box">
+                                                            @Html.Displayattachment(item2.attachment.FileName, item2.attachment.Title, "MD")
+                                                            <div class="prs_upcom_movie_img_overlay"></div>
+                                                            <div class="prs_upcom_movie_img_btn_wrapper">
+                                                                <ul>
+                                                                    <li>
+                                                                        <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">view</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">detail</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="prs_upcom_movie_content_box">
+                                                            <div class="prs_upcom_movie_content_box_inner">
+                                                                <h2><a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">@item2.Title</a></h2>
+                                                                <p>@item2.User.FirstName @item2.User.LastName</p>
+                                                                @*<i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star-o"></i>
+                                                                    <i class="fa fa-star-o"></i>*@
+                                                            </div>
+                                                            @*<div class="prs_upcom_movie_content_box_inner_icon">
+                                                                    <ul>
+                                                                        <li>
+                                                                            <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>*@
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        @foreach (var item2 in item.TopContentList.Skip(10).Take(5))
+                                        {
+                                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 prs_upcom_slide_first">
+                                                <div class="prs_upcom_movie_box_wrapper">
+                                                    <div class="prs_upcom_movie_img_box">
+                                                        @Html.Displayattachment(item2.attachment.FileName, item2.attachment.Title, "MD")
+                                                        <div class="prs_upcom_movie_img_overlay"></div>
+                                                        <div class="prs_upcom_movie_img_btn_wrapper">
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">view</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">detail</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box">
+                                                        <div class="prs_upcom_movie_content_box_inner">
+                                                            <h2><a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">@item2.Title</a></h2>
+                                                            <p>@item2.User.FirstName @item2.User.LastName</p>
+                                                            @*<i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star-o"></i>
+                                                                <i class="fa fa-star-o"></i>*@
+                                                        </div>
+                                                        @*<div class="prs_upcom_movie_content_box_inner_icon">
+                                                                <ul>
+                                                                    <li>
+                                                                        <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <div class="cc_featured_second_section">
+                                            @foreach (var item2 in item.TopContentList.Skip(15).Take(5))
+                                            {
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 prs_upcom_slide_first">
+                                                    <div class="prs_upcom_movie_box_wrapper">
+                                                        <div class="prs_upcom_movie_img_box">
+                                                            @Html.Displayattachment(item2.attachment.FileName, item2.attachment.Title, "MD")
+                                                            <div class="prs_upcom_movie_img_overlay"></div>
+                                                            <div class="prs_upcom_movie_img_btn_wrapper">
+                                                                <ul>
+                                                                    <li>
+                                                                        <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">view</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">detail</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="prs_upcom_movie_content_box">
+                                                            <div class="prs_upcom_movie_content_box_inner">
+                                                                <h2><a href="@("/En"+Url.Action("Index","video",new {id=item2.Id,title=CommonFunctions.NormalizeAddress(item2.PageAddress) }))">@item2.Title</a></h2>
+                                                                <p>@item2.User.FirstName @item2.User.LastName</p>
+                                                                @*<i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star-o"></i>
+                                                                    <i class="fa fa-star-o"></i>*@
+                                                            </div>
+                                                            @*<div class="prs_upcom_movie_content_box_inner_icon">
+                                                                    <ul>
+                                                                        <li>
+                                                                            <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>*@
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="prs_animate_btn1 prs_upcom_main_wrapper">
+                                        <ul>
+                                            <li>
+                                                <a href="@("/En"+Url.Action("Index","VideoCategory",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))" class="button button--tamaya prs_upcom_main_btn" data-text="نمایش همه"><span>view All </span></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    i++;
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!-- prs web series Slider End -->
+<!-- prs theater Slider Start -->
+<div class="prs_theater_main_slider_wrapper">
+    <div class="prs_theater_img_overlay"></div>
+    <div class="prs_theater_sec_heading_wrapper">
+        <h2>Best </h2>
+    </div>
+    <div class="wrap-album-slider">
+        <div class="bx-wrapper" style="max-width: 1901px;">
+            <div class="bx-viewport" style="width: 100%; overflow: hidden; position: relative; height: 482px;">
+                <ul class="album-slider" style="width: 915%; position: relative; left: -68.089px;">
+                    @foreach (var item in Model.TopContentsByRandom1)
+                    {
+                        <li class="album-slider__item" style="float: left; list-style: none; position: relative; width: 257px; margin-right: 17px;">
+                            <figure class="album">
+                                <div class="prs_upcom_movie_box_wrapper">
+                                    <div class="prs_upcom_movie_img_box">
+                                        @Html.Displayattachment(item.attachment.FileName, item.attachment.Title, "MD")
+
+                                        <div class="prs_upcom_movie_img_overlay"></div>
+                                        <div class="prs_upcom_movie_img_btn_wrapper">
+                                            <ul>
+                                                <li>
+                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))">view</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@("/En"+Url.Action("Index","video",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))">detail</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="prs_upcom_movie_content_box">
+                                        <div class="prs_upcom_movie_content_box_inner">
+                                            <h2><a href="@("/En"+Url.Action("Index","video",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))">@item.Title</a></h2>
+                                            <p>@item.User.FirstName @item.User.LastName</p>
+
+                                        </div>
+                                        @*<div class="prs_upcom_movie_content_box_inner_icon">
+                                                <ul>
+                                                    <li>
+                                                        <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                    </li>
+                                                </ul>
+                                            </div>*@
+                                    </div>
+                                </div>
+                                <!-- End album body -->
+                            </figure>
+                            <!-- End album -->
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+        <!-- End slider -->
+    </div>
+</div>
+
+
+<!-- prs upcomung Slider End -->
+@if (Model.LeftAdveresting.Any())
+{
+    foreach (var item in Model.LeftAdveresting)
+    {
+
+        <!-- prs video section Start -->
+        <div class="prs_video_section_main_wrapper" style="background:@("url("+Html.DisplayattachmentUrl(item.attachment.FileName,"LG")+") "))">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="prs_video_sec_icon_wrapper">
+                            <ul>
+                                <li>
+                                    <a class="test-popup-link button" href="@item.Link" title="@item.Title"><i class="flaticon-play-button"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- prs video section End -->
+    }
+}
+<!-- prs web series Slider Start -->
+<!-- prs videos&photos slider Start -->
+<div class="prs_vp_main_section_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_heading_section_wrapper">
+                    <h2>Recomended</h2>
+                </div>
+            </div>
+            <div class="prs_vp_main_slider_wrapper">
+                <div class="prs_vp_left_slidebar_wrapper">
+                    <div class="wrap-album-slider">
+                        <div class="bx-wrapper" style="max-width: 257px;">
+                            <div class="bx-viewport" style="width: 100%; overflow: hidden; position: relative; height: 176px;">
+                                <ul class="prs_vp_left_slider" style="width: auto; position: relative; top: -1059.03px;">
+                                    @foreach (var item in Model.TopContentsByRandom2)
+                                    {
+                                        <li class="album-slider__item prs_vp_hover_overlay">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    @if (item.Cover.HasValue)
+                                                    {
+                                                        @Html.Displayattachment(item.attachment.FileName, item.attachment.Title, "MD")
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/Content/Default/images/default-thumbnail.jpg" />
+                                                    }
+                                                    <a href="@("/En"+Url.Action("Index", "video", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) }))" class="">
+                                                        <i class="fa fa-search"></i>
+                                                    </a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                    }
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="prs_vp_center_slidebar_wrapper">
+                    <div class="prs_vp_center_slider">
+                        <div class="owl-carousel owl-theme owl-drag">
+
+                            @foreach (var item in Model.TopContentsByRandom3)
+                            {
+
+                                <div class="item">
+                                    <div class="prs_vp_center_slider_img_wrapper">
+
+                                        <a href="@("/En"+Url.Action("Index", "video", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) }))">
+                                            @if (item.Cover.HasValue)
+                                            {
+                                                @Html.Displayattachment(item.attachment.FileName, item.attachment.Title, "MD")
+                                            }
+                                            else
+                                            {
+                                                <img src="~/Content/Default/images/default-thumbnail.jpg" />
+                                            }
+                                        </a>
+                                    </div>
+                                </div>
+
+
+                            }
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="prs_vp_right_slidebar_wrapper">
+                    <div class="wrap-album-slider">
+                        <div class="bx-wrapper" style="max-width: 257px;">
+                            <div class="bx-viewport" style="width: 100%; overflow: hidden; position: relative; height: 176px;">
+                                <ul class="prs_vp_right_slider" style="width: auto; position: relative; top: -98.9704px;">
+
+                                    @foreach (var item in Model.TopContentsByRandom4)
+                                    {
+                                        <li class="album-slider__item prs_vp_hover_overlay">
+                                            <figure class="album">
+                                                <div class="prs_vp_img_overlay">
+                                                    @if (item.Cover.HasValue)
+                                                    {
+                                                        @Html.Displayattachment(item.attachment.FileName, item.attachment.Title, "MD")
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/Content/Default/images/default-thumbnail.jpg" />
+                                                    }
+                                                    <a href="@("/En"+Url.Action("Index", "video", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) }))" class">
+                                                        <i class="fa fa-search"></i>
+                                                    </a>
+                                                </div>
+                                            </figure>
+                                            <!-- End album -->
+                                        </li>
+                                    }
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- prs videos&photos slider End -->
+@if (Model.BottomAdveresting.Any())
+{
+    foreach (var item in Model.BottomAdveresting)
+    {
+
+        <!-- prs video section Start -->
+        <div class="prs_video_section_main_wrapper" style="background:@("url("+Html.DisplayattachmentUrl(item.attachment.FileName,"LG")+") "))">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="prs_video_sec_icon_wrapper">
+                            <ul>
+                                <li>
+                                    <a class="test-popup-link button" href="@item.Link" title="@item.Title"><i class="flaticon-play-button"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- prs video section End -->
+    }
+}
+<!-- prs web series Slider Start -->
+<!-- prs patner slider Start -->
+<!--<div class="prs_patner_main_section_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_heading_section_wrapper">
+                    <h2>Our Patner�s</h2>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_pn_slider_wraper">
+                    <div class="owl-carousel owl-theme owl-drag">
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p1.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p2.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p3.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p4.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p5.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p6.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p1.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p2.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p3.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p4.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p5.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p6.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p1.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p2.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p3.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p4.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p5.jpg" alt="patner_img">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="prs_pn_img_wrapper">
+                                <img src="~/Content/video/images/p6.jpg" alt="patner_img">
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+<!-- prs patner slider End -->
+<!-- prs Newsletter Wrapper Start -->
+<!--<div class="prs_newsletter_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                <div class="prs_newsletter_text">
+                    <h3>Get update sign up now !</h3>
+                </div>
+            </div>
+            <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                <div class="prs_newsletter_field">
+                    <input type="text" placeholder="Enter Your Email">
+                    <button type="submit">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+<!-- prs Newsletter Wrapper End -->

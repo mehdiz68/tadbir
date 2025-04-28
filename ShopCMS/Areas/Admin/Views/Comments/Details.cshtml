@@ -1,0 +1,154 @@
+﻿@model Domain.Comment
+<title>جزئیات نظر</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            جزئیات نظر
+        </h1>
+        <br /><br />
+
+        <dl class="dl-horizontal col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <dt>
+                @Html.DisplayNameFor(model => model.FullName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FullName)
+            </dd>
+            <dt>
+                نظر مربوط به محتوای
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Content.Title)
+                <a href="~/Content/@Model.ContentId/@CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(Model.Content.Title)" target="_blank"><span class="glyphicon glyphicon-link"></span></a>
+
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Message)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Message)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Visited)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Visited)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.IsActive)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.InsertDate)
+            </dt>
+
+            <dd>
+                @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.InsertDate) <br /> @Model.InsertDate.ToShortTimeString()
+            </dd>
+            <content><br /><br /></content>
+
+            <dt>
+                نظر مربوط به کامنتِ :
+            </dt>
+
+            <dd>
+                @if (Model.ParentComment != null)
+            {
+                    @Html.DisplayFor(model => model.ParentComment.Email)
+                }
+                else
+                {
+                    <span>هیچ کامنتی</span>
+                }
+            </dd>
+
+
+        </dl>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <fieldset class="NewFieldset">
+                <legend class="Newlegend">پاسخ و تایید</legend>
+                <div>
+                    <p class="text text-danger">@ViewBag.message</p>
+                    @using (Html.BeginForm("Replay", "Comments", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(model => model.Id)
+                        <textarea id="ReplayMessage" name="ReplayMessage" placeholder="متن پاسخ..." rows="8" class="form-control"></textarea><br />
+                            <input type="submit" class="btn btn-primary" value="ثبت" />
+                    }
+
+                    <hr />
+                    <h4>پاسخ های ثبت شده برای این نظر : </h4>
+                    @if (Model.ChildComment.Any())
+                    {
+                        <table class="table">
+                            <tr>
+                                <th>نام و نام خانوادگی</th>
+                                <th>ایمیل</th>
+                                <th>متن نظر</th>
+                                <th>تاریخ ثبت</th>
+                            </tr>
+                            @foreach (var item in Model.ChildComment)
+                            {
+                                <tr>
+                                    <td>@item.FullName</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.Message</td>
+                                    <td>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate) <br /> @item.InsertDate.ToShortTimeString()</td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="alert alert-danger">پاسخی داده نشده است.</p>
+                    }
+
+                </div>
+
+            </fieldset>
+        </div>
+        <div class="clearfix"></div>
+        <p>
+
+            @if (Model.IsActive == false)
+            {
+                <a id="Active" class="btn btn-primary" data-url="@Url.Action("Details","Comments", new { id = Model.Id })" href="@Url.Action("Active", new { id = Model.Id })"><span class="glyphicon glyphicon-edit"></span> فعال سازی </a>
+            }
+            else
+            {
+                <a id="DeActive" class="btn btn-primary" data-url="@Url.Action("Details","Comments", new { id = Model.Id })" href="@Url.Action("DeActive", new { id = Model.Id })"><span class="glyphicon glyphicon-edit"></span> غیرفعال سازی </a>
+            }
+            <a href="~/Admin/Comments/Edit/@Model.Id" class="btn btn-success">ویرایش</a>
+        </p>
+
+
+
+        @section Scripts{
+            <script src="~/Areas/Admin/Content/Scripts/View/DetailsComment.js"></script>
+        }
+
+        </div>
+</div>

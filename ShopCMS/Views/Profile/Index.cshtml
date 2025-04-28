@@ -1,0 +1,153 @@
+﻿@model ahmadi.Models.IndexViewModel
+@using ahmadi.Infrastructure.Helper
+@using PagedList.Mvc;
+@using PagedList;
+@using CoreLib.Infrastructure.DateTime;
+@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;}
+
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+<div class="container UserPage" id="UserIndexPage">
+    <div class="row">
+        @if (ViewBag.Error != null)
+        {
+            <p class="alert alert-danger">خطایی در ارسال پیام کوتاه رخ داد.</p>
+        }
+        @if (ViewBag.StatusMessage != null)
+        {
+            if (ViewBag.StatusMessage != "")
+            {
+                <p class="alert alert-info">@ViewBag.StatusMessage</p>
+            }
+        }
+        @if (ViewBag.Message != null)
+        {
+            if (ViewBag.Message != "")
+            {
+                <p class="alert alert-info">@ViewBag.Message</p>
+            }
+        }
+
+        <div class="col-md-12" id="left-profile">
+
+            <section>
+                <div class="col-md-12 sidebar">
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p class="phone">شماره تلفن همراه : <span> @Model.PhoneNumber</span></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="email">ایمیل : <span> @Model.Email</span></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="address">آدرس : <span> @Model.Address</span></p>
+                        </div>
+                        @if (!String.IsNullOrEmpty(Model.About))
+                        {
+                            <div class="col-md-12">
+                                <p class="status-profile">@Model.About</p>
+                            </div>
+                        }
+                    </div>
+                    <div class="detail-block">
+
+                        <div class="row">
+
+                            <hr />
+                            <div class="col-md-6">
+                                <span> وضعیت ایمیل :  </span>
+                                @if (Model.EmailConfirmed)
+                                {
+                                    <span class="edit-profile">تایید شده است</span>
+                                }
+                                else
+                                {
+                                    using (Html.BeginForm("ConfirmEmail", "Profile", FormMethod.Post, new { @style = "display:inline", @class = "form-horizontal", name = "EmailConfirmForm" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="button" onclick="document.EmailConfirmForm.submit();" class="edit-profile btn btn-info" value="تایید ایمیل" />
+                                    }
+                                }
+
+                            </div>
+                            <div class="col-md-6">
+
+                                <span> وضعیت تلفن همراه : </span>
+                                @if (Model.PhoneNumberConfirmed)
+                                {
+                                    <span class="edit-profile">تایید شده است</span>
+                                }
+                                else
+                                {
+                                    using (Html.BeginForm("PhoneConfirm", "Profile", FormMethod.Post, new { @style = "display:inline", @class = "form-horizontal", name = "PhoneConfirmForm" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="button" onclick="document.PhoneConfirmForm.submit();" class="edit-profile btn btn-info" value="تایید تلفن همراه" />
+                                    }
+                                }
+
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <br />
+                            <br />
+                            <br />
+
+                            <div class="col-md-4">
+                                <span> تعداد سوالات شما :  </span>
+
+                                <span>@Model.QuestionCount</span>
+
+
+                            </div>
+
+
+                            <div class="col-md-4">
+                                <span> تعداد پاسخ به سوالات شما:  </span>
+
+                                <span>@Model.AnswerCount</span>
+
+
+                            </div>
+
+                            <div class="col-md-4">
+                                <span> تعداد پاسخ جدید به سوالات شما :  </span>
+
+                                <span>@Model.AnswerNotVisitedCount</span>
+
+
+                            </div>
+                            <div class="clearfix"></div>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                </div>
+            </section>
+
+        </div>
+
+
+        <!-- /.sidebar -->
+        <!-- /.col -->
+
+    </div>
+    <!-- /.row -->
+</div>
+
+@section Scripts{
+    <script src="~/Content/Base/Scripts/scroll/dragscrollable.js"></script>
+
+} 

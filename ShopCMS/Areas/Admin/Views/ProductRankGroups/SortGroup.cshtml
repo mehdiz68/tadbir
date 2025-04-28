@@ -1,0 +1,96 @@
+﻿@model PagedList.IPagedList<Domain.ProductRankGroup>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+
+<title>مرتب سازی گروههای آیتم امتیازدهی</title>
+
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <a href="@Url.Action("SortGroup", "ProductRankGroup")">  مرتب سازی گروههای آیتم امتیازدهی</a>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+            <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index", "ProductRankGroups")"> بازگشت <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+
+                <thead>
+                    <tr class="headings">
+
+                        <th class="text-center column-title">
+                            عنوان
+                        </th>
+
+
+                        <th class="text-center column-title">
+                            زبان وب سایت
+                        </th>
+
+                        <th class="text-center column-title"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="rowItem" id="@item.Id">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+
+                            <td>
+                                @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId)
+                            </td>
+                            <td>
+
+                                @if (ViewBag.EditPermission)
+                                {
+                                    <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                }
+                                @if (ViewBag.DeletePermission)
+                                {
+                                    <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount گروه امتیازدهی
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("SortGroup", new { page }))
+
+
+        </div>
+        @section Scripts{
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/View/SortRankGroup.js"></script>
+
+        }
+</div>
+</div>

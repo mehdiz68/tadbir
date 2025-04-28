@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Domain.OrderRateItem>
+
+<title>مدیریت آیتم های نظرسنجی سفارشات</title>
+
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="box-title container" style="padding:0">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                @Html.ActionLink("آیتم های نظرسنجی سفارشات", "Index")
+            </div>
+
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+                <a class="btn btn-success" href="@Url.Action("Index","Offers")">بازگشت به تخفیف ها</a>
+
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <br /><br />
+        <p>
+            @if (ViewBag.AddPermission)
+            {
+                <a class="btn btn-success" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> تعریف آیتم جدید </a>
+            }
+            else
+            {
+                <span class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> <span style="text-decoration:line-through"> تعریف آیتم جدید </span> </span>
+
+            }
+        </p>
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>
+                        عنوان
+                    </th>
+                    <th>
+                        توضیحات
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td >
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td >
+                            @item.Descr
+                        </td>
+                        <td>
+
+                            @if (ViewBag.EditPermission)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                            }
+                            else
+                            {
+                                <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                            }
+                            @if (ViewBag.DeletePermission)
+                            {
+                                <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                            }
+                            else
+                            {
+                                <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>

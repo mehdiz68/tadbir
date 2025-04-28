@@ -1,0 +1,17 @@
+﻿@model ahmadi.ViewModels.Home.NewsLetter
+
+@using (Ajax.BeginForm("JoinNewsLetter", "Home", null, new AjaxOptions { HttpMethod = "POST", OnBegin = "onBeginSubmit", OnSuccess = "ShowJoinNewsletterSuccess", OnFailure = "ShowJoinNewsletterFailure", InsertionMode = InsertionMode.Replace }, new { @class = "rd-form rd-mailform form-inline", id = "JoinNewsLetter" }))
+{
+
+    @Html.AntiForgeryToken()
+
+        @Html.TextBoxFor(model => model.Email, new { id = "EmailNewsletter", @placeholder = "آدرس ایمیل", @class = "form-input form-control form-control-has-validation", type = "email" })
+   
+
+            <input type="submit" class="btn btn-info" value="عضویت در خبرنامه" />
+
+     
+
+}
+
+

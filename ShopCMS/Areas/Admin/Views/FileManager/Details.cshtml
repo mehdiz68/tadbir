@@ -1,0 +1,183 @@
+﻿@model Domain.attachment
+@using ahmadi.Infrastructure.Helper
+
+<title>جزئیات فایل</title>
+
+@{
+    Domain.Setting oSetting = ViewBag.setting as Domain.Setting;
+}
+<div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+<div class="x_panel">
+    <div class="x_content">
+        <h3 class="box-title">
+            <i class="flaticon-clipboard"></i> جزئیات فایل
+        </h3>
+        <br /><br />
+
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Id)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Id)
+            </dd>
+            <dt>
+                @Html.DisplayName("عنوان فایل")
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+            <dt>
+                @Html.DisplayName("نام فایل")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FileName)
+            </dd>
+            <dt>فایل(ها)</dt>
+            <dd>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    @if (CoreLib.Infrastructure.Image.ImageClass.IsFileAnImage("~/Content/UploadFiles/" + Model.FileName))
+                    {
+                        <label>بزرگ  : </label><br />
+                    }
+                    <a target="_blank" href="@Html.DisplayattachmentUrl(Model.FileName,"LG",Model.HasMultiSize)">@Html.Displayattachment(Model.Title,Model.Title, "LG", htmlAttributes: new { @class = "img-responsive", style = "display:inline-block" })</a>
+                </div>
+                @{
+                    if (Model.HasMultiSize && CoreLib.Infrastructure.Image.ImageClass.IsFileAnImage("~/Content/UploadFiles/" + Model.FileName))
+                    {
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                            <label>متوسط  : </label><br />
+                            <a target="_blank" href="@Html.DisplayattachmentUrl(Model.FileName,"MD",Model.HasMultiSize)">@Html.Displayattachment(Model.Title, Model.Title, "MD", htmlAttributes: new { @class = "img-responsive", style = "display:inline-block" })</a>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                            <label>کوچک  : </label><br />
+                            <a target="_blank" href="@Html.DisplayattachmentUrl(Model.FileName,"SM",Model.HasMultiSize)">@Html.Displayattachment(Model.Title, Model.Title, "SM", htmlAttributes: new { @class = "img-responsive", style = "display:inline-block" })</a>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                            <label>خیلی کوچک  : </label><br />
+                            <a target="_blank" href="@Html.DisplayattachmentUrl(Model.FileName,"XS",Model.HasMultiSize)">@Html.Displayattachment(Model.Title, Model.Title, "XS", htmlAttributes: new { @class = "img-responsive", style = "display:inline-block" })</a>
+                        </div>
+
+                    }
+                }
+
+                <div class="clearfix"></div>
+            </dd>
+
+            <dt>
+                @Html.DisplayName("پوشه")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Folder.FolderName)
+            </dd>
+            <dt>
+                @Html.DisplayName("حجم فایل")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Capacity) کیلوبایت
+            </dd>
+
+
+            <dt>
+                @Html.DisplayName("تعداد استفاده")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.UseCount) بار
+            </dd>
+            <dt>
+                @Html.DisplayName("با تغییر اندازه؟")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.HasMultiSize)
+            </dd>
+
+            <dt>
+                @Html.DisplayName("استفاده از واترمارک؟")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.HasWatermark)
+            </dd>
+
+            <dt>
+                @Html.DisplayName("فعال؟")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.IsActive)
+            </dd>
+            <dt>
+                @Html.DisplayName("ترتیب نمایش")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DisplaySort)
+            </dd>
+            <dt>
+                @Html.DisplayName("تاریخ درج")
+            </dt>
+
+            <dd>
+                @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsi(Model.InsertDate) - @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsiTime(Model.InsertDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayName("تاریخ ویرایش")
+            </dt>
+
+            <dd>
+                @{
+                    if (Model.UpdateDate.HasValue)
+                    {
+                        <span>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsi(Model.UpdateDate.Value)</span>
+                        <span> - </span>
+                        <span>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsiTime(Model.UpdateDate.Value)</span>
+
+                    }
+                    else
+                    {
+                        <span style="color:red">ویرایشی انجام نشده است</span>
+                    }
+                }
+            </dd>
+
+            <dt>
+                کاربر
+            </dt>
+
+            <dd>
+                @if (Model.User != null)
+                {
+                    @Html.DisplayFor(model => model.User.UserName)
+                }
+            </dd>
+
+            <dt>
+                زبان ( وب سایت )
+            </dt>
+
+            <dd>
+                @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(Convert.ToInt16(Model.LanguageId))
+            </dd>
+
+
+
+        </dl>
+
+        <p>
+
+            <a class="btn btn-success" href="@Url.Action("Edit", new { id = Model.Id})"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+            <a class="btn btn-danger" href="@Url.Action("Delete", new { id = Model.Id })"><span class="glyphicon glyphicon-remove"></span>حذف</a>
+
+        </p>
+    </div>
+</div>
+      
+
+  

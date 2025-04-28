@@ -1,0 +1,328 @@
+﻿@model PagedList.IPagedList<Domain.Category>
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+
+<title>مدیریت دسته بندی های @ViewBag.ContentTypeName</title>
+
+@{
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+    var setting = ViewBag.setting as Domain.Setting;
+}
+
+@section Header{
+
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+            <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+                <a href="@Url.Action("Index","Categories",new { ContentTypeId = ViewBag.contenttypeid})">
+                    دسته بندی های @ViewBag.ContentTypeName
+
+                </a>
+            </h1>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+            <a class="btn btn-success" href="@Url.Action("Index", "Contents",new { ContentTypeId = ViewBag.contenttypeid})"> بازگشت به @ViewBag.ContentTypeName <span class="glyphicon glyphicon-chevron-left"></span></a>
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+
+        @{
+            bool IsTreeResponse = true;
+            if (Request.QueryString["Type"] != null)
+            {
+                if (Request.QueryString["Type"] != "Tree")
+                {
+                    IsTreeResponse = false;
+                }
+            }
+        }
+        <ul class="nav nav-tabs">
+            <li class="@((IsTreeResponse?"active":""))"><a data-toggle="tab" href="#View2">نمایش درختی</a></li>
+            <li class="@((IsTreeResponse?"":"active"))"><a data-toggle="tab" href="#View1">نمایش عادی</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="View1" class="@((IsTreeResponse?"tab-pane fade in":"tab-pane fade in active"))">
+                <br />
+                @if (ViewBag.AddPermission)
+                {
+                    <p><a class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد دسته بندی").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد دسته بندی").First().Abstract:"")" href="@Url.Action("Create",new {ContentTypeId = ViewBag.contenttypeid })"><span class="glyphicon glyphicon-plus"></span> ایجاد دسته بندی جدید </a></p>
+                }
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2><span class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").First().Abstract:"")"></span> جستجو / فیلتر</h2>
+                        <ul class="nav navbar-left panel_toolbox">
+                            <li>
+                                <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                            </li>
+
+                            <li>
+                                <a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="x_content" style="display:none">
+
+                        <div id="SearchPage">
+                            <div id="SearchPage">
+                                <div>
+                                    <div>
+
+                                        @using (Html.BeginForm("Index", "Categories", FormMethod.Get))
+                                        {
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                                @Html.TextBox("CatTitleString", ViewBag.CatTitleFilter as string, htmlAttributes: new { @placeholder = "عنوان", style = "width:90%;display: inline-block", @class = "form-control" })
+                                                <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                                            </div>
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                                @Html.DropDownList("LanguagenameString", ViewBag.LanguagenameSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { @placeholder = "زبان", style = "width:90%;display: inline-block", @class = "form-control" })
+                                                <span class="fa fa-language form-control-feedback right" aria-hidden="true"></span>
+
+                                            </div>
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                                @Html.DropDownList("IsActive", ViewBag.IsActiveSelectListItem as SelectList, "--انتخاب نمایید--", htmlAttributes: new { @placeholder = "فعال/غیرفعال", style = "width:99%;display: inline-block", @class = "form-control" })
+                                                <span class="fa fa-check form-control-feedback right" aria-hidden="true"></span>
+
+
+                                            </div>
+
+                                            @Html.Hidden("Type", "List")
+                                            @Html.Hidden("ContentTypeId", ViewBag.contenttypeid as int?)
+                                            <div class="clearfix"></div>
+                                            <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                            @Html.ActionLink("نمایش همه", "Index", new { ContentTypeId = ViewBag.contenttypeid, Type = "List" }, htmlAttributes: new { @class = "btn btn-primary" })
+                                        }
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped jambo_table bulk_action">
+
+                        <thead>
+                            <tr class="headings">
+                                <th class="text-center column-title">
+                                    <p class="text-center">
+                                        <span>عنوان</span>
+                                        <span>
+                                            <a style="display:block" href="@Url.Action("Index", new { ContentTypeId = ViewBag.contenttypeid, Type = "List", sortOrder = "CatTitle", CatTitleFilter = ViewBag.CatTitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, ParrentCatFilter = ViewBag.ParrentCatFilter, IsActiveFilter = ViewBag.IsActiveFilter })" title="مرتب سازی بر اساس عنوان صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                            <a style="display:block" href="@Url.Action("Index", new { ContentTypeId = ViewBag.contenttypeid, Type = "List", sortOrder = "CatTitle_desc", CatTitleFilter = ViewBag.CatTitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, ParrentCatFilter = ViewBag.ParrentCatFilter, IsActiveFilter = ViewBag.IsActiveFilter })" title="مرتب سازی بر اساس عنوان نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                        </span>
+                                    </p>
+                                </th>
+                                <th class="text-center column-title">
+                                    <p class="text-center">
+                                        <span>دسته بندی اصلی</span>
+                                        <span>
+                                            <a style="display:block" href="@Url.Action("Index", new { ContentTypeId = ViewBag.contenttypeid, Type = "List", sortOrder = "ParrentCat", CatTitleFilter = ViewBag.CatTitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, ParrentCatFilter = ViewBag.ParrentCatFilter, IsActiveFilter = ViewBag.IsActiveFilter })" title="مرتب سازی بر اساس دسته بندی صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                            <a style="display:block" href="@Url.Action("Index", new { ContentTypeId = ViewBag.contenttypeid, Type = "List", sortOrder = "ParrentCat_desc", CatTitleFilter = ViewBag.CatTitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, ParrentCatFilter = ViewBag.ParrentCatFilter, IsActiveFilter = ViewBag.IsActiveFilter })" title="مرتب سازی بر اساس دسته بندی نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                        </span>
+                                    </p>
+                                </th>
+                                <th class="text-center column-title">
+                                    <p class="text-center">
+                                        <span>فعال؟</span>
+                                        <span>
+                                            <a style="display:block" href="@Url.Action("Index", new { ContentTypeId = ViewBag.contenttypeid, Type = "List", sortOrder = "IsActive", CatTitleFilter = ViewBag.CatTitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, ParrentCatFilter = ViewBag.ParrentCatFilter, IsActiveFilter = ViewBag.IsActiveFilter })" title="مرتب سازی بر اساس غیرفعال ها"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                            <a style="display:block" href="@Url.Action("Index", new { ContentTypeId = ViewBag.contenttypeid, Type = "List", sortOrder = "IsActive_desc", CatTitleFilter = ViewBag.CatTitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, ParrentCatFilter = ViewBag.ParrentCatFilter, IsActiveFilter = ViewBag.IsActiveFilter })" title="مرتب سازی بر اساس فعال ها">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                        </span>
+                                    </p>
+                                </th>
+                                <th class="text-center column-title">
+                                    <p class="text-center">
+                                        <span>نمایش در صفحه اصلی؟</span>
+                                        <span>
+                                            <a style="display:block" href="@Url.Action("Index", new { ContentTypeId = ViewBag.contenttypeid, Type = "List", sortOrder = "Defalut", CatTitleFilter = ViewBag.CatTitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, ParrentCatFilter = ViewBag.ParrentCatFilter, IsActiveFilter = ViewBag.IsActiveFilter })" title="مرتب سازی بر اساس عدم نمایش در صفحه اصلی ها"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                            <a style="display:block" href="@Url.Action("Index", new { ContentTypeId = ViewBag.contenttypeid, Type = "List", sortOrder = "Defalut_desc", CatTitleFilter = ViewBag.CatTitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, ParrentCatFilter = ViewBag.ParrentCatFilter, IsActiveFilter = ViewBag.IsActiveFilter })" title="مرتب سازی بر اساس نمایش در صفحه اصلی ها">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                        </span>
+                                    </p>
+                                </th>
+                                <th class="text-center column-title">
+                                    <p class="text-center">
+                                        <span>نوع محتوا</span>
+                                        <span>
+                                            <a style="display:block" href="@Url.Action("Index", new { ContentTypeId = ViewBag.contenttypeid, Type = "List", sortOrder = "ContentTypeId", CatTitleFilter = ViewBag.CatTitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, ParrentCatFilter = ViewBag.ParrentCatFilter, IsActiveFilter = ViewBag.IsActiveFilter })" title="مرتب سازی بر اساس نوع محتوا صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                            <a style="display:block" href="@Url.Action("Index", new { ContentTypeId = ViewBag.contenttypeid, Type = "List", sortOrder = "ContentTypeId_desc", CatTitleFilter = ViewBag.CatTitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, ParrentCatFilter = ViewBag.ParrentCatFilter, IsActiveFilter = ViewBag.IsActiveFilter })" title="مرتب سازی بر اساس نوع محتوا نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                        </span>
+                                    </p>
+                                </th>
+                                <th class="text-center column-title">
+                                    <p class="text-center">
+                                        <span>زبان ( وب سایت)</span>
+                                        <span>
+                                            <a style="display:block" href="@Url.Action("Index", new { ContentTypeId = ViewBag.contenttypeid, Type = "List", sortOrder = "Languagename", CatTitleFilter = ViewBag.CatTitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, ParrentCatFilter = ViewBag.ParrentCatFilter, IsActiveFilter = ViewBag.IsActiveFilter })" title="مرتب سازی بر اساس زبان ( وب سایت ) صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                            <a style="display:block" href="@Url.Action("Index", new { ContentTypeId = ViewBag.contenttypeid, Type = "List", sortOrder = "Languagename_desc", CatTitleFilter = ViewBag.CatTitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, ParrentCatFilter = ViewBag.ParrentCatFilter, IsActiveFilter = ViewBag.IsActiveFilter })" title="مرتب سازی بر اساس زبان ( وب سایت ) نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                        </span>
+                                    </p>
+                                </th>
+                                <th class="text-center column-title">
+                                    کاور
+                                </th>
+
+                                <th class="text-center column-title"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                        <div><a target="_blank" href="@Url.Action("Index",new { controller ="category", id =item.Id,title= CommonFunctions.NormalizeAddress(item.Title),area=""})"><span class="glyphicon glyphicon-link"></span></a></div>
+
+                                    </td>
+                                    <td>
+                                        @{
+                                            if (item.ParentCat != null)
+                                            {
+                                                @Html.DisplayFor(modelItem => item.ParentCat.Title);
+                                            }
+                                            else
+                                            {
+                                                <span>----</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IsActive)
+                                    </td>
+                                    <td>
+                                        @if (item.ContentTypeId.HasValue)
+                                        {
+
+                                            @CommonFunctions.GetContentTypeName(item.ContentTypeId.Value,setting.StaticContentDomain)
+                                        }
+                                        else
+                                        {
+                                            <span>ویدیوها</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId.Value)
+                                    </td>
+                                    <td>
+                                        @if (item.attachment != null)
+                                        {
+                                            @Html.Displayattachment(item.attachment.FileName, item.Title, "SM", false, htmlAttributes: new { @class = "img-responsive", style = "display:inline-block;width:220px;height:120px" })
+
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:220px;height:120px" />
+                                        }
+                                    </td>
+                                    <td>
+
+                                        @if (ViewBag.EditPermission)
+                                        {
+                                            <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                        }
+                                        @if (ViewBag.DeletePermission)
+                                        {
+                                            <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                                        }
+                                    </td>
+                                </tr>
+                                            }
+                        </tbody>
+                    </table>
+                    <p>
+                        <strong style="color: #900">
+                            صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount دسته بندی
+                        </strong>
+                    </p>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, Type = "List", ContentTypeId = ViewBag.contenttypeid, sortOrder = ViewBag.CurrentSort, CatTitleFilter = ViewBag.CatTitleFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, ParrentCatFilter = ViewBag.ParrentCatFilter, IsActiveFilter = ViewBag.IsActiveFilter }))
+
+
+                </div>
+
+            </div>
+            <div id="View2" class="@((IsTreeResponse?"tab-pane fade in active":"tab-pane fade in"))">
+                <br />
+                <p>
+                    @if (ViewBag.AddPermission)
+            {
+                        <a class="btn btn-success" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد دسته بندی").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="ایجاد دسته بندی").First().Abstract:"")" href="@Url.Action("Create",new {ContentTypeId = ViewBag.contenttypeid })"><span class="glyphicon glyphicon-plus"></span> ایجاد دسته بندی جدید </a>
+                    }
+                </p>
+
+
+                <div class="tree">
+                    @{
+                        CoreLib.ViewModel.Xml.XMLReader xr = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+                        var Languages = xr.ListOfXLanguage();
+                    }
+                    @if (Languages.Count > 1)
+            {
+                        <div>
+                            <p>فیلتر با زبان (وب سایت) :</p>
+                            @Html.DropDownList("LanguageId", ViewBag.LanguageId as SelectList, "--انتخاب نمایید--", htmlAttributes: new { id = "LanguageFilter", style = "width:99%;display: inline-block", @class = "form-control" })
+                        </div>
+                    }
+                    @(Html.TreeView(ViewBag.TreeCategories as IEnumerable<Domain.Category>).EmptyContent("دسته بندی ای وجود ندارد!").Children(m => m.ChildCategory).HtmlAttributes(new { id = "tree" }).ChildrenHtmlAttributes(new { @class = "subItem" }).ItemText(m => m.Title).ItemTemplate(@<text><a data-id="@item.Id" href="@Url.Action("SelectTree", new { ID = item.Id})">@item.Title</a></text>))
+                </div>
+                <ul id="ContexMenu" style="width: 150px; text-align: center; display: none">
+                    @if (ViewBag.AddPermission)
+            {
+                        <li id="NewSubMenu"><span>زیر دسته بندی جدید</span><span class="ui-icon ui-icon-circle-check"></span><span style="right: 1.3em" class="ui-icon ui-icon-circle-check"></span></li>
+                    }
+                    @if (ViewBag.EditPermission)
+            {
+                        <li id="EditItem"><span>ویرایش</span><span class="ui-icon ui-icon-pencil"></span></li>
+                    }
+                    @if (ViewBag.DeletePermission)
+            {
+                        <li id="DeleteItem"><span>حذف</span><span class="ui-icon ui-icon-circle-close"></span></li>
+                    }
+                </ul>
+            </div>
+
+
+        </div>
+
+
+        @section Scripts{
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/View/Category.js"></script>
+
+            <script>
+                $('#ContentTitle').simplyCountable({ counter: '.ContentTitle', maxCount: 100, safeClass: 'safe', overClass: 'over' });
+                $('#ContentDescr').simplyCountable({ counter: '.ContentDescr', maxCount: 150, safeClass: 'safe', overClass: 'over' });
+            </script>
+
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+            <script src="~/Scripts/tinymce/tinymce.min.js"></script>
+            <script src="~/Scripts/tinymce/tiny_mce_load.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/View/TreeCategory.js?v=2"></script>
+
+        }
+</div>
+</div>

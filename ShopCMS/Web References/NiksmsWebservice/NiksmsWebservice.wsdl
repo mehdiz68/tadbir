@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="NiksmsWebservice" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://94.182.154.28:1370/NiksmsWebservice.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="INiksmsWebservice_GroupSms_InputMessage">
+    <wsdl:part name="parameters" element="tns:GroupSms" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GroupSms_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GroupSmsResponse" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_AsyncGroupSms_InputMessage">
+    <wsdl:part name="parameters" element="tns:AsyncGroupSms" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_AsyncGroupSms_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AsyncGroupSmsResponse" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GroupSmsWithPattern_InputMessage">
+    <wsdl:part name="parameters" element="tns:GroupSmsWithPattern" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GroupSmsWithPattern_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GroupSmsWithPatternResponse" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_AsyncGroupSmsWithPattern_InputMessage">
+    <wsdl:part name="parameters" element="tns:AsyncGroupSmsWithPattern" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_AsyncGroupSmsWithPattern_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AsyncGroupSmsWithPatternResponse" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_PtpSms_InputMessage">
+    <wsdl:part name="parameters" element="tns:PtpSms" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_PtpSms_OutputMessage">
+    <wsdl:part name="parameters" element="tns:PtpSmsResponse" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_AsyncPtpSms_InputMessage">
+    <wsdl:part name="parameters" element="tns:AsyncPtpSms" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_AsyncPtpSms_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AsyncPtpSmsResponse" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetCredit_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCredit" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetCredit_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCreditResponse" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetDiscountCredit_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetDiscountCredit" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetDiscountCredit_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetDiscountCreditResponse" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetPanelExpireDate_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetPanelExpireDate" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetPanelExpireDate_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetPanelExpireDateResponse" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetReceiveSms_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetReceiveSms" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetReceiveSms_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetReceiveSmsResponse" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_ResetReceiveSmsVisitedStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:ResetReceiveSmsVisitedStatus" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_ResetReceiveSmsVisitedStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ResetReceiveSmsVisitedStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetSmsDelivery_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetSmsDelivery" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetSmsDelivery_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetSmsDeliveryResponse" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetSmsDeliveryWithClientId_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetSmsDeliveryWithClientId" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetSmsDeliveryWithClientId_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetSmsDeliveryWithClientIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetServertime_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetServertime" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetServertime_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetServertimeResponse" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetSenderNumbers_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetSenderNumbers" />
+  </wsdl:message>
+  <wsdl:message name="INiksmsWebservice_GetSenderNumbers_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetSenderNumbersResponse" />
+  </wsdl:message>
+  <wsdl:portType name="INiksmsWebservice">
+    <wsdl:operation name="GroupSms">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/GroupSms" message="tns:INiksmsWebservice_GroupSms_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/GroupSmsResponse" message="tns:INiksmsWebservice_GroupSms_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AsyncGroupSms">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/AsyncGroupSms" message="tns:INiksmsWebservice_AsyncGroupSms_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/AsyncGroupSmsResponse" message="tns:INiksmsWebservice_AsyncGroupSms_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GroupSmsWithPattern">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/GroupSmsWithPattern" message="tns:INiksmsWebservice_GroupSmsWithPattern_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/GroupSmsWithPatternResponse" message="tns:INiksmsWebservice_GroupSmsWithPattern_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AsyncGroupSmsWithPattern">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/AsyncGroupSmsWithPattern" message="tns:INiksmsWebservice_AsyncGroupSmsWithPattern_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/AsyncGroupSmsWithPatternResponse" message="tns:INiksmsWebservice_AsyncGroupSmsWithPattern_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="PtpSms">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/PtpSms" message="tns:INiksmsWebservice_PtpSms_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/PtpSmsResponse" message="tns:INiksmsWebservice_PtpSms_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AsyncPtpSms">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/AsyncPtpSms" message="tns:INiksmsWebservice_AsyncPtpSms_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/AsyncPtpSmsResponse" message="tns:INiksmsWebservice_AsyncPtpSms_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCredit">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/GetCredit" message="tns:INiksmsWebservice_GetCredit_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/GetCreditResponse" message="tns:INiksmsWebservice_GetCredit_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDiscountCredit">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/GetDiscountCredit" message="tns:INiksmsWebservice_GetDiscountCredit_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/GetDiscountCreditResponse" message="tns:INiksmsWebservice_GetDiscountCredit_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPanelExpireDate">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/GetPanelExpireDate" message="tns:INiksmsWebservice_GetPanelExpireDate_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/GetPanelExpireDateResponse" message="tns:INiksmsWebservice_GetPanelExpireDate_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetReceiveSms">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/GetReceiveSms" message="tns:INiksmsWebservice_GetReceiveSms_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/GetReceiveSmsResponse" message="tns:INiksmsWebservice_GetReceiveSms_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ResetReceiveSmsVisitedStatus">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/ResetReceiveSmsVisitedStatus" message="tns:INiksmsWebservice_ResetReceiveSmsVisitedStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/ResetReceiveSmsVisitedStatusResponse" message="tns:INiksmsWebservice_ResetReceiveSmsVisitedStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSmsDelivery">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/GetSmsDelivery" message="tns:INiksmsWebservice_GetSmsDelivery_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/GetSmsDeliveryResponse" message="tns:INiksmsWebservice_GetSmsDelivery_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSmsDeliveryWithClientId">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/GetSmsDeliveryWithClientId" message="tns:INiksmsWebservice_GetSmsDeliveryWithClientId_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/GetSmsDeliveryWithClientIdResponse" message="tns:INiksmsWebservice_GetSmsDeliveryWithClientId_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetServertime">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/GetServertime" message="tns:INiksmsWebservice_GetServertime_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/GetServertimeResponse" message="tns:INiksmsWebservice_GetServertime_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSenderNumbers">
+      <wsdl:input wsaw:Action="http://tempuri.org/INiksmsWebservice/GetSenderNumbers" message="tns:INiksmsWebservice_GetSenderNumbers_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/INiksmsWebservice/GetSenderNumbersResponse" message="tns:INiksmsWebservice_GetSenderNumbers_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_INiksmsWebservice" type="tns:INiksmsWebservice">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GroupSms">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/GroupSms" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AsyncGroupSms">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/AsyncGroupSms" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GroupSmsWithPattern">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/GroupSmsWithPattern" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AsyncGroupSmsWithPattern">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/AsyncGroupSmsWithPattern" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PtpSms">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/PtpSms" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AsyncPtpSms">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/AsyncPtpSms" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCredit">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/GetCredit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDiscountCredit">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/GetDiscountCredit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPanelExpireDate">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/GetPanelExpireDate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetReceiveSms">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/GetReceiveSms" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResetReceiveSmsVisitedStatus">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/ResetReceiveSmsVisitedStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSmsDelivery">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/GetSmsDelivery" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSmsDeliveryWithClientId">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/GetSmsDeliveryWithClientId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetServertime">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/GetServertime" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSenderNumbers">
+      <soap:operation soapAction="http://tempuri.org/INiksmsWebservice/GetSenderNumbers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="NiksmsWebservice">
+    <wsdl:port name="BasicHttpBinding_INiksmsWebservice" binding="tns:BasicHttpBinding_INiksmsWebservice">
+      <soap:address location="http://94.182.154.28:1370/NiksmsWebservice.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

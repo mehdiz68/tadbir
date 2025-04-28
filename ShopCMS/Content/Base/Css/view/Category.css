@@ -1,0 +1,94 @@
+﻿.post-classic h4{font-size:1em}
+.CategoryContent {
+    border-bottom: 1px dashed #fff;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    background-color: #fff;
+    border: 1px solid #f0f1f2;
+    box-shadow: 0 2px 2px #edeef0;
+    border-radius: 4px;
+}
+.CategoryContent h2{
+    margin: 0;
+    font-size: 18px;
+    padding: 0 20px;
+    border-bottom: 1px solid #eaeaea;
+    background-color: #f8f8f8;
+}
+
+.CategoryContent h2 a {
+    font-size: 18px;
+    display: inline-block;
+    height: 44px;
+    line-height: 44px;
+    margin: 0;
+    padding-left: 11px;
+    border-bottom: 2px solid #11afcb;
+}
+.CategoryContent .CategoryContentDate {
+    font-size: 12px;
+}
+.CategoryContent p {
+    margin: 4px 17px;
+}
+.CategoryContent img, .body-content .categoryImg, .SingleContent .imgcover {
+    display: inline-block;
+    height: auto;
+    max-width: 100%;
+    padding: 4px;
+    line-height: 1.428571429;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+#LeftSideCategory{background-color: #fff;border: 1px solid #f0f1f2;box-shadow: 0 2px 2px #edeef0;border-radius: 4px;}
+#LeftSideCategory h2 {
+    margin: 0;
+    padding: 0 20px;
+    line-height: 40px;
+    font-size: 14px;
+    border-bottom: 1px solid #eaeaea;
+    background-color: #f8f8f8;
+}
+#LeftSideCategory h2 span {
+    display: inline-block;
+    line-height: 40px;
+    border-bottom: 2px solid #11afcb;
+    padding-left: 11px;
+}
+.site-content .MainCategory{padding: 5px 10px;border: 1px dashed #11afcb;background-color: #f8f8f8;margin-bottom: 10px;}
+.site-content .MainCategory h1{font-size:20px;}
+.CategorySubcategory h2 {
+    margin: 0;
+    padding: 0 20px;
+    line-height: 40px;
+    font-size: 14px;
+    border-bottom: 1px solid #eaeaea;
+    background-color: #f8f8f8;
+}
+.CategorySubcategory {
+    background-color: #fff;
+    border: 1px solid #f0f1f2;
+    box-shadow: 0 2px 2px #edeef0;
+    border-radius: 4px;
+}
+.CategorySubcategory h2 span {
+    display: inline-block;
+    line-height: 40px;
+    border-bottom: 2px solid #11afcb;
+    padding-left: 11px;
+}
+.contentLefSide,.CategorySubcategoryItem {
+    padding: 15px 0;
+    text-align: center;
+    background-color: #fff;
+
+}
+.contentLefSide h3,.CategorySubcategory h5,.CategorySubcategory a {
+    font-size: 14px;
+}
+.contentLefSide p {
+    font-size: 12px;
+}

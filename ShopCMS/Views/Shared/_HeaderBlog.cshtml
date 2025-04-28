@@ -1,0 +1,364 @@
+﻿@model ahmadi.ViewModels.Home.Master
+@using ahmadi.Infrastructure.Helper
+@using Microsoft.AspNet.Identity;
+@{
+
+    var Menu = Model.HeaderMainMenu;
+    bool IsRoot = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home";
+    int i = 0;
+}
+
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<div class="humberger__menu__overlay"></div>
+<div class="humberger__menu__wrapper">
+    @*<div class="humberger__menu__logo">
+              <a href="/">
+                  @Html.DisplayattachmentCookieFree(Model.StaticContentUrl, Model.HeaderLogo, Model.WebSiteName, "LG", true, new { @class = "img-responsive" })
+
+              </a>
+          </div>
+        <nav class="humberger__menu__nav mobile-menu">
+
+              <ul>
+                  @foreach (var item in Menu.Where(x => x.parentId == 0).OrderBy(x => x.DisplayOrder))
+                  {
+                      if (!Menu.Any(x => x.parentId == item.Id))
+                      {
+
+                          <li><a href="@(item.IsRoot ? "/" : item.Link)">@item.Title</a></li>
+
+                      }
+                      else
+                      {
+                          <li class="@(Menu.Any(x => x.parentId == item.Id)?"dropdown":"")">
+                              <a href="@(item.IsRoot ? "/" : item.Link)">@item.Title</a>
+                              <ul class="@(Menu.Any(x => x.parentId == item.Id)?"dropdown__menu":"")">
+                                  <li>
+                                      @foreach (var item2 in Menu.Where(x => x.parentId == item.Id).OrderBy(x => x.DisplayOrder))
+                                      {
+
+                                          <a href="@(item2.IsRoot ? "/" : item2.Link)">@item2.Title</a>
+
+
+                                          <ul>
+                                              @foreach (var item3 in Menu.Where(x => x.parentId == item2.Id).OrderBy(x => x.DisplayOrder))
+                                              {
+
+                                                  <li><a href="@(item3.IsRoot ? "/" : item3.Link)">@item3.Title</a></li>
+
+                                              }
+                                          </ul>
+
+
+                                      }
+                                  </li>
+
+
+
+                              </ul>
+
+                          </li>
+                      }
+
+                  }
+
+              </ul>
+          </nav>*@
+    <div id="mobile-menu-wrap">
+        <div class="slicknav_menu">
+            <a href="#" aria-haspopup="true" role="button" tabindex="0" class="slicknav_btn slicknav_collapsed" style="">
+                <span class="slicknav_menutxt">MENU</span>
+                <span class="slicknav_icon">
+                    <span class="slicknav_icon-bar"></span>
+                    <span class="slicknav_icon-bar"></span>
+                    <span class="slicknav_icon-bar"></span>
+                </span>
+            </a>
+            <nav class="slicknav_nav slicknav_hidden" aria-hidden="true" role="menu" style="display: none;">
+
+                <ul>
+                    @foreach (var item in Menu.Where(x => x.parentId == 0).OrderBy(x => x.DisplayOrder))
+                    {
+                        if (!Menu.Any(x => x.parentId == item.Id))
+                        {
+
+                            <li><a role="menuitem" href="@(item.IsRoot ? "/" : item.Link)">@item.Title</a></li>
+
+                        }
+                        else
+                        {
+                            if (Menu.Any(x => x.parentId == item.Id))
+                            {
+                                <li class="dropdown slicknav_collapsed slicknav_parent">
+                                    <a href="#" role="menuitem" aria-haspopup="true" tabindex="-1" class="slicknav_item slicknav_row" style="">
+                                        <span class="slicknav_arrow">►</span>
+                                        <a href="#">@item.Title</a>
+                                    </a>
+                                    <ul class="dropdown__menu slicknav_hidden" role="menu" aria-hidden="true" style="display: none;">
+                                        @foreach (var item2 in Menu.Where(x => x.parentId == item.Id).OrderBy(x => x.DisplayOrder))
+                                        {
+
+                                            <li>
+                                                <a role="menuitem" tabindex="-1" href="@(item2.IsRoot ? "/" : item2.Link)">@item2.Title</a>
+
+
+                                                <ul>
+                                                    @foreach (var item3 in Menu.Where(x => x.parentId == item2.Id).OrderBy(x => x.DisplayOrder))
+                                                    {
+
+                                                        <li><a role="menuitem" tabindex="-1" href="@(item3.IsRoot ? "/" : item3.Link)">@item3.Title</a></li>
+
+                                                    }
+                                                </ul>
+                                            </li>
+
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+
+                                <li><a role="menuitem" href="@(item.IsRoot ? "/" : item.Link)">@item.Title</a></li>
+                            }
+
+
+                        }
+
+                    }
+
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="humberger__menu__about">
+        <div class="humberger__menu__title sidebar__item__title">
+            <h6>درباره ما</h6>
+        </div>
+        @Html.DisplayattachmentCookieFree(Model.StaticContentUrl, Model.HeaderLogo, Model.WebSiteName, "LG", true, new { @class = "img-responsive" })
+
+        @Html.Raw(Model.AboutPageAbstract)
+
+        <div class="humberger__menu__about__social sidebar__item__follow__links">
+            @foreach (var item in Model.HeaderSocialNetworks)
+            {
+                <a href="@item.Link"><i class="@item.Icon"></i></a>
+
+            }
+        </div>
+    </div>
+    <div class="humberger__menu__subscribe">
+        <div class="humberger__menu__title sidebar__item__title">
+            <h6>مطالب جدید را از دست ندهید!</h6>
+        </div>
+        <p>با کلیک روی دکمه عضویت در خبرنامه ما عضو شوید.</p>
+        <form action="#">
+            <input type="text" class="email-input" placeholder="Your email">
+            <label for="agree-check">
+                موافق &amp; شرایط هستم
+                <input type="checkbox" id="agree-check">
+                <span class="checkmark"></span>
+            </label>
+            <button type="submit" class="site-btn">عضویت</button>
+        </form>
+    </div>
+</div>
+
+<header class="header">
+    <div class="header__top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2 col-md-1 col-6 order-md-1 order-1">
+                    <div class="header__humberger">
+                        <i class="fa fa-bars humberger__open"></i>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-10 order-md-2 order-3">
+                    <nav class="header__menu">
+                        <ul>
+                            @foreach (var item in Menu.Where(x => x.parentId == 0).OrderBy(x => x.DisplayOrder))
+                            {
+                                if (!Menu.Any(x => x.parentId == item.Id))
+                                {
+
+                                    <li><a href="@(item.IsRoot ? "/" : item.Link)">@item.Title</a></li>
+
+                                }
+                                else
+                                {
+                                    <li >
+                                        <a href="@(item.IsRoot ? "/" : item.Link)">@item.Title</a>
+
+                                        <div class="header__megamenu__wrapper">
+                                            <div class="header__megamenu">
+                                                @foreach (var item2 in Menu.Where(x => x.parentId == item.Id).OrderBy(x => x.DisplayOrder))
+                                                {
+                                                    <div class="header__megamenu__item">
+                                                        @if (!String.IsNullOrEmpty(item2.Cover))
+                                                        {
+                                                            <div class="header__megamenu__item--pic set-bg" data-setbg="@(!String.IsNullOrEmpty(item2.Cover)?Html.DisplayattachmentUrl(item2.Cover).ToString():"")" style="background-image: url(&quot;@Html.DisplayattachmentUrl(item2.Cover).ToString()&quot;);">
+                                                                <div class="label">@item2.Title</div>
+                                                            </div>
+                                                        }
+                                                        <div class="header__megamenu__item--text">
+                                                            <h5>
+                                                                <a href="@(item2.IsRoot ? "/" : item2.Link)">@item2.Title</a>
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                }
+                                            </div>
+                                        </div>
+
+                                    </li>
+                                }
+
+                            }
+
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-2 col-md-1 col-6 order-md-3 order-2">
+                    <div class="header__logo">
+                        <a href="/">
+                            @Html.DisplayattachmentCookieFree(Model.StaticContentUrl, Model.HeaderLogo, Model.WebSiteName, "LG", true, new { @class = "img-responsive" })
+                        </a>
+
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+
+
+                <input class="form-control" id="search_input" placeholder="جستجو..." type="text" />
+
+                <div id="SearchList">
+                    <div style="display:flex">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+
+                            <div class="ProductCategoryList">
+                                <div class="st">
+                                    <span>گروه کالا </span>&nbsp;&nbsp;&nbsp;<span class="fa fa-list-alt"></span>
+                                </div>
+                                <div class="content">
+                                </div>
+
+                                <div class="continue"></div>
+                            </div>
+                            <div class="ProductList">
+                                <div class="st">
+                                    <span>محصولات </span>&nbsp;&nbsp;&nbsp;<span class="fa fa-list-alt"></span>
+                                </div>
+                                <div class="content">
+                                </div>
+
+                                <div class="continue"></div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ContentTypeLists">
+                            <div class="CategoryList">
+                                <div class="st">
+                                    <span>دسته بندی مطالب</span>&nbsp;&nbsp;&nbsp;<span class="fa fa-list-alt"></span>
+                                </div>
+                                <div class="content">
+                                </div>
+
+                                <div class="continue"></div>
+                            </div>
+                            <div class="TagList">
+                                <div class="st">
+                                    <span>برچسب</span>&nbsp;&nbsp;&nbsp;<span class="fa fa-tag"></span>
+                                </div>
+                                <div class="content">
+                                </div>
+
+                                <div class="continue"></div>
+                            </div>
+
+                            @if (Model.ContentTypes != null)
+                            {
+                                i = 0;
+                                foreach (var item in Model.ContentTypes.Where(x => x.InSearch))
+                                {
+                                    <div data-id="@item.Id" id="ContentTypeList@(item.Id)" class="ContentTypeList">
+                                        <div class="st">
+                                            <span>@item.Name</span>&nbsp;&nbsp;&nbsp;<span class="fa fa-pencil"></span>
+                                        </div>
+                                        <div class="content">
+                                        </div>
+                                        <div class="continue"></div>
+                                    </div>
+                                    i = i + 1;
+                                    if (i % 2 == 0)
+                                    {
+                                        <div class="clearfix"></div>
+                                    }
+                                }
+
+                            }
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+
+
+@if (Model.PopUpActive)
+{
+    <!-- Home Popup Section -->
+    <div class="modal fade subscribe_popup" id="onload-popup" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            @if (Model.PopUpType)
+            {
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span style="opacity:1" class="close red" data-dismiss="modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        @Html.Raw(Model.PopUpMessage)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <!-- Modal content-->
+                <div class="modal-content transparent">
+                    <div class="modal-header">
+                        <span style="opacity:1" class="close red" data-dismiss="modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        @Html.Raw(Model.PopUpMessage)
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <!-- End Screen Load Popup Section -->
+
+}

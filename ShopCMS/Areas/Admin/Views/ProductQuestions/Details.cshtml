@@ -1,0 +1,210 @@
+﻿@model Domain.ProductQuestion
+@using ahmadi.Infrastructure.Helper
+
+<title>نمایش جزئیات</title>
+
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <h3 class="box-title">
+            نمایش جزئیات پرسش و پاسخ در مورد محصول
+        </h3>
+        <br /><br />
+
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.Id);
+                <dl class="dl-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <dt>
+                        <label>نام مطرح کننده سوال</label>
+                    </dt>
+
+                    <dd>
+                        @Html.Raw(Model.ParrentId != null ? Model.ParentComment.User.FirstName + " " + Model.ParentComment.User.LastName : Model.User.FirstName + " " + Model.User.LastName)
+                    </dd>
+                    <content><br /></content>
+                    @if (Model.ParrentId != null)
+                    {
+                        <dt>
+                            <label>نام پاسخ دهنده سوال</label>
+                        </dt>
+
+                        <dd>
+                            @Html.Raw(Model.User.FirstName + " " + Model.User.LastName)
+                        </dd>
+                        <content><br /></content>
+                    }
+
+                    <dt>
+                        <label>نام محصول</label>
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Product.Title)
+                    </dd>
+                    <content><br /></content>
+
+                    <dt>
+                        @Html.LabelFor(model => model.InsertDate)
+                    </dt>
+
+                    <dd>
+                        @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.InsertDate)
+                        @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToShamsiTime(Model.InsertDate)
+                    </dd>
+                    <content><br /></content>
+
+                    <dt>
+                        <label>متن سوال</label>
+                    </dt>
+
+                    <dd>
+                        @Html.Label("Message", Model.ParrentId != null ? Model.ParentComment.Message : Model.Message)
+                    </dd>
+                    <content><br /></content>
+
+                    <dt>
+
+                        <label>پاسخ </label>
+
+                    </dt>
+
+                    <dd>
+                        @Html.Label("Answer", Model.ParentComment != null ? Model.Message : "")
+                    </dd>
+                    <content><br /></content>
+
+                </dl>
+                <p>
+                    @if (ViewBag.EditPermission)
+                    {
+                        @*<input type="submit" name="Edit" value="ویرایش و پاسخ" />*@
+                        if (Model.ParrentId != null)
+                        {
+                            if (Model.ParentComment.IsActive)
+                            {
+                                <input class="btn btn-danger" type="submit" name="ConfirmQuestion" value="عدم تایید سوال" />
+                            }
+                            else
+                            {
+                                <input class="btn btn-info" type="submit" name="ConfirmQuestion" value="تایید سوال" />
+                            }
+
+                            if (Model.IsActive)
+                            {
+                                <input class="btn btn-danger" type="submit" name="ConfirmAnswer" value="عدم تایید پاسخ" />
+                            }
+                            else
+                            {
+                                <input class="btn btn-info" type="submit" name="ConfirmAnswer" value="تایید پاسخ" />
+                            }
+                        }
+                        else
+                        {
+                            if (Model.IsActive)
+                            {
+                                <input class="btn btn-danger" type="submit" name="ConfirmQuestion" value="عدم تایید سوال" />
+                            }
+                            else
+                            {
+                                <input class="btn btn-info" type="submit" name="ConfirmQuestion" value="تایید سوال" />
+                            }
+                        }
+                    }
+                    else
+                    {
+                        @*<span class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش و پاسخ </span> </span>*@
+                        if (Model.IsActive)
+                        {
+                            <span class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> عدم تایید سوال </span> </span>
+                            if (Model.ParrentId != null)
+                            {
+                                <span class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> عدم تایید پاسخ </span> </span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> تایید سوال </span> </span>
+                            if (Model.ParrentId != null)
+                            {
+                                <span class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> تایید پاسخ </span> </span>
+                            }
+                        }
+                    }
+                    @if (ViewBag.DeletePermission)
+                    {
+                        <input type="submit" class="btn btn-danger" name="DeleteQuestion" value="حذف سوال" onclick="return confirm('آیا شما مطمئن به حذف سوال مورد نظر هستید؟!')" />
+                        if (Model.ParrentId != null)
+                        {
+                            <input type="submit" class="btn btn-danger" name="DeleteAnswer" value="حذف پاسخ" onclick="return confirm('آیا شما مطمئن به حذف پاسخ مورد نظر هستید؟!')" />
+                        }
+                    }
+                    else
+                    {
+                        <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف سوال</span>  </span>
+                        if (Model.ParrentId != null)
+                        {
+                            <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف پاسخ</span>  </span>
+                        }
+                    }
+
+                </p>
+            }
+
+        </div>
+        @if (Model.ParrentId == null)
+        {
+
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <fieldset class="NewFieldset">
+                    <legend class="Newlegend">پاسخ و تایید</legend>
+                    <div>
+                        <p class="text text-danger">@ViewBag.message</p>
+                        @using (Html.BeginForm("Replay", "ProductQuestions", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(model => model.Id)
+                            <textarea id="ReplayMessage" name="ReplayMessage" placeholder="متن پاسخ..." rows="8" class="form-control"></textarea><br />
+                            <input type="submit" name="Replay" class="btn btn-primary" value="ثبت" />
+                        }
+
+                        <hr />
+                        <h4>پاسخ های ثبت شده برای این نظر : </h4>
+                        @if (Model.ChildComment.Any())
+                        {
+                            <table class="table">
+                                <tr>
+                                    <th>نام و نام خانوادگی</th>
+                                    <th>متن نظر</th>
+                                    <th>تاریخ ثبت</th>
+                                </tr>
+                                @foreach (var item in Model.ChildComment)
+                                {
+                                    <tr>
+                                        <td>@item.User.FirstName @item.User.LastName </td>
+                                        <td>@item.Message</td>
+                                        <td>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate) <br /> @item.InsertDate.ToShortTimeString()</td>
+                                    </tr>
+                                }
+                            </table>
+                        }
+                        else
+                        {
+                            <p class="alert alert-danger">پاسخی داده نشده است.</p>
+                        }
+
+                    </div>
+
+                </fieldset>
+            </div>
+        }
+        <div class="clearfix"></div>
+    </div>
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/Admin/TinyMCE/Js")
+}

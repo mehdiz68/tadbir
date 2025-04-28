@@ -1,0 +1,120 @@
+﻿@model ahmadi.ViewModels.Home.Master
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+
+
+
+<!-- prs footer Wrapper Start -->
+<div class="prs_footer_main_section_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="prs_footer_cont1_wrapper prs_footer_cont1_wrapper_1">
+                    @if (Model.VideoCat1 != null)
+                    {
+                        <h2>@Model.VideoCat1.Name</h2>
+                        <ul>
+                            @foreach (var item in Model.Videos1)
+                            {
+                                <li>
+                                    <i class="fa fa-circle"></i> &nbsp;&nbsp;<a href="@Url.Action("Index","video",new {id=item.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) })">@item.Name</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="prs_footer_cont1_wrapper prs_footer_cont1_wrapper_2">
+                    @if (Model.VideoCat2 != null)
+                    {
+                        <h2>@Model.VideoCat2.Name</h2>
+                        <ul>
+                            @foreach (var item in Model.Videos2)
+                            {
+                                <li>
+                                    <i class="fa fa-circle"></i> &nbsp;&nbsp;<a href="@Url.Action("Index","video",new {id=item.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) })">@item.Name</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="prs_footer_cont1_wrapper prs_footer_cont1_wrapper_3">
+                    @if (Model.VideoCat3 != null)
+                    {
+                        <h2>@Model.VideoCat3.Name</h2>
+                        <ul>
+                            @foreach (var item in Model.Videos3)
+                            {
+                                <li>
+                                    <i class="fa fa-circle"></i> &nbsp;&nbsp;<a href="@Url.Action("Index","video",new {id=item.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) })">@item.Name</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="prs_footer_cont1_wrapper prs_footer_cont1_wrapper_4">
+                    <h2>اپ های ما در دسترس هستند</h2>
+                    <p>از طریق لینک های زیر نصب کنید !</p>
+                    <ul>
+                        <li>
+                            <a href="/">
+                                <img src="~/Content/video/images/f1.jpg" alt="footer_img">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/">
+                                <img src="~/Content/video/images/f2.jpg" alt="footer_img">
+                            </a>
+                        </li>
+                    </ul>
+                    @*<h5><span>$50</span> Payback on App Download</h5>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="prs_bottom_footer_wrapper">
+    <a href="javascript:" id="return-to-top" style="display: inline;"><i class="flaticon-play-button"></i></a>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-8 col-xs-12">
+                <div class="prs_bottom_footer_cont_wrapper">
+                    <p>
+                        Copyright 2010-@DateTime.Now.Year <a href="/">ahmadi.com</a> . All rights reserved
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-4 col-xs-12">
+                <div class="prs_footer_social_wrapper">
+                    <ul>
+                        @foreach (var item in Model.HeaderSocialNetworks)
+                        {
+                            <li>
+                                <a href="@item.Link"><i class="@item.Icon"></i></a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- prs footer Wrapper End -->
+<!-- st login wrapper Start -->
+
+<div class="loading">
+    <a href="/"> @Html.DisplayattachmentCookieFree(Model.StaticContentUrl, Model.HeaderLogo, Model.WebSiteName, "LG", true, new { @class = "img-responsive" })</a>
+
+    <div class="lds-ellipsis">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
+
+

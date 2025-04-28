@@ -1,0 +1,37 @@
+﻿@using Stimulsoft.Base
+@using Stimulsoft.Report
+@using Stimulsoft.Report.Mvc
+@{ 
+    Layout = null;
+}
+<style>
+    th, td{text-align:unset}
+    .stiJsViewerReportPanel table {
+        direction: ltr !important;
+    }
+</style>
+
+@Html.Stimulsoft().StiMvcViewer("MvcViewer1",
+
+new StiMvcViewerOptions()
+{
+    Localization = "~/Localization/fa.xml",
+    Appearance =
+    {
+        RightToLeft=true
+    },
+
+    Actions =
+
+{
+
+GetReport = "GetFactorReport",
+
+ViewerEvent = "ViewerEvent"
+
+}
+    ,
+    Theme = Stimulsoft.Report.Web.StiViewerTheme.Office2013WhiteOrange
+
+
+});

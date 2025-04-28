@@ -1,0 +1,242 @@
+﻿@model IEnumerable<Domain.ProductPrice>
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using PagedList.Mvc;
+@{
+    var product = ViewBag.product as Domain.Product;
+    var StateList = ViewBag.ProductStateList as IEnumerable<Domain.ProductState>;
+}
+<title>مدیریت تنوعِ @product.Name</title>
+<style>
+    .form-group.has-feedback span {
+        display: inline-block;
+    }
+
+    .dropdown-menu > li > a {
+        text-align: center;
+    }
+
+    .bootstrap-select.btn-group .dropdown-menu li a span.check-mark {
+        display: none !important;
+    }
+
+    .table-responsive select {
+        width: 115px;
+        font-size: 12px;
+    }
+
+    .ProductCategories {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+</style>
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-md-8">
+            <h1 style="display:inline-block;font-size: 1.5em;" class="box-title">
+                <a href="/admin/ProductPrice/Index/@product.Id"> مدیریت تنوعِ @product.Name</a>
+
+            </h1>
+        </div>
+        <div class="col-md-4 text-left" style="padding-left: 4px;">
+
+            <a class="btn btn-success" href="/Admin/Products"><span class="glyphicon glyphicon-list-alt"></span> بازگشت به محصولات</a>
+
+        </div>
+        <div class="clearfix"></div>
+        <br /><div>
+            <a href="/Admin/ProductPrice/Create/@product.Id" class="btn btn-success">درج تنوع</a>
+            <span>برای هر رنگ ، گارانتی، سایز یا وزن متفاوت از هر محصول، یک تنوع جدید ایجاد کنید</span>
+        </div><br />
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+
+                        </th>
+                        <th class="text-center column-title">
+
+                        </th>
+                        @*<th class="text-center column-title">
+                                وضعیت
+                            </th>*@
+                        <th class="text-center column-title">
+                            کد فروش
+                        </th>
+                        <th class="text-center column-title">
+                            عنوان تنوع
+                        </th>
+                        <th class="text-center column-title">
+                            گروه کالا
+                        </th>
+                        <th class="text-center column-title">
+                            قیمت
+                        </th>
+                        <th class="text-center column-title">
+                            حداکثر سفارش مشتریان در سبد
+                        </th>
+                        <th class="text-center column-title">
+                            بازه زمانی ارسال
+                        </th>
+                        <th class="text-center column-title">
+                            موجودی نزد شما
+                        </th>
+                        <th class="text-center column-title">
+                            فعال
+                        </th>
+                        <th class="text-center column-title">
+                            وضعیت موجودی
+                        </th>
+                        <th class="text-center column-title">
+                            تنوع پیش فرض
+                        </th>
+                        <th class="text-center column-title">
+                            عملیات
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int i = 1; }
+                    @foreach (var item in Model)
+                    {
+                        <tr class="ContentRow">
+
+                            <td class="text-center">@i</td>
+                            <td>
+                                @if (item.ProductImages.Any())
+                                {
+                                    if (item.ProductImages.Where(x => x.IsMain).Any())
+                                    {
+
+                                        @Html.Displayattachment(item.ProductImages.Where(x => x.IsMain).First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                    }
+                                    else
+                                    {
+                                        @Html.Displayattachment(item.ProductImages.First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                    }
+                                }
+                                else
+                                {
+                                    if (item.Product.ProductImages.Any())
+                                    {
+                                        if (item.Product.ProductImages.Where(x => x.IsMain).Any())
+                                        {
+                                            @Html.Displayattachment(item.Product.ProductImages.First(x => x.IsMain).Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                        }
+                                        else
+                                        {
+                                            @Html.Displayattachment(item.Product.ProductImages.First().Image.FileName, item.Product.Title, "SM", htmlAttributes: new { @class = "img-responsive img-thumbnail", style = "display:inline-block;max-height:100px" })
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:110px;height:60px" />
+
+
+                                    }
+                                }
+                            </td>
+                            @*<td class="text-center">
+                                    @switch (item.Product.state)
+                                    {
+                                        case 1:<text>در حال بررسی</text>break;
+                                        case 2:<text>بررسی مجدد</text>break;
+                                        case 3:<text>عدم تایید</text>break;
+                                        case 4:<text>تایید</text>break;
+                                        default:<text>نامشخص</text>break;
+                                    }
+                                </td>*@
+
+                            <td class="text-center">@item.code</td>
+                            <td>
+                                <span> @item.Product.Name</span>
+                                @if (item.ProductAttributeSelectModelId.HasValue)
+                                {
+                                    <span>مدل @item.ProductAttributeSelectModel.Value |</span>
+                                }
+                                @if (item.ProductAttributeSelectSizeId.HasValue)
+                                {
+                                    <span>سایز @item.ProductAttributeSelectSize.Value |</span>
+                                }
+                                @if (item.ProductAttributeSelectColorId.HasValue)
+                                {
+                                    <span>@Html.DisplaySelectColorAttribute(int.Parse(item.ProductAttributeSelectColor.Value)) |</span>
+                                }
+                                @if (item.ProductAttributeSelectGarantyId.HasValue)
+                                {
+                                    <span>@Html.DisplaySelectAttribute(int.Parse(item.ProductAttributeSelectGaranty.Value)) |</span>
+                                }
+                                @if (item.ProductAttributeSelectWeightId.HasValue)
+                                {
+                                    <span>@item.ProductAttributeSelectweight.Value |</span>
+                                }
+                                <br />
+                                <a target="_blank" href="/TFP/@item.ProductId/@CommonFunctions.NormalizeAddress(item.Product.PageAddress)"><span class="glyphicon glyphicon-link"></span></a>
+                            </td>
+                            <td class="text-center">
+                                <ul class="ProductCategories">
+                                    <li>@item.Product.ProductCategories.First().Name</li>
+                                </ul>
+                            </td>
+
+
+                            <td class="text-center PriceContainer" data-version="0"><input class="Price" data-old-value="@string.Format("{0:n0}",item.Price)" value="@string.Format("{0:n0}",item.Price)" style="width:100px" /></td>
+                            <td class="text-center MaxBasketCountContainer" data-version="0"> <input type="number" class="MaxBasketCount" data-old-value="@item.MaxBasketCount" value="@item.MaxBasketCount" style="width:50px" /> </td>
+                            <td class="text-center DeliveryTimeoutContainer" data-version="0"><input type="number" class="DeliveryTimeout" data-old-value="@item.DeliveryTimeout" value="@item.DeliveryTimeout" style="width:50px" />  </td>
+                            <td class="text-center QuantityContainer" data-version="0"> <input type="number" class="Quantity" data-old-value="@item.Quantity" value="@item.Quantity" style="width:50px" />   </td>
+                            <td class="text-center IsActiveContainer" data-version="0">
+                                <input type="checkbox" class="IsActive" data-old-value="@(item.IsActive?true:false)" checked="@(item.IsActive?true:false)" />
+
+                            </td>
+
+                            <td class="text-center ProductStateIdContainer" data-version="0">
+                                @{
+                                    <select id="ProductStateId" name="ProductStateId" class="form-control ProductStateId" data-old-value="@(item.ProductState!=null?item.ProductState.Id:0)">
+                                        @foreach (var item2 in StateList)
+                                        {
+                                            if (item.ProductStateId.HasValue)
+                                            {
+                                                <option value="@item2.Id" selected="@(item2.Id == item.ProductState.Id ? true : false)">@item2.Title</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item2.Id">@item2.Title</option>
+
+                                            }
+                                        }
+                                    </select>
+                                }
+
+                            </td>
+                            <td class="text-center IsDefaultContainer" data-version="0">
+                                <input type="checkbox" data-old-value="@item.IsDefault" checked="@item.IsDefault" class="IsDefault" />
+                            </td>
+                            <td>
+                                <a href="#" data-id="@item.Id" class="Edit-Now btn btn-default">تایید</a><br /><br />
+                                <a href="/admin/ProductPrice/Edit/@item.Id" title="ویرایش کامل"><span class="fa fa-edit"> </span></a>
+                                <a href="/admin/ProductPrice/Delete/@item.Id" title="حذف"><span class="fa fa-remove"></span></a>
+                                <a href="/admin/ProductPrice/Images/@item.Id" title="تصاویر"><span class="fa fa-picture-o"></span></a>
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+
+    </div>
+</div>
+@section Scripts{
+
+    @*ProductPriceList*@
+    <script src="~/Areas/Admin/Content/Scripts/View/ProductPriceList.js?v=1.4.5"></script>
+
+
+}

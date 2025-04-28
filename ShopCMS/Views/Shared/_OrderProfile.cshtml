@@ -1,0 +1,95 @@
+﻿@model Domain.Order
+@using ahmadi.Infrastructure.Helper;
+@using CoreLib.Infrastructure;
+@using CoreLib;
+@{
+    int i = 1;
+    var wallet = Model.OrderWallets.First().Wallet;
+}
+
+<div class="order-header">
+
+    @if (Model.OrderStates.OrderByDescending(x => x.Id).Take(1).SingleOrDefault().state == Domain.OrderStatus.تایید_سفارش)
+    {
+        <a class="btn btn-info" href="/Cart/OnlinePay/@Model.BankOrderId?bankid=@Model.OrderWallets.First().Wallet.BankAccount.BankId">پرداخت</a>
+
+    }
+
+    <div class="order-header-right">
+        @*<strong>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.InsertDate)</strong>*@
+       
+            @{
+
+                <strong> @Model.OrderStates.OrderByDescending(x => x.LogDate).Take(1).SingleOrDefault().state.EnumDisplayNameFor()</strong>
+            }
+      
+    </div>
+    <div class="order-header-center">
+
+        <label>@Model.CustomerOrderId</label>
+    </div>
+    <div class="order-header-left">
+        <a href="/Profile/Detail/@Model.CustomerOrderId"><span class="fa fa-chevron-down"></span></a>
+    </div>
+</div>
+@*<div class="order-price">
+    <label>مبلغ کل : </label> @string.Format("{0:n0}", wallet.Price)
+</div>*@
+<div class="order-deliveries">
+    @foreach (var delivery in Model.OrderDeliveries)
+    {
+
+        <div class="order-delivery">
+            <h4> مرسوله @i  از @Model.OrderDeliveries.Count</h4>
+            <div class="order-delivery-products">
+                @foreach (var OrderRow in delivery.OrderRows)
+                {
+                    <a href="/TFP/@OrderRow.ProductId/@CommonFunctions.NormalizeAddress(OrderRow.Product.Name)">
+                        @if (OrderRow.Product.ProductPrices != null)
+                        {
+                            if (OrderRow.Product.ProductPrices.Any(x => x.ProductImages.Any()))
+                            {
+                                if (OrderRow.Product.ProductPrices.Any(x => x.IsDefault))
+                                {
+                                    if (OrderRow.Product.ProductPrices.Where(x => x.IsDefault).First().ProductImages.Any())
+                                    {
+                                        if (OrderRow.Product.ProductPrices.Where(x => x.IsDefault).First().ProductImages.Any(x => x.IsMain)) // تنوع پیش فرض ، عکس اصلی
+                                        {
+                                            @Html.Displayattachment(OrderRow.Product.ProductPrices.Where(x => x.IsDefault).First().ProductImages.Where(x => x.IsMain).First().Image.FileName, OrderRow.ProductPrice.Product.Title, "MD", htmlAttributes: new { @class = "img-responsive" })
+                                        }
+                                        else // تنوع پیش فرض ، اولین عکس
+                                        {
+                                            @Html.Displayattachment(OrderRow.Product.ProductPrices.Where(x => x.IsDefault).First().ProductImages.First().Image.FileName, OrderRow.ProductPrice.Product.Title, "MD", htmlAttributes: new { @class = "img-responsive" })
+
+                                        }
+                                    }
+                                    else // اولین تنوع، اولین عکس
+                                    {
+                                        @Html.Displayattachment(OrderRow.Product.ProductPrices.First().ProductImages.First().Image.FileName, OrderRow.ProductPrice.Product.Title, "MD", htmlAttributes: new { @class = "img-responsive" })
+
+                                    }
+                                }
+                                else // اولین تنوع، اولین عکس
+                                {
+                                    @Html.Displayattachment(OrderRow.Product.ProductPrices.First().ProductImages.First().Image.FileName, OrderRow.ProductPrice.Product.Title, "MD", htmlAttributes: new { @class = "img-responsive" })
+
+                                }
+                            }
+                            else
+                            {
+                                <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" />
+                            }
+                        }
+                        else
+                        {
+                            <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" />
+                        }
+
+
+                    </a>
+                }
+            </div>
+        </div>
+        i++;
+    }
+</div>

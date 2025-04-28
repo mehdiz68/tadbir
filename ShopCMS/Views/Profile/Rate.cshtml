@@ -1,0 +1,238 @@
+﻿@model Domain.ViewModel.OrderRateVM
+@using CoreLib;
+@using ahmadi.Infrastructure.Helper;
+
+@{var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;}
+
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+    int i = 0;
+    var finished = ViewBag.finished as string;
+    int? step = ViewBag.step as int?;
+
+}
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+@section Header{
+    <link href="~/Content/Base/Scripts/BarRating/css/bars-1to10.css" rel="stylesheet" />
+    <style>
+        #right-profile {
+            display: none
+        }
+
+        #left-profile {
+            -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
+            max-width: 100%
+        }
+    </style>
+
+}
+
+<div class="container" id="ProfileRate">
+
+    @if (ViewBag.step != null)
+    {
+        if (step == 0)
+        {
+            <h1>
+                <span>  نظر سنجی کیفیت کالاها و خدمات </span>
+                <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+            </h1>
+
+            <div class="descr">
+                <p>شما می توانید با شرکت در نظرسنجی، به کالای خریداری شده امتیاز دهید و ما را در بهبود ارائه خدمات یاری کنید. </p>
+                <p>همچنین با درج نظر و پس از تایید آن، <strong> کد تخفیف </strong> هدیه بگیرید.</p>
+                <p><a href="?step=1" class="btn btn-info">شروع کنید</a></p>
+            </div>
+        }
+    }
+    <div class="row">
+        <div class="col-lg-12">
+            @if (ViewBag.step != null)
+            {
+                if (step > 0)
+                {
+                    <div id="OrderItems">
+                        @using (Html.BeginForm())
+                        {
+
+                            @Html.HiddenFor(m => m.order.Id);
+                            <input type='hidden' name='RateItem' value='0' />
+
+                            foreach (var item in Model.orderRateItems)
+                            {
+                                <div class="OrderItem">
+                                    <h2>
+                                        <span>@item.Title</span>
+                                    </h2>
+                                    <p>@item.Descr</p>
+                                    <ul>
+                                        <li>
+
+
+                                            <button type="submit" name="RateOrder" data-id="@item.Id" value="@Convert.ToInt16(Domain.OrderRateStatus.کاملا_راضی)">
+                                                <span class="emoji">😎</span>
+                                                <span> @Domain.OrderRateStatus.کاملا_راضی.EnumDisplayNameFor()</span>
+                                            </button>
+                                        </li>
+                                        <li>
+
+                                            <button type="submit" name="RateOrder" data-id="@item.Id" value="@Convert.ToInt16(Domain.OrderRateStatus.راضی)">
+                                                <span class="emoji">😊</span>
+                                                <span> @Domain.OrderRateStatus.راضی.EnumDisplayNameFor()</span>
+                                            </button>
+                                        </li>
+                                        <li>
+
+                                            <button type="submit" name="RateOrder" data-id="@item.Id" value="@Convert.ToInt16(Domain.OrderRateStatus.نظری_ندارم)">
+                                                <span class="emoji">😐</span>
+                                                <span> @Domain.OrderRateStatus.نظری_ندارم.EnumDisplayNameFor()</span>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="submit" name="RateOrder" data-id="@item.Id" value="@Convert.ToInt16(Domain.OrderRateStatus.ناراضی)">
+
+                                                <span class="emoji">😕</span>
+                                                <span>@Domain.OrderRateStatus.ناراضی.EnumDisplayNameFor()</span>
+                                            </button>
+                                        </li>
+                                        <li>
+
+                                            <button type="submit" name="RateOrder" data-id="@item.Id" value="@Convert.ToInt16(Domain.OrderRateStatus.کاملا_ناراضی)">
+                                                <span class="emoji">😡</span>
+                                                <span>@Domain.OrderRateStatus.کاملا_ناراضی.EnumDisplayNameFor()</span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            }
+            @if (ViewBag.step != null)
+            {
+                if (step > 1)
+                {
+                    <div id="RateComments">
+                        @foreach (var item in Model.products)
+                        {
+                            i = 0;
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="o-headline">
+                                        <span>کالا @((Model.productCount-Model.productRemainCount)+1) از @Model.productCount</span>
+                                        <a class="c-swiper__show-more"></a>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 CommentImage">
+                                    <div class="product_img_box">
+
+                                        @if (item.MainImageFileName != null)
+                                        {
+                                            <img id="product_img" src="@Html.DisplayattachmentUrl(item.MainImageFileName,"MD",true)" data-zoom-image="@Html.DisplayattachmentUrl(item.MainImageFileName,"LG",true)" alt="@item.Name" title="@item.Title" />
+                                        }
+                                        else
+                                        {
+
+                                            <img id="product_img" src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" />
+                                        }
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8 CommentImageTextImage">
+                                    <div class="CommentImageTextImageText">
+                                        <h2>@item.Title</h2>
+                                    </div>
+                                    <div class="CommentImageTextImageImage">
+                                        @if (item.MainImageFileName != null)
+                                        {
+                                            <img id="product_img" class="img-thumbnail" src="@Html.DisplayattachmentUrl(item.MainImageFileName,"SM",true)" data-zoom-image="@Html.DisplayattachmentUrl(item.MainImageFileName,"LG",true)" alt="@item.Name" title="@item.Title" />
+                                        }
+                                        else
+                                        {
+
+                                            <img id="product_img" src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" />
+                                        }
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                    <p class="ctextment">به این کالا امتیاز دهید...</p>
+                                    <hr class="hr" />
+                                    <div class="row">
+                                        @foreach (var itemRank in item.ProductRanks)
+                                        {
+                                            <div class="Rank col-md-6">
+                                                <label>@itemRank.Name</label>
+                                                <select data-id="@itemRank.Id" class="RankItem" id="@("Rank"+i)">
+                                                    <option value="1">خیلی بد</option>
+                                                    <option value="2">بد</option>
+                                                    <option value="3" selected="selected">معمولی</option>
+                                                    <option value="4">خوب</option>
+                                                    <option value="5">عالی</option>
+                                                </select>
+                                                <input type="hidden" name="rankvalue" value="3">
+                                                <input type="hidden" name="rankid" value="@itemRank.Id">
+                                            </div>
+                                            i++;
+                                        }
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6" id="comments">
+
+                                    @Html.Partial("_ProductComment", new Domain.ProductComment(item.Id), new ViewDataDictionary { { "IsBuyUser", true }, { "msg", null }, { "AllowAddComment", true }, { "customerOrderId", Model.order.CustomerOrderId } })
+
+                                </div>
+
+                                <div class="col-md-6 hide" id="descr">
+                                    <h3>دیگران را با نوشتن نظرات خود، برای انتخاب این محصول راهنمایی کنید.</h3>
+                                    <p><span><strong>لطفا پیش از ارسال نظر، خلاصه قوانین زیر را مطالعه کنید:</strong></span></p>
+                                    <ul>
+                                        <li>لازم است محتوای ارسالی منطبق برعرف و شئونات جامعه و با بیانی رسمی و عاری از لحن تند، تمسخرو توهین باشد.</li>
+                                        <li>از ارسال لینک‌های سایت‌های دیگر و ارایه‌ی اطلاعات شخصی خودتان مثل شماره تماس، ایمیل و آی‌دی شبکه‌های اجتماعی پرهیز کنید.</li>
+                                        <li>
+                                            <strong>در نظر داشته باشید هدف نهایی از ارائه‌ی نظر درباره‌ی کالا ارائه‌ی اطلاعات مشخص و دقیق برای راهنمایی سایر کاربران در فرآیند خرید یک محصول توسط ایشان است.</strong>
+                                        </li>
+                                        <li>با توجه به ساختار بخش نظرات، از پرسیدن سوال یا درخواست راهنمایی در این بخش خودداری کرده و سوالات خود را در بخش «پرسش و پاسخ» مطرح کنید.</li>
+                                    </ul>
+
+                                    <p><span><strong>نکات مهم افزودن عکس و ویدیو به نظرات:</strong></span></p>
+                                    <ul>
+                                        <li>ثبت یا مشخص بودن شماره تلفن، ‌آدرس، مشخصات شبکه‌های اجتماعی غیرمجاز است.</li>
+                                        <li>برای اطمینان از آپلود موفقیت‌آمیز، بعد از اینکه آپلود ۱۰۰ درصد شد، مقداری باید صبر کنید.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+
+            @if (ViewBag.finished != null)
+            {
+                <p class="alert alert-info alert-add">
+                    با تشکر از زمانی که برای ثبت امتیاز گذاشتید.
+                    <br />
+                    در صورت تایید نظرات شما توسط کارشناسان، کد تخفیف برای شما از طریق پیامک ارسال خواهد شد.
+                </p>
+            }
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+
+    <script src="~/Content/Base/Scripts/BarRating/jquery.barrating.min.js"></script>
+
+    <script src="~/Content/Base/Scripts/UploadUser.js"></script>
+
+    <script src="~/Content/Base/Scripts/view/ProfileRate.js"></script>
+
+}

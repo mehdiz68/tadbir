@@ -1,0 +1,212 @@
+﻿@model ahmadi.Areas.Admin.ViewModel.AdminPanel.HeaderLayout
+@using ahmadi.Infrastructure.Helper
+@{
+    bool? ProductLicense = ViewBag.ProductLicense as bool?;
+    bool whichPlace = Convert.ToBoolean(ViewData["whichPlace"]);
+}
+@if (whichPlace)
+{
+
+    <li class="">
+        <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+
+            @if (Model.au.Avatar.HasValue)
+            {
+                @Html.Displayattachment(Model.au.Avatarattachment.FileName, Model.au.FirstName + " " + Model.au.LastName, "MD", htmlAttributes: new { @class = "user-image" })<span> @Model.au.FirstName</span><span>  @Model.au.LastName</span>
+            }
+            else
+            {
+                <img src="~/Content/Default/images/man-avatar.jpg" class="user-image" alt="@Model.au.FirstName @Model.au.LastName"><span> @Model.au.FirstName </span><span>  @Model.au.LastName</span>
+            }
+            <span class="fa fa-angle-down"></span>
+        </a>
+        <ul class="dropdown-menu dropdown-usermenu pull-right">
+            <li>
+                @Html.ActionLink("پروفایل", "Details", "UserManagement", new { id = @Model.au.Id }, new { @target = "_blank" })
+            <li>
+
+                @Html.ActionLink("تغییر رمز ", "ChangePassword", "Home", new { id = @Model.au.Id }, new { @target = "_blank" })
+            </li>
+            <li><a id="UpdateSitemap" href="@Url.Action("UpdateSitemap", "Home")">بروز رسانی سایت مپ</a></li>
+            <li><a href="~/" target="_blank"><strong>نمایش سایت</strong></a></li>
+            <li><a id="ClearCache" href="@Url.Action("ClearCache", "Home")">پاک کردن کش</a></li>
+            <li>
+                @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="submit" name="LogOut" value="خروج از سیستم" class="btn btn-default btn-flat btn-danger">
+                }
+            </li>
+        </ul>
+    </li>
+
+
+    <!-- Comments-->
+    <li role="presentation" class="dropdown">
+        <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-envelope-o"></i>
+            <span class="badge bg-green">@Model.Comments.Where(x => !x.Visited).Count()</span>
+        </a>
+        <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+            @foreach (var item in Model.Comments.OrderByDescending(x => x.Id))
+            {
+                <li>
+                    <!-- start message -->
+                    <a href="@Url.Action("Details", "Comments", new { Id = item.Id })">
+
+                        <span class="image"><img src="~/Content/Default/images/man-avatar.jpg" alt="Profile Image" /></span>
+                        <span>
+                            <span>@item.FullName</span>
+                            <span class="time">>@Convert.ToInt32(DateTime.Now.Subtract(item.InsertDate).TotalMinutes) دقیقه پیش</span>
+                        </span>
+                        <span class="message">
+                            @if (item.Message.Length > 50)
+                            {
+                                <span>@item.Message.Substring(0, 49)</span>
+                            }
+                            else
+                            {
+                                <span>@item.Message</span>
+                            }
+                        </span>
+
+                    </a>
+                </li>
+            }
+
+            <li class="footer"><a href="@Url.Action("Index", "Comments")">دیدن همه نظرات محتواها</a></li>
+
+        </ul>
+    </li>
+
+
+    <li role="presentation" class="dropdown">
+        <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-envelope-o"></i>
+            <span class="badge bg-green">@Model.FormRequests.Where(x => !x.IsVisit).Count()</span>
+        </a>
+        <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+            @foreach (var item in Model.FormRequests.OrderByDescending(x => x.Id))
+            {
+                <li>
+                    <!-- start message -->
+                    <a href="@Url.Action("Details", "RequestForm", new { Id = item.Id })">
+
+                        <span class="image"><img src="~/Content/Default/images/man-avatar.jpg" alt="Profile Image" /></span>
+                        <span>
+                            <span>@item.Name @item.Family </span>
+                            <span class="time">>@Convert.ToInt32(DateTime.Now.Subtract(item.InsertDate).TotalMinutes) دقیقه پیش</span>
+                        </span>
+                        <span class="message">
+                            @if (item.Message.Length > 50)
+                            {
+                                <span>@item.Message.Substring(0, 49)</span>
+                            }
+                            else
+                            {
+                                <span>@item.Message</span>
+                            }
+                        </span>
+
+                    </a>
+                </li>
+            }
+
+            <li class="footer"><a href="@Url.Action("Index", "RequestForm")">دیدن همه درخواست های مشاوره</a></li>
+
+        </ul>
+    </li>
+
+    <li role="presentation" class="dropdown">
+        <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-envelope-o"></i>
+            <span class="badge bg-green">@Model.ContactUs.Where(x => !x.IsVisit).Count()</span>
+        </a>
+        <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+            @foreach (var item in Model.ContactUs.OrderByDescending(x => x.Id))
+            {
+                <li>
+                    <!-- start message -->
+                    <a href="@Url.Action("Details", "ContactUs", new { Id = item.Id })">
+
+                        <span class="image"><img src="~/Content/Default/images/man-avatar.jpg" alt="Profile Image" /></span>
+                        <span>
+                            <span>@item.FullName</span>
+                            <span class="time">>@Convert.ToInt32(DateTime.Now.Subtract(item.InsertDate).TotalMinutes) دقیقه پیش</span>
+                        </span>
+                        <span class="message">
+                            @if (item.Message.Length > 50)
+                            {
+                                <span>@item.Message.Substring(0, 49)</span>
+                            }
+                            else
+                            {
+                                <span>@item.Message</span>
+                            }
+                        </span>
+
+                    </a>
+                </li>
+            }
+
+            <li class="footer"><a href="@Url.Action("Index", "ContactUs")">دیدن همه پیام های تماس با ما</a></li>
+
+        </ul>
+    </li>
+
+    <li role="presentation" class="dropdown">
+        <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-envelope-o"></i>
+            <span class="badge bg-green">@Model.Tickets.Count()</span>
+        </a>
+        <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+            @foreach (var item in Model.Tickets.OrderByDescending(x => x.Id))
+            {
+                <li>
+                    <!-- start message -->
+                    <a href="@Url.Action("Details", "Tickets", new { Id = item.Id })">
+
+                        <span class="image"><img src="~/Content/Default/images/man-avatar.jpg" alt="Profile Image" /></span>
+                        <span>
+                            <span>@item.User.FirstName</span>
+                            <span>&nbsp;</span>
+                            <span>@item.User.FirstName</span>
+                            <span class="time">>@Convert.ToInt32(DateTime.Now.Subtract(item.InsertDate).TotalMinutes) دقیقه پیش</span>
+                        </span>
+                        <span class="message">
+                            @if (item.Message.Length > 50)
+                            {
+                                <span>@item.Message.Substring(0, 49)</span>
+                            }
+                            else
+                            {
+                                <span>@item.Message</span>
+                            }
+                        </span>
+
+                    </a>
+                </li>
+            }
+
+            <li class="footer"><a href="@Url.Action("Index", "Tickets")">دیدن همه تیکت ها</a></li>
+
+        </ul>
+    </li>
+}
+else
+{
+    @*<!-- menu profile quick info -->
+        <div class="profile clearfix">
+            <div class="profile_pic">
+                <img src="~/Content/Default/images/man-avatar.jpg" alt="..." class="img-circle profile_img">
+            </div>
+            <div class="profile_info">
+                <span>خوش آمدید ,</span>
+                <h2>@Model.au.FirstName @Model.au.LastName</h2>
+            </div>
+        </div>
+                        <!-- /menu profile quick info -->*@
+}
+
+
+

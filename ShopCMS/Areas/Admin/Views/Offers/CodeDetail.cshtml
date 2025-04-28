@@ -1,0 +1,570 @@
+﻿@model Domain.Offer
+@using PagedList.Mvc;
+@using Domain;
+@using ahmadi.Infrastructure.Helper
+@using ahmadi.Infrastructure.Security;
+
+<title>جزئیات تخفیف @Model.Title </title>
+<style>
+    .column-state {
+        width: 150px;
+    }
+
+    .column-name {
+        width: 220px
+    }
+
+    .column-image {
+        width: 100px
+    }
+
+    .form-group.has-feedback span {
+        display: inline-block;
+    }
+
+    .dropdown-menu > li > a {
+        text-align: center;
+    }
+
+    .bootstrap-select.btn-group .dropdown-menu li a span.check-mark {
+        display: none !important;
+    }
+
+    .ProductCategories {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .x_panel .nav.navbar-nav > li > a {
+        color: #fff !important;
+    }
+
+    .navbar-right .btn-success {
+        padding: 2px 8px;
+        border-radius: 3px;
+        margin-bottom: 10px;
+    }
+
+        .navbar-right .btn-success:hover {
+            background-color: #ea7526;
+        }
+</style>
+
+<div class="x_panel">
+    <div class="x_content">
+        @{
+            var StateList = ViewBag.ProductStateList as IEnumerable<Domain.ProductState>;
+            var HelpModuleSection = ViewBag.HelpModule as Domain.HelpModuleSection;
+            var ProductCategories = ViewBag.TreeProductCategories as IEnumerable<Domain.ProductCategory>;
+            var setting = ViewBag.setting as Domain.Setting;
+            int? PageSize = ViewBag.PageSize as int?;
+            var users = ViewBag.users as PagedList.IPagedList<Domain.ApplicationUser>;
+            var SearchType = ViewBag.SearchType as int?;
+        }
+
+        @section Header{
+            @*View*@
+            <link href="~/Areas/Admin/Content/Stylesheets/View/ProductCategories.css" rel="stylesheet" />
+            <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+            @*Bootstrap Select*@
+            <link href="~/areas/admin/content/scripts/component/bootstrp-dropdown/bootstrap-select.min.css" rel="stylesheet" />
+        }
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left" style="padding-left: 4px;">
+            <a class="btn btn-success" href="/Admin/Offers"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a>
+
+        </div>
+        <div class="clearfix"></div>
+
+        <ul id="prtabs" class="nav nav-tabs">
+            @if (Model.CodeTypeValueCode == 4)
+            {
+                <li class="@(SearchType.Value==1?"active":"")"><a data-toggle="tab" href="#ProductOffer">انتخاب از لیست کاربران</a></li>
+
+                if (Model.codeUseType == CodeUseType.ثبت_در_پنل_مدیریت)
+                {
+                    <li><a data-toggle="tab" href="#CatOffer">انتخاب از گروه کاربران</a></li>
+                }
+            }
+
+
+        </ul>
+        <div class="tab-content">
+            <div id="ProductOffer" class="@(SearchType.Value==1?"tab-pane fade in active":"tab-pane fade in") ">
+
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2> جستجو / فیلتر</h2>
+                        <ul class="nav navbar-left panel_toolbox">
+                            <li>
+                                <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                            </li>
+
+                            <li>
+                                <a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="x_content">
+
+                        <div id="SearchPage">
+                            <div>
+                                <div>
+
+                                    @using (Html.BeginForm("CodeDetail", "Offers", FormMethod.Get, new { id = "Search-Form" }))
+                                    {
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                            @Html.TextBox("UsernameString", ViewBag.UsernameFilter as string, htmlAttributes: new { placeholder = "نام کاربری", style = "display: inline-block", @class = "form-control" })
+                                            <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                            @Html.TextBox("CreationStartDateInput", ViewBag.currentStartDateInputFiltering as string, htmlAttributes: new { placeholder = "تاریخ ایجاد از ", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('CreationStartDateInput')" })
+                                            <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                            @Html.TextBox("CreationEndDateInput", ViewBag.currentEndDateInputFiltering as string, htmlAttributes: new { placeholder = "تاریخ ایجاد تا ", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('CreationEndDateInput')" })
+                                            <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                            @Html.DropDownList("UserGroupId", ViewBag.UserGroups as SelectList, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "گروه کاربری", style = "display: inline-block", @class = "form-control" })
+                                            <span class="fa fa-user-secret form-control-feedback right" aria-hidden="true"></span>
+
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                            @Html.TextBox("LastActivityStartDateInput", ViewBag.currentLastActivityStartDateInputFiltering as string, htmlAttributes: new { placeholder = "زمان آخرین ورود از", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('LastActivityStartDateInput');" })
+                                            <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                            @Html.TextBox("LastActivityEndDateInput", ViewBag.currentLastActivityEndDateInputFiltering as string, htmlAttributes: new { placeholder = "تا", style = "display: inline-block", @class = "form-control", onclick = "displayDatePicker('LastActivityEndDateInput');" })
+                                            <span class="fa fa-calendar form-control-feedback right" aria-hidden="true"></span>
+
+
+                                        </div>
+
+
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                            @Html.DropDownList("EmailConfirmId", ViewBag.EmailConfirmSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "وضعیت ایمیل کاربر", style = "display: inline-block", @class = "form-control" })
+
+                                            <span class="fa fa-envelope form-control-feedback right" aria-hidden="true"></span>
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                            @Html.DropDownList("PhoneNumberConfirmId", ViewBag.PhoneNumberSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "وضعیت تلفن همراه کاربر", style = "display: inline-block", @class = "form-control" })
+                                            <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
+
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                            @Html.DropDownList("Disable", ViewBag.DisableSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "کاربران فعال/غیر فعال", style = "display: inline-block", @class = "form-control" })
+                                            <span class="fa fa-user-plus form-control-feedback right" aria-hidden="true"></span>
+
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                            @Html.TextBox("PhoneNumberString", ViewBag.PhoneNumberFilter as string, htmlAttributes: new { placeholder = "تلفن همراه", style = "display: inline-block", @class = "form-control" })
+                                            <span class="fa fa-mobile-phone form-control-feedback right" aria-hidden="true"></span>
+
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                            @Html.TextBox("FullName", ViewBag.FullNameFilter as string, htmlAttributes: new { placeholder = "نام و نام خانوادگی", style = "display: inline-block", @class = "form-control" })
+                                            <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+
+                                            @Html.DropDownList("Gender", ViewBag.GenderSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "جنسیت", style = "display: inline-block", @class = "form-control" })
+                                            <span class="fa fa-genderless form-control-feedback right" aria-hidden="true"></span>
+
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        @Html.Hidden("PageSize", PageSize.Value);
+                                        @Html.Hidden("SearchType", "1");
+                                        @Html.Hidden("OfferId", Model.Id);
+                                        <div class="clearfix"></div>
+                                        <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                        @Html.ActionLink("نمایش همه", "CodeDetail", new { Model.Id }, htmlAttributes: new { @class = "btn btn-success" })
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (users != null)
+                    {
+                        if (users.Any())
+                        {
+
+
+                            <div class="Pagging-New-Container">
+                                <strong class="Pagging-New-Info">
+                                    تعداد نتایج : @users.TotalItemCount ، صفحه @(users.PageCount < users.PageNumber ? 0 : users.PageNumber) از @users.PageCount
+                                </strong>
+
+                                @Html.PagedListPager(users, Page => Url.Action("CodeDetail", new { Page, sortOrder = ViewBag.CurrentSort, PageSize = PageSize, ProductCatIdFilter = ViewBag.ProductCatIdFilter, QuantityFilter = ViewBag.QuantityFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductStateFilter = ViewBag.ProductStateFilter, ProductInsertStateFilter = ViewBag.ProductInsertStateFilter }))
+
+                                <div class="PageSizeSelectorContainer">
+                                    <span>تعداد نمایش</span>
+                                    <select class="PageSizeSelector" name="PageSizeSelector">
+                                        <option value="10" selected="@(PageSize.HasValue && PageSize.Value==10?true:false)">10</option>
+                                        <option value="20" selected="@(PageSize.HasValue && PageSize.Value==20?true:false)">20</option>
+                                        <option value="50" selected="@(PageSize.HasValue && PageSize.Value==50?true:false)">50</option>
+                                        <option value="100" selected="@(PageSize.HasValue && PageSize.Value==100?true:false)">100</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped jambo_table bulk_action">
+                                    <thead>
+                                        <tr class="headings">
+                                            <th class="text-center column-title">
+                                                #
+                                            </th>
+                                            <th>
+                                                آواتار
+                                            </th>
+                                            <th class="text-center column-title">
+                                                <p class="text-center">
+                                                    <span>نام کاربری</span>
+                                                    <span>
+                                                        <a style="display:block" href="@Url.Action("Index", new { sortOrder = "UserName", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, UserGroupIdFiltering = ViewBag.UserGroupIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس نام کاربری صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                        <a style="display:block" href="@Url.Action("Index", new { sortOrder = "UserName_desc", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, UserGroupIdFiltering = ViewBag.UserGroupIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس نام کاربری نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                                    </span>
+                                                </p>
+                                            </th>
+                                            <th class="text-center column-title">
+                                                <p class="text-center">
+                                                    <span>نام و نام خانوادگی</span>
+                                                    <span>
+                                                        <a style="display:block" href="@Url.Action("Index", new { sortOrder = "FullName", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, UserGroupIdFiltering = ViewBag.UserGroupIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس نام و نام خانوادگی صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                        <a style="display:block" href="@Url.Action("Index", new { sortOrder = "FullName_desc", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, UserGroupIdFiltering = ViewBag.UserGroupIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس نام و نام خانوادگی نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                                    </span>
+                                                </p>
+                                            </th>
+                                            <th class="text-center column-title">
+                                                <p class="text-center">
+                                                    <span>جنسیت</span>
+                                                    <span>
+                                                        <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Gender", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, UserGroupIdFiltering = ViewBag.UserGroupIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس زن ها"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                                        <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Gender", UsernameFilter = ViewBag.UsernameFilter, currentStartDateInputFiltering = ViewBag.currentStartDateInputFiltering, currentEndDateInputFiltering = ViewBag.currentEndDateInputFiltering, currentLastActivityStartDateInputFiltering = ViewBag.currentLastActivityStartDateInputFiltering, currentLastActivityEndDateInputFiltering = ViewBag.currentLastActivityEndDateInputFiltering, PhoneNumberFilter = ViewBag.PhoneNumberFilter, UserGroupIdFiltering = ViewBag.UserGroupIdFiltering, CurrentEmailConfirmId = ViewBag.CurrentEmailConfirmId, CurrentPhoneNumberConfirmId = ViewBag.CurrentPhoneNumberConfirmId, CurrentDisable = ViewBag.CurrentDisable, FullNameFilter = ViewBag.FullNameFilter, GenderFilter = ViewBag.GenderFilter })" title="مرتب سازی بر اساس مردها">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                                    </span>
+                                                </p>
+                                            </th>
+
+                                            <th class="text-center column-title">
+                                                نقش
+                                            </th>
+                                            <th class="text-center column-title">
+                                                &nbsp;
+                                            </th>
+                                            <th class="text-center column-title">
+                                                کد تخفیف
+                                            </th>
+                                            <th class="text-center column-title">
+                                                میزان تخفیف
+                                            </th>
+                                            <th class="text-center column-title">
+                                                نوع تخفیف
+                                            </th>
+                                            <th class="text-center column-title">
+                                                سقف مبلغ در هر استفاده
+                                            </th>
+                                            <th class="text-center column-title">
+                                                سقف تعداد استفاده
+                                            </th>
+                                            <th class="text-center column-title">
+                                                فعال
+                                            </th>
+                                            <th class="text-center column-title">
+
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{ int i = 1; }
+                                        @foreach (var item in users)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @i
+                                                </td>
+                                                <td>
+                                                    @if (item.Avatar.HasValue)
+                                                    {
+                                                        @Html.Displayattachment(item.Avatarattachment.FileName, item.LastName, "LG", htmlAttributes: new { @class = "img-responsive", width = "80", height = "80", style = "display:inline-block;width:80px;height:80px" })
+                                                    }
+                                                    else
+                                                    {
+                                                        if (item.Gender == true)
+                                                        {
+                                                            <img src="~/Content/Default/images/man-avatar.jpg" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="~/Content/Default/images/woman-avatar.gif" />
+                                                        }
+
+                                                    }
+                                                </td>
+                                                <td class="text-center">
+                                                    @Html.DisplayFor(modelItem => item.UserName)
+                                                </td>
+
+                                                <td class="text-center">
+
+                                                    @item.FirstName @item.LastName
+                                                </td>
+
+                                                <td class="text-center">
+                                                    @if (item.Gender == true)
+                                                    {
+                                                        <span>مرد</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>زن</span>
+                                                    }
+                                                </td>
+                                                <td class="text-center">
+                                                    @{
+                                                        IdentityManager Oidentitymanager = new IdentityManager();
+                                                        bool HasAdminModules = true;
+                                                        if (Oidentitymanager.IsInRole(item.Id, "Admin"))
+                                                        {
+                                                            <span>Admin ( مدیر پنل مدیریت )</span>
+                                                        }
+                                                        else if (Oidentitymanager.IsInRole(item.Id, "User"))
+                                                        {
+                                                            HasAdminModules = false;
+                                                            <span>User ( کاربرِ سایت )</span>
+                                                        }
+
+                                                        else if (Oidentitymanager.IsInRole(item.Id, "Security"))
+                                                        {
+                                                            <span>Security ( مدیر امنیتی )</span>
+                                                        }
+
+                                                        else if (Oidentitymanager.IsInRole(item.Id, "Support"))
+                                                        {
+                                                            <span>Support ( مدیر پشتیبانی )</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>نقش تعریف نشده است.</span>
+                                                        }
+                                                    }
+                                                </td>
+
+                                                <td>
+                                                <td class="text-center CodeContainer" data-version="0"> <input class="Code" data-old-value="@(item.UserCodeGifts.Any(x=>x.OfferId==Model.Id)?item.UserCodeGifts.Where(x=>x.OfferId==Model.Id).First().Code:"0")" value="@(item.UserCodeGifts.Any(x=>x.OfferId==Model.Id)?item.UserCodeGifts.Where(x=>x.OfferId==Model.Id).First().Code:"0")" style="width:100px" /> </td>
+                                                <td class="text-center ValueContainer" data-version="0"><input class="Value" data-old-value="@string.Format("{0:n0}",(item.UserCodeGifts.Any(x=>x.OfferId==Model.Id)?item.UserCodeGifts.Where(x=>x.OfferId==Model.Id).First().Value:0))" value="@string.Format("{0:n0}",(item.UserCodeGifts.Any(x=>x.OfferId==Model.Id)?item.UserCodeGifts.Where(x=>x.OfferId==Model.Id).First().Value:0))" style="width:100px" /></td>
+                                                <td class="text-center CodeTypeContainer" data-version="0" value="@(item.UserCodeGifts.Any(x=>x.OfferId==Model.Id)?item.UserCodeGifts.Where(x=>x.OfferId==Model.Id).First().CodeType:0)" data-old-value="@(item.UserCodeGifts.Any(x=>x.OfferId==Model.Id)?item.UserCodeGifts.Where(x=>x.OfferId==Model.Id).First().CodeType:0)">
+                                                    <select class="CodeType" value="@(item.UserCodeGifts.Any(x=>x.OfferId==Model.Id)?item.UserCodeGifts.Where(x=>x.OfferId==Model.Id).First().CodeType:0)" data-old-value="@(item.UserCodeGifts.Any(x=>x.OfferId==Model.Id)?item.UserCodeGifts.Where(x=>x.OfferId==Model.Id).First().CodeType:0)">
+
+                                                        <option value="0">--انتخاب--</option>
+                                                        @if (item.UserCodeGifts.Any(x => x.OfferId == Model.Id))
+                                                        {
+                                                            if (item.UserCodeGifts.Where(x => x.OfferId == Model.Id).First().CodeType == 1)
+                                                            {
+
+                                                                <option selected value="1">ثابت</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="1">ثابت</option>
+
+                                                            }
+                                                            if (item.UserCodeGifts.Where(x => x.OfferId == Model.Id).First().CodeType == 2)
+                                                            {
+
+                                                                <option selected value="2">درصدی</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="2">درصدی</option>
+
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+
+                                                            <option value="1">ثابت</option>
+                                                            <option value="2">درصدی</option>
+                                                        }
+                                                    </select>
+                                                </td>
+                                                <td class="text-center MaxValueContainer" data-version="0"><input class="MaxValue" data-old-value="@string.Format("{0:n0}",(item.UserCodeGifts.Any(x=>x.OfferId==Model.Id)?item.UserCodeGifts.Where(x=>x.OfferId==Model.Id).First().MaxValue:0))" value="@string.Format("{0:n0}",(item.UserCodeGifts.Any(x=>x.OfferId==Model.Id)?item.UserCodeGifts.Where(x=>x.OfferId==Model.Id).First().MaxValue:0))" style="width:100px" /></td>
+                                                <td class="text-center CountUseContainer" data-version="0"><input class="CountUse" data-old-value="@string.Format("{0:n0}",(item.UserCodeGifts.Any(x=>x.OfferId==Model.Id)?item.UserCodeGifts.Where(x=>x.OfferId==Model.Id).First().CountUse:0))" value="@string.Format("{0:n0}",(item.UserCodeGifts.Any(x=>x.OfferId==Model.Id)?item.UserCodeGifts.Where(x=>x.OfferId==Model.Id).First().CountUse:0))" style="width:100px" /></td>
+                                                <td class="text-center IsActiveContainer" data-version="0">
+                                                    <input type="checkbox" class="IsActive" data-old-value="@(item.UserCodeGifts.Any(x=>x.IsActive)?true:false)" checked="@(item.UserCodeGifts.Any(x=>x.IsActive)?true:false)" />
+                                                </td>
+                                                <td>
+                                                    <a href="#" data-offer-id="@Model.Id" data-UserCodeGift-id="@(item.UserCodeGifts.Any(x=>x.OfferId==Model.Id)?item.UserCodeGifts.Where(x=>x.OfferId==Model.Id).First().Id:0)" data-id="@item.Id" class="Edit-Now btn btn-default">تایید</a><br /><br />
+
+                                                </td>
+
+
+                                            </tr>
+                                            i++;
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="Pagging-New-Container">
+                                <strong class="Pagging-New-Info">
+                                    تعداد نتایج : @users.TotalItemCount ، صفحه @(users.PageCount < users.PageNumber ? 0 : users.PageNumber) از @users.PageCount
+                                </strong>
+
+                                @Html.PagedListPager(users, Page => Url.Action("CodeDetail", new { Page, sortOrder = ViewBag.CurrentSort, PageSize = PageSize, ProductCatIdFilter = ViewBag.ProductCatIdFilter, QuantityFilter = ViewBag.QuantityFilter, LanguagenameFilter = ViewBag.LanguagenameFilter, NameFilter = ViewBag.NameFilter, IsActiveFilter = ViewBag.IsActiveFilter, ProductTypeFilter = ViewBag.ProductTypeFilter, ProductStateFilter = ViewBag.ProductStateFilter, ProductInsertStateFilter = ViewBag.ProductInsertStateFilter }))
+                                <div class="PageSizeSelectorContainer">
+                                    <span>تعداد نمایش</span>
+                                    <select class="PageSizeSelector" name="PageSizeSelector">
+                                        <option value="10" selected="@(PageSize.HasValue && PageSize.Value==10?true:false)">10</option>
+                                        <option value="20" selected="@(PageSize.HasValue && PageSize.Value==20?true:false)">20</option>
+                                        <option value="50" selected="@(PageSize.HasValue && PageSize.Value==50?true:false)">50</option>
+                                        <option value="100" selected="@(PageSize.HasValue && PageSize.Value==100?true:false)">100</option>
+                                    </select>
+                                </div>
+                            </div>
+                        }
+                    }
+
+
+
+                </div>
+
+
+            </div>
+
+            @if (Model.codeUseType == CodeUseType.ثبت_در_پنل_مدیریت)
+            {
+                <div id="CatOffer" class="tab-pane fade in">
+
+                    <div class="col-md-4">
+                        <br /><label>گروه کاربری</label><br />
+                        @Html.DropDownList("UserGroupIdCAT", ViewBag.UserGroups as IEnumerable<SelectListItem>, new { id = "UserGroupIdCAT", @class = "form-control selectpicker", data_live_search = "true" })
+
+                        <br />
+                        <br /><label>کد تخفیف </label><br />
+                        <select class="CodeCat form-control">
+                            <option value="1">ثابت</option>
+                            <option value="2">تصادفی</option>
+                        </select>
+                        <br />
+                        <input class="codeValueCat form-control" />
+
+                        <br /><label>میزان تخفیف</label><br />
+                        <input type="number" class="ValueCat form-control" />
+                        <br /><label>نوع تخفیف</label><br />
+                        <select class="CodeTypeCat form-control">
+                            <option value="1">ثابت</option>
+                            <option value="2">درصدی</option>
+                        </select>
+                        <br /><label>سقف مبلغ در هر استفاده</label><br />
+                        <input type="number" class="MaxValueCat form-control" />
+                        <br /><label>سقف تعداد استفاده</label><br />
+                        <input type="number" class="CountUseCat form-control" />
+                        <br /><br />
+                        <span class="btn btn-primary" data-Offer-Id="@Model.Id" id="Add-userCodeGift-Group">ثبت</span>
+                    </div>
+
+                </div>
+            }
+
+
+        </div>
+        @section Scripts{
+
+            <script src="~/Areas/Admin/Content/Scripts/Component/Bootstrp-DropDown/bootstrap-select.min.js"></script>
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/View/ProductCategories.js"></script>
+            <script src="~/Areas/Admin/Content/Scripts/View/CodeDetail.js"></script>
+            <script>
+                $(document).ready(function () {
+                    $(".CodeCat").change(function () {
+                        if ($(this).val() == "1")
+                            $(".codeValueCat").show();
+                        else
+                            $(".codeValueCat").hide();
+                    });
+
+                    if ($("#proviencId").val() != "") {
+                        var CityId = $("#CityId option:selected").val();
+                        $.ajax({
+                            type: "Get",
+                            url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#proviencId").val(),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (response) {
+                                $("#CityId option").remove();
+                                $("#CityId").append("<option value='0'>--همه--</option>");
+                                for (var i = 0; i < response.data.length; i++) {
+
+                                    $("#CityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                                }
+                                $("#CityId option[value='" + CityId + "']").prop("selected", true);
+                                $(".loading").hide();
+                            }
+                        });
+                    }
+
+                    $("#proviencId").change(function () {
+                        if ($("#proviencId").val() == "")
+                            $("#CityId option").remove();
+                        else {
+
+                            $(".loading").show();
+                            $.ajax({
+                                type: "Get",
+                                url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#proviencId").val(),
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function (response) {
+                                    $("#CityId option").remove();
+                                    $("#CityId").append("<option value='0'>--همه--</option>");
+                                    for (var i = 0; i < response.data.length; i++) {
+
+                                        $("#CityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                                    }
+
+                                    $(".loading").hide();
+                                }
+                            });
+                        }
+                    });
+
+                    if ($("#SearchType").val() == "1") {
+                        $('.nav-tabs a[href="#ProductOffer"]').tab('show');
+                    }
+                    else if ($("#SearchType").val() == "2") {
+
+                        $('.nav-tabs a[href="#FreeSend"]').tab('show');
+                    }
+                    else if ($("#SearchType").val() == "3") {
+
+                        $('.nav-tabs a[href="#CodeGift"]').tab('show');
+                    }
+                    else {
+
+                        $('.nav-tabs a[href="#ProductOffer"]').tab('show');
+                    }
+                });
+            </script>
+        }
+    </div>
+</div>

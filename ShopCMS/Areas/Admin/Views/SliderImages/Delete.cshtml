@@ -1,0 +1,58 @@
+﻿@model Domain.SliderImage
+
+@using ahmadi.Infrastructure.Helper
+
+<title> حذف تصویرِ  @Model.Title</title>
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h3 class="box-title">
+            <i class="flaticon-image"></i> حذفِ @Model.Title
+        </h3>
+        <h4 style="color:red"><i class="glyphicon glyphicon-remove"></i> آیا مطمئن به حذف این رکورد هستید؟</h4>
+        <br /><br />
+        <p class="text text-danger"><strong>@ViewBag.Erorr</strong></p>
+        <dl class="dl-horizontal">
+            <dt>
+                کاور ( تصویر)
+            </dt>
+
+            <dd>
+                @Html.Displayattachment(Model.attachment.FileName,Model.Title, "SM", htmlAttributes: new { @class = "img-responsive", width = "110", height = "60", style = "display:inline-block;width:110px;height:60px" })
+            </dd>
+
+            <dt>
+                مربوط به اسلایدرِ
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Slider.Title)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+
+            <dd>
+
+                <a href="@Model.Title" target="_blank">@Model.Title</a>
+            </dd>
+
+
+
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="حذف" class="btn btn-danger" />
+            </div>
+        }
+
+</div>
+</div>

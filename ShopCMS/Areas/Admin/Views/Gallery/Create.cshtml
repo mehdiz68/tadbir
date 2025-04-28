@@ -1,0 +1,146 @@
+﻿@model Domain.GalleryCategory
+<title>ایجاد گالری</title>
+
+@{
+    var HelpModuleSection = ViewBag.HelpModuleSection as Domain.HelpModuleSection;
+    var setting = ViewBag.setting as Domain.Setting;
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        <span style="cursor:pointer" data-html="true" data-toggle="tooltip" data-placement="left" class="glyphicon glyphicon-question-sign" title="@(HelpModuleSection!=null?Html.Raw(HelpModuleSection.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ایجاد گالری
+
+        </h1>
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm())
+            {
+            @Html.AntiForgeryToken()
+
+
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group has-feedback col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+
+                    <label class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></label> @Html.LabelFor(x => x.Title)
+
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { placeholder = "عنوان", id = "ContentTitle", @class = "form-control" } })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    <p><label class="ContentTitle"></label> کاراکتر باقی مانده.</p>
+
+                </div>
+
+                <div class="form-group has-feedback col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+
+                    <label class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان سئو").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "عنوان سئو").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></label> @Html.LabelFor(x => x.Title)
+
+                    @Html.EditorFor(model => model.PageAddress, new { htmlAttributes = new { placeholder = "عنوان سئو", id = "PageAddress", @class = "form-control" } })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                    @Html.ValidationMessageFor(model => model.PageAddress, "", new { @class = "text-danger" })
+                    <p><label class="PageAddress"></label> کاراکتر باقی مانده.</p>
+
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="form-group has-feedback col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <label class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "توضیحات متای گوگل").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "توضیحات متای گوگل").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></label> @Html.LabelFor(x => x.Descr)
+
+                    @Html.TextAreaFor(model => model.Descr, htmlAttributes: new { placeholder = "توضیحات متای گوگل", id = "ContentDescr", @class = "form-control", rows = "5" })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                    @Html.ValidationMessageFor(model => model.Descr, "", new { @class = "text-danger" })
+
+                    <p><label class="ContentDescr"></label> کاراکتر باقی مانده.</p>
+
+                </div>
+
+                <div class="form-group has-feedback col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <label class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "چکیده").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "چکیده").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></label> @Html.LabelFor(x => x.Abstract)
+                    @Html.TextAreaFor(model => model.Abstract, htmlAttributes: new { placeholder = "چکیده", @class = "form-control", rows = "5" })
+                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+                    @Html.ValidationMessageFor(model => model.Abstract, "", new { @class = "text-danger" })
+
+                </div>
+
+                <div class="form-group has-feedback col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                    <div>
+                        @Ajax.ActionLink("استفاده از فایل ها", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',1)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager", @style = "margin-bottom:0" })
+                        <label class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "محتوا").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "محتوا").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></label> @Html.LabelFor(x => x.Data, new { style = "display:inline" })
+                    </div>
+
+                    @Html.TextAreaFor(model => model.Data, htmlAttributes: new { Id = "txt_Content", @class = "form-control elm1", rows = "5" })
+                    @Html.ValidationMessageFor(model => model.Data, "", new { @class = "text-danger" })
+
+                </div>
+
+                <div class="form-group has-feedback col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    <span class="glyphicon glyphicon-question-sign " data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "آیکن").Any()? Html.Raw(HelpModuleSection.HelpModuleSectionFields.Where(x=>x.Name== "آیکن").First().Data).ToHtmlString():Html.Raw("").ToHtmlString())"></span> @Html.LabelFor(x => x.Cover)
+
+                    @Ajax.ActionLink("انتخاب یا آپلود تصویر", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager" })
+
+                    <div id="createView"></div>
+
+                    <div id="AttachementContainer">
+                        <img src="~/Content/Default/images/default-thumbnail.jpg" class="img-responsive" width="220" height="120" style="display:inline-block;width:220px;height:120px" />
+                        @Html.EditorFor(model => model.Cover, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.Cover, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+
+                @{
+                    CoreLib.ViewModel.Xml.XMLReader readXml = new CoreLib.ViewModel.Xml.XMLReader(setting.StaticContentDomain);
+                    var languages = readXml.ListOfXLanguage();
+                }
+                @if (languages.Count == 1)
+                {
+                    @Html.Hidden("LanguageId", languages.First().Id)
+                }
+                else
+                {
+                    <div class="form-group has-feedback col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        @Html.LabelFor(model => model.LanguageId, "زبان ( وب سایت )", htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.DropDownList("LanguageId", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.LanguageId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+
+
+
+                <div class="form-group has-feedback col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                    @Html.CheckBox("IsActive", true, new { @class = "js-switch" }) @Html.LabelFor(m => m.IsActive)
+                </div>
+
+                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <input type="submit" value="ایجاد" class="btn btn-primary" />
+                </div>
+
+            </div>
+                    }
+
+        @section Scripts{
+            <script>
+                $('#ContentTitle').simplyCountable({ counter: '.ContentTitle', maxCount: 100, safeClass: 'safe', overClass: 'over' });
+                $('#PageAddress').simplyCountable({ counter: '.PageAddress', maxCount: 80, safeClass: 'safe', overClass: 'over' });
+                $('#ContentDescr').simplyCountable({ counter: '.ContentDescr', maxCount: 150, safeClass: 'safe', overClass: 'over' });
+            </script>
+            <script src="~/Areas/Admin/Content/Scripts/View/CategoryFilterByContentType.js"></script>
+
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+            <script src="~/Scripts/tinymce/tinymce.min.js"></script><script src="~/Scripts/tinymce/tiny_mce_load.js"></script>
+
+        }
+</div>
+</div>

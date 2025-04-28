@@ -1,0 +1,49 @@
+﻿@using Combres.Mvc
+<!DOCTYPE html>
+<html lang="fa" dir='rtl'>
+<head>
+    @{ bool IsCart = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "cart"; }
+    @RenderSection("Meta", required: false)
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta -->
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SITE TITLE -->
+    <link rel="preload" href="~/Content/Base/Css/Fonts.css" as="style" />
+    <link href="~/Content/Base/Css/font-awesome.css" rel="stylesheet" />
+    @Styles.Render("~/bundles/SiteCss")
+
+    <link href="~/Content/Base/Css/Fonts.css" rel="stylesheet" />
+
+    @RenderSection("Header", required: false)
+
+    @Html.Action("GetJsTools", "Home")
+
+</head>
+<body class="@(IsCart?"Cart-on":"Cart-off")">
+
+    @if (!Request.IsAuthenticated)
+    {
+        @Html.Partial("LoginModal")
+    }
+
+    @Html.Action("GetHeader", "Home")
+
+
+    <div class="main_content">
+        @RenderBody()
+    </div>
+
+    @Html.Action("GetFooter", "Home")
+
+    @Scripts.Render("~/bundles/Sitejs")    
+
+    @RenderSection("scripts", required: false)
+</body>
+
+
+
+</html>

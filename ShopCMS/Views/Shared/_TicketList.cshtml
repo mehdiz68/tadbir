@@ -1,0 +1,81 @@
+﻿@model Domain.Ticket
+
+@using ahmadi.Infrastructure.Helper;
+@using PagedList.Mvc;
+@{ var ticket = Model;
+    var ReplayAnswer = ViewBag.ReplayAnswer as bool?;
+    var parrentId = ViewBag.lastId as int?; }
+
+
+
+<div class="ticket-message">
+    <div class="clientticket">
+        <div class="clientheader">
+            <h5><i class="fa fa-comment" aria-hidden="true"></i> @Model.User.FirstName @Model.User.LastName  | کاربر</h5>
+        </div>
+        <div class="clientmsg">
+            @Model.Message
+        </div>
+        <div class="ticket-footer clearfix">
+            <div class="tickets-timestamp">
+                <i class="fa fa-clock padding-right-10" aria-hidden="true">
+                </i> @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.InsertDate) ( @Model.InsertDate.ToShortTimeString() )
+            </div>
+        </div>
+    </div>
+
+
+    @foreach (var item in ticket.ChildTickets.Where(x => x.Answer == true))
+    {
+        ticket = item;
+<div class="adminticket">
+    <div class="adminheader">
+        <h5><i class="fa fa-comment" aria-hidden="true"></i> @ticket.User.FirstName @ticket.User.LastName| عدل جو</h5>
+    </div>
+    <div class="adminmsg">
+        @ticket.Message
+    </div>
+    <div class="ticket-footer clearfix">
+        <div class="tickets-timestamp"><i class="fa fa-clock padding-right-10" aria-hidden="true"></i> @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(ticket.InsertDate) ( @ticket.InsertDate.ToShortTimeString() )</div>
+    </div>
+</div> while (ticket.ChildTickets.Any())
+{
+    ticket = ticket.ChildTickets.First();
+
+    bool Admin = ticket.Answer;
+<div class="@(Admin?"adminticket":"clientticket")">
+    <div class="@(Admin?"adminheader":"clientheader")">
+        <h5><i class="fa fa-comment" aria-hidden="true"></i> @ticket.User.FirstName @ticket.User.LastName  | @(Admin?"عدل جو": "کاربر") </h5>
+    </div>
+    <div class="@(Admin?"adminmsg":"clientmsg")">
+        @ticket.Message
+    </div>
+    <div class="ticket-footer clearfix">
+        <div class="tickets-timestamp">
+            <i class="fa fa-clock padding-right-10" aria-hidden="true"></i> @CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(ticket.InsertDate) ( @ticket.InsertDate.ToShortTimeString() )
+        </div>
+    </div>
+</div>}
+
+}
+
+</div>
+
+<br />
+<br />
+
+@using (Html.BeginForm("Replay", "freeConsultation", new { area = "" }, FormMethod.Post))
+{
+@Html.AntiForgeryToken();
+@Html.Hidden("ParrentId", parrentId.Value);
+@Html.Hidden("ReplayAnswer", ReplayAnswer.Value);
+@Html.Hidden("CatId", Model.CatId);
+
+<div>
+    <p>@Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })</p>
+
+    <p>@Html.TextAreaFor(model => model.Message, new { @Value = "", @placeholder = "متن پاسخ...", @class = "form-control", rows = "5" })</p>
+</div>
+
+
+                <input type="submit" class="btn btn-info" value="ثبت پاسخ" />}

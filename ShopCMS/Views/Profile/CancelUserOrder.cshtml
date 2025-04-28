@@ -1,0 +1,44 @@
+﻿@model Domain.OrderDelivery
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml;
+@using ahmadi.Infrastructure.Helper;
+@using CoreLib;
+
+@{
+    var setting = ViewBag.setting as Domain.Setting;
+    int price = 0;
+    var wallet = Model.Order.OrderWallets.First().Wallet;
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var result = "";
+    int i = 1;
+    @Html.Partial("_Meta", Meta)
+}
+@{
+    Layout = "~/Views/Profile/_layout.cshtml";
+}
+
+
+<div class="o-box container" id="cancel-order-confirm">
+    <h1>
+        <span>  لغو مرسوله </span>
+        <a href="/Profile"><span class="fa fa-chevron-left"></span></a>
+    </h1>
+    
+    @if (ViewBag.status != null)
+    {
+        if (ViewBag.status as string == "1")
+        {
+            <p class="alert alert-success">@ViewBag.msg</p>
+        }
+        else
+        {
+            <p class="alert alert-error">@ViewBag.msg</p>
+        }
+    }
+
+
+
+
+</div>
+
+

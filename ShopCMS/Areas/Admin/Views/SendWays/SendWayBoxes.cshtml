@@ -1,0 +1,114 @@
+﻿@model IEnumerable<Domain.SendwayBox>
+@using CoreLib;
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml
+
+<title>مدیریت باکس های ارسال</title>
+
+@{
+
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+    var Setting = ViewBag.setting as Domain.Setting;
+}
+@section Header{
+
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <a href="@Url.Action("Index", "SendWayBoxes")">  مدیریت باکس های ارسال</a>
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+            <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت  <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+
+        @if (ViewBag.AddPermission)
+        {
+            <p><a class="btn btn-success" href="CreateSendWayBox"> ایجاد باکس ارسال جدید</a></p>
+        }
+
+        <hr style="margin:0;border:1px solid #c23321" />
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>
+                        عنوان
+                    </th>
+                    <th>
+                        حداکثر ارتفاع بسته ( سانتی متر)
+                    </th>
+                    <th>
+                        حداکثر عرض بسته ( سانتی متر)
+                    </th>
+                    <th>
+                        حداکثر طول بسته ( سانتی متر)
+                    </th>
+                    <th>
+                        حداکثر وزن بسته ( گرم)
+                    </th>
+                    <th>ماهیت باکس</th>
+                    <th>
+                        توضیحات
+                    </th>
+
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Title
+                        </td>
+                        <td>
+                            @item.Height
+                        </td>
+                        <td>
+                            @item.Width
+                        </td>
+                        <td>
+                            @item.Lenght
+                        </td>
+                        <td>
+                            @item.ProductWeight
+                        </td>
+                        <td>
+
+                            @item.ProductPackageType.EnumDisplayNameFor()
+                        </td>
+                        <td>
+                            @item.Description
+                        </td>
+
+                        <td>
+
+                            @if (ViewBag.EditPermission)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("EditSendWayBox", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                            }
+                            @if (ViewBag.DeletePermission)
+                            {
+                                <a class="btn btn-success" href="@Url.Action("DeleteSendWayBox", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> حذف </a>
+                            }
+
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts{
+
+
+
+}

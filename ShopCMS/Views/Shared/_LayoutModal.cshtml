@@ -1,0 +1,14 @@
+﻿@* Layout Page for Twitter Bootstrap Modal Dialogs *@
+<div class="modal fade" id="@ViewBag.ModalId" tabindex="-1" role="dialog" aria-labelledby="@ViewBag.ModalId@Html.Raw("Label")" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+           
+            <div class="modal-body">
+                @RenderBody()
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>

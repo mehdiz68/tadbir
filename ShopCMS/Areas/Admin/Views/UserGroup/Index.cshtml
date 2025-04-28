@@ -1,0 +1,170 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model PagedList<Domain.UserGroup>
+
+<title> گروههای کاربری</title>
+
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+
+
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Stylesheets/View/ProductCategories.css" rel="stylesheet" />
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+    @*Bootstrap Select*@
+    <link href="~/areas/admin/content/scripts/component/bootstrp-dropdown/bootstrap-select.min.css" rel="stylesheet" />
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="body-content">
+
+            <div class="Pagecontent">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <a href="@Url.Action("Index","Brand")">
+                        مدیریت گروههای کاربری
+
+                    </a>
+                </div>
+                <div class="clearfix"></div>
+                <br /><br />
+
+
+
+                <div>
+                    <br />
+                    @if (ViewBag.AddPermission)
+                    {
+                        <p><a class="btn btn-success" href="@Url.Action("Create","usergroup")"> <span class="glyphicon glyphicon-plus"></span> ایجاد گروه جدید</a></p>
+                    }
+
+
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2> جستجو / فیلتر</h2>
+                            <ul class="nav navbar-left panel_toolbox">
+                                <li>
+                                    <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                                </li>
+
+                                <li>
+                                    <a class="close-link"><i class="fa fa-close"></i></a>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content" style="display:none">
+
+                            <div id="SearchPage">
+                                <div>
+                                    <div>
+
+                                        @using (Html.BeginForm("Index", "usergroup", FormMethod.Get))
+                                        {
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                                @Html.TextBox("Name", ViewBag.NameFilter as string, htmlAttributes: new { placeholder = "عنوان", style = "width:90%;display: inline-block", @class = "form-control" })
+                                                <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+                                            </div>
+
+
+                                            <div class="clearfix"></div>
+                                            <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                            @Html.ActionLink("نمایش همه", "Index", new { @class = "btn btn-success" })
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped jambo_table bulk_action">
+                            <thead>
+                                <tr class="headings">
+
+                                    <th class="text-center column-title">
+                                        <p class="text-center">
+                                            <span>نام گروه</span>
+
+                                        </p>
+                                    </th>
+                                    <th class="text-center column-title">
+                                        <p class="text-center">
+                                            <span>تعداد اعضا</span>
+
+                                        </p>
+                                    </th>
+
+                                    <th class="text-center column-title">
+                                        <p class="text-center">
+                                            <span>اولیت</span>
+
+                                        </p>
+                                    </th>
+
+                                    <th class="text-center column-title"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr class="rowItem" id="@item.Id">
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </td>
+
+                                        <td>
+                                            @item.UserGroupSelects.Count
+                                        </td>
+
+                                        <td>
+                                            @item.DisplayOrder
+                                        </td>
+                                        <td>
+
+                                            @if (ViewBag.EditPermission)
+                                            {
+                                                <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                                <a class="btn btn-success" href="@Url.Action("addMember", new { id = item.Id })"><span class="glyphicon glyphicon-user"></span> اعضا </a>
+                                                <a class="btn btn-success" href="@Url.Action("Export", new { id = item.Id })"><span class="glyphicon glyphicon-export"></span> خروجی اعضا </a>
+                                            }
+                                            @if (ViewBag.DeletePermission)
+                                            {
+                                                <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <p>
+                            <strong style="color: #900">
+                                صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount گروه
+                            </strong>
+                        </p>
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, NameFilter = ViewBag.NameFilter }))
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+@section Scripts{
+
+    @*View*@
+    <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+    <script src="~/Areas/Admin/Content/Scripts/View/SortUserGroup.js"></script>
+
+}

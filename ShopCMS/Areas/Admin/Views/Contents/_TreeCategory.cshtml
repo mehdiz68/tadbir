@@ -1,0 +1,4 @@
+﻿@model IEnumerable<Domain.Category>
+@using ahmadi.Infrastructure.Helper
+
+@(Html.TreeView(Model).EmptyContent("دسته بندی ای وجود ندارد!").Children(m => m.ChildCategory).HtmlAttributes(new { id = "tree" }).ChildrenHtmlAttributes(new { @class = "subItem" }).ItemText(m => m.Title).ItemTemplate(@<text><a data-id="@item.Id" href="@Url.Action("SelectTree", new { ID = item.Id})">@item.Title</a></text>))

@@ -1,0 +1,17 @@
+﻿.subItem{display:none}
+ul.bar_tabs > li{margin-left:7px!important;margin-top:-16px!important}
+ul.bar_tabs > li.active{margin-top:-16px!important}
+ul.bar_tabs > li a{padding: 10px 7px;}
+#myTabContent2 #tab_content22 .form-control{display:inline-block!important;width:auto!important}
+.btn, .buttons, .modal-footer .btn + .btn, button{margin-bottom:0!important}
+.ProductCategories{padding:0}
+.ProductCategories li{display:inline-block}
+.ProductCode{color:blue;text-decoration:underline}
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  vertical-align: middle!important;
+}

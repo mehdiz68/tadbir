@@ -1,0 +1,133 @@
+﻿@model IEnumerable<Domain.labelIcon>
+@using ahmadi.Infrastructure.Helper
+<title>مدیریت آیکن های ارسال مرسوله</title>
+@{
+    var setting = ViewBag.setting as Domain.Setting;
+    <style>
+        #tree {
+            padding-right: 110px;
+            padding-bottom: 160px;
+        }
+
+        .tree li a:hover, .tree li a:hover + ul li a {
+            color: #000 !important;
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+
+        .hilight {
+            background: #3c8dbc;
+            color: #ffffff !important;
+            border: 1px solid #3c8dbc;
+        }
+    </style>
+}
+
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.css" rel="stylesheet" />
+ 
+}
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+                <a href="@Url.Action("Index","labelIcons")">  آیکن های ارسال مرسوله </a>
+            </h1>
+
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+     
+            <div id="View1" >
+
+                <br />
+                <p>
+                    @if (ViewBag.AddPermission)
+            {
+                        <a class="btn btn-success" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد آیکن جدید </a>
+                    }
+                </p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>
+                                عنوان
+                            </th>
+                            <th>
+                               تصویر
+                            </th>
+                            <th>
+                              توضیحات
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Title)
+                                </td>
+                                <td>
+                                    @if (item.attachment != null)
+                                    {
+                                        @Html.Displayattachment(item.attachment.FileName, item.Title, "SM", false, htmlAttributes: new { @class = "img-responsive", style = "display:inline-block;width:220px;height:120px" })
+
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:220px;height:120px" />
+                                    }
+                                </td>
+                                <td>
+
+                                    @Html.DisplayFor(modelItem => item.Descr)
+                                </td>
+                                <td>
+
+                                    @if (ViewBag.EditPermission)
+                                    {
+                                        <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                    }
+                                    @if (ViewBag.DeletePermission)
+                                    {
+                                        <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                                    }
+                                </td>
+                            </tr>
+                                        }
+
+                    </table>
+                </div>
+            </div>
+            
+
+        
+    </div>
+</div>
+
+
+
+
+
+@section Scripts{
+    <script src="~/Areas/Admin/Content/Scripts/Component/jquery-ui.min.js"></script>
+
+}

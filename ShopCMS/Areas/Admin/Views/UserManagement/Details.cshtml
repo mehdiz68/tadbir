@@ -1,0 +1,178 @@
+﻿@model Domain.ApplicationUser
+@using ahmadi.Infrastructure.Helper
+@using ahmadi.Infrastructure.Security;
+
+
+<title>جزئیات کاربر</title>
+<div class="x_panel">
+    <div class="x_content">
+
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;">جزئیات کاربر</h1>
+
+        <br /><br />
+
+        <dl class="dl-horizontal">
+
+            <dt>
+                نام کاربری ( ایمیل)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.UserName)
+            </dd>
+            <dt>
+                نام
+            </dt>
+            <dd>
+                @Model.FirstName
+            </dd>
+            <dt>نام خانوادگی</dt>
+            <dd>
+                @Model.LastName
+            </dd>
+            <dt>
+                جنسیت
+            </dt>
+            <dd>
+                @if (Model.Gender == true)
+                {
+                    <span>مرد</span>
+                }
+                else
+                {
+                    <span>زن</span>
+                }
+            </dd>
+            <dt>آواتار</dt>
+            <dd>
+                @if (Model.Avatar.HasValue)
+                {
+                    @Html.Displayattachment(Model.Avatarattachment.FileName,Model.LastName,"SM", htmlAttributes: new { @class = "img-responsive", width = "80", height = "80", style = "display:inline-block;width:80px;height:80px" })
+                }
+            </dd>
+            <dt>
+                ایمیل تایید شده است؟
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EmailConfirmed)
+            </dd>
+
+            <dt>
+                تلفن همراه
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </dd>
+
+            <dt>
+                تلفن همراه تایید شده است؟
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PhoneNumberConfirmed)
+            </dd>
+
+
+            <dt>
+                تاریخ ایجاد
+            </dt>
+
+            <dd>
+                <p>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.CreationDate)</p>
+                <p>@Model.CreationDate.ToShortTimeString()</p>
+
+            </dd>
+
+            <dt>
+                زمانِ آخرین ورود
+            </dt>
+
+            <dd>
+                @if (Model.LastActivityDate.HasValue)
+                {
+                    <p>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.LastActivityDate.Value)</p>
+                    <p>@Model.LastActivityDate.Value.ToShortTimeString()</p>
+                }
+            </dd>
+
+
+            <dt>
+                غیرفعال
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Disable)
+            </dd>
+
+            <dt>
+                خروج از قفل
+            </dt>
+
+            <dd>
+                @if (Model.LockoutEndDateUtc.HasValue)
+                {
+
+                    if (DateTime.UtcNow < Model.LockoutEndDateUtc.Value)
+                    {
+                        <p>@((Model.LockoutEndDateUtc.Value - DateTime.UtcNow).TotalMinutes) دقیقه</p>
+                    }
+                    else
+                    {
+
+                        <span>قفل نیست</span>
+                    }
+                }
+                else
+                {
+                    <span>قفل نیست</span>
+                }
+            </dd>
+
+
+            <dt>
+                تعداد تلاش ناموفقِ ورود
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AccessFailedCount)
+            </dd>
+
+            <dt>
+                نقش
+            </dt>
+            <dd>
+                @{
+                    IdentityManager Oidentitymanager = new IdentityManager();
+
+                    if (Oidentitymanager.IsInRole(Model.Id, "Admin"))
+                    {
+                        <span>Admin ( مدیر پنل مدیریت )</span>
+                    }
+                    else if (Oidentitymanager.IsInRole(Model.Id, "User"))
+                    {
+                        <span>User ( کاربرِ سایت )</span>
+                    }
+                    else
+                    {
+                        <span>نقش تعریف نشده است.</span>
+                    }
+                }
+            </dd>
+
+            <dt>درباره</dt>
+            <dd>@Model.About</dd>
+        </dl>
+        <p>
+
+            <a class="btn btn-primary" href="@Url.Action("Edit", new { id = Model.Id})"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+            <a class="btn btn-success" href="@Url.Action("UserAttachements", new { id = Model.Id})"><span class="glyphicon glyphicon-file"></span> نمایش فایل های کاربر </a>
+
+        </p>
+
+
+    </div>
+</div>

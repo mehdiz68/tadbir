@@ -1,0 +1,40 @@
+﻿@model CoreLib.Infrastructure.Captcha.zCaptcha  
+
+<div class="captcha" >
+  
+
+    @if (Model.CurrentNumber1 == null)
+    {
+
+        <input id="CaptchaValue"  placeholder="عدد..." autocomplete="off" name="CaptchaValue" class="CurrentNumber1" type="number"  data-val="true" data-val-required="اجباری" data-val-number="عدد وارد نمایید"/> 
+    }
+    else
+    {
+
+        <span class="CurrentNumber1">&nbsp; @Model.CurrentNumber1 &nbsp;</span>
+    }
+
+    <span class="Operator">&nbsp; @Model.Operator &nbsp;</span> 
+    @if (Model.CurrentNumber2 == null)
+    {
+
+        <input id="CaptchaValue" placeholder="عدد..." autocomplete="off" name="CaptchaValue" class="CurrentNumber2" type="number" data-val="true" data-val-required="اجباری" data-val-number="عدد وارد نمایید"/>
+    }
+    else
+    {
+
+        <span class="CurrentNumber2" placeholder="عدد...">&nbsp; @Model.CurrentNumber2 &nbsp;</span>
+    }
+    <span> = </span>
+    @if (Model.CurrentNumber3 == null)
+    {
+
+        <input id="CaptchaValue" autocomplete="off" placeholder="عدد..." name="CaptchaValue" class="CurrentNumber3" type="number" data-val="true" data-val-required="اجباری" data-val-number="عدد وارد نمایید"/>
+    }
+    else
+    {
+
+        <span class="CurrentNumber3">&nbsp; @Model.CurrentNumber3 &nbsp;</span>
+    }
+    <span onclick="RefreshCaptcha()" class="fa fa-refresh" style="cursor:pointer"></span>
+</div>

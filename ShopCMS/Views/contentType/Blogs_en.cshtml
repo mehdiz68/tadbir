@@ -1,0 +1,158 @@
+﻿@model ahmadi.ViewModels.Content.ContentType
+@using CoreLib.Infrastructure
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure
+@using PagedList.Mvc;
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var setting = ViewBag.setting as Domain.Setting;
+    int i = 1, k = 0;
+    int SumSize = 0;
+
+
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+}
+
+@section Header{
+    <link href="~/Content/Base/Css/view/ContentType.css" rel="stylesheet" />
+}
+
+<section class="hero-wrap hero-wrap-2" style="background-image: url('/Content/Base/Theme/images/xbg_2.jpg');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-start">
+            <div class="col-md-9 ftco-animate pb-5 fadeInUp ftco-animated">
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="/En"> Home <i class="fa fa-chevron-right"></i></a></span>
+                    <span>@Model.contentType.Name </span>
+                </p>
+                <h1 class="mb-3 bread">@Model.contentType.Title</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+
+        @if (Model.Sliders != null)
+        {
+            if (Model.Sliders.Any())
+            {
+                i = 0;
+                <div class="col-lg-12" style="padding:0">
+
+                    @foreach (var slider in Model.Sliders)
+                    {
+                        @Html.Partial("_BootStrapSlideShowCaptionBlog", slider, new ViewDataDictionary { { "Index", i.ToString() }, { "staticUrl", Meta.StaticContentUrl } })
+                        i++;
+                    }
+
+                </div>
+            }
+        }
+
+
+    </div>
+</div>
+
+<div class="container ads">
+    <div class="row">
+        @{ SumSize = 0;}
+        @foreach (var item in Model.TopAdveresting)
+        {
+            SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(item.AdverestingSizeId);
+            <div class="Adveresting Position-@item.Position Size-@item.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                <a href="@item.Link" title="@item.Title">
+                    <div class="categories__item set-bg" data-setbg="@Html.DisplayattachmentUrl(item.attachment.FileName)" style="background-image: url(&quot;@Html.DisplayattachmentUrl(item.attachment.FileName)&quot;);">
+                        <div class="categories__hover__text">
+                            <h5>@item.Title</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+
+    </div>
+</div>
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row d-flex">
+
+            @foreach (var item in Model.LatestContents)
+            {
+                <div class="col-lg-4 ftco-animate">
+                    <div class="blog-entry">
+                        <a href="@("/En"+Url.Action("Index","content",new {id=item.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) }))" class="block-20" style="background-image:url(@Html.DisplayattachmentUrl(item.attachment.FileName, "LG", true))">
+                        </a>
+                        <div class="text d-block">
+                            <div class="meta">
+                                <p>
+                                    <a href="#"><span class="fa fa-calendar mr-2"></span>@item.InsertDate.ToShortDateString()</a>
+                                    <a href="#" class="meta-chat"><span class="fa fa-comment mr-2"></span> @item.Comments.Count()</a>
+                                </p>
+                            </div>
+                            <h3 class="heading"><a href="@("/En"+Url.Action("Index","content",new {id=item.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) }))">@item.Title</a></h3>
+                            <p><a href="@("/En"+Url.Action("Index","content",new {id=item.Id,title=CoreLib.Infrastructure.CommonFunctions.NormalizeAddress(item.PageAddress) }))" class="btn btn-secondary py-2 px-3">Read More...</a></p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @Html.PagedListPager(Model.LatestContents, page => Url.Action("Index", new { page, id = Model.contentType.Id }))
+    </div>
+</section>
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center mb-5 pb-2">
+            <div class="col-md-8 text-center heading-section ftco-animate fadeInUp ftco-animated">
+                <h2 class="mb-4">Categories</h2>
+            </div>
+        </div>
+        <div class="row">
+            <ul class="categories" id="ContetTypeCategories">
+                @foreach (var item in Model.Categories)
+                {
+                    <li><a href="@("/En"+Url.Action("Index","Category",new {id=item.Id,title=CommonFunctions.NormalizeAddress(item.PageAddress) }))"> @item.Title <span>(@item.Contents.Count)</span></a></li>
+
+                }
+            </ul>
+        </div>
+    </div>
+</section>
+<div class="ads">
+    <div class="row">
+
+        @{ SumSize = 0;}
+        @foreach (var item in Model.BottomAdveresting)
+        {
+            SumSize += CoreLib.Infrastructure.CommonFunctions.GetSizeColumn(item.AdverestingSizeId);
+            <div class="Adveresting Position-@item.Position Size-@item.AdverestingSizeId @(SumSize==12?"lastbox":"")">
+                <a href="@item.Link" title="@item.Title">
+                    <div class="categories__item set-bg" data-setbg="@Html.DisplayattachmentUrl(item.attachment.FileName)" style="background-image: url(&quot;@Html.DisplayattachmentUrl(item.attachment.FileName)&quot;);">
+                        <div class="categories__hover__text">
+                            <h5>@item.Title</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+
+
+
+
+@section Scripts{
+
+
+}

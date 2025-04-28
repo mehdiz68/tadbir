@@ -1,0 +1,36 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ahmadi.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ahmadi_com_zarinpal_ir_PaymentGatewayImplementationService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://ir.zarinpal.com/pg/services/WebGate/service</Value>
+    </Setting>
+    <Setting Name="ahmadi_NiksmsWebservice_NiksmsWebservice" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://94.182.154.28:1370/NiksmsWebservice.svc</Value>
+    </Setting>
+    <Setting Name="ShopCMS_com_zarinpal_ir_PaymentGatewayImplementationService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://ir.zarinpal.com/pg/services/WebGate/service</Value>
+    </Setting>
+    <Setting Name="ShopCMS_NiksmsWebservice_NiksmsWebservice" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://94.182.154.28:1370/NiksmsWebservice.svc</Value>
+    </Setting>
+    <Setting Name="ahmadi_ir_shaparak_bpm_PaymentGatewayImplService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://bpm.shaparak.ir/pgwchannel/services/pgw</Value>
+    </Setting>
+    <Setting Name="ahmadi_ir_shaparak_sep_PaymentIFBinding" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://sep.shaparak.ir/payments/initpayment.asmx</Value>
+    </Setting>
+    <Setting Name="ahmadi_ir_shaparak_sep1_PaymentIFBinding" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://sep.shaparak.ir/payments/referencepayment.asmx</Value>
+    </Setting>
+    <Setting Name="TfShop_ir_shaparak_bpm_PaymentGatewayImplService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://bpm.shaparak.ir/pgwchannel/services/pgw</Value>
+    </Setting>
+    <Setting Name="TfShop_ir_shaparak_sep_PaymentIFBinding" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://sep.shaparak.ir/payments/initpayment.asmx</Value>
+    </Setting>
+    <Setting Name="TfShop_ir_shaparak_sep1_PaymentIFBinding" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://sep.shaparak.ir/payments/referencepayment.asmx</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,157 @@
+﻿@model PagedList.IPagedList<Domain.Tag>
+@using PagedList.Mvc;
+
+<title>مدیریت برچسب ها</title>
+
+@{
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+}
+
+
+@section Header{
+
+    @*View*@
+    <link href="~/Areas/Admin/Content/Stylesheets/View/Tag.css" rel="stylesheet" />
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")" title="راهنمای این صفحه"></span>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            برچسب ها
+
+        </h1>
+
+        <br /><br />
+        @if (ViewBag.AddPermission)
+        {
+            <p><a class="btn btn-success" href="@Url.Action("Create")"><span class="glyphicon glyphicon-plus"></span> ایجاد برچسب جدید </a></p>
+        }
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><span class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="left" title="@(HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").Any()?HelpModule.HelpModuleSections.Where(x=>x.Name=="جست و جو").First().Abstract:"")"></span> جستجو / فیلتر</h2>
+                <ul class="nav navbar-left panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                    </li>
+
+                    <li>
+                        <a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content" style="display:none">
+
+
+                <div id="SearchPage">
+                    <div>
+                        <div>
+
+                            @using (Html.BeginForm("Index", "Tags", FormMethod.Get))
+                            {
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.TextBox("TagnameString", ViewBag.TagnameFilter as string, htmlAttributes: new { placeholder = "برچسب", style = "width:90%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                                    @Html.DropDownList("LanguagenameString", ViewBag.LanguagenameSelectListItem as IEnumerable<SelectListItem>, "--انتخاب نمایید--", htmlAttributes: new { placeholder = "زبان ( وب سایت )", style = "width:90%;display: inline-block", @class = "form-control" })
+                                    <span class="fa fa-language form-control-feedback right" aria-hidden="true"></span>
+
+
+                                </div>
+                                <div class="clearfix"></div>
+                                <input type="submit" value="جست و جو" class="btn btn-primary" />
+                                @Html.ActionLink("نمایش همه", "Index", null, htmlAttributes: new { @class = "btn btn-success" })
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>برچسب</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "TagName", TagnameFilter = ViewBag.TagnameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter })" title="مرتب سازی بر اساس برچسب صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "TagName_desc", TagnameFilter = ViewBag.TagnameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter })" title="مرتب سازی بر اساس برچسب نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>زبان ( وب سایت)</span>
+                                <span>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Languagename", TagnameFilter = ViewBag.TagnameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter })" title="مرتب سازی بر اساس زبان (وب سایت) صعودی"> <span class="glyphicon glyphicon-chevron-up"></span></a>
+                                    <a style="display:block" href="@Url.Action("Index", new { sortOrder = "Languagename_desc", TagnameFilter = ViewBag.TagnameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter })" title="مرتب سازی بر اساس زبان (وب سایت) نزولی">  <span class="glyphicon glyphicon-chevron-down"></span></a>
+                                </span>
+                            </p>
+                        </th>
+
+                        <th class="text-center column-title"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TagName)
+                            </td>
+                            <td>
+                                @CoreLib.Infrastructure.CommonFunctions.GetLanguageName(item.LanguageId.Value)
+                            </td>
+                            <td>
+
+                                @if (ViewBag.EditPermission)
+                                {
+                                    <a class="btn btn-success" href="@Url.Action("Edit", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span> ویرایش </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-success"><span class="glyphicon glyphicon-edit"></span> <span style="text-decoration:line-through"> ویرایش </span> </span>
+
+                                }
+                                @if (ViewBag.DeletePermission)
+                                {
+                                    <a class="btn btn-danger" href="@Url.Action("Delete", new { id = item.Id })"><span class="glyphicon glyphicon-remove"></span> حذف </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-danger"><span style="text-decoration:line-through"> حذف </span>  </span>
+
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p>
+                <strong style="color: #900">
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میانِ @Model.TotalItemCount برچسب
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, TagnameFilter = ViewBag.TagnameFilter, LanguagenameFilter = ViewBag.LanguagenameFilter }))
+
+
+        </div>
+
+
+        @section Scripts{
+
+            @*View*@
+            <script src="~/Areas/Admin/Content/Scripts/View/Tag.js"></script>
+
+        }
+</div>
+</div>

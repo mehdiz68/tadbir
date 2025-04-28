@@ -1,0 +1,651 @@
+﻿@model Domain.Content
+
+
+@using CoreLib.Infrastructure.DateTime
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure
+@using CoreLib.ViewModel.Xml
+
+@{
+    var Meta = ViewBag.Meta as ahmadi.ViewModels.Home.Meta;
+    var sliders = ViewBag.Sliders as List<Domain.Slider>;
+    var relateds = ViewBag.RecentContentCategory as IEnumerable<Domain.Content>;
+    var catRelateds = ViewBag.contentTypes as IQueryable<ahmadi.ViewModels.Content.ContentTypeViewModel>;
+    var ads = ViewBag.Ads as IEnumerable<Domain.Adveresting>;
+    XMLReader readXML = new XMLReader(Meta.StaticContentUrl);
+    var ContentType = readXML.DetailOfXContentType(Model.ContentTypeId);
+    string currentUrl = "http://" + HttpContext.Current.Request.Url.Host + Url.Action("Index", "contents", new { id = Model.Id, title = CommonFunctions.NormalizeAddress(Model.PageAddress) });
+    int k = 0;
+    Layout = "~/Views/Shared/_LayoutVideo.cshtml";
+}
+
+@section Meta{
+    @Html.Partial("_Meta", Meta)
+
+}
+
+@section Header{
+    <link href="~/Content/Base/Css/star-rating.min.css" rel="stylesheet" />
+    <link href="~/Content/Base/Css/prettyPhoto.css" rel="stylesheet" />
+    <link href="~/Content/Base/Css/view/Content.css" rel="stylesheet" />
+}
+
+
+
+
+<!-- prs title wrapper Start -->
+<div class="prs_title_main_sec_wrapper">
+    <div class="prs_title_img_overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_title_heading_wrapper breadcrumb-inner">
+                    <h1>@Model.Title</h1>
+                    <ul>
+
+                        <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+                        @Html.Raw(ViewBag.breadcrumbCat)
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- prs title wrapper End -->
+<!-- prs mc slider wrapper Start -->
+@if (sliders != null)
+{
+    foreach (var item in sliders)
+    {
+        <div class="prs_mc_slider_main_wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="prs_heading_section_wrapper">
+                            <h2>ویژه ها</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="prs_mc_slider_wrapper">
+                            @foreach (var item2 in item.SliderImages)
+                            {
+                                <div class="item">
+                                    <div class="prs_vp_center_slider_img_wrapper">
+                                        <a href="@item2.Link">
+                                            @Html.Displayattachment(item2.attachment.FileName, item.Title, "LG")
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+<!-- prs ms trailer wrapper Start -->
+<div class="prs_ms_trailer_vid_main_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_heading_section_wrapper">
+                    <h2>مشاهده ویدئو</h2>
+                </div>
+            </div>
+            <div class="col-lg-12 col-lg-12 col-lg-12 col-lg-12">
+                <div class="prs_ms_trailer_vid_wrapper" style="background:unset">
+                    @*<div class="prs_ms_trailer_vid_img_overlay"></div>*@
+                    @if (Model.Cover.HasValue)
+                    {
+                        <video style="width:100%;height:500px;" controls="controls" width="100%" height="200" playsinline poster="@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, Model.attachment.FileName,"LG", true)" id="player">
+                            <!-- Video files -->
+                            <source src="@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, Model.VideoAttachment.FileName,"LG", true)" type="video/mp4" />
+                            @*<a href="@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, Model.VideoAttachment.FileName,"LG", true)" download>دانلود</a>*@
+                        </video>
+                    }
+                    else
+                    {
+                        <video style="width:100%;height:500px;" controls="controls" width="100%" height="200" playsinline id="player">
+                            <!-- Video files -->
+                            <source src="@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, Model.VideoAttachment.FileName,"LG", true)" type="video/mp4" />
+                            @*<a href="@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, Model.VideoAttachment.FileName,"LG", true)" download>دانلود</a>*@
+                        </video>
+                    }
+                </div>
+
+
+            </div>
+
+            <div class="col-lg-12 col-lg-12 col-lg-12 col-lg-12">
+                <div class="prs_ms_trailer_slider_main_wrapper">
+                    <div class="prs_ms_trailer_slider_left_wrapper">
+                        <div class="owl-carousel owl-theme owl-drag">
+                            <div class="item">
+                                <div class="prs_ms_trailer_slider_left_img_wrapper">
+                                    @Html.Displayattachment(Model.attachment.FileName, Model.Title, "MD")
+                                </div>
+                            </div>
+                            @foreach (var item in Model.OtherImages)
+                            {
+                                <div class="item">
+                                    <div class="prs_ms_trailer_slider_left_img_wrapper">
+                                        @Html.Displayattachment(item.attachment.FileName, item.Title, "MD")
+                                    </div>
+                                </div>
+                            }
+
+
+                        </div>
+                    </div>
+                    <div class="prs_ms_trailer_slider_right_wrapper">
+                        <ul id="Video-Links">
+                            <li>
+                                <span title="تعداد بازدید">@Model.Visits <span class="fa fa-eye"></span></span>
+                            </li>
+                            <li>
+                                <span class="like" data-id="@Model.Id"><span class="text">@Model.Link</span>  <span class="fa fa-thumbs-up"></span></span>
+                            </li>
+                            <li>
+                                <span class="Dislike" data-id="@Model.Id"><span class="text">@Model.DisLike</span><span class="fa fa-thumbs-down"></span></span>
+                            </li>
+                            <li>
+                                <span title="دریافت ویدئو"><a href="@Html.DisplayattachmentCookieFreeUrl(Meta.StaticContentUrl, Model.VideoAttachment.FileName, "LG", true)"><span class="fa fa-download"></span></a></span>
+                            </li>
+                        </ul>
+
+                        <h2>@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(Model.InsertDate)</h2>
+
+
+                        <ul id="Tags">
+
+
+                            @if (Model.Tags.Any())
+                            {
+                                <li>
+                                    برچسب ها :
+                                    <span>
+                                        @foreach (var item in Model.Tags)
+                                        {
+                                            <span>
+                                                <a href="@Url.Action("Index", "Tag", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.TagName) })">@item.TagName</a>
+                                            </span>
+                                        }
+                                    </span>
+
+
+
+
+                                </li>
+
+
+                            }
+
+
+                            @if (Model.Sources.Any())
+                            {
+                                <li id="Source">
+                                    منبع :
+                                    <span>
+
+                                        @foreach (var item in Model.Sources)
+                                        {
+                                            <span><a href="@item.Link" target="_blank"><span class="fa fa-link"></span> @item.Title </a></span>
+                                        }
+
+                                    </span>
+                                </li>
+                            }
+                            <li>
+                                به اشتراک گذاری :
+                                <span>
+                                    @{
+                                        currentUrl = "http://" + HttpContext.Current.Request.Url.Host + Url.Action("Index", "Video", new { id = Model.Id, title = CommonFunctions.NormalizeAddress(Model.PageAddress) });
+                                        <span class="share-links">
+                                            <a class="fa fa-twitter" id="ShareTwitter" href="http://twitter.com/intent/tweet?text=@Model.Title&url=@currentUrl" target="_blank">
+                                                <span id="ShareTwitterTitle"></span>
+                                            </a>
+                                            <a class="fa fa-facebook" id="ShareFacebook" href="https://www.facebook.com/sharer/sharer.php?u=@currentUrl" target="_blank">
+                                                <span id="ShareFacebookTitle"></span>
+                                            </a>
+                                            <a class="fa fa-google-plus" id="ShareGPlus" href="https://plus.google.com/share?url=@currentUrl" target="_blank">
+                                                <span id="ShareGPlusTitle"></span>
+                                            </a>
+                                            <a class="fa fa-pinterest" id="SharePinterest" href="https://pinterest.com/pin/create/button/?url=@currentUrl" target="_blank">
+                                                <span id="SharePinterestTitle"></span>
+                                            </a>
+                                            <a class="fa fa-linkedin" id="ShareLinkedIn" href="https://www.linkedin.com/shareArticle?mini=true&url=@currentUrl" target="_blank">
+                                                <span id="ShareLinkedInTitle"></span>
+                                            </a>
+                                        </span>
+                                    }
+                                </span>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- prs ms trailer wrapper End -->
+<!-- prs syn Slider Start -->
+<div class="prs_syn_main_section_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="prs_syn_cont_wrapper">
+                    <h3>توضیحات بیشتر</h3>
+
+                    <p id="Abstractt">@Model.Abstract</p>
+                    <div id="Data">
+                        @Html.Raw(Model.Data)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- prs syn Slider End -->
+<!-- prs syn Slider Start -->
+<div class="prs_syn_main_section_wrapper" id="commentContainer">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="prs_syn_cont_wrapper">
+                    <h3>نظرات</h3>
+                    @if (!Model.HasContact)
+                    {
+                        <div id="comments">
+
+
+                            @foreach (var item in Model.Comments.Where(x => x.IsActive == true && x.ParrentId == null))
+                            {
+                                <div class="single-post__comment__item" id="Comment_@(item.Id)">
+                                    <div class="single-post__comment__item__pic">
+                                        <img class="img-responsive" style="width: 64px; height: 64px;" src="~/Content/Default/images/man-avatar.jpg">
+                                    </div>
+                                    <div class="single-post__comment__item__text">
+                                        <h5 class="comment-classic-name">@item.FullName</h5>
+                                        <span>@DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate) - @item.InsertDate.ToString("HH:mm")</span>
+
+                                        <p>@item.Message</p>
+                                        <ul>
+                                            <li><span href="#"><span>@item.PositiveRating</span><i data-id="@item.Id" class="fa fa-plus-square"></i></span></li>
+                                            <li><span href="#"><span>@item.NegativeRating</span><i data-id="@item.Id" class="fa fa-minus-square"></i></span></li>
+                                            <li><span onclick="NestedComment(@item.Id)" href="#"><i class="fa fa-share-square-o"></i></span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="comment-classic-group" id="Comment_@(item.Id)">
+                                    <!-- Comment Classic-->
+
+
+                                    @foreach (var item2 in item.ChildComment.Where(x => x.IsActive == true))
+                                    {
+                                        <div class="single-post__comment__item single-post__comment__item--reply">
+                                            <div class="single-post__comment__item__pic">
+                                                <img class="comment-classic-image img-responsive" style="width: 64px; height: 64px;" src="~/Content/Default/images/man-avatar.jpg">
+                                            </div>
+                                            <div class="single-post__comment__item__text">
+                                                <h5>@item2.FullName</h5>
+                                                <span>@DateTimeConverter.ChangeMiladiToLongShamsi(item2.InsertDate) - @item2.InsertDate.ToString("HH:mm")</span>
+                                                <p>@item2.Message</p>
+                                                <ul>
+                                                    <li><span href="#"><span>@item2.PositiveRating</span><i data-id="@item.Id" class="fa fa-plus-square"></i></span></li>
+                                                    <li><span href="#"><span>@item2.NegativeRating</span><i data-id="@item.Id" class="fa fa-minus-square"></i></span></li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+
+
+
+                                    }
+
+
+                                </div>
+
+
+
+                            }
+
+                            @Html.Partial("_Comment", new Domain.Comment(Model.Id))
+
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.Partial("_ContactUsForm", new Domain.ContactUs(Model.Id))
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- prs syn Slider End -->
+
+@if (catRelateds != null)
+{
+    if (catRelateds.Any(x => x.Contents.Any()))
+    {
+        if (catRelateds.SelectMany(x => x.Contents).Count() > 1)
+        {
+            <!-- prs related movie slider Start -->
+            <div class="prs_ms_rm_main_wrapper">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="prs_heading_section_wrapper">
+                                <h2>جدیدترین های مرتبط</h2>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="prs_ms_rm_slider_wrapper">
+                                <div class="owl-carousel owl-theme owl-drag">
+                                    @if (ViewBag.TopContentsByRandom2 != null)
+                                    {
+                                        foreach (var item in ViewBag.TopContentsByRandom2 as IEnumerable<Domain.Content>)
+                                        {
+                                            <div class="item">
+                                                <div class="prs_upcom_movie_box_wrapper">
+                                                    <div class="prs_upcom_movie_img_box">
+                                                        @if (item.Cover.HasValue)
+                                                        {
+                                                            @Html.Displayattachment(item.attachment.FileName, item.Title, "MD")
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="~/Content/Default/images/default-thumbnail.jpg" />
+                                                        }
+                                                        <div class="prs_upcom_movie_img_overlay"></div>
+                                                        <div class="prs_upcom_movie_img_btn_wrapper">
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="@Url.Action("Index", "video", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) })">مشاهده</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="@Url.Action("Index", "video", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) })">جزئیات</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="prs_upcom_movie_content_box">
+                                                        <div class="prs_upcom_movie_content_box_inner">
+                                                            <h2>
+                                                                <a href="@Url.Action("Index", "video", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) })"> @item.Title</a>
+                                                            </h2>
+
+                                                        </div>
+                                                        @*<div class="prs_upcom_movie_content_box_inner_icon">
+                                                                <ul>
+                                                                    <li>
+                                                                        <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- prs related movie slider End -->
+
+        }
+    }
+}
+
+<!-- prs related movie slider Start -->
+<div class="prs_ms_rm_main_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_heading_section_wrapper">
+                    <h2>مرتبط ها</h2>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_ms_rm_slider_wrapper">
+                    <div class="owl-carousel owl-theme owl-drag">
+
+                        @if (relateds != null)
+                        {
+                            foreach (var item in relateds)
+                            {
+                                <div class="item">
+                                    <div class="prs_upcom_movie_box_wrapper">
+                                        <div class="prs_upcom_movie_img_box">
+                                            @if (item.Cover.HasValue)
+                                            {
+                                                @Html.Displayattachment(item.attachment.FileName, item.Title, "MD")
+                                            }
+                                            else
+                                            {
+                                                <img src="~/Content/Default/images/default-thumbnail.jpg" />
+                                            }
+                                            <div class="prs_upcom_movie_img_overlay"></div>
+                                            <div class="prs_upcom_movie_img_btn_wrapper">
+                                                <ul>
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "content", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) })">مشاهده</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "content", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) })">جزئیات</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="prs_upcom_movie_content_box">
+                                            <div class="prs_upcom_movie_content_box_inner">
+                                                <h2>
+                                                    <a href="@Url.Action("Index", "content", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) })"> @item.Title</a>
+                                                </h2>
+
+                                            </div>
+                                            @*<div class="prs_upcom_movie_content_box_inner_icon">
+                                                    <ul>
+                                                        <li>
+                                                            <a href="http://www.webstrot.com/html/moviepro/html/movie_booking.html"><i class="flaticon-cart-of-ecommerce"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- prs related movie slider End -->
+<!-- prs videos&photos slider Start -->
+<div class="prs_vp_main_section_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="prs_heading_section_wrapper">
+                    <h2>ویدئوهای پیشنهادی</h2>
+                </div>
+            </div>
+            <div class="prs_vp_main_slider_wrapper">
+                <div class="prs_vp_left_slidebar_wrapper">
+                    <div class="wrap-album-slider">
+                        <div class="bx-wrapper" style="max-width: 257px;">
+                            <div class="bx-viewport" style="width: 100%; overflow: hidden; position: relative; height: 176px;">
+                                <ul class="prs_vp_left_slider" style="width: auto; position: relative; top: -1059.03px;">
+                                    @if (ViewBag.TopContentsByRandom2 != null)
+                                    {
+                                        foreach (var item in ViewBag.TopContentsByRandom2 as IEnumerable<Domain.Content>)
+                                        {
+                                            <li class="album-slider__item prs_vp_hover_overlay">
+                                                <figure class="album">
+                                                    <div class="prs_vp_img_overlay">
+
+
+                                                        @if (item.Cover.HasValue)
+                                                        {
+                                                            @Html.Displayattachment(item.attachment.FileName, item.Title, "MD")
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="~/Content/Default/images/default-thumbnail.jpg" />
+                                                        }
+                                                        <a href="@Url.Action("Index", "video", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) })" class="venobox info ">
+                                                            <i class="fa fa-search"></i>
+                                                        </a>
+                                                    </div>
+                                                </figure>
+                                                <!-- End album -->
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="prs_vp_center_slidebar_wrapper">
+                    <div class="prs_vp_center_slider">
+                        <div class="owl-carousel owl-theme owl-drag">
+                            @if (ViewBag.TopContentsByRandom3 != null)
+                            {
+                                foreach (var item in ViewBag.TopContentsByRandom3 as IEnumerable<Domain.Content>)
+                                {
+
+                                    <div class="item">
+                                        <div class="prs_vp_center_slider_img_wrapper">
+
+                                            <a href="@Url.Action("Index", "video", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) })">
+                                                @if (item.Cover.HasValue)
+                                                {
+                                                    @Html.Displayattachment(item.attachment.FileName, item.Title, "MD")
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/Content/Default/images/default-thumbnail.jpg" />
+                                                }
+                                            </a>
+
+                                        </div>
+                                    </div>
+
+
+                                }
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="prs_vp_right_slidebar_wrapper">
+                    <div class="wrap-album-slider">
+                        <div class="bx-wrapper" style="max-width: 257px;">
+                            <div class="bx-viewport" style="width: 100%; overflow: hidden; position: relative; height: 176px;">
+                                <ul class="prs_vp_right_slider" style="width: auto; position: relative; top: -98.9704px;">
+
+                                    @if (ViewBag.TopContentsByRandom4 != null)
+                                    {
+                                        foreach (var item in ViewBag.TopContentsByRandom4 as IEnumerable<Domain.Content>)
+                                        {
+                                            <li class="album-slider__item prs_vp_hover_overlay">
+                                                <figure class="album">
+                                                    <div class="prs_vp_img_overlay">
+                                                        @if (item.Cover.HasValue)
+                                                        {
+                                                            @Html.Displayattachment(item.attachment.FileName, item.Title, "MD")
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="~/Content/Default/images/default-thumbnail.jpg" />
+                                                        }
+                                                        <a href="@Url.Action("Index", "video", new { id = item.Id, title = CommonFunctions.NormalizeAddress(item.PageAddress) })" class="venobox info ">
+                                                            <i class="fa fa-search"></i>
+                                                        </a>
+                                                    </div>
+                                                </figure>
+                                                <!-- End album -->
+                                            </li>
+                                        }
+                                    }
+                                    </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- prs videos&photos slider End -->
+@if (Model.OtherImages.Any())
+{
+    <!-- prs ms scene slider Start -->
+    <div class="prs_ms_scene_main_wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="prs_heading_section_wrapper">
+                        <h2>تصاویر جانبی</h2>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                    <div class="prs_ms_rm_slider_wrapper">
+                        <div class="owl-carousel owl-theme owl-drag">
+
+                            @foreach (var item in Model.OtherImages)
+                            {
+                                <div class="item">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="prs_ms_scene_slider_img prs_ms_scene_slider_img2">
+                                            @Html.Displayattachment(item.attachment.FileName, item.Title, "MD")
+
+                                            <div class="prs_ms_scene_img_overlay">
+                                                <a href="@Html.DisplayattachmentUrl(item.attachment.FileName, "LG")" class="venobox info vbox-item" data-title="@item.Title" data-gall="gall12"><i class="flaticon-tool"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- prs ms scene slider End -->
+}
+
+
+
+
+
+
+
+@section Scripts{
+    <script src="~/Content/Base/Scripts/Rating/star-rating.min.js"></script>
+    <script src="~/Content/Base/Scripts/PrettyImage/jquery.prettyPhoto.js"></script>
+    <script src="~/Content/Base/Scripts/View/Content.js"></script>
+
+}
+

@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Domain.ProductImage>
+@using ahmadi.Infrastructure.Helper
+@{
+    var ProductPrice = ViewBag.ProductPrice as Domain.ProductPrice;
+}
+<title>مدیریت تصاویر تنوعِ @ProductPrice.Id</title>
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-md-8">
+            <h1 style="display:inline-block;font-size: 1.5em;" class="box-title">
+                <a href="/admin/ProductPrice/Images/@ProductPrice.Id"> مدیریت تصاویرِ تنوعِ @ProductPrice.Id</a>
+
+            </h1>
+        </div>
+        <div class="col-md-4 text-left" style="padding-left: 4px;">
+
+            <a class="btn btn-success" href="/Admin/ProductPrice/Index/@ProductPrice.ProductId"><span class="glyphicon glyphicon-list-alt"></span> بازگشت به لیست تنوع ها</a>
+
+        </div>
+        <div class="clearfix"></div>
+        <br /><div>
+            <a href="/Admin/ProductPrice/CreateImage/@ProductPrice.Id" class="btn btn-success">درج تصویر جدید برای این تنوع</a>
+            <a href="/Admin/ProductPrice/SelectImage/?ProductId=@ProductPrice.ProductId&id=@ProductPrice.Id" class="btn btn-success">انتخاب تصویر از تصاویر بلااستفاده این محصول</a>
+        </div><br />
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+                            ردیف
+                        </th>
+                        <th class="text-center column-title">
+                            تصویر
+                        </th>
+
+                        <th class="text-center column-title">
+                           تصویر اصلی تنوع؟
+                        </th>
+                        <th class="text-center column-title">
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int i = 1; }
+                    @foreach (var item in Model.OrderBy(x=>x.DisplaySort))
+                    {
+                        <tr class="ContentRow">
+
+                            <td class="text-center">@i</td>
+                            
+                            <td>@Html.Displayattachment(item.Image.FileName,item.Image.Title, "SM", htmlAttributes: new { @class = "img-responsive", width = "110", height = "60", style = "display:inline-block;width:110px;height:60px" })</td>
+                           
+                            <td class="text-center">
+                                    <input type="checkbox" checked="@item.IsMain"  disabled="disabled" />
+                            </td>
+                            <td>
+                                <a href="/admin/ProductPrice/EditImage/@item.Id" class="btn btn-primary">ویرایش</a><br /><br />
+                                <a href="/admin/ProductPrice/DeleteImage/@item.Id"  class="btn btn-danger">حذف</a><br /><br />
+
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</div>
+

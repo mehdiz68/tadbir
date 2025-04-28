@@ -1,0 +1,123 @@
+﻿@model Domain.ProductSendwayIrPostDetail
+@using PagedList.Mvc;
+@using ahmadi.Infrastructure.Helper
+@using CoreLib.Infrastructure;
+@using CoreLib.ViewModel.Xml
+
+<title>تنظیمات حمل و نقل @ViewBag.title</title>
+
+@{
+
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+    var Setting = ViewBag.setting as Domain.Setting;
+}
+@section Header{
+
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <a href="@Url.Action("IrPostDetail", "SendWays",new { id=ViewBag.Id})"> تنظیمات حمل و نقل @ViewBag.title</a>
+            <span style="cursor:pointer" class="glyphicon glyphicon-question-sign" data-html="true" data-toggle="tooltip" data-placement="right" title="@(HelpModule!=null?Html.Raw(HelpModule.Data).ToHtmlString():"راهنمایی وجود ندارد")"></span>
+
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+            <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت  <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+        </div>
+        <div class="clearfix"></div>
+        <br /><br />
+
+        @if (ViewBag.status != null)
+        {
+            if (Convert.ToInt16(ViewBag.status) == 0)
+            {
+                <p class="alert alert-danger">خطایی رخ داد</p>
+            }
+            else
+            {
+                <p class="alert alert-success">تغییرات اعمال گردید</p>
+
+            }
+        }
+
+        @using (Html.BeginForm())
+        {
+            @Html.Hidden("ProductSendWayId", ViewBag.Id as int?)
+
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+                <div class="form-group">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.InnserState1)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.InnserState1, htmlAttributes: new { @class = "form-control", placeholder = Html.DisplayNameFor(x => x.InnserState1) })
+                        @Html.ValidationMessageFor(model => model.InnserState1, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.OuterNearState1)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.OuterNearState1, htmlAttributes: new { @class = "form-control", placeholder = Html.DisplayNameFor(x => x.OuterNearState1) })
+                        @Html.ValidationMessageFor(model => model.OuterNearState1, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.OuterState1)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.OuterState1, htmlAttributes: new { @class = "form-control", placeholder = Html.DisplayNameFor(x => x.OuterState1) })
+                        @Html.ValidationMessageFor(model => model.OuterState1, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <br /><br />
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.InnserStateOver1)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.InnserStateOver1, htmlAttributes: new { @class = "form-control", placeholder = Html.DisplayNameFor(x => x.InnserStateOver1) })
+                        @Html.ValidationMessageFor(model => model.InnserStateOver1, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.OuterNearStateOver1)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.OuterNearStateOver1, htmlAttributes: new { @class = "form-control", placeholder = Html.DisplayNameFor(x => x.OuterNearStateOver1) })
+                        @Html.ValidationMessageFor(model => model.OuterNearStateOver1, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <p>
+                            <span>@Html.LabelFor(x => x.OuterStateOver1)</span>
+
+                        </p>
+                        @Html.TextBoxFor(model => model.OuterStateOver1, htmlAttributes: new { @class = "form-control", placeholder = Html.DisplayNameFor(x => x.OuterStateOver1) })
+                        @Html.ValidationMessageFor(model => model.OuterStateOver1, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="clearfix"></div>
+                </div>
+
+
+
+                <input type="submit" value="ثبت تغییرات" class="btn btn-primary" style="border-radius:0" />
+            </div>
+        }
+
+    </div>
+</div>
+@section Scripts{
+
+
+
+}

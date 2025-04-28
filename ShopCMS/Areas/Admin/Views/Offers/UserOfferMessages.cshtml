@@ -1,0 +1,158 @@
+﻿@model Domain.Offer
+@using CoreLib;
+
+@section Header{
+
+}
+
+<title>مدیریت تخفیف ها</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+
+
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+            @if (ViewBag.AddPermission)
+            {
+                <p style="margin:0"><a class="btn btn-success" href="@Url.Action("CreateUserOfferMessages","Offers",new { id=Model.Id})"> تعریف پیام جدید</a></p>
+            }
+            <br />
+            <h1 style="display:inline-block;font-size: 1.3em;" class="box-title">
+                <a href="@Url.Action("UserOfferMessages", "Offers",new { id=Model.Id})"> مدیریت پیام های تخفیف @Model.Title</a>
+
+            </h1>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left" style="padding-left: 4px;">
+
+            <a class="btn btn-success " href="@Url.Action("Index", "Offers")"><span class="glyphicon glyphicon-chevron-left"></span> بازگشت </a>
+
+        </div>
+        <div class="clearfix"></div>
+
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:0">
+
+
+
+            <div class="tab-content">
+                <div id="Offers">
+                    <div class="x_panel">
+
+
+                        <div class="x_content">
+                            <div class="table-responsive">
+                                <table class="table table-striped jambo_table bulk_action">
+                                    <thead>
+                                        <tr class="headings">
+                                            <th class="text-center column-title">
+
+                                            </th>
+                                            <th class="text-center column-title">
+                                                متن
+                                            </th>
+
+                                            <th class="text-center column-title">
+                                                نوع پیام
+                                            </th>
+                                            <th class="text-center column-title">
+                                                تاریخ درج
+                                            </th>
+
+                                            <th class="text-center column-title">
+                                                وضعیت ارسال
+                                            </th>
+
+                                            <th class="text-center column-title">
+
+                                            </th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{ int i = 1; }
+                                        @foreach (var item in Model.userOfferMessages)
+                                        {
+                                            <tr class="ContentRow">
+
+                                                <td class="text-center">@i</td>
+
+                                                <td class="text-center">
+                                                    @item.Text
+                                                </td>
+                                                <td class="text-center">
+                                                    @item.OfferMessageType.EnumDisplayNameFor()
+                                                </td>
+                                                <td class="text-center">@CoreLib.Infrastructure.DateTime.DateTimeConverter.ChangeMiladiToLongShamsi(item.InsertDate) <span> - </span> @item.InsertDate.ToShortTimeString()</td>
+
+                                                <td class="text-center">
+                                                    @if (item.state)
+                                                    {
+                                                        <span>ارسال شده</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>ارسال نشده</span>
+                                                    }
+                                                </td>
+
+                                                <td>
+                                                    <a href="/admin/Offers/UserOfferMessageMembers/@item.Id" title="لیست مخاطبین و ارسال ها"><span class="fa fa-list"></span></a>
+                                                    <a href="/admin/Offers/DeleteUserOfferMessage/@item.Id" title="حذف"><span class="fa fa-remove"></span></a>
+                                                    <a href="/admin/Offers/EditUserOfferMessage/@item.Id" title="ویرایش"><span class="fa fa-edit"></span></a>
+                                                    <a data-id="@item.Id" class="SetState" href="/admin/Offers/SetState/@item.Id" title="ارسال دوباره پیام به همه"><span class="fa fa-send"></span></a>
+
+                                                </td>
+                                            </tr>
+                                            i++;
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="clearfix"></div>
+
+
+    </div>
+</div>
+
+@section Scripts{
+
+    <script>
+        $(document).ready(function () {
+            $(".SetState").click(function (e) {
+                e.preventDefault();
+                var $this = $(this);
+                $(".loading").show();
+                $.ajax({
+                    crossDomain: true,
+                    type: "Post",
+                    url: "/Admin/Offers/SetState",
+                    data: '{stateId:"' + $this.attr("data-id") + '"}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.statusCode == 200)
+                            swal({ title: "", text: "انجام شد", type: "success", showCancelButton: false, confirmButtonClass: 'btn-danger', confirmButtonText: 'بستن' });
+                        else
+                            swal({ title: "", text: response.Message, type: "error", showCancelButton: false, confirmButtonClass: 'btn-error', confirmButtonText: 'بستن' });
+
+                        $(".loading").hide();
+                    }
+                });
+            });
+        });
+    </script>
+
+}

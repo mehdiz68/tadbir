@@ -1,0 +1,65 @@
+﻿
+#prtabs{float:right!important;width:15%}
+#prtabs >li {
+    float: none!important;
+    border: 1px solid #ccc;
+}
+#prtabs>li>a{
+    margin-right:0!important
+}
+.tab-content{float:right;width:85%}
+.tab-content>.tab-pane{padding:5px}
+/*.bootstrap-select.btn-group .dropdown-menu li a span.check-mark{display:none!important}*/
+.bootstrap-select.btn-group .dropdown-menu li a span.text{text-align:right!important}
+#janebi-images{padding:0}
+#janebi-images li{position:relative;display:inline-block;margin: 0 5px 5px 5px;padding: 5px;background-color: transparent;border: 1px solid #ccc;border-radius: 5px!important;transition: 0.5s;width: 118px;height: 118px;}
+#janebi-images li img{position:absolute;top: 20%;right: 10%;}
+#janebi-images li span{cursor:pointer}
+#janebi-images li  .dettail{position: absolute;left: 4%;}
+.CourseList,.RankGroup{border-bottom:1px solid #e4e4e4}
+.CourseList h3,.RankGroup h3{font-size:1.2em;background-color:#f4f4f4;padding:5px 2px}
+.CourseList  span,.CourseList  label,.RankGroup span,.RankGroup label,#CurrentRanks span,#CurrentRanks label{cursor:pointer}
+.CourseList ul,.RankGroup ul{list-style-type:none}
+.RankGroup ul{display:none}
+.CourseList ul li,.RankGroup li{margin-bottom:5px}
+#CurrentRanks li{list-style-type:none;display:inline-block;margin:5px 0}
+
+.timeSelectorPlugin{position:absolute;background-color:#c3c4b0;border:1px solid #ccc;min-width:200px;min-height:50px;z-index:999999;padding-top: 8px;text-align: center;}
+.timeSelectorPlugin p{cursor:pointer;margin:5px;padding:5px;background-color:red;color:#fff;border:1px solid #fff}
+#SearchPageShow {
+    text-align: center;
+    cursor: pointer;
+    padding: 10px 5px;
+    font-size: 14px;
+    background-color: #d73925;
+    color: #fff;
+    width: 150px;
+}
+
+#SearchPage {
+    display: none;
+    border: 1px solid #d73925;
+    border-bottom: 0;
+    padding: 10px;
+    background: #feebe8;
+    clear: both;
+    text-align: right;
+    font-size: 12px;
+}
+.search-hr {
+    border: 2px solid #d73925;
+    margin: 0;
+    width: 100%;
+}
+#attributes h2:before{font-family: FontAwesome;position:absolute;top:3px;right:5px;content:'\f078';color:#fff}
+#attributes h2.open:before{font-family: FontAwesome;position:absolute;top:3px;right:5px;content:'\f077'!important;color:#fff}
+#attributes h2.open span {background-color: #ea7526}
+#attributes h2.open {border-bottom: 1px solid #ea7526}
+#attributes h2{border-bottom: 1px solid #337ab7;font-size:14px;cursor:pointer;position:relative}
+#attributes h2 span{min-width: 300px;background-color: #337ab7;display: inline-block;text-align: center;padding: 5px;color: #fff;}
+#attributes .form-group > .ProductAttributeGroups{padding-bottom:40px}
+#attributes .form-group > .ProductAttributeGroups > div{margin:10px 0}
+#attributes .form-group > .ProductAttributeGroups .clearfix{border-bottom:1px solid #ccc}
+#attributes .AttributeName{font-weight:bold}
+.MultipleValues .selectedValue{background-color:#26B99A;min-width:100px;text-align:right;display:inline-block;color:#fff;padding:5px;margin:10px 0}
+.MultipleValues .selectedValue span{color:#eb4b4b}

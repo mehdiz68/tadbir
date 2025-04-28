@@ -1,0 +1,157 @@
+﻿@model PagedList.IPagedList<Domain.Order>
+@using PagedList.Mvc;
+@using Domain;
+@using CoreLib;
+@{
+    var OrderRateItems = ViewBag.OrderRateItems as IEnumerable<Domain.OrderRateItem>;
+}
+<title>مدیریت نظرسنجی سفارشات</title>
+@section header{
+    <style>
+        .emoji{font-size:1.5em}
+    </style>
+}
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="box-title container" style="padding:0">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                @Html.ActionLink("نظرسنجی سفارشات", "Index")
+
+            </div>
+
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-left">
+                <a class="btn btn-success" href="@Url.Action("Index","Orders")">سفارشات</a>
+
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <br /><br />
+
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>
+                        شماره سفارش
+                    </th>
+                    <th>
+                        نام و نام خانوادگی
+                    </th>
+                    <th>
+                        شماره موبایل
+                    </th>
+                    @foreach (var item in OrderRateItems)
+                    {
+                        <th>
+                            @item.Title
+                        </th>
+                    }
+                </tr>
+                @{ int k = 0;}
+                @foreach (var item2 in Model)
+                {
+                    var orderRate = item2.OrderRates.GroupBy(x => x.orderRateItem).Select(x => new Domain.ViewModels.OrderItemAvg { ItemName = x.Key.Title, ItemTotalCount = x.Count(), ItemCount0 = x.Count(s => s.state == OrderRateStatus.کاملا_راضی), ItemCount1 = x.Count(s => s.state == OrderRateStatus.راضی), ItemCount2 = x.Count(s => s.state == OrderRateStatus.نظری_ندارم), ItemCount3 = x.Count(s => s.state == OrderRateStatus.ناراضی), ItemCount4 = x.Count(s => s.state == OrderRateStatus.کاملا_ناراضی) });
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("Edit","Orders",new {id=item2.Id })"> @item2.CustomerOrderId</a>
+                        </td>
+                        <td>
+                            @item2.User.FirstName @item2.User.LastName
+                        </td>
+                        <td>
+                            @item2.User.PhoneNumber
+                        </td>
+                        @foreach (var item in orderRate)
+                        {
+                            <td>
+                                @if (item.ItemCount0 > 0)
+                                {
+                                    <span class="emoji">😎</span>
+                                    @*<span> @Domain.OrderRateStatus.کاملا_راضی.EnumDisplayNameFor()</span>*@
+
+                                }
+                                else if (item.ItemCount1 > 0)
+                                {
+                                    <span class="emoji">😊</span>
+                                    @*<span> @Domain.OrderRateStatus.راضی.EnumDisplayNameFor()</span>*@
+                                }
+                                else if (item.ItemCount2 > 0)
+                                {
+                                    <span class="emoji">😐</span>
+                                    @*<span> @Domain.OrderRateStatus.نظری_ندارم.EnumDisplayNameFor()</span>*@
+                                }
+                                else if (item.ItemCount3 > 0)
+                                {
+                                    <span class="emoji">😕</span>
+                                    @*<span> @Domain.OrderRateStatus.ناراضی.EnumDisplayNameFor()</span>*@
+                                }
+                                else if (item.ItemCount4 > 0)
+                                {
+                                    <span class="emoji">😡</span>
+                                    @*<span> @Domain.OrderRateStatus.کاملا_ناراضی.EnumDisplayNameFor()</span>*@
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+
+            </table>
+
+            <div class="Pagging-New-Container">
+                <strong class="Pagging-New-Info">
+                    تعداد نتایج : @Model.TotalItemCount ، صفحه @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount
+                </strong>
+
+                @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page }))
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script>
+        $(document).ready(function () {
+
+            var chart_gauge_settings = {
+                lines: 12,
+                angle: 0,
+                lineWidth: 0.4,
+                pointer: {
+                    length: 0.75,
+                    strokeWidth: 0.042,
+                    color: '#1D212A'
+                },
+                limitMax: 'false',
+                colorStart: '#1ABC9C',
+                colorStop: '#1ABC9C',
+                strokeColor: '#F0F3F3',
+                generateGradient: true
+            };
+
+            $(".chart_gauge").each(function () {
+                var $this = $(this);
+                var attid = $this.attr("id");
+                if ($this.length) {
+
+                    var chart_gauge_01_elem = document.getElementById(attid);
+                    var chart_gauge_01 = new Gauge(chart_gauge_01_elem).setOptions(chart_gauge_settings);
+
+                }
+
+                var txtAttId = $this.parent().find(".gauge-textt").attr("id");
+
+                chart_gauge_01.maxValue = 100;
+                chart_gauge_01.animationSpeed = 32;
+                chart_gauge_01.set(parseInt($this.parent().next().find(".pers-val").text()));
+                chart_gauge_01.setTextField(document.getElementById(txtAttId));
+
+
+            });
+
+        });
+    </script>
+}

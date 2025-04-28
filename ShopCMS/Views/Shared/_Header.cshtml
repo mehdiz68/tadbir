@@ -1,0 +1,129 @@
+﻿@model ahmadi.ViewModels.Home.Master
+@using ahmadi.Infrastructure.Helper
+@using Microsoft.AspNet.Identity;
+@using CoreLib;
+@{
+
+    var Menu = Model.HeaderMainMenu;
+    bool IsRoot = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home";
+ 
+}
+
+@if (Model.PopUpActive)
+{
+    <!-- Home Popup Section -->
+    <div class="modal fade subscribe_popup" id="onload-popup" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            @if (Model.PopUpType)
+            {
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span style="opacity:1" class="close red" data-dismiss="modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        @Html.Raw(Model.PopUpMessage)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <!-- Modal content-->
+                <div class="modal-content transparent">
+                    <div class="modal-header">
+                        <span style="opacity:1" class="close red" data-dismiss="modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        @Html.Raw(Model.PopUpMessage)
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <!-- End Screen Load Popup Section -->
+
+}
+
+<div class="py-1 top">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm text-center text-md-left mb-md-0 mb-2 pr-md-4 d-flex topper align-items-center">
+                <p class="mb-0 w-100">
+                    <span class="fa fa-paper-plane"></span>
+                    <span class="text">@Model.Email</span>
+
+                </p>
+            </div>
+            <div class="col-sm justify-content-center d-flex mb-md-0 mb-2">
+                <div class="social-media">
+                    <p class="mb-0 d-flex">
+                        @foreach (var item in Model.HeaderSocialNetworks.OrderBy(x => x.DisplaySort))
+                        {
+                            <a href="@item.Link" class="d-flex align-items-center justify-content-center"><span class="@item.Icon"><i class="sr-only">@item.Title</i></span></a>
+                        }
+                    </p>
+
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-7 d-flex topper align-items-center text-lg-right justify-content-end">
+                <p class="mb-0 register-link">
+
+                    <a href="/">Fa</a>
+                    <a href="https://www.elaras.ca">En</a>
+                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">درخواست مشاوره</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pt-4 pb-5">
+    <div class="container">
+        <div class="row d-flex align-items-start align-items-center px-3 px-md-0">
+            <div class="col-md-4 d-flex mb-2 mb-md-0">
+                <a class="navbar-brand d-flex align-items-center" href="@(Model.CurrentLanguageId==1?"/":"/En")">
+
+                    @Html.Displayattachment(Model.HeaderLogo, Model.WebSiteName, "LG", true, new { @class = "img-responsive" })
+                </a>
+            </div>
+            <div class="col-md-4 d-flex topper mb-md-0 mb-2 align-items-center">
+                <div class="icon d-flex justify-content-center align-items-center">
+                    <span class="fa fa-map"></span>
+                </div>
+                <div class="pr-md-4 pl-md-3 pl-3 text">
+                    <p class="con"><span>شماره تماس </span> <span>@Model.WebsiteTele</span></p>
+                    <p class="con">24 ساعت شبانه روز و 7 روز هفته تماس بگیرید</p>
+                </div>
+            </div>
+            <div class="col-md-4 d-flex topper mb-md-0 align-items-center">
+                <div class="icon d-flex justify-content-center align-items-center">
+                    <span class="fa fa-paper-plane"></span>
+                </div>
+                <div class="text pl-3 pl-md-3">
+                    <p class="hr"><span>آدرس</span></p>
+                    <p class="con">@Model.WebsiteAddress</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark ftco-navbar-light" id="ftco-navbar">
+    <div class="container d-flex align-items-center">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="fa fa-bars"></span> منو
+        </button>
+        <div class="collapse navbar-collapse" id="ftco-nav">
+            <ul class="navbar-nav mr-auto">
+                @foreach (var item in Menu.Where(x => x.parentId == 0).OrderBy(x => x.DisplayOrder))
+                {
+                    <li class="nav-item"><a href="@(item.IsRoot ? "/" : item.Link)" class="nav-link">@item.Title</a></li>
+                }
+
+            </ul>
+            <a href="#" class="btn-custom" data-toggle="modal" data-target="#exampleModalCenter">درخواست مشاوره</a>
+        </div>
+    </div>
+</nav>
+

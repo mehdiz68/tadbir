@@ -1,0 +1,112 @@
+﻿@model PagedList.IPagedList<Domain.ApplicationUser>
+@using PagedList.Mvc;
+@using Domain;
+@using ahmadi.Infrastructure.Helper
+@using ahmadi.Infrastructure.Security;
+
+<title>کاربران علاقه مند به محصول @ViewBag.Title</title>
+
+
+<div class="x_panel">
+    <div class="x_content">
+        <h3>
+            <a href="@("/Admin/ProductFavorates/Details/"+@ViewBag.Id)">کاربران علاقه مند به محصول @ViewBag.Title</a>
+        </h3>
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="text-center column-title">
+                            #
+                        </th>
+                        <th>
+                            آواتار
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>نام کاربری ( ایمیل)</span>
+                               
+                            </p>
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>نام و نام خانوادگی</span>
+                              
+                            </p>
+                        </th>
+                        <th class="text-center column-title">
+                            <p class="text-center">
+                                <span>جنسیت</span>
+                               
+                            </p>
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        int i = 0;
+                        foreach (var item in Model)
+                        {
+                            i++;
+                            <tr>
+                                <td>
+                                    @i
+                                </td>
+                                <td>
+                                    @if (item.Avatar.HasValue)
+                                    {
+                                        @Html.Displayattachment(item.Avatarattachment.FileName,item.FirstName + " "+item.LastName, "LG", htmlAttributes: new { @class = "img-responsive", width = "80", height = "80", style = "display:inline-block;width:80px;height:80px" })
+                                    }
+                                    else
+                                    {
+                                        if (item.Gender == true)
+                                        {
+                                            <img src="~/Content/Default/images/man-avatar.jpg" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Content/Default/images/woman-avatar.gif" />
+                                        }
+
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.UserName)
+                                </td>
+
+                                <td class="text-center">
+
+                                    @item.FirstName @item.LastName
+                                </td>
+
+                                <td class="text-center">
+                                    @if (item.Gender == true)
+                                    {
+                                        <span>مرد</span>
+                                    }
+                                    else
+                                    {
+                                        <span>زن</span>
+                                    }
+                                </td>
+                              
+                            </tr>
+                        }
+                    }
+                </tbody>
+
+
+            </table>
+
+            <p>
+                <strong>
+                    صفحه  @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) از @Model.PageCount از میان @Model.TotalItemCount کاربر
+                </strong>
+            </p>
+            @Html.PagedListPager(Model, page => Url.Action("Details", new { page }))
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,73 @@
+﻿@model ahmadi.ViewModels.Home.Meta
+
+@{
+    string contentType = "article";
+    if (!String.IsNullOrEmpty(Model.contenType))
+    {
+        contentType = Model.contenType;
+    }
+}
+
+@if (Model == null)
+{
+    <title>عدل جو</title>
+}
+else
+{
+
+    <title>@Model.WebSiteTitle</title>
+}
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+@if (Model != null)
+{
+    if (Model.WebSiteMetakeyword != "")
+    {
+        <meta id="Keywords" name="keywords" content="@Model.WebSiteMetakeyword" />
+    }
+}
+@if (Model == null)
+{
+
+    <meta id="Description" name="description" content="بدون عنوان" />
+    <link rel="canonical" href="بدون عنوان">
+    <meta name="distribution" content="Global">
+    <meta name="rating" content="General">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+
+    <meta property="og:locale" content="fa_IR" />
+    <meta property="og:type" content="@contentType" />
+    <meta property="og:title" content="بدون عنوان" />
+    <meta property="og:description" content="بدون عنوان" />
+    <meta property="og:url" content="#" />
+    <meta property="og:site_name" content="بدون عنوان">
+    <meta property="og:image" content="#" />
+    <meta property="og:image:width" content="220" />
+    <meta property="og:image:height" content="120" />
+}
+else
+{
+
+    <meta id="Description" name="description" content="@Model.WebSiteMetaDescription" />
+    <link rel="canonical" href="@Model.CanocicalUrl">
+    <meta name="distribution" content="Global">
+    <meta name="rating" content="General">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="icon" href="@Url.Content("~/Content/Uploadfiles/"+Model.Favicon)" type="image/x-icon" />
+
+
+    <meta property="og:locale" content="fa_IR" />
+    <meta property="og:type" content="@contentType" />
+    <meta property="og:title" content="@Model.WebSiteTitle" />
+    <meta property="og:url" content="@Model.CanocicalUrl" />
+    <meta property="og:image" content="https://@Model.PageCover" />
+    <meta property="og:image:width" content="160" />
+    <meta property="og:image:height" content="160" />
+    <meta property="og:description" content="@Model.WebSiteMetaDescription" />
+    <meta property="og:site_name" content="@Model.WebSiteName">
+}
+
+
+
+

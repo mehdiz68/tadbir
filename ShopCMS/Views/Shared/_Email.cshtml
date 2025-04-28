@@ -1,0 +1,37 @@
+﻿@model CoreLib.ViewModel.Email.Template
+
+<div style="font-family: Tahoma;font-size: 12px;text-align: right;direction: rtl;background-color: #eee;width: 100%;margin: 0 auto;">
+    <div style="background-color: #2e363f;padding: 10px;text-align: right;">
+        <img src="@Model.Url/Content/UploadFiles/@Model.Logo" style="max-width:300px!important;max-height:200px!important;display:block;margin:0 auto" />
+    </div>
+    <div style="width: 70%;margin: 20px auto 0 auto;background-color: #fff;padding: 15px;border: 1px solid #ccc;">
+        <div style="width:35%;float:right">
+            <img style=" display: block; max-width: 100%; height: auto;" src="@Model.Url/Content/Default/images/info.png" />
+        </div>
+        <div style="width:60%;float:right;padding:0px 10px">
+            <h2> @Model.Title </h2>
+            <div>@Html.Raw( Model.Text)</div>
+        </div>
+        <div style="clear:both">
+        </div>
+    </div>
+    <div style="width:70%;margin:0 auto">
+        <img src="@Model.Url/Content/Default/images/mailbottom.png" style="width:100%;display: block;height: auto;" />
+    </div>
+    <div style="background-color: #2e363f;padding: 10px;text-align: center;color: #fff;min-height:60px">
+        <div style="width:45%;float:right">
+            <p style="margin-top:0">
+                @Model.SiteName - @Model.SiteDescription
+            </p>
+            <p>
+                <a style="color: #fff; text-decoration: none;" href="#">@Model.SiteName</a>
+            </p>
+        </div>
+        <div style="width:45%;float:right">
+            <a style="color: #fff; text-decoration: none;" href="@Model.Url">@Model.Url</a>
+        </div>
+        <div style="clear:both">
+
+        </div>
+    </div>
+</div>

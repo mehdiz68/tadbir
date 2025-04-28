@@ -1,0 +1,302 @@
+﻿@model IEnumerable<Domain.Law>
+@using ahmadi.Infrastructure.Helper;
+@using PagedList.Mvc;
+@using CoreLib.Infrastructure;
+<title>مدیریت  قوانین</title>
+@{
+    var HelpModule = ViewBag.HelpModule as Domain.HelpModule;
+    var law = ViewBag.law as Domain.Law;
+}
+
+@section Header{
+    <style>
+        .Law {
+            margin: 15px 0;
+            box-shadow: 0px 0px 3px #000;
+            padding: 15px;
+        }
+
+            .Law a {
+                word-break: break-all;
+            }
+            .law h1 {
+                font-size: 20px
+            }
+
+        .Law1 {
+            margin-right: 10px
+        }
+
+        .Law2 {
+            margin-right: 10px
+        }
+
+        .Law3 {
+            margin-right: 20px
+        }
+
+        .Law4 {
+            margin-right: 30px
+        }
+
+        .Law5 {
+            margin-right: 40px
+        }
+
+        .Law6 {
+            margin-right: 50px
+        }
+
+        .Law7 {
+            margin-right: 60px
+        }
+    </style>
+
+}
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="row">
+            <div class="col-md-6 text-right">
+                <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+                    <a href="@Url.Action("Index","Law")">مجموعه قوانین</a>
+
+                </h1>
+            </div>
+            <div class="col-md-6 text-left">
+
+                <a class="btn btn-success" href="@Url.Action("Create")"><span class="fa fa-plus"></span> ایجاد قانون </a>
+                @if (law != null)
+                {
+
+                    <a class="btn btn-success" href="/Admin/Law"><span class="fa fa-chevron-left"></span> بازگشت </a>
+                }
+            </div>
+        </div>
+        <hr />
+
+        @if (law != null)
+        {
+            <div class="law">
+                <div class="oprs text-left">
+                    <a href="@Url.Action("Create",new {law.Id })" class="btn btn-success"><span class="fa fa-plus"></span> افزودن آیتم </a>
+                    <a href="@Url.Action("Edit",new {law.Id })" class="btn btn-success"><span class="fa fa-edit"></span> ویرایش </a>
+                    <a href="@Url.Action("Delete",new {law.Id })" class="btn btn-success"><span class="fa fa-remove"></span> حذف </a>
+                </div>
+                <h1>@law.Title</h1>
+                <div class="row">
+                    <div class="col-md-6 text-right date">
+                        @if (!String.IsNullOrEmpty(law.date))
+                        {
+                            <span>مصوب @law.date</span>
+                        }
+                    </div>
+                    <div class="col-md-6 text-left visits">
+                        <span><span class="fa fa-eye"></span> @law.Visits</span>
+                    </div>
+                    <div class="clearfix"></div>
+                    @if (!String.IsNullOrEmpty(law.Data))
+                    {
+                        <div class="col-md-12 text-justify">@Html.Raw(law.Data)</div>
+                    }
+                </div>
+            </div>
+        }
+        @foreach (var item in Model)
+        {
+            <div class="Law Law1">
+                <div class="oprs text-left">
+                    <a href="@Url.Action("Create",new {item.Id })" class="btn btn-success"><span class="fa fa-plus"></span> افزودن آیتم </a>
+                    <a href="@Url.Action("Edit",new {item.Id })" class="btn btn-success"><span class="fa fa-edit"></span> ویرایش </a>
+                    <a href="@Url.Action("Delete",new {item.Id })" class="btn btn-success"><span class="fa fa-remove"></span> حذف </a>
+                </div>
+                <h2><a href="@Url.Action("Index",new {id=item.Id })">@item.Title</a></h2>
+                <div class="row">
+                    <div class="col-md-6 text-right date">
+                        @if (!String.IsNullOrEmpty(item.date))
+                        {
+                            <span>مصوب @item.date</span>
+                        }
+                    </div>
+                    <div class="col-md-6 text-left visits">
+                        <span><span class="fa fa-eye"></span> @item.Visits</span>
+                    </div>
+                    @if (!String.IsNullOrEmpty(item.Data))
+                    {
+                        <div class="col-md-12 text-justify">@Html.Raw(item.Data)</div>
+                    }
+                    <div class="clearfix"></div>
+                </div>
+                @*@if (item.ChildLaws != null)
+                {
+                    foreach (var item2 in item.ChildLaws)
+                    {
+                        <div class="Law Law2">
+                            <div class="oprs text-left">
+                                <a href="@Url.Action("Create",new {item2.Id })" class="btn btn-success"><span class="fa fa-plus"></span> افزودن آیتم </a>
+                                <a href="@Url.Action("Edit",new {item2.Id })" class="btn btn-success"><span class="fa fa-edit"></span> ویرایش </a>
+                                <a href="@Url.Action("Delete",new {item2.Id })" class="btn btn-success"><span class="fa fa-remove"></span> حذف </a>
+                            </div>
+                            <h2><a href="@Url.Action("Index", new { id = item2.Id })">@item2.Title</a></h2>
+                            <div class="row">
+                                <div class="col-md-6 text-right date">
+                                    @if (!String.IsNullOrEmpty(item2.date))
+                                    {
+                                        <span>مصوب @item2.date</span>
+                                    }
+                                </div>
+                                <div class="col-md-6 text-left visits">
+                                    <span><span class="fa fa-eye"></span> @item2.Visits</span>
+                                </div>
+                                <div class="clearfix"></div>
+                                @if (!String.IsNullOrEmpty(item2.Data))
+                                {
+                                    <div class="col-md-12 text-justify">@Html.Raw(item2.Data)</div>
+                                }
+                            </div>
+                        </div>
+                        foreach (var item3 in item2.ChildLaws)
+                        {
+                            <div class="Law Law3">
+                                <div class="oprs text-left">
+                                    <a href="@Url.Action("Create",new {item3.Id })" class="btn btn-success"><span class="fa fa-plus"></span> افزودن آیتم </a>
+                                    <a href="@Url.Action("Edit",new {item3.Id })" class="btn btn-success"><span class="fa fa-edit"></span> ویرایش </a>
+                                    <a href="@Url.Action("Delete",new {item3.Id })" class="btn btn-success"><span class="fa fa-remove"></span> حذف </a>
+                                </div>
+                                <h2><a href="@Url.Action("Index", new { id = item3.Id })">@item3.Title</a></h2>
+                                <div class="row">
+                                    <div class="col-md-6 text-right date">
+                                        @if (!String.IsNullOrEmpty(item3.date))
+                                        {
+                                            <span>مصوب @item3.date</span>
+                                        }
+                                    </div>
+                                    <div class="col-md-6 text-left visits">
+                                        <span><span class="fa fa-eye"></span> @item3.Visits</span>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    @if (!String.IsNullOrEmpty(item3.Data))
+                                    {
+                                        <div class="col-md-12 text-justify">@Html.Raw(item3.Data)</div>
+                                    }
+                                </div>
+                            </div>
+                            foreach (var item4 in item3.ChildLaws)
+                            {
+                                <div class="Law Law4">
+                                    <div class="oprs text-left">
+                                        <a href="@Url.Action("Create",new {item4.Id })" class="btn btn-success"><span class="fa fa-plus"></span> افزودن آیتم </a>
+                                        <a href="@Url.Action("Edit",new {item4.Id })" class="btn btn-success"><span class="fa fa-edit"></span> ویرایش </a>
+                                        <a href="@Url.Action("Delete",new {item4.Id })" class="btn btn-success"><span class="fa fa-remove"></span> حذف </a>
+                                    </div>
+                                    <h2><a href="@Url.Action("Index", new { id = item4.Id })">@item4.Title</a></h2>
+                                    <div class="row">
+                                        <div class="col-md-6 text-right date">
+                                            @if (!String.IsNullOrEmpty(item4.date))
+                                            {
+                                                <span>مصوب @item4.date</span>
+                                            }
+                                        </div>
+                                        <div class="col-md-6 text-left visits">
+                                            <span><span class="fa fa-eye"></span> @item4.Visits</span>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        @if (!String.IsNullOrEmpty(item4.Data))
+                                        {
+                                            <div class="col-md-12 text-justify">@Html.Raw(item4.Data)</div>
+                                        }
+                                    </div>
+                                </div>
+                                foreach (var item5 in item4.ChildLaws)
+                                {
+                                    <div class="Law Law5">
+                                        <div class="oprs text-left">
+                                            <a href="@Url.Action("Create",new {item5.Id })" class="btn btn-success"><span class="fa fa-plus"></span> افزودن آیتم </a>
+                                            <a href="@Url.Action("Edit",new {item5.Id })" class="btn btn-success"><span class="fa fa-edit"></span> ویرایش </a>
+                                            <a href="@Url.Action("Delete",new {item5.Id })" class="btn btn-success"><span class="fa fa-remove"></span> حذف </a>
+                                        </div>
+                                        <h2><a href="@Url.Action("Index", new { id = item5.Id })">@item5.Title</a></h2>
+                                        <div class="row">
+                                            <div class="col-md-6 text-right date">
+                                                @if (!String.IsNullOrEmpty(item5.date))
+                                                {
+                                                    <span>مصوب @item5.date</span>
+                                                }
+                                            </div>
+                                            <div class="col-md-6 text-left visits">
+                                                <span><span class="fa fa-eye"></span> @item5.Visits</span>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            @if (!String.IsNullOrEmpty(item5.Data))
+                                            {
+                                                <div class="col-md-12 text-justify">@Html.Raw(item5.Data)</div>
+                                            }
+                                        </div>
+                                    </div>
+                                    foreach (var item6 in item5.ChildLaws)
+                                    {
+                                        <div class="Law Law6">
+                                            <div class="oprs text-left">
+                                                <a href="@Url.Action("Create",new {item6.Id })" class="btn btn-success"><span class="fa fa-plus"></span> افزودن آیتم </a>
+                                                <a href="@Url.Action("Edit",new {item6.Id })" class="btn btn-success"><span class="fa fa-edit"></span> ویرایش </a>
+                                                <a href="@Url.Action("Delete",new {item6.Id })" class="btn btn-success"><span class="fa fa-remove"></span> حذف </a>
+                                            </div>
+                                            <h2><a href="@Url.Action("Index", new { id = item6.Id })">@item6.Title</a></h2>
+                                            <div class="row">
+                                                <div class="col-md-6 text-right date">
+                                                    @if (!String.IsNullOrEmpty(item6.date))
+                                                    {
+                                                        <span>مصوب @item6.date</span>
+                                                    }
+                                                </div>
+                                                <div class="col-md-6 text-left visits">
+                                                    <span><span class="fa fa-eye"></span> @item6.Visits</span>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                @if (!String.IsNullOrEmpty(item6.Data))
+                                                {
+                                                    <div class="col-md-12 text-justify">@Html.Raw(item6.Data)</div>
+                                                }
+                                            </div>
+                                        </div>
+                                        foreach (var item7 in item6.ChildLaws)
+                                        {
+                                            <div class="Law Law7">
+                                                <div class="oprs text-left">
+                                                    <a href="@Url.Action("Create",new {item7.Id })" class="btn btn-success"><span class="fa fa-plus"></span> افزودن آیتم </a>
+                                                    <a href="@Url.Action("Edit",new {item7.Id })" class="btn btn-success"><span class="fa fa-edit"></span> ویرایش </a>
+                                                    <a href="@Url.Action("Delete",new {item7.Id })" class="btn btn-success"><span class="fa fa-remove"></span> حذف </a>
+                                                </div>
+                                                <h2><a href="@Url.Action("Index", new { id = item7.Id })">@item7.Title</a></h2>
+                                                <div class="row">
+                                                    <div class="col-md-6 text-right date">
+                                                        @if (!String.IsNullOrEmpty(item7.date))
+                                                        {
+                                                            <span>مصوب @item7.date</span>
+                                                        }
+                                                    </div>
+                                                    <div class="col-md-6 text-left visits">
+                                                        <span><span class="fa fa-eye"></span> @item7.Visits</span>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    @if (!String.IsNullOrEmpty(item7.Data))
+                                                    {
+                                                        <div class="col-md-12 text-justify">@Html.Raw(item7.Data)</div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }*@
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts{
+}

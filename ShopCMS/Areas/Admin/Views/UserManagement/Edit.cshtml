@@ -1,0 +1,236 @@
+﻿@model ahmadi.Models.EditUserViewModel
+@using ahmadi.Infrastructure.Helper
+<title>ویرایش کاربر</title>
+
+<div class="x_panel">
+    <div class="x_content">
+
+        <div class="text-left"><a class="btn btn-success" href="@Url.Action("Index")"> بازگشت به لیست <span class="glyphicon glyphicon-chevron-left"></span></a></div>
+
+        <h1 style="display:inline-block;font-size: 2em;" class="box-title">
+            ویرایش کاربر
+        </h1>
+        <br /><br />
+
+       
+
+        <p class="text text-danger">@ViewBag.Error</p>
+        @using (Html.BeginForm("Edit", "UserManagement", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.Mobile)
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+
+            <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "نام" })
+                <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+
+            </div>
+            <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "نام خانوادگی" })
+                <span class="fa fa-bold form-control-feedback right" aria-hidden="true"></span>
+            </div>
+            <div class="form-group  has-feedback  col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "ایمیل" })
+                <span class="fa fa-phone-square form-control-feedback right" aria-hidden="true"></span>
+
+            </div>
+            <div class="clearfix"></div>
+
+
+            <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                @Html.DropDownList("Rolename", ViewBag.RoleSelectListItem as IEnumerable<SelectListItem>, null, new { @class = "form-control" })
+                <span class="fa fa-user-plus form-control-feedback right" aria-hidden="true"></span>
+
+            </div>
+            <div class="form-group  has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                @Html.DropDownList("Gender", ViewBag.GenderSelectListItem as IEnumerable<SelectListItem>, null, new { @class = "form-control" })
+                <span class="fa fa-navicon form-control-feedback right" aria-hidden="true"></span>
+
+
+            </div>
+
+            if (ViewBag.ProuctLisence != null)
+            {
+                <div class="form-group has-feedback  col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                    @Html.TextBoxFor(m => m.LandlinePhone, new { @class = "form-control", placeholder = "تلفن ثابت" })
+                    <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
+
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="form-group has-feedback  col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control", placeholder = "کد پستی" })
+                    <span class="fa fa-qrcode form-control-feedback right" aria-hidden="true"></span>
+
+                </div>
+                <div class="form-group has-feedback  col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.DropDownList("proviencId", ViewBag.ProvinceList as IEnumerable<SelectListItem>, htmlAttributes: new { placeholder = "زبان ( وب سایت )", style = "width:90%;display: inline-block", @class = "form-control" })
+
+                    <span class="fa fa-cloud form-control-feedback right" aria-hidden="true"></span>
+                </div>
+                <div class="form-group has-feedback col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @Html.DropDownList("cityId", ViewBag.CityList as IEnumerable<SelectListItem>, htmlAttributes: new { placeholder = "زبان ( وب سایت )", style = "width:90%;display: inline-block", @class = "form-control" })
+
+                    <span class="fa fa-bitbucket form-control-feedback right" aria-hidden="true"></span>
+
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    @Html.TextAreaFor(m => m.Address, new { @class = "form-control", rows = "5", placeholder = "آدرس" })
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label> پلاک </label>
+                            @Html.TextBoxFor(m => m.AddressNumber, new { @class = "form-control" })
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label> واحد </label>
+                            @Html.TextBoxFor(m => m.AddressUnit, new { @class = "form-control" })
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </div>
+            }
+            else
+            {
+                @Html.Hidden("LandlinePhone", " ")
+                @Html.Hidden("PostalCode", " ")
+                @Html.Hidden("State", 1)
+                @Html.Hidden("City", " ")
+                @Html.Hidden("Address", " ")
+            }
+
+            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                @Html.TextAreaFor(m => m.About, new { @class = "form-control", rows = "5", placeholder = "درباره" })
+
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <p>
+                    @{
+                        bool IsNewsLetter = ViewBag.CurrentIsNewsLetter;
+                        @Html.CheckBox("IsNewLetter", IsNewsLetter, new { @class = "js-switch" })<label for="IsNewLetter"> عضویت در خبرنامه(به شرط تایید ایمیل </label>
+                    }
+                </p>
+                <p>
+
+                    @Html.CheckBoxFor(m => m.EmailConfirmed, new { @class = "js-switch" }) @Html.LabelFor(m => m.EmailConfirmed)
+                </p>
+                <p>
+                    @Html.CheckBoxFor(m => m.PhoneNumberConfirmed, new { @class = "js-switch" }) @Html.LabelFor(m => m.PhoneNumberConfirmed)
+                </p>
+                <p>
+
+                    @Html.CheckBoxFor(m => m.Disable, new { @class = "js-switch" }) @Html.LabelFor(m => m.Disable)
+                </p>
+
+            </div>
+
+
+            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                @Ajax.ActionLink("انتخاب یا آپلود آواتار", "OpenAttachement", "FileManager", null, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "createView", OnBegin = "$('.loading').show();", OnSuccess = "$('.loading').hide();createMode('',2)", InsertionMode = InsertionMode.Replace }, htmlAttributes: new { @class = "btn btn-primary OpenFileManager" })
+                <span class="btn btn-danger deleteCover @(Model.Avatar.HasValue?"":"hide")">عدم انتخاب</span>
+
+                <div id="createView"></div>
+
+                <div id="AttachementContainer" class="text-right">
+
+                    @if (Model.Avatar.HasValue)
+                    {
+                        @Html.Displayattachment(Model.attachment.FileName, Model.LastName, "SM", htmlAttributes: new { @class = "img-responsive", width = "80", height = "80", style = "display:inline-block;width:80px;height:80px" })
+                    }
+                    else
+                    {
+
+                        <img src="~/Content/Default/images/default-thumbnail.jpg" style="width:220px;height:120px" />
+                    }
+
+
+                    @Html.EditorFor(model => model.Avatar, new { htmlAttributes = new { @class = "form-control text-left Ltr", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.Avatar, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="form-group col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-primary" value="ویرایش" />
+                </div>
+            </div>
+        }
+
+
+        @section Scripts{
+            @Scripts.Render("~/bundles/Admin/FileManager/Js")
+
+            <script>
+
+                $(document).ready(function () {
+                    if ($("#proviencId").val() != "") {
+                        var CityId = $("#cityId option:selected").val();
+                        $.ajax({
+                            type: "Get",
+                            url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#proviencId").val(),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (response) {
+                                $("#cityId option").remove();
+                                $("#cityId").append("<option value='0'>--همه--</option>");
+                                for (var i = 0; i < response.data.length; i++) {
+
+                                    $("#cityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                                }
+                                $("#cityId option[value='" + CityId + "']").prop("selected", true);
+                                $(".loading").hide();
+                            }
+                        });
+                    }
+
+                    $("#proviencId").change(function () {
+                        if ($("#proviencId").val() == "")
+                            $("#cityId option").remove();
+                        else {
+
+                            $(".loading").show();
+                            $.ajax({
+                                type: "Get",
+                                url: "/Admin/SendWays/GetCities?ProvinceId=" + $("#proviencId").val(),
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function (response) {
+                                    $("#cityId option").remove();
+                                    $("#cityId").append("<option value='0'>--همه--</option>");
+                                    for (var i = 0; i < response.data.length; i++) {
+
+                                        $("#cityId").append("<option value='" + response.data[i].Id + "'>" + response.data[i].Name + "</option>");
+                                    }
+
+                                    $(".loading").hide();
+                                }
+                            });
+                        }
+                    });
+                });
+            </script>
+
+        }
+
+    </div>
+</div>
