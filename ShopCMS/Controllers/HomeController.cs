@@ -35,11 +35,11 @@ namespace ahmadi.Controllers
         }
         public ActionResult Index(int? langid)
         {
-            if (langid.HasValue)
-                langid = langid.Value;
-            else if (Request.Url.Host.ToLower().Contains("tadbirpoyan"))
-                langid = 1;
-            else
+            //if (langid.HasValue)
+            //    langid = langid.Value;
+            //else if (Request.Url.Host.ToLower().Contains("tadbirpoyan"))
+            //    langid = 1;
+            //else
                 langid = 2;
 
             //langid = langid.HasValue ? langid.Value : 1;
@@ -143,11 +143,11 @@ namespace ahmadi.Controllers
 
         public PartialViewResult GetHeader(short? langId)
         {
-            if (langId.HasValue)
-                langId = langId.Value;
-            else if (Request.Url.Host.ToLower().Contains("tadbirpoyan"))
-                langId = 1;
-            else
+            //if (langId.HasValue)
+            //    langId = langId.Value;
+            //else if (Request.Url.Host.ToLower().Contains("tadbirpoyan"))
+            //    langId = 1;
+            //else
                 langId = 2;
             #region Get Language
             if (!langId.HasValue)
@@ -502,11 +502,11 @@ namespace ahmadi.Controllers
         }
         public PartialViewResult GetFooter(short? langId)
         {
-            if (langId.HasValue)
-                langId = langId.Value;
-            else if (Request.Url.Host.ToLower().Contains("tadbirpoyan"))
-                langId = 1;
-            else
+            //if (langId.HasValue)
+            //    langId = langId.Value;
+            //else if (Request.Url.Host.ToLower().Contains("tadbirpoyan"))
+            //    langId = 1;
+            //else
                 langId = 2;
             if (true)
             //if (oModulesList.Any(x => x.Id > 0 && x.HasAccess))

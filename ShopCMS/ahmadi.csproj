@@ -109,7 +109,7 @@
       <HintPath>..\packages\Quartz.3.2.4\lib\net461\Quartz.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp">
-      <HintPath>C:\Users\Tfshops\Desktop\IpPanelSolution\IpPanelSolution\RestClientSendSMSSample\bin\Debug\RestSharp.dll</HintPath>
+      <HintPath>..\..\Almasi\sources\ShopCMS\bin\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="Stimulsoft.Base, Version=2020.2.1.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a" />
     <Reference Include="Stimulsoft.Report, Version=2020.2.1.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a" />
@@ -5737,7 +5737,6 @@
     <Content Include="Areas\Admin\Content\AdminPanel\vendors\DateJS\LICENSE" />
     <Content Include="Areas\Admin\Content\AdminPanel\vendors\DateJS\package.json" />
     <Content Include="Areas\Admin\Content\AdminPanel\vendors\DateJS\README.md" />
-    <Content Include="Areas\Admin\Content\AdminPanel\vendors\DateJS\reports\coverage.json" />
     <Content Include="Areas\Admin\Content\AdminPanel\vendors\DateJS\reports\lcov.info" />
     <Content Include="Areas\Admin\Content\AdminPanel\vendors\devbridge-autocomplete\.bower.json" />
     <Content Include="Areas\Admin\Content\AdminPanel\vendors\devbridge-autocomplete\bower.json" />
